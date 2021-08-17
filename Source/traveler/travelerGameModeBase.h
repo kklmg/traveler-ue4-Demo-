@@ -14,4 +14,6 @@ class TRAVELER_API AtravelerGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+private:
+	void StartPlay() override;
 };
