@@ -5,5 +5,7 @@
 
 void AtravelerGameModeBase::StartPlay() 
 {
+	Super::StartPlay();
+
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, "AtravelerGameModeBase::StartPlay");
 }
