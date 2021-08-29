@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -47,4 +48,19 @@ public:
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* _cameraComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* _cameraSpringArm;
+
+	UPROPERTY(EditAnywhere)
+	float _zoomSpeed = 50.0f;
+	
+
+	//FVector2D MovementInput;
+	//FVector2D CameraInput;
+	//bool bZoomingIn;
+
+	void PitchCamera(float AxisValue);
+	void YawCamera(float AxisValue);
+	void ZoomInOut(float AxisValue);
 };
