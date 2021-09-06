@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Character/MovementHandler.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -21,6 +22,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void BeginDestroy() override;
 
 public:	
 	// Called every frame
@@ -56,8 +59,10 @@ public:
 	float _zoomSpeed = 50.0f;
 	
 
-	//FVector2D MovementInput;
-	//FVector2D CameraInput;
+	FVector2D MovementInput;
+	FVector2D CameraInput;
+
+	MovementHandler *_pMovementHandler;
 	//bool bZoomingIn;
 
 	void PitchCamera(float AxisValue);

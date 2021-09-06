@@ -26,7 +26,7 @@ AMyCharacter::AMyCharacter()
 
 	_cameraComponent->SetupAttachment(_cameraSpringArm, USpringArmComponent::SocketName);
 
-
+	bUseControllerRotationYaw = false;
 	// Attach the camera component to our capsule component.
 	//_cameraComponent->SetupAttachment(CastChecked<USceneComponent, UCapsuleComponent>(GetCapsuleComponent()));
 
@@ -35,9 +35,6 @@ AMyCharacter::AMyCharacter()
 
 	// Enable the pawn to control camera rotation.
 	//_cameraComponent->bUsePawnControlRotation = true;
-
-	
-	
 
 	//AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -48,67 +45,29 @@ void AMyCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Character BeginPlay"));
+
+	_pMovementHandler = new MovementHandler(this);
+}
+
+void AMyCharacter::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Character BeginPlay"));
+
+	if (_pMovementHandler != nullptr) 
+	{
+		delete(_pMovementHandler);
+		_pMovementHandler = nullptr;
+	}
 }
 
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
 {
-
 	Super::Tick(DeltaTime);
 
-	//if (!MovementInput.IsZero())
-	//{
-	//	//Scale our movement input axis values by 100 units per second
-	//	MovementInput = MovementInput * 100.0f;
-	//	FVector NewLocation = GetActorLocation();
-	//	NewLocation += GetActorForwardVector() * MovementInput.X * DeltaTime;
-	//	NewLocation += GetActorRightVector() * MovementInput.Y * DeltaTime;
-	//	SetActorLocation(NewLocation);
-	//}
-
-	//Zoom in if ZoomIn button is down, zoom back out if it's not
-	//{
-	//	if (bZoomingIn)
-	//	{
-	//		ZoomFactor += DeltaTime / 0.5f;         //Zoom in over half a second
-	//	}
-	//	else
-	//	{
-	//		ZoomFactor -= DeltaTime / 0.25f;        //Zoom out over a quarter of a second
-	//	}
-	//}
-	//	ZoomFactor = FMath::Clamp<float>(ZoomFactor, 0.0f, 1.0f);
-	//	//Blend our camera's FOV and our SpringArm's length based on ZoomFactor
-	//	_cameraComponent->FieldOfView = FMath::Lerp<float>(90.0f, 60.0f, ZoomFactor);
-	//	_cameraSpringArm->TargetArmLength = FMath::Lerp<float>(400.0f, 300.0f, ZoomFactor);
-	//}
-
-	////Rotate our actor's yaw, which will turn our camera because we're attached to it
-	//{
-	//	FRotator NewRotation = GetActorRotation();
-	//	NewRotation.Yaw += CameraInput.X;
-	//	SetActorRotation(NewRotation);
-	//}
-
-	////Rotate our camera's pitch, but limit it so we're always looking downward
-	//{
-	//	FRotator NewRotation = _cameraSpringArm->GetComponentRotation();
-	//	NewRotation.Pitch = FMath::Clamp(NewRotation.Pitch + CameraInput.Y, -80.0f, -15.0f);
-	//	_cameraSpringArm->SetWorldRotation(NewRotation);
-	//}
-
-	////Handle movement based on our "MoveX" and "MoveY" axes
-	//{
-	//	if (!MovementInput.IsZero())
-	//	{
-	//		//Scale our movement input axis values by 100 units per second
-	//		MovementInput = MovementInput.SafeNormal() * 100.0f;
-	//		FVector NewLocation = GetActorLocation();
-	//		NewLocation += GetActorForwardVector() * MovementInput.X * DeltaTime;
-	//		NewLocation += GetActorRightVector() * MovementInput.Y * DeltaTime;
-	//		SetActorLocation(NewLocation);
-	//	}
-	//}
+	_pMovementHandler->HandleMovement(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -116,37 +75,34 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// Set up "movement" bindings.
+	//movement
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
 
-
-	// Set up "action" bindings.
+	//jump
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::StartJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AMyCharacter::StopJump);
 
-	
-	//InputComponent->BindAction("ZoomIn", IE_Pressed, this, &AMyCharacter::ZoomIn);
-	//InputComponent->BindAction("ZoomIn", IE_Released, this, &AMyCharacter::ZoomOut);
-
-	
+	//camera
 	InputComponent->BindAxis("CameraPitch", this, &AMyCharacter::PitchCamera);
 	InputComponent->BindAxis("CameraYaw", this, &AMyCharacter::YawCamera);
-
 	InputComponent->BindAxis("ZoomInOut", this, &AMyCharacter::ZoomInOut);
 }
 
 void AMyCharacter::MoveForward(float Value)
 {
-	
-	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
-	AddMovementInput(Direction, Value);
+	_pMovementHandler->SetMovementInputX(Value);
+	_pMovementHandler->SetCameraRotation(_cameraComponent->GetComponentRotation());
+
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(camreaRotation.Yaw));
 }
 
 void AMyCharacter::MoveRight(float Value)
-{
-	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
-	AddMovementInput(Direction, Value);
+{	
+	_pMovementHandler->SetMovementInputY(Value);
+	_pMovementHandler->SetCameraRotation(_cameraComponent->GetComponentRotation());
+
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(camreaRotation.Yaw));
 }
 
 
