@@ -21,4 +21,5 @@ private:
 	void Init() override;
 	void StartGameInstance() override;
 	void OnStart() override;
+	void BeginDestroy() override;
 };

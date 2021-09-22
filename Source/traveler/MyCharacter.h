@@ -8,6 +8,8 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Character/MovementHandler.h"
+#include "StateComponent.h"
+#include "Projectile.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -55,8 +57,14 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* _cameraSpringArm;
 
+	UPROPERTY(VisibleAnywhere)
+	UStateComponent* _stateComponent;
+
 	UPROPERTY(EditAnywhere)
 	float _zoomSpeed = 50.0f;
+
+	UFUNCTION(BlueprintCallable)
+	UStateComponent* GetStateComponent();
 	
 
 	FVector2D MovementInput;
@@ -68,4 +76,20 @@ public:
 	void PitchCamera(float AxisValue);
 	void YawCamera(float AxisValue);
 	void ZoomInOut(float AxisValue);
+
+	// Function that handles firing projectiles.
+	UFUNCTION()
+	void Aim();
+
+	// Function that handles firing projectiles.
+	UFUNCTION()
+	void CancelAim();
+
+	// Gun muzzle offset from the camera location.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	FVector MuzzleOffset;
+
+	// Projectile class to spawn.
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<class AProjectile> ProjectileClass;
 };

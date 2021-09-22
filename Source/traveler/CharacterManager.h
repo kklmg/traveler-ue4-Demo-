@@ -3,15 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "CharacterManager.generated.h"
 
 /**
  * 
  */
-class TRAVELER_API GameManager
+UCLASS()
+class TRAVELER_API UCharacterManager : public UObject
 {
-public:
-	GameManager();
-	~GameManager();
+	GENERATED_BODY()
+
 
 	void SpawnMyCharacter();
+
+	
 };

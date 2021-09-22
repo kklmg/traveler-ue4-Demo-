@@ -52,7 +52,7 @@ void MovementHandler::HandleMovement(float deltaTime)
 	moveDirection.Normalize();
 
 	//character movement
-	_pCharacter->AddMovementInput(moveDirection, 50 * deltaTime);
+	_pCharacter->AddMovementInput(moveDirection, 100 * deltaTime);
 
 	//let character face to moving direction
 	_pCharacter->SetActorRotation(moveDirection.Rotation());
