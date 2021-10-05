@@ -26,8 +26,6 @@ void UMyGameInstance::OnStart()
 	Super::OnStart();
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, "GameInstance::OnStart"); 
-
-	GameManager->S
 }
 
 void UMyGameInstance::BeginDestroy()
@@ -37,4 +35,5 @@ void UMyGameInstance::BeginDestroy()
 		delete(_gameManager);
 		_gameManager = nullptr;
 	}
+	Super::BeginDestroy();
 }

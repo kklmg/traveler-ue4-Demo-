@@ -7,8 +7,6 @@ void AAimHUD::DrawHUD()
 {
     Super::DrawHUD();
 
-    GetWorld()->getgamemode
-
     if (CrosshairTexture)
     {
         // Find the center of our canvas.
