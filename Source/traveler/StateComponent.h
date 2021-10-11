@@ -29,4 +29,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "state")
 	EEquipState equipState;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "state")
+	EActionState actionState;
+
 };
