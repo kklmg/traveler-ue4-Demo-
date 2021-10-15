@@ -158,6 +158,35 @@ void AMyCharacter::ZoomInOut(float AxisValue)
 
 void AMyCharacter::Aim()
 {
+	if (_stateComponent) 
+	{
+		_stateComponent->equipState = EEquipState::ES_bow;
+
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, " Aim");
+	}
+
+	if (_cameraComponent) 
+	{
+		_cameraComponent->AddLocalOffset(FVector(10,10,10));
+	
+	}
+}
+
+
+void AMyCharacter::CancelAim()
+{
+	LaunchProjectile();
+
+	if (_stateComponent)
+	{
+		_stateComponent->equipState = EEquipState::ES_unEquiped;
+
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "Cancel Aim");
+	}
+}
+
+void AMyCharacter::LaunchProjectile() 
+{
 	// Attempt to fire a projectile.
 	if (ProjectileClass)
 	{
@@ -192,24 +221,6 @@ void AMyCharacter::Aim()
 				Projectile->FireInDirection(LaunchDirection);
 			}
 		}
-	}
-
-	if (_stateComponent) 
-	{
-		_stateComponent->equipState = EEquipState::ES_bow;
-
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, " Aim");
-	}
-}
-
-
-void AMyCharacter::CancelAim()
-{
-	if (_stateComponent)
-	{
-		_stateComponent->equipState = EEquipState::ES_unEquiped;
-
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "Cancel Aim");
 	}
 }
 

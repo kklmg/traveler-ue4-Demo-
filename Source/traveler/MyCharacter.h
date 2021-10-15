@@ -65,6 +65,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UStateComponent* GetStateComponent();
+
+	UFUNCTION(BlueprintCallable)
+	void LaunchProjectile();
 	
 
 	FVector2D MovementInput;
@@ -92,4 +95,7 @@ public:
 	// Projectile class to spawn.
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<class AProjectile> ProjectileClass;
+
+
+
 };
