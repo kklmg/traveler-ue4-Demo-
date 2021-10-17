@@ -60,7 +60,7 @@ unsigned int UProcessManager::UpdateProcesses(unsigned long deltaMs)
             // remove the process
             _processList.Remove(pProcess);
         }
-    }
+   }
 
     return ((successCount << 16) | failCount);
 }

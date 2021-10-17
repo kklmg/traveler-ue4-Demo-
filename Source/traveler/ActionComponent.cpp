@@ -29,46 +29,23 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	for (auto action : _actions) 
+	{
+        // process is uninitialized, so initialize it
+        if (action->GetState() == EProcessState::UNINITIALIZED)
+            action->VInit();
+
+        // give the process an update tick if it's running
+        if (action->GetState() == EProcessState::RUNNING)
+            action->VUpdate(DeltaTime);
+
+        // check to see if the process is dead
+        if (action->IsDead())
+        {
+            // remove the process
+            _actions.Remove(action);
+        }
+	
+	}
 	// ...
-}
-
-void UActionComponent::MoveForward(float Value)
-{
-	//_pMovementHandler->SetMovementInputX(Value);
-	//_pMovementHandler->SetCameraRotation(_cameraComponent->GetComponentRotation());
-}
-
-void UActionComponent::MoveRight(float Value)
-{
-	//_pMovementHandler->SetMovementInputY(Value);
-	//_pMovementHandler->SetCameraRotation(_cameraComponent->GetComponentRotation());
-}
-
-
-void UActionComponent::StartJump()
-{
-	//bPressedJump = true;
-}
-
-void asdf() 
-{
-	//if (_isActive == false) return;
-	//if (_movementInput.IsZero()) return;
-
-	////translate character 
-	//FRotator cameraYaw(0, _cameraRotation.Yaw, 0);
-	//FVector cameraDirection(cameraYaw.Vector());
-	//FVector inputDirection(_movementInput.X, _movementInput.Y, 0);
-
-	//FMatrix inputRotaionMatrix = FRotationMatrix(inputDirection.Rotation());
-
-	//FVector moveDirection = inputRotaionMatrix.TransformVector(cameraDirection);
-	//moveDirection.Normalize();
-
-	////character movement
-	//_pCharacter->AddMovementInput(moveDirection, 100 * deltaTime);
-
-	////let character face to moving direction
-	//_pCharacter->SetActorRotation(moveDirection.Rotation());
-
 }

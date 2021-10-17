@@ -3,19 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Action/Action.h"
 #include "Components/ActorComponent.h"
-#include "ActionComponent.generated.h"
+#include "AttributeComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TRAVELER_API UActionComponent : public UActorComponent
+class TRAVELER_API UAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UActionComponent();
+	UAttributeComponent();
 
 protected:
 	// Called when the game starts
@@ -25,7 +24,5 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-private:
-	TArray<UAction*> _actions;
-
+		
 };
