@@ -3,17 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Process.h"
-#include "Action.generated.h"
+#include "UObject/NoExportTypes.h"
+#include "State.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UAction : public UProcess
+class TRAVELER_API UState : public UObject
 {
 	GENERATED_BODY()
+
 public:
-	virtual void Start();
-	
+	void virtual Enter();
+	void virtual End();
 };
