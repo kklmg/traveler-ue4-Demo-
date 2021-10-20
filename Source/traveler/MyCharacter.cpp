@@ -1,6 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Character/MovementHandler.h"
+#include "ActionComponent.h"
+#include "StateComponent.h"
+#include "Projectile.h"
 #include "MyCharacter.h"
 
 // Sets default values
@@ -27,7 +33,13 @@ AMyCharacter::AMyCharacter()
 
 	bUseControllerRotationYaw = false;
 
+	//create state component
 	_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("stateComponent"));
+	check(_stateComponent != nullptr);
+
+	// Create action component
+	_actionComponent = CreateDefaultSubobject<UActionComponent>(TEXT("ActionComponent"));
+	check(_actionComponent != nullptr);
 
 	// Attach the camera component to our capsule component.
 	//_cameraComponent->SetupAttachment(CastChecked<USceneComponent, UCapsuleComponent>(GetCapsuleComponent()));
@@ -100,9 +112,10 @@ void AMyCharacter::MoveForward(float Value)
 	_pMovementHandler->SetMovementInputX(Value);
 	_pMovementHandler->SetCameraRotation(_cameraComponent->GetComponentRotation());
 
-
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, GetVelocity().ToString());
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(camreaRotation.Yaw));
+
+	_actionComponent->Move();
 }
 
 void AMyCharacter::MoveRight(float Value)
@@ -111,16 +124,22 @@ void AMyCharacter::MoveRight(float Value)
 	_pMovementHandler->SetCameraRotation(_cameraComponent->GetComponentRotation());
 
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(camreaRotation.Yaw));
+
+	_actionComponent->Move();
 }
 
 
 void AMyCharacter::StartJump()
 {
-	bPressedJump = true;
+	_actionComponent->Jump();
+
+	//bPressedJump = true;
 }
 
 void AMyCharacter::StopJump()
 {
+	_actionComponent->Jump();
+
 	bPressedJump = false;
 }
 
@@ -168,8 +187,12 @@ void AMyCharacter::Aim()
 	if (_cameraComponent) 
 	{
 		_cameraComponent->AddLocalOffset(FVector(10,10,10));
-	
 	}
+	if (_actionComponent) 
+	{
+		_actionComponent->Target();
+	}
+
 }
 
 
@@ -182,6 +205,10 @@ void AMyCharacter::CancelAim()
 		_stateComponent->equipState = EEquipState::ES_unEquiped;
 
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "Cancel Aim");
+	}
+	if (_actionComponent)
+	{
+		_actionComponent->Target();
 	}
 }
 
@@ -221,6 +248,11 @@ void AMyCharacter::LaunchProjectile()
 				Projectile->FireInDirection(LaunchDirection);
 			}
 		}
+	}
+
+	if (_actionComponent)
+	{
+		//_actionComponent->();
 	}
 }
 

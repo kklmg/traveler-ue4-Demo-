@@ -7,6 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "ActionComponent.generated.h"
 
+class UCharacterStateBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UActionComponent : public UActorComponent
@@ -25,7 +26,16 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void SetState();
+
+	void Move();
+	void Sprint();
+	void Jump();
+	void Target();
+	void Dash();
+
 private:
 	TArray<UAction*> _actions;
 
+	UCharacterStateBase *_pCharacterState;
 };

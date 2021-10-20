@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "CharacterStateBase.h"
 #include "ActionComponent.h"
 
 // Sets default values for this component's properties
@@ -48,4 +49,43 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	
 	}
 	// ...
+}
+
+void UActionComponent::SetState()
+{
+}
+void UActionComponent::Move() 
+{
+	if (_pCharacterState != nullptr) 
+	{
+		_pCharacterState->Move();
+	}
+}
+void UActionComponent::Sprint() 
+{
+	if (_pCharacterState != nullptr)
+	{
+		_pCharacterState->Sprint();
+	}
+}
+void UActionComponent::Jump() 
+{
+	if (_pCharacterState != nullptr)
+	{
+		_pCharacterState->Jump();
+	}
+}
+void UActionComponent::Target() 
+{
+	if (_pCharacterState != nullptr)
+	{
+		_pCharacterState->Target();
+	}
+}
+void UActionComponent::Dash() 
+{
+	if (_pCharacterState != nullptr)
+	{
+		_pCharacterState->Dash();
+	}
 }

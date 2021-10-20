@@ -3,14 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Character.h"
-#include "Camera/CameraComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "Character/MovementHandler.h"
-#include "StateComponent.h"
-#include "Projectile.h"
 #include "MyCharacter.generated.h"
+
+class UCameraComponent;
+class USpringArmComponent;
+class UStateComponent;
+class MovementHandler;
+class UActionComponent;
+
+class AProjectile;
+
 
 UCLASS()
 class TRAVELER_API AMyCharacter : public ACharacter
@@ -59,6 +62,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UStateComponent* _stateComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UActionComponent* _actionComponent;
+		
 
 	UPROPERTY(EditAnywhere)
 	float _zoomSpeed = 50.0f;
