@@ -13,5 +13,11 @@ UCLASS()
 class TRAVELER_API ABow : public AWeapon
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void Fire() override;
+
+private:
+	float _strength;
+	float _power;
 };

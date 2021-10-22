@@ -11,6 +11,7 @@ class USpringArmComponent;
 class UStateComponent;
 class MovementHandler;
 class UActionComponent;
+class UWeaponComponent;
 
 class AProjectile;
 
@@ -65,6 +66,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UActionComponent* _actionComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UWeaponComponent* _weaponComponent;
 		
 
 	UPROPERTY(EditAnywhere)

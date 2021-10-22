@@ -24,8 +24,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USkeletalMeshComponent* _mesh;
+	UPROPERTY(EditAnywhere)
+	USkeletalMeshComponent* _skeletalMeshComponent;
 public:
 	/**/
 	virtual void Fire() PURE_VIRTUAL(AWeapon::Fire.;);

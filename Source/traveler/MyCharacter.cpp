@@ -4,6 +4,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Character/MovementHandler.h"
+#include "WeaponComponent.h"
 #include "ActionComponent.h"
 #include "StateComponent.h"
 #include "Projectile.h"
@@ -16,7 +17,6 @@ AMyCharacter::AMyCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-
 
 	_cameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
 	_cameraSpringArm->SetupAttachment(GetCapsuleComponent());
@@ -40,6 +40,11 @@ AMyCharacter::AMyCharacter()
 	// Create action component
 	_actionComponent = CreateDefaultSubobject<UActionComponent>(TEXT("ActionComponent"));
 	check(_actionComponent != nullptr);
+
+	// Create action component
+	_weaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
+	check(_actionComponent != nullptr);
+
 
 	// Attach the camera component to our capsule component.
 	//_cameraComponent->SetupAttachment(CastChecked<USceneComponent, UCapsuleComponent>(GetCapsuleComponent()));

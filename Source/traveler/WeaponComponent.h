@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "WeaponComponent.generated.h"
 
+class AWeapon;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponChanged, AWeapon*,weapon);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UWeaponComponent : public UActorComponent
@@ -24,5 +27,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	void SetWeapon(AWeapon* weapon);
+
+public:
+	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
+	FWeaponChanged onWeaponChanged;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DefaultWeapon")
+	TSubclassOf<AWeapon> DefaultWeapon;
+private:
+	AWeapon* _aWeapon;
 };

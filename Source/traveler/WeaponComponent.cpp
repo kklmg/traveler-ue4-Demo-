@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Weapon.h"
+#include "Bow.h"
 #include "WeaponComponent.h"
 
 // Sets default values for this component's properties
@@ -11,16 +12,24 @@ UWeaponComponent::UWeaponComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-}
 
+	
+}
 
 // Called when the game starts
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (DefaultWeapon) 
+	{
+		FActorSpawnParameters params;
+		AWeapon* bow = GetWorld()->SpawnActor<AWeapon>(DefaultWeapon);
+		SetWeapon(bow);
+	}
 	// ...
 	
+
 }
 
 
@@ -31,4 +40,14 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 	// ...
 }
+
+void UWeaponComponent::SetWeapon(AWeapon* weapon)
+{
+	if (_aWeapon != weapon)
+	{
+		_aWeapon = weapon;
+		onWeaponChanged.Broadcast(_aWeapon);
+	}
+}
+
 
