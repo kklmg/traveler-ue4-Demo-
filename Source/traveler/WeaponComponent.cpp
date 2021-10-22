@@ -3,6 +3,7 @@
 #include "Weapon.h"
 #include "Bow.h"
 #include "WeaponComponent.h"
+#include "MyCharacter.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -21,13 +22,18 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 	if (DefaultWeapon) 
 	{
 		FActorSpawnParameters params;
 		AWeapon* bow = GetWorld()->SpawnActor<AWeapon>(DefaultWeapon);
 		SetWeapon(bow);
+
+		
 	}
 	// ...
+
+	
 	
 
 }
@@ -46,7 +52,21 @@ void UWeaponComponent::SetWeapon(AWeapon* weapon)
 	if (_aWeapon != weapon)
 	{
 		_aWeapon = weapon;
-		onWeaponChanged.Broadcast(_aWeapon);
+
+		//Get Character
+		ACharacter* character = Cast<ACharacter>(GetOwner());
+		check(character != nullptr);
+
+		//Attach Weapon 
+		_aWeapon->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketLeftHand);
+	}
+}
+
+void UWeaponComponent::SetArmWeapon(bool isArmed) 
+{
+	if (_aWeapon)
+	{
+		_aWeapon->SetActorHiddenInGame(isArmed);
 	}
 }
 

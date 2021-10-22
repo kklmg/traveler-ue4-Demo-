@@ -29,12 +29,17 @@ public:
 
 	void SetWeapon(AWeapon* weapon);
 
+	void SetArmWeapon(bool isArmed);
+
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
 	FWeaponChanged onWeaponChanged;
 
 	UPROPERTY(EditDefaultsOnly, Category = "DefaultWeapon")
 	TSubclassOf<AWeapon> DefaultWeapon;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Socket")
+	FName SocketLeftHand;
 private:
 	AWeapon* _aWeapon;
 };

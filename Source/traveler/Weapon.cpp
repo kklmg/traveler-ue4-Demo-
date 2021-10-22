@@ -19,6 +19,11 @@ void AWeapon::BeginPlay()
 	
 }
 
+//void AWeapon::AttachTo(USceneComponent* sceneComponent, FName socketName)
+//{
+//	_skeletalMeshComponent->SetupAttachment(sceneComponent,socketName);
+//}
+
 // Called every frame
 void AWeapon::Tick(float DeltaTime)
 {
