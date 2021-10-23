@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Camera/CameraComponent.h"
-#include "GameFramework/SpringArmComponent.h"
+#include "CameraSpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Character/MovementHandler.h"
 #include "WeaponComponent.h"
@@ -18,20 +18,15 @@ AMyCharacter::AMyCharacter()
 
 	//RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
-	_cameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
-	_cameraSpringArm->SetupAttachment(GetCapsuleComponent());
-	_cameraSpringArm->SetRelativeRotation(FRotator(-60.0f, 0.0f, 0.0f));
-	_cameraSpringArm->TargetArmLength = 200.0f;
-	//_cameraSpringArm->bEnableCameraLag = true;
-	//_cameraSpringArm->CameraLagSpeed = 3.0f;
+	//Create Camera Spring Arm Component
+	_cameraSpringArmComponent = CreateDefaultSubobject<UCameraSpringArmComponent>(TEXT("CameraSpringArmComponent"));
+	check(_cameraSpringArmComponent != nullptr);
+	_cameraSpringArmComponent->SetupAttachment(GetCapsuleComponent());
 
 	// Create a first person camera component.
 	_cameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	check(_cameraComponent != nullptr);
-
-	_cameraComponent->SetupAttachment(_cameraSpringArm, USpringArmComponent::SocketName);
-
-	bUseControllerRotationYaw = false;
+	_cameraComponent->SetupAttachment(_cameraSpringArmComponent, USpringArmComponent::SocketName);
 
 	//create state component
 	_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("stateComponent"));
@@ -45,17 +40,9 @@ AMyCharacter::AMyCharacter()
 	_weaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
 	check(_actionComponent != nullptr);
 
-
-	// Attach the camera component to our capsule component.
-	//_cameraComponent->SetupAttachment(CastChecked<USceneComponent, UCapsuleComponent>(GetCapsuleComponent()));
-
-	// Position the camera slightly above the eyes.
-	//_cameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f + BaseEyeHeight));
-
 	// Enable the pawn to control camera rotation.
-	//_cameraComponent->bUsePawnControlRotation = true;
+	bUseControllerRotationYaw = false;
 
-	//AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 // Called when the game starts or when spawned
@@ -104,9 +91,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AMyCharacter::StopJump);
 
 	//camera
-	InputComponent->BindAxis("CameraPitch", this, &AMyCharacter::PitchCamera);
-	InputComponent->BindAxis("CameraYaw", this, &AMyCharacter::YawCamera);
-	InputComponent->BindAxis("ZoomInOut", this, &AMyCharacter::ZoomInOut);
+	InputComponent->BindAxis("CameraPitch", _cameraSpringArmComponent, &UCameraSpringArmComponent::Pitch);
+	InputComponent->BindAxis("CameraYaw", _cameraSpringArmComponent, &UCameraSpringArmComponent::Yaw);
+	InputComponent->BindAxis("ZoomInOut", _cameraSpringArmComponent, &UCameraSpringArmComponent::ZoomInOut);
 
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AMyCharacter::Aim);
 	PlayerInputComponent->BindAction("Aim", IE_Released, this, &AMyCharacter::CancelAim);
@@ -153,33 +140,6 @@ UStateComponent* AMyCharacter::GetStateComponent()
 	return _stateComponent;
 }
 
-void AMyCharacter::PitchCamera(float AxisValue)
-{
-	FRotator rotation = _cameraSpringArm->GetRelativeRotation();
-	float pitch = rotation.Pitch + AxisValue;
-	rotation.Pitch = pitch > 0 ? FMath::Clamp(rotation.Pitch + AxisValue, 0.0f, 89.9f) : FMath::Clamp(rotation.Pitch + AxisValue, -89.9f, 0.0f);
-	
-	_cameraSpringArm->SetRelativeRotation(rotation);
-}
-
-void AMyCharacter::YawCamera(float AxisValue)
-{
-	FRotator DeltaRotation(ForceInit);
-	DeltaRotation.Yaw = (AxisValue);
-
-	_cameraSpringArm->AddRelativeRotation(DeltaRotation);
-}
-
-
-
-void AMyCharacter::ZoomInOut(float AxisValue)
-{
-	_cameraSpringArm->TargetArmLength = FMath::Clamp(_cameraSpringArm->TargetArmLength + AxisValue*_zoomSpeed, 200.0f, 400.0f);
-
-	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(_cameraSpringArm->TargetArmLength));
-}
-
-
 void AMyCharacter::Aim()
 {
 	if (_stateComponent) 
@@ -191,7 +151,8 @@ void AMyCharacter::Aim()
 
 	if (_cameraComponent) 
 	{
-		_cameraComponent->AddLocalOffset(FVector(10,10,10));
+		//_cameraComponent->AddLocalOffset(FVector(10, 10, 10));
+		//_cameraSpringArm->AddLocalOffset(FVector(10, 10, 10));
 	}
 	if (_actionComponent) 
 	{

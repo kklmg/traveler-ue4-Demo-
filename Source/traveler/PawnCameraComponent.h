@@ -14,4 +14,6 @@ class TRAVELER_API UPawnCameraComponent : public UCameraComponent
 {
 	GENERATED_BODY()
 	
+public:
+	
 };

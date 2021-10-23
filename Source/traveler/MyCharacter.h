@@ -7,7 +7,7 @@
 #include "MyCharacter.generated.h"
 
 class UCameraComponent;
-class USpringArmComponent;
+class UCameraSpringArmComponent;
 class UStateComponent;
 class MovementHandler;
 class UActionComponent;
@@ -59,7 +59,7 @@ public:
 	UCameraComponent* _cameraComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* _cameraSpringArm;
+	UCameraSpringArmComponent* _cameraSpringArmComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UStateComponent* _stateComponent;
@@ -69,10 +69,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UWeaponComponent* _weaponComponent;
-		
-
-	UPROPERTY(EditAnywhere)
-	float _zoomSpeed = 50.0f;
 
 	UFUNCTION(BlueprintCallable)
 	UStateComponent* GetStateComponent();
@@ -85,11 +81,7 @@ public:
 	FVector2D CameraInput;
 
 	MovementHandler *_pMovementHandler;
-	//bool bZoomingIn;
 
-	void PitchCamera(float AxisValue);
-	void YawCamera(float AxisValue);
-	void ZoomInOut(float AxisValue);
 
 	// Function that handles firing projectiles.
 	UFUNCTION()
