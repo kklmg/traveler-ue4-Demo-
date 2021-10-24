@@ -28,14 +28,19 @@ public:
 
 	void SetState();
 
-	void Move();
+	void Move(FVector direction,float scale = 1.0f);
 	void Sprint();
 	void Jump();
 	void Target();
 	void Dash();
 
+	void AddMovementInputX(float value);
+	void AddMovementInputY(float value);
+
 private:
 	TArray<UAction*> _actions;
 
 	UCharacterStateBase *_pCharacterState;
+
+	FVector2D _movementInput;
 };

@@ -2,6 +2,9 @@
 
 
 #include "CharacterStateBase.h"
+#include "MyCharacter.h"
+#include "Camera/CameraComponent.h"
+#include "AttributeComponent.h"
 #include "ActionComponent.h"
 
 // Sets default values for this component's properties
@@ -30,31 +33,59 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	for (auto action : _actions) 
+	if (_movementInput.IsZero() == false) 
 	{
-        // process is uninitialized, so initialize it
-        if (action->GetState() == EProcessState::UNINITIALIZED)
-            action->VInit();
+		//Get My Character
+		AMyCharacter* pCharacter = Cast<AMyCharacter>(GetOwner());
+		check(pCharacter != nullptr);
 
-        // give the process an update tick if it's running
-        if (action->GetState() == EProcessState::RUNNING)
-            action->VUpdate(DeltaTime);
+		UCameraComponent* pCamera = pCharacter->GetCameraComponent();
+		check(pCamera != nullptr);
 
-        // check to see if the process is dead
-        if (action->IsDead())
-        {
-            // remove the process
-            _actions.Remove(action);
-        }
-	
+		UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
+		check(pAttributeComponent != nullptr);
+
+		FVector inputDirection(_movementInput.X, _movementInput.Y, 0);
+
+		FRotator cameraRotator = pCamera->GetComponentRotation();
+		FMatrix cameraRotationMatrix = FRotationMatrix(cameraRotator);
+
+		FVector moveDirection = cameraRotationMatrix.TransformVector(inputDirection);
+		moveDirection.Z = 0;
+		moveDirection.Normalize();
+
+		pCharacter->SetActorRotation(moveDirection.Rotation());
+		pCharacter->AddMovementInput(moveDirection, pAttributeComponent->GetVelocity()*DeltaTime);
 	}
+
+	
+
+
+	//for (auto action : _actions) 
+	//{
+ //       // process is uninitialized, so initialize it
+ //       if (action->GetState() == EProcessState::UNINITIALIZED)
+ //           action->VInit();
+
+ //       // give the process an update tick if it's running
+ //       if (action->GetState() == EProcessState::RUNNING)
+ //           action->VUpdate(DeltaTime);
+
+ //       // check to see if the process is dead
+ //       if (action->IsDead())
+ //       {
+ //           // remove the process
+ //           _actions.Remove(action);
+ //       }
+	//
+	//}
 	// ...
 }
 
 void UActionComponent::SetState()
 {
 }
-void UActionComponent::Move() 
+void UActionComponent::Move(FVector direction, float scale)
 {
 	if (_pCharacterState != nullptr) 
 	{
@@ -88,4 +119,13 @@ void UActionComponent::Dash()
 	{
 		_pCharacterState->Dash();
 	}
+}
+
+void UActionComponent::AddMovementInputX(float value) 
+{
+	_movementInput.X = value;
+}
+void UActionComponent::AddMovementInputY(float value) 
+{
+	_movementInput.Y = value;
 }

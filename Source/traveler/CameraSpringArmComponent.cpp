@@ -11,6 +11,9 @@ UCameraSpringArmComponent::UCameraSpringArmComponent()
 	bEnableCameraLag = false;
 	//CameraLagSpeed = 3.0f;
 
+	//
+	SetAbsolute(false, true, true);
+
 	//zoom 
 	_zoomMax = 400;
 	_zoomMin = 100; 

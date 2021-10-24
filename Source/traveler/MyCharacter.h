@@ -12,6 +12,7 @@ class UStateComponent;
 class MovementHandler;
 class UActionComponent;
 class UWeaponComponent;
+class UAttributeComponent;
 
 class AProjectile;
 
@@ -38,6 +39,22 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+	UFUNCTION(BlueprintCallable)
+	UStateComponent* GetStateComponent();
+
+	UFUNCTION(BlueprintCallable)
+	UCameraSpringArmComponent* GetSpringArmComponent();
+
+	UFUNCTION(BlueprintCallable)
+	UCameraComponent* GetCameraComponent();
+
+	UFUNCTION(BlueprintCallable)
+	UAttributeComponent* GetAttributeComponent();
+
+	UFUNCTION(BlueprintCallable)
+	void LaunchProjectile();
+
 	// Handles input for moving forward and backward.
 	UFUNCTION()
 	void MoveForward(float Value);
@@ -53,6 +70,23 @@ public:
 	// Clears jump flag when key is released.
 	UFUNCTION()
 	void StopJump();
+
+	// Function that handles firing projectiles.
+	UFUNCTION()
+	void Aim();
+
+	// Function that handles firing projectiles.
+	UFUNCTION()
+	void CancelAim();
+
+private:
+	// Gun muzzle offset from the camera location.
+	UPROPERTY(EditAnywhere, Category = Gameplay)
+	FVector MuzzleOffset;
+
+	// Projectile class to spawn.
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<class AProjectile> ProjectileClass;
 
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
@@ -70,32 +104,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UWeaponComponent* _weaponComponent;
 
-	UFUNCTION(BlueprintCallable)
-	UStateComponent* GetStateComponent();
-
-	UFUNCTION(BlueprintCallable)
-	void LaunchProjectile();
-	
+	UPROPERTY(VisibleAnywhere)
+	UAttributeComponent* _attributeComponent;
 
 	FVector2D MovementInput;
 	FVector2D CameraInput;
 
-	MovementHandler *_pMovementHandler;
-
-
-	// Function that handles firing projectiles.
-	UFUNCTION()
-	void Aim();
-
-	// Function that handles firing projectiles.
-	UFUNCTION()
-	void CancelAim();
-
-	// Gun muzzle offset from the camera location.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	FVector MuzzleOffset;
-
-	// Projectile class to spawn.
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TSubclassOf<class AProjectile> ProjectileClass;
+	MovementHandler* _pMovementHandler;
 };

@@ -7,6 +7,7 @@
 #include "WeaponComponent.h"
 #include "ActionComponent.h"
 #include "StateComponent.h"
+#include "AttributeComponent.h"
 #include "Projectile.h"
 #include "MyCharacter.h"
 
@@ -21,26 +22,30 @@ AMyCharacter::AMyCharacter()
 	//Create Camera Spring Arm Component
 	_cameraSpringArmComponent = CreateDefaultSubobject<UCameraSpringArmComponent>(TEXT("CameraSpringArmComponent"));
 	check(_cameraSpringArmComponent != nullptr);
-	_cameraSpringArmComponent->SetupAttachment(GetCapsuleComponent());
+	//_cameraSpringArmComponent->SetupAttachment(GetCapsuleComponent());
 
 	// Create a first person camera component.
 	_cameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	check(_cameraComponent != nullptr);
 	_cameraComponent->SetupAttachment(_cameraSpringArmComponent, USpringArmComponent::SocketName);
 
-	//create state component
+	//Create state component
 	_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("stateComponent"));
 	check(_stateComponent != nullptr);
 
-	// Create action component
+	//Create action component
 	_actionComponent = CreateDefaultSubobject<UActionComponent>(TEXT("ActionComponent"));
 	check(_actionComponent != nullptr);
 
-	// Create action component
+	//Create weapon component
 	_weaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
-	check(_actionComponent != nullptr);
+	check(_weaponComponent != nullptr);
 
-	// Enable the pawn to control camera rotation.
+	//Create Attribute component
+	_attributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
+	check(_attributeComponent != nullptr);
+
+	//Enable the pawn to control camera rotation.
 	bUseControllerRotationYaw = false;
 
 }
@@ -73,7 +78,7 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	_pMovementHandler->HandleMovement(DeltaTime);
+	//_pMovementHandler->HandleMovement(DeltaTime);
 
 }
 
@@ -83,8 +88,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	//movement
-	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", _actionComponent, &UActionComponent::AddMovementInputX);
+	PlayerInputComponent->BindAxis("MoveRight", _actionComponent, &UActionComponent::AddMovementInputY);
+	//PlayerInputComponent->bindax
 
 	//jump
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::StartJump);
@@ -107,7 +113,7 @@ void AMyCharacter::MoveForward(float Value)
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, GetVelocity().ToString());
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(camreaRotation.Yaw));
 
-	_actionComponent->Move();
+	//_actionComponent->Move();
 }
 
 void AMyCharacter::MoveRight(float Value)
@@ -117,7 +123,7 @@ void AMyCharacter::MoveRight(float Value)
 
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(camreaRotation.Yaw));
 
-	_actionComponent->Move();
+	//_actionComponent->Move();
 }
 
 
@@ -220,5 +226,20 @@ void AMyCharacter::LaunchProjectile()
 	{
 		//_actionComponent->();
 	}
+}
+
+UCameraSpringArmComponent* AMyCharacter::GetSpringArmComponent()
+{
+	return _cameraSpringArmComponent;
+}
+
+UCameraComponent* AMyCharacter::GetCameraComponent()
+{
+	return _cameraComponent;
+}
+
+UAttributeComponent* AMyCharacter::GetAttributeComponent()
+{
+	return _attributeComponent;
 }
 

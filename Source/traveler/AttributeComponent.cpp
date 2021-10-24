@@ -11,6 +11,7 @@ UAttributeComponent::UAttributeComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	_velocity = 100;
 }
 
 
@@ -30,5 +31,10 @@ void UAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+float UAttributeComponent::GetVelocity()
+{
+	return _velocity;
 }
 
