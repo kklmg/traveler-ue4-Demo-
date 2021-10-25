@@ -22,7 +22,7 @@ AMyCharacter::AMyCharacter()
 	//Create Camera Spring Arm Component
 	_cameraSpringArmComponent = CreateDefaultSubobject<UCameraSpringArmComponent>(TEXT("CameraSpringArmComponent"));
 	check(_cameraSpringArmComponent != nullptr);
-	//_cameraSpringArmComponent->SetupAttachment(GetCapsuleComponent());
+	_cameraSpringArmComponent->SetupAttachment(GetCapsuleComponent());
 
 	// Create a first person camera component.
 	_cameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));

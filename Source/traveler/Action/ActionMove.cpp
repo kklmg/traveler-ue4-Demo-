@@ -10,6 +10,6 @@ void UActionMove::VUpdate(unsigned long deltaMs)
 	if (_pPawn)
 	{
 		_pPawn->AddMovementInput(_direction, _scale * deltaMs);
-		UProcess::SetState(EProcessState::SUCCEEDED);
+		//UProcess::SetState(EProcessState::SUCCEEDED);
 	}
 }

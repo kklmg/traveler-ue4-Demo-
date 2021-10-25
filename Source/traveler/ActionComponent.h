@@ -37,8 +37,13 @@ public:
 	void AddMovementInputX(float value);
 	void AddMovementInputY(float value);
 
+	void StartAction(UAction* action);
+private:
+	void UpdateActions(float deltaTime);
+
 private:
 	TArray<UAction*> _actions;
+	TMap<FName, UAction*> _MapActionsInProgress;
 
 	UCharacterStateBase *_pCharacterState;
 

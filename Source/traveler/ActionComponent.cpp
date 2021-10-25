@@ -58,28 +58,7 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		pCharacter->AddMovementInput(moveDirection, pAttributeComponent->GetVelocity()*DeltaTime);
 	}
 
-	
-
-
-	//for (auto action : _actions) 
-	//{
- //       // process is uninitialized, so initialize it
- //       if (action->GetState() == EProcessState::UNINITIALIZED)
- //           action->VInit();
-
- //       // give the process an update tick if it's running
- //       if (action->GetState() == EProcessState::RUNNING)
- //           action->VUpdate(DeltaTime);
-
- //       // check to see if the process is dead
- //       if (action->IsDead())
- //       {
- //           // remove the process
- //           _actions.Remove(action);
- //       }
-	//
-	//}
-	// ...
+	UpdateActions(DeltaTime);
 }
 
 void UActionComponent::SetState()
@@ -128,4 +107,25 @@ void UActionComponent::AddMovementInputX(float value)
 void UActionComponent::AddMovementInputY(float value) 
 {
 	_movementInput.Y = value;
+}
+
+void UActionComponent::StartAction(UAction* action)
+{
+	if (action == nullptr || action->CanStart() == false) return;
+
+	action->Start();
+	_MapActionsInProgress.Add(action->GetActionName(),action);
+}
+
+void UActionComponent::UpdateActions(float deltaTime)
+{
+	for (auto pair : _MapActionsInProgress)
+	{
+		pair.Value->VUpdate(deltaTime);
+
+		if (pair.Value->GetState() == EActionState::AS_FINISHED) 
+		{
+			_MapActionsInProgress.FindAndRemoveChecked(pair.Key);
+		}
+	}
 }
