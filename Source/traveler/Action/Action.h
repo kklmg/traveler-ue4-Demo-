@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "../Process.h"
+#include"../Private/Action/ActionData.h"
 #include "Action.generated.h"
 
 UENUM(BlueprintType)
@@ -20,15 +21,18 @@ enum class EActionState : uint8
 	AS_FINISHED UMETA(DisplayName = "FINISHED"),
 };
 
+
+class UActionComponent;
+
 /**
  *
  */
-UCLASS()
+UCLASS(Blueprintable)
 class TRAVELER_API UAction : public UObject
 {
 	GENERATED_BODY()
 public:
-	void Start();
+	void Start(UActionComponent* actionComponent);
 
 	void Pause();
 	void Stop();
@@ -39,7 +43,7 @@ public:
 
 public:
 	virtual void VInitialize();
-	virtual void VUpdate(unsigned long deltaMs);
+	virtual void VUpdate(float deltaTime,AActor* actor, UActionData *data);
 
 public:
 	FName GetActionName();

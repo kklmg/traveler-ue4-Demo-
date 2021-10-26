@@ -7,33 +7,38 @@
 #include "Action/Action.h"
 #include "CharacterStateBase.generated.h"
 
+class UActionComponent;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class TRAVELER_API UCharacterStateBase : public UState
 {
 	GENERATED_BODY()
 public:
-	virtual void Move();
-	virtual void Sprint();
-	virtual void Jump();
-	virtual void Target();
-	virtual void Dash();
+	void Move(UActionComponent* actionComponent);
+	void Sprint(UActionComponent* actionComponent);
+	void Jump(UActionComponent* actionComponent);
+	void Target(UActionComponent* actionComponent);
+	void Dash(UActionComponent* actionComponent);
+
+public:
+	void virtual Enter() override;
+	void virtual Leave() override;
 
 private:
 	UPROPERTY(EditAnywhere)
-	UAction* _actionMove;
+	TSubclassOf<class UAction> _actionMove;
 
 	UPROPERTY(EditAnywhere)
-	UAction* _actionSprint;
+	TSubclassOf<class UAction> _actionSprint;
 
 	UPROPERTY(EditAnywhere)
-	UAction* _actionJump;
+	TSubclassOf<class UAction> _actionJump;
 
 	UPROPERTY(EditAnywhere)
-	UAction* _actionTarget;
+	TSubclassOf<class UAction> _actionTarget;
 
 	UPROPERTY(EditAnywhere)
-	UAction* _actionDash;
+	TSubclassOf<class UAction> _actionDash;
 };

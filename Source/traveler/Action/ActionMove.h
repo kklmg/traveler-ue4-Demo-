@@ -16,12 +16,6 @@ class TRAVELER_API UActionMove : public UAction
 
 public:
 	UActionMove();
-	UActionMove(APawn* pawn, FVector direction,float scale);
 	
-	virtual void VUpdate(unsigned long deltaMs) override;
-
-private:
-	APawn* _pPawn;
-	FVector _direction;
-	float _scale;
+	virtual void VUpdate(float deltaTime, AActor* actor, UActionData* data) override;
 };

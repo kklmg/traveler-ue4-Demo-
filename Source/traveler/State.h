@@ -16,5 +16,5 @@ class TRAVELER_API UState : public UObject
 
 public:
 	void virtual Enter();
-	void virtual End();
+	void virtual Leave();
 };

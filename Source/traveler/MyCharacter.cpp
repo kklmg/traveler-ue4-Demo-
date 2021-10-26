@@ -48,6 +48,7 @@ AMyCharacter::AMyCharacter()
 	//Enable the pawn to control camera rotation.
 	bUseControllerRotationYaw = false;
 
+
 }
 
 // Called when the game starts or when spawned

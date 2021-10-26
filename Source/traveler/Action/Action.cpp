@@ -2,14 +2,19 @@
 
 
 #include"Action.h"
+#include"../ActionComponent.h"
 
 
-void UAction::Start() 
+
+void UAction::Start(UActionComponent* actionComponent)
 {
 	if (_state == EActionState::AS_UNINITIALIZED)
 	{
 		VInitialize();
 	}
+
+	actionComponent->AddToLoop(this);
+	_state = EActionState::AS_RUNNING;
 }
 
 void UAction::Pause()
@@ -37,7 +42,8 @@ void UAction::VInitialize()
 {
 
 }
-void UAction::VUpdate(unsigned long deltaMs)
+
+void UAction::VUpdate(float deltaTime,AActor* actor, UActionData* data)
 {
 
 }
@@ -49,5 +55,5 @@ EActionState UAction::GetState() const
 
 void UAction::SetState(EActionState state)
 {
-
+	_state = state;
 }

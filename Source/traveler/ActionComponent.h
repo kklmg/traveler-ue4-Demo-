@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Action/Action.h"
 #include "Components/ActorComponent.h"
 #include "ActionComponent.generated.h"
 
+class UAction;
+class UActionData;
 class UCharacterStateBase;
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UActionComponent : public UActorComponent
@@ -26,9 +28,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetState();
+	void SetCharacterState();
 
-	void Move(FVector direction,float scale = 1.0f);
+	void Move();
 	void Sprint();
 	void Jump();
 	void Target();
@@ -37,15 +39,22 @@ public:
 	void AddMovementInputX(float value);
 	void AddMovementInputY(float value);
 
-	void StartAction(UAction* action);
+	void AddToLoop(UAction* action);
 private:
-	void UpdateActions(float deltaTime);
+	void _LoopActions(float deltaTime);
+
+	FVector _CalculateMovingDirection();
 
 private:
 	TArray<UAction*> _actions;
 	TMap<FName, UAction*> _MapActionsInProgress;
 
-	UCharacterStateBase *_pCharacterState;
+	UActionData* _actionData;
 
 	FVector2D _movementInput;
+
+	UPROPERTY(EditAnyWhere, Category = State)
+	TSubclassOf<UCharacterStateBase> DefaultCharacterState;
+
+	UCharacterStateBase* _pCharacterState;
 };

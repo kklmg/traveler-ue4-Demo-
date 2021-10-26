@@ -2,39 +2,50 @@
 
 
 #include "CharacterStateBase.h"
+#include "ActionComponent.h"
 
-void UCharacterStateBase::Move()
+void UCharacterStateBase::Move(UActionComponent* actionComponent)
 {
 	if (_actionMove != nullptr) 
 	{
-		_actionMove->Start();
+		_actionMove.GetDefaultObject()->Start(actionComponent);
 	}
 }
-void UCharacterStateBase::Sprint() 
+void UCharacterStateBase::Sprint(UActionComponent* actionComponent)
 {
 	if (_actionSprint != nullptr)
 	{
-		_actionSprint->Start();
+		_actionSprint.GetDefaultObject()->Start(actionComponent);
 	}
 }
-void UCharacterStateBase::Jump()
+void UCharacterStateBase::Jump(UActionComponent* actionComponent)
 {
 	if (_actionJump != nullptr)
 	{
-		_actionJump->Start();
+		_actionJump.GetDefaultObject()->Start(actionComponent);
 	}
 }
-void UCharacterStateBase::Target()
+void UCharacterStateBase::Target(UActionComponent* actionComponent)
 {
 	if (_actionTarget != nullptr)
 	{
-		_actionTarget->Start();
+		_actionTarget.GetDefaultObject()->Start(actionComponent);
 	}
 }
-void UCharacterStateBase::Dash() 
+void UCharacterStateBase::Dash(UActionComponent* actionComponent)
 {
 	if (_actionDash != nullptr)
 	{
-		_actionDash->Start();
+		_actionDash.GetDefaultObject()->Start(actionComponent);
 	}
+}
+
+
+void UCharacterStateBase::Enter() 
+{
+
+}
+void UCharacterStateBase::Leave()
+{
+
 }

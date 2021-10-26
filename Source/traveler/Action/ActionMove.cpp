@@ -2,14 +2,24 @@
 
 
 #include "ActionMove.h"
-UActionMove::UActionMove() {}
-UActionMove::UActionMove(APawn* pPawn, FVector direction, float scale) : _pPawn(pPawn), _direction(direction), _scale(scale) {}
+#include"../MyCharacter.h"
+#include"../AttributeComponent.h"
 
-void UActionMove::VUpdate(unsigned long deltaMs)
+
+UActionMove::UActionMove() {}
+
+void UActionMove::VUpdate(float deltaTime, AActor* actor, UActionData* actionData)
 {
-	if (_pPawn)
-	{
-		_pPawn->AddMovementInput(_direction, _scale * deltaMs);
-		//UProcess::SetState(EProcessState::SUCCEEDED);
-	}
+	//Get My Character
+	AMyCharacter* pCharacter = Cast<AMyCharacter>(actor);
+	check(pCharacter != nullptr);
+
+	//Get Attribute
+	UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
+	check(pAttributeComponent != nullptr);
+
+	pCharacter->SetActorRotation(actionData->Direction.Rotation());
+	pCharacter->AddMovementInput(actionData->Direction, pAttributeComponent->GetVelocity() * deltaTime);
+
+	SetState(EActionState::AS_FINISHED);
 }

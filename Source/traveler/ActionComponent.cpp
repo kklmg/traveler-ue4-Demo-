@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+
+#include "Action/Action.h"
+#include "Private/Action/ActionData.h"
 #include "CharacterStateBase.h"
 #include "MyCharacter.h"
 #include "Camera/CameraComponent.h"
@@ -15,6 +18,7 @@ UActionComponent::UActionComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	_actionData = NewObject<UActionData>();
 }
 
 
@@ -24,6 +28,10 @@ void UActionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	if (DefaultCharacterState != nullptr) 
+	{
+		_pCharacterState = DefaultCharacterState.GetDefaultObject();
+	}
 	
 }
 
@@ -35,68 +43,52 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 	if (_movementInput.IsZero() == false) 
 	{
-		//Get My Character
-		AMyCharacter* pCharacter = Cast<AMyCharacter>(GetOwner());
-		check(pCharacter != nullptr);
+		_actionData->Direction = _CalculateMovingDirection();
+		this->Move();
 
-		UCameraComponent* pCamera = pCharacter->GetCameraComponent();
-		check(pCamera != nullptr);
-
-		UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
-		check(pAttributeComponent != nullptr);
-
-		FVector inputDirection(_movementInput.X, _movementInput.Y, 0);
-
-		FRotator cameraRotator = pCamera->GetComponentRotation();
-		FMatrix cameraRotationMatrix = FRotationMatrix(cameraRotator);
-
-		FVector moveDirection = cameraRotationMatrix.TransformVector(inputDirection);
-		moveDirection.Z = 0;
-		moveDirection.Normalize();
-
-		pCharacter->SetActorRotation(moveDirection.Rotation());
-		pCharacter->AddMovementInput(moveDirection, pAttributeComponent->GetVelocity()*DeltaTime);
+		//pCharacter->SetActorRotation(moveDirection.Rotation());
+		//pCharacter->AddMovementInput(moveDirection, pAttributeComponent->GetVelocity()*DeltaTime);
 	}
 
-	UpdateActions(DeltaTime);
+	_LoopActions(DeltaTime);
 }
 
-void UActionComponent::SetState()
+void UActionComponent::SetCharacterState()
 {
 }
-void UActionComponent::Move(FVector direction, float scale)
+void UActionComponent::Move()
 {
 	if (_pCharacterState != nullptr) 
 	{
-		_pCharacterState->Move();
+		_pCharacterState->Move(this);
 	}
 }
 void UActionComponent::Sprint() 
 {
 	if (_pCharacterState != nullptr)
 	{
-		_pCharacterState->Sprint();
+		_pCharacterState->Sprint(this);
 	}
 }
 void UActionComponent::Jump() 
 {
 	if (_pCharacterState != nullptr)
 	{
-		_pCharacterState->Jump();
+		_pCharacterState->Jump(this);
 	}
 }
 void UActionComponent::Target() 
 {
 	if (_pCharacterState != nullptr)
 	{
-		_pCharacterState->Target();
+		_pCharacterState->Target(this);
 	}
 }
 void UActionComponent::Dash() 
 {
 	if (_pCharacterState != nullptr)
 	{
-		_pCharacterState->Dash();
+		_pCharacterState->Dash(this);
 	}
 }
 
@@ -109,23 +101,49 @@ void UActionComponent::AddMovementInputY(float value)
 	_movementInput.Y = value;
 }
 
-void UActionComponent::StartAction(UAction* action)
+void UActionComponent::AddToLoop(UAction* action)
 {
-	if (action == nullptr || action->CanStart() == false) return;
-
-	action->Start();
 	_MapActionsInProgress.Add(action->GetActionName(),action);
 }
 
-void UActionComponent::UpdateActions(float deltaTime)
+void UActionComponent::_LoopActions(float deltaTime)
 {
 	for (auto pair : _MapActionsInProgress)
 	{
-		pair.Value->VUpdate(deltaTime);
+		pair.Value->VUpdate(deltaTime, GetOwner(), _actionData);
 
-		if (pair.Value->GetState() == EActionState::AS_FINISHED) 
+		if (pair.Value->GetState() == EActionState::AS_FINISHED)
 		{
 			_MapActionsInProgress.FindAndRemoveChecked(pair.Key);
 		}
 	}
+}
+
+FVector UActionComponent::_CalculateMovingDirection()
+{
+	//Get My Character
+	AMyCharacter* pCharacter = Cast<AMyCharacter>(GetOwner());
+	check(pCharacter != nullptr);
+
+	//Get Camera
+	UCameraComponent* pCamera = pCharacter->GetCameraComponent();
+	check(pCamera != nullptr);
+
+	//Get Attribute
+	UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
+	check(pAttributeComponent != nullptr);
+
+	//Get Input Direction
+	FVector inputDirection(_movementInput.X, _movementInput.Y, 0);
+
+	//Get Camera Rotation Matrix
+	FRotator cameraRotator = pCamera->GetComponentRotation();
+	FMatrix cameraRotationMatrix = FRotationMatrix(cameraRotator);
+
+	//Calculate moving direction
+	FVector moveDirection = cameraRotationMatrix.TransformVector(inputDirection);
+	moveDirection.Z = 0;
+	moveDirection.Normalize();
+
+	return moveDirection;
 }

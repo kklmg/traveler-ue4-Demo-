@@ -4,4 +4,4 @@
 #include "State.h"
 
 void UState::Enter() {}
-void UState::End() {}
+void UState::Leave() {}
