@@ -117,6 +117,9 @@ void UActionComponent::_LoopActions(float deltaTime)
 			_MapActionsInProgress.FindAndRemoveChecked(pair.Key);
 		}
 	}
+
+	//int count = _MapActionsInProgress.Num();
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::FromInt(count));
 }
 
 FVector UActionComponent::_CalculateMovingDirection()

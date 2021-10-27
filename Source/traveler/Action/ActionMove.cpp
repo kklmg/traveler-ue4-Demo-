@@ -18,7 +18,6 @@ void UActionMove::VUpdate(float deltaTime, AActor* actor, UActionData* actionDat
 	UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
 	check(pAttributeComponent != nullptr);
 
-	pCharacter->SetActorRotation(actionData->Direction.Rotation());
 	pCharacter->AddMovementInput(actionData->Direction, pAttributeComponent->GetVelocity() * deltaTime);
 
 	SetState(EActionState::AS_FINISHED);
