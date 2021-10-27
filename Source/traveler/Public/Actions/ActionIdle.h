@@ -13,8 +13,15 @@ UCLASS()
 class TRAVELER_API UActionIdle : public UAction
 {
 	GENERATED_BODY()
-	
-	virtual void VInitialize() override;
+public:
+	virtual void VBegin(AActor* actor, UActionData* actionData) override;
 
 	virtual void VUpdate(float deltaTime, AActor* actor, UActionData* data) override;
+
+private:
+	UPROPERTY(EditAnyWhere, Category = animation)
+	UAnimMontage* _AniMontage;
+
+	UPROPERTY(EditAnyWhere, Category = animation)
+	UAnimSequence* _AniSequence;
 };

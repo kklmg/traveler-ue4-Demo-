@@ -5,12 +5,18 @@
 #include "Components/ActionComponent.h"
 
 
+UAction::UAction() 
+{
+	_state = EActionState::AS_UNINITIALIZED;
+}
 
 void UAction::Start(UActionComponent* actionComponent)
 {
+	check(actionComponent != nullptr)
+
 	if (_state == EActionState::AS_UNINITIALIZED)
 	{
-		VInitialize();
+		VBegin(actionComponent->GetOwner(), actionComponent->GetActionData());
 	}
 
 	actionComponent->AddToLoop(this);
@@ -37,16 +43,6 @@ FName UAction::GetActionName()
 	return _actionName;
 }
 
-
-void UAction::VInitialize()
-{
-
-}
-
-void UAction::VUpdate(float deltaTime,AActor* actor, UActionData* data)
-{
-
-}
 
 EActionState UAction::GetState() const
 {

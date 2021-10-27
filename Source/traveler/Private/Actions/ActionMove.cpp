@@ -7,6 +7,9 @@
 
 
 UActionMove::UActionMove() {}
+void UActionMove::VBegin(AActor* actor, UActionData* actionData)
+{
+}
 
 void UActionMove::VUpdate(float deltaTime, AActor* actor, UActionData* actionData)
 {

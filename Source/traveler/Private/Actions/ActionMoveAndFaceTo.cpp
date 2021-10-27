@@ -5,6 +5,9 @@
 #include "Character/MyCharacter.h"
 #include "Components/AttributeComponent.h"
 
+void UActionMoveAndFaceTo::VBegin(AActor* actor, UActionData* actionData)
+{
+}
 
 void UActionMoveAndFaceTo::VUpdate(float deltaTime, AActor* actor, UActionData* actionData)
 {

@@ -4,6 +4,14 @@
 #include "State/CharacterStateBase.h"
 #include "Components/ActionComponent.h"
 
+
+void UCharacterStateBase::Idle(UActionComponent* actionComponent)
+{
+	if (_actionIdle != nullptr)
+	{
+		_actionIdle.GetDefaultObject()->Start(actionComponent);
+	}
+}
 void UCharacterStateBase::Move(UActionComponent* actionComponent)
 {
 	if (_actionMove != nullptr) 

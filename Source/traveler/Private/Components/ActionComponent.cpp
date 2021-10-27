@@ -31,6 +31,7 @@ void UActionComponent::BeginPlay()
 	if (DefaultCharacterState != nullptr) 
 	{
 		_pCharacterState = DefaultCharacterState.GetDefaultObject();
+		this->TriggerIdle();
 	}
 	
 }
@@ -44,10 +45,7 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	if (_movementInput.IsZero() == false) 
 	{
 		_actionData->Direction = _CalculateMovingDirection();
-		this->Move();
-
-		//pCharacter->SetActorRotation(moveDirection.Rotation());
-		//pCharacter->AddMovementInput(moveDirection, pAttributeComponent->GetVelocity()*DeltaTime);
+		this->TriggerMove();
 	}
 
 	_LoopActions(DeltaTime);
@@ -56,35 +54,42 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 void UActionComponent::SetCharacterState()
 {
 }
-void UActionComponent::Move()
+void UActionComponent::TriggerIdle()
+{
+	if (_pCharacterState != nullptr)
+	{
+		_pCharacterState->Idle(this);
+	}
+}
+void UActionComponent::TriggerMove()
 {
 	if (_pCharacterState != nullptr) 
 	{
 		_pCharacterState->Move(this);
 	}
 }
-void UActionComponent::Sprint() 
+void UActionComponent::TriggerSprint()
 {
 	if (_pCharacterState != nullptr)
 	{
 		_pCharacterState->Sprint(this);
 	}
 }
-void UActionComponent::Jump() 
+void UActionComponent::TriggerJump()
 {
 	if (_pCharacterState != nullptr)
 	{
 		_pCharacterState->Jump(this);
 	}
 }
-void UActionComponent::Target() 
+void UActionComponent::TriggerTarget()
 {
 	if (_pCharacterState != nullptr)
 	{
 		_pCharacterState->Target(this);
 	}
 }
-void UActionComponent::Dash() 
+void UActionComponent::TriggerDash() 
 {
 	if (_pCharacterState != nullptr)
 	{
@@ -149,4 +154,9 @@ FVector UActionComponent::_CalculateMovingDirection()
 	moveDirection.Normalize();
 
 	return moveDirection;
+}
+
+UActionData* UActionComponent::GetActionData()
+{
+	return _actionData;
 }

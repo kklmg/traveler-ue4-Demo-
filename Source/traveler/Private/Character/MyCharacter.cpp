@@ -131,14 +131,14 @@ void AMyCharacter::MoveRight(float Value)
 
 void AMyCharacter::StartJump()
 {
-	_actionComponent->Jump();
+	_actionComponent->TriggerJump();
 
 	//bPressedJump = true;
 }
 
 void AMyCharacter::StopJump()
 {
-	_actionComponent->Jump();
+	_actionComponent->TriggerJump();
 
 	bPressedJump = false;
 }
@@ -164,7 +164,7 @@ void AMyCharacter::Aim()
 	}
 	if (_actionComponent) 
 	{
-		_actionComponent->Target();
+		_actionComponent->TriggerTarget();
 	}
 
 }
@@ -182,7 +182,7 @@ void AMyCharacter::CancelAim()
 	}
 	if (_actionComponent)
 	{
-		_actionComponent->Target();
+		_actionComponent->TriggerTarget();
 	}
 }
 

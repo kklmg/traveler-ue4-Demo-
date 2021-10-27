@@ -30,16 +30,21 @@ public:
 
 	void SetCharacterState();
 
-	void Move();
-	void Sprint();
-	void Jump();
-	void Target();
-	void Dash();
+	void TriggerIdle();
+	void TriggerMove();
+	void TriggerSprint();
+	void TriggerJump();
+	void TriggerTarget();
+	void TriggerDash();
 
 	void AddMovementInputX(float value);
 	void AddMovementInputY(float value);
 
 	void AddToLoop(UAction* action);
+
+public:
+	UActionData* GetActionData();
+
 private:
 	void _LoopActions(float deltaTime);
 

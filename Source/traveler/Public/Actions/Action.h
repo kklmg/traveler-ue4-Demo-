@@ -31,6 +31,8 @@ class TRAVELER_API UAction : public UObject
 {
 	GENERATED_BODY()
 public:
+	UAction();
+public:
 	void Start(UActionComponent* actionComponent);
 
 	void Pause();
@@ -41,8 +43,8 @@ public:
 	void SetState(EActionState state);
 
 public:
-	virtual void VInitialize();
-	virtual void VUpdate(float deltaTime,AActor* actor, UActionData *data);
+	virtual void VBegin(AActor* actor, UActionData* actionData) PURE_VIRTUAL(UAction::VBegin.;);
+	virtual void VUpdate(float deltaTime,AActor* actor, UActionData *data) PURE_VIRTUAL(UAction::VUpdate.;);
 
 public:
 	FName GetActionName();
