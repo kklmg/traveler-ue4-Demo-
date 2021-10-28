@@ -5,8 +5,25 @@
 #include "Character/MyCharacter.h"
 #include "Components/AttributeComponent.h"
 
+UActionMoveAndFaceTo::UActionMoveAndFaceTo() 
+{
+	_actionName = "MoveAndFaceTo";
+}
 void UActionMoveAndFaceTo::VBegin(AActor* actor, UActionData* actionData)
 {
+	//Get My Character
+	AMyCharacter* character = Cast<AMyCharacter>(actor);
+	check(character != nullptr);
+
+	//Get Attribute
+	UAttributeComponent* pAttributeComponent = character->GetAttributeComponent();
+	check(pAttributeComponent != nullptr);
+	if (_AniMontage != nullptr)
+	{
+		UE_LOG(LogTemp,Log,TEXT("playing walking animation"))
+		character->PlayAnimMontage(_AniMontage);
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("playing walking animation"));
+	}
 }
 
 void UActionMoveAndFaceTo::VUpdate(float deltaTime, AActor* actor, UActionData* actionData)

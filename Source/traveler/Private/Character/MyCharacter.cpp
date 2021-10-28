@@ -57,9 +57,9 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Character BeginPlay"));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Character BeginPlay"));
 
-	_pMovementHandler = new MovementHandler(this);
+	//_pMovementHandler = new MovementHandler(this);
 }
 
 void AMyCharacter::BeginDestroy()

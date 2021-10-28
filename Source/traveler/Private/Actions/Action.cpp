@@ -8,6 +8,12 @@
 UAction::UAction() 
 {
 	_state = EActionState::AS_UNINITIALIZED;
+	_actionName = "UnKnown";
+}
+
+void UAction::VInitialize()
+{
+	_state = EActionState::AS_UNINITIALIZED;
 }
 
 void UAction::Start(UActionComponent* actionComponent)

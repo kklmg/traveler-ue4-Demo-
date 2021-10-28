@@ -18,7 +18,8 @@ UActionComponent::UActionComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_actionData = NewObject<UActionData>();
+	
+	
 }
 
 
@@ -27,10 +28,13 @@ void UActionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	_actionData = NewObject<UActionData>(this);
+	
 	// ...
-	if (DefaultCharacterState != nullptr) 
+	if (DefaultCharacterStateClass != nullptr)
 	{
-		_pCharacterState = DefaultCharacterState.GetDefaultObject();
+		_pCharacterState = NewObject<UCharacterStateBase>(this, DefaultCharacterStateClass);
+		_pCharacterState->Initialize();
 		this->TriggerIdle();
 	}
 	
@@ -113,15 +117,23 @@ void UActionComponent::AddToLoop(UAction* action)
 
 void UActionComponent::_LoopActions(float deltaTime)
 {
+	TArray<FName> needToDelete;
 	for (auto pair : _MapActionsInProgress)
 	{
 		pair.Value->VUpdate(deltaTime, GetOwner(), _actionData);
 
 		if (pair.Value->GetState() == EActionState::AS_FINISHED)
 		{
-			_MapActionsInProgress.FindAndRemoveChecked(pair.Key);
+			needToDelete.Add(pair.Key);
 		}
 	}
+
+	for (auto key : needToDelete) 
+	{
+		_MapActionsInProgress.Remove(key);
+	}
+
+	//_MapActionsInProgress.Compact();
 
 	//int count = _MapActionsInProgress.Num();
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::FromInt(count));

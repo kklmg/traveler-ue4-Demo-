@@ -15,7 +15,10 @@ UCLASS(Blueprintable)
 class TRAVELER_API UCharacterStateBase : public UState
 {
 	GENERATED_BODY()
+
 public:
+	void Initialize();
+
 	void Idle(UActionComponent* actionComponent);
 	void Move(UActionComponent* actionComponent);
 	void Sprint(UActionComponent* actionComponent);
@@ -29,20 +32,28 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, Category = Action)
-	TSubclassOf<class UAction> _actionIdle;
+	TSubclassOf<class UAction> ActionIdleClass;
 
 	UPROPERTY(EditAnywhere, Category = Action)
-	TSubclassOf<class UAction> _actionMove;
+	TSubclassOf<class UAction> ActionMoveClass;
 
 	UPROPERTY(EditAnywhere, Category = Action)
-	TSubclassOf<class UAction> _actionSprint;
+	TSubclassOf<class UAction> ActionSprintClass;
 
 	UPROPERTY(EditAnywhere, Category = Action)
-	TSubclassOf<class UAction> _actionJump;
+	TSubclassOf<class UAction> ActionJumpClass;
 
 	UPROPERTY(EditAnywhere, Category = Action)
-	TSubclassOf<class UAction> _actionTarget;
+	TSubclassOf<class UAction> ActionTargetClass;
 
 	UPROPERTY(EditAnywhere, Category = Action)
-	TSubclassOf<class UAction> _actionDash;
+	TSubclassOf<class UAction> ActionDashClass;
+
+private:
+	UAction* _actionIdle;
+	UAction* _actionMove;
+	UAction* _actionSprint;
+	UAction* _actionJump;
+	UAction* _actionTarget;
+	UAction* _actionDash;
 };

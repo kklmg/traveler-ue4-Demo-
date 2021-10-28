@@ -14,6 +14,9 @@ class TRAVELER_API UActionIdle : public UAction
 {
 	GENERATED_BODY()
 public:
+	UActionIdle();
+
+public:
 	virtual void VBegin(AActor* actor, UActionData* actionData) override;
 
 	virtual void VUpdate(float deltaTime, AActor* actor, UActionData* data) override;

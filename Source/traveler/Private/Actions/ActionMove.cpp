@@ -6,7 +6,11 @@
 #include "Components/AttributeComponent.h"
 
 
-UActionMove::UActionMove() {}
+UActionMove::UActionMove() 
+{
+	_actionName = "Move";
+}
+
 void UActionMove::VBegin(AActor* actor, UActionData* actionData)
 {
 }

@@ -5,6 +5,11 @@
 #include "Character/MyCharacter.h"
 #include "Components/AttributeComponent.h"
 
+UActionIdle::UActionIdle() 
+{
+	_actionName = "Idle";
+}
+
 
 void UActionIdle::VBegin(AActor* actor, UActionData* actionData)
 {

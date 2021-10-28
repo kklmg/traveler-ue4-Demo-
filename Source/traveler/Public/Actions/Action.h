@@ -43,6 +43,8 @@ public:
 	void SetState(EActionState state);
 
 public:
+	virtual void VInitialize();
+public:
 	virtual void VBegin(AActor* actor, UActionData* actionData) PURE_VIRTUAL(UAction::VBegin.;);
 	virtual void VUpdate(float deltaTime,AActor* actor, UActionData *data) PURE_VIRTUAL(UAction::VUpdate.;);
 
@@ -50,10 +52,13 @@ public:
 	FName GetActionName();
 
 
-private:
+protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName _actionName;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	UAction* _pNextAction;
+
+	UPROPERTY(VisibleAnywhere, Category = "Action")
 	EActionState _state;
 };

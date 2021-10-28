@@ -59,7 +59,7 @@ private:
 	FVector2D _movementInput;
 
 	UPROPERTY(EditAnyWhere, Category = State)
-	TSubclassOf<UCharacterStateBase> DefaultCharacterState;
+	TSubclassOf<UCharacterStateBase> DefaultCharacterStateClass;
 
 	UCharacterStateBase* _pCharacterState;
 };
