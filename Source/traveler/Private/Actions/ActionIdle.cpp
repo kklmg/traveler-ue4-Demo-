@@ -20,9 +20,16 @@ void UActionIdle::VBegin(AActor* actor, UActionData* actionData)
 	//Get Attribute
 	UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
 	check(pAttributeComponent != nullptr);
+
+	UAnimInstance* AnimInstance = pCharacter->GetMesh()->GetAnimInstance();
+
+	UE_LOG(LogTemp,Log,TEXT("ani instance %s"),AnimInstance==nullptr?TEXT("no instance"):TEXT("exist instance"));
+
 	if (_AniMontage != nullptr)
 	{
-		pCharacter->PlayAnimMontage(_AniMontage);
+		//pCharacter->PlayAnimMontage(_AniMontage);
+		
+
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Trigger Character Idle"));
 	}
 }
