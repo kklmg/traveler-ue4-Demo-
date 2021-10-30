@@ -5,5 +5,12 @@
 
 void ABow::Fire() 
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, "Trigger Fire");
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "Trigger Fire");
+
+
+}
+
+void ABow::OnFireEnd() 
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "Fire Finished");
 }

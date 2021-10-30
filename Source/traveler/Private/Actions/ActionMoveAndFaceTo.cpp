@@ -22,7 +22,7 @@ void UActionMoveAndFaceTo::VBegin(AActor* actor, UActionData* actionData)
 	{
 		UE_LOG(LogTemp,Log,TEXT("playing walking animation"))
 		character->PlayAnimMontage(_AniMontage);
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("playing walking animation"));
+		GEngine->AddOnScreenDebugMessage(-1,1.0f, FColor::Red, TEXT("playing walking animation"));
 	}
 }
 

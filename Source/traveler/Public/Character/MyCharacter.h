@@ -72,12 +72,12 @@ public:
 	void StopJump();
 
 	// Function that handles firing projectiles.
-	UFUNCTION()
-	void Aim();
+	//UFUNCTION()
+	//void Aim();
 
 	// Function that handles firing projectiles.
-	UFUNCTION()
-	void CancelAim();
+	//UFUNCTION()
+	//void CancelAim();
 
 private:
 	// Gun muzzle offset from the camera location.

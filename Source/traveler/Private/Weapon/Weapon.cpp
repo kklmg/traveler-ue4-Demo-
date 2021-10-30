@@ -19,13 +19,18 @@ void AWeapon::BeginPlay()
 	
 }
 
-//void AWeapon::AttachTo(USceneComponent* sceneComponent, FName socketName)
-//{
-//	_skeletalMeshComponent->SetupAttachment(sceneComponent,socketName);
-//}
+void AWeapon::Initialize(ACharacter* owner)
+{
+	_owner = owner;
+}
 
 // Called every frame
 void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AWeapon::OnFireEnd() 
+{
+
 }

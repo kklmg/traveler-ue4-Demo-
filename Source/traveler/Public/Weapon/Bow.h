@@ -17,6 +17,8 @@ class TRAVELER_API ABow : public AWeapon
 public:
 	virtual void Fire() override;
 
+	virtual void OnFireEnd() override;
+
 private:
 	float _strength;
 	float _power;

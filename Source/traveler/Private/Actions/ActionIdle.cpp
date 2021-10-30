@@ -27,9 +27,7 @@ void UActionIdle::VBegin(AActor* actor, UActionData* actionData)
 
 	if (_AniMontage != nullptr)
 	{
-		//pCharacter->PlayAnimMontage(_AniMontage);
-		
-
+		pCharacter->PlayAnimMontage(_AniMontage);
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Trigger Character Idle"));
 	}
 }

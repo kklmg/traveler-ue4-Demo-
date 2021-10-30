@@ -23,19 +23,14 @@ void UWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 
-	if (DefaultWeapon) 
+	if (DefaultWeaponClass)
 	{
-		FActorSpawnParameters params;
-		AWeapon* bow = GetWorld()->SpawnActor<AWeapon>(DefaultWeapon);
+		//FActorSpawnParameters params;
+		AWeapon* bow = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
+		bow->Initialize(Cast<ACharacter>(GetOwner()));
 		SetWeapon(bow);
-
-		
 	}
 	// ...
-
-	
-	
-
 }
 
 
@@ -67,6 +62,25 @@ void UWeaponComponent::SetArmWeapon(bool isArmed)
 	if (_aWeapon)
 	{
 		_aWeapon->SetActorHiddenInGame(isArmed);
+	}
+}
+
+
+void UWeaponComponent::OnAttackStart() 
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "mouse dowm");
+	if (_aWeapon)
+	{
+		_aWeapon->Fire();
+	}
+}
+
+void UWeaponComponent::OnAttackEnd()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "mouse up");
+	if (_aWeapon)
+	{
+		_aWeapon->OnFireEnd();
 	}
 }
 

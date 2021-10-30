@@ -20,16 +20,21 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	void Initialize(ACharacter* owner);
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	//void AttachTo(USceneComponent* sceneComponent, FString socketName);
 
 private:
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* _skeletalMeshComponent;
+
+protected:
+	ACharacter* _owner;
+
 public:
 	/**/
 	virtual void Fire() PURE_VIRTUAL(AWeapon::Fire.;);
 
+	virtual void OnFireEnd();
 };

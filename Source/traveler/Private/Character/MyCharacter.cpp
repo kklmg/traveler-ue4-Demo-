@@ -103,8 +103,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	InputComponent->BindAxis("CameraYaw", _cameraSpringArmComponent, &UCameraSpringArmComponent::Yaw);
 	InputComponent->BindAxis("ZoomInOut", _cameraSpringArmComponent, &UCameraSpringArmComponent::ZoomInOut);
 
-	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AMyCharacter::Aim);
-	PlayerInputComponent->BindAction("Aim", IE_Released, this, &AMyCharacter::CancelAim);
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, _weaponComponent, &UWeaponComponent::OnAttackStart);
+	PlayerInputComponent->BindAction("Attack", IE_Released, _weaponComponent, &UWeaponComponent::OnAttackEnd);
 }
 
 void AMyCharacter::MoveForward(float Value)
@@ -148,43 +148,43 @@ UStateComponent* AMyCharacter::GetStateComponent()
 	return _stateComponent;
 }
 
-void AMyCharacter::Aim()
-{
-	if (_stateComponent) 
-	{
-		_stateComponent->equipState = EEquipState::ES_bow;
+//void AMyCharacter::Aim()
+//{
+//	//if (_stateComponent) 
+//	//{
+//	//	_stateComponent->equipState = EEquipState::ES_bow;
+//
+//	//	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, " Aim");
+//	//}
+//
+//	//if (_cameraComponent) 
+//	//{
+//	//	//_cameraComponent->AddLocalOffset(FVector(10, 10, 10));
+//	//	//_cameraSpringArm->AddLocalOffset(FVector(10, 10, 10));
+//	//}
+//	//if (_actionComponent) 
+//	//{
+//	//	_actionComponent->TriggerTarget();
+//	//}
+//
+//}
 
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, " Aim");
-	}
 
-	if (_cameraComponent) 
-	{
-		//_cameraComponent->AddLocalOffset(FVector(10, 10, 10));
-		//_cameraSpringArm->AddLocalOffset(FVector(10, 10, 10));
-	}
-	if (_actionComponent) 
-	{
-		_actionComponent->TriggerTarget();
-	}
-
-}
-
-
-void AMyCharacter::CancelAim()
-{
-	LaunchProjectile();
-
-	if (_stateComponent)
-	{
-		_stateComponent->equipState = EEquipState::ES_unEquiped;
-
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "Cancel Aim");
-	}
-	if (_actionComponent)
-	{
-		_actionComponent->TriggerTarget();
-	}
-}
+//void AMyCharacter::CancelAim()
+//{
+//	/*LaunchProjectile();
+//
+//	if (_stateComponent)
+//	{
+//		_stateComponent->equipState = EEquipState::ES_unEquiped;
+//
+//		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "Cancel Aim");
+//	}
+//	if (_actionComponent)
+//	{
+//		_actionComponent->TriggerTarget();
+//	}*/
+//}
 
 void AMyCharacter::LaunchProjectile() 
 {
