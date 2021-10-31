@@ -2,6 +2,7 @@
 
 #include "Character/MyCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "Components/PawnCameraComponent.h"
 #include "Components/CameraSpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Character/MovementHandler.h"
@@ -26,7 +27,7 @@ AMyCharacter::AMyCharacter()
 	_cameraSpringArmComponent->SetupAttachment(GetCapsuleComponent());
 
 	// Create a first person camera component.
-	_cameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	_cameraComponent = CreateDefaultSubobject<UPawnCameraComponent>(TEXT("FirstPersonCamera"));
 	check(_cameraComponent != nullptr);
 	_cameraComponent->SetupAttachment(_cameraSpringArmComponent, USpringArmComponent::SocketName);
 
@@ -235,7 +236,7 @@ UCameraSpringArmComponent* AMyCharacter::GetSpringArmComponent()
 	return _cameraSpringArmComponent;
 }
 
-UCameraComponent* AMyCharacter::GetCameraComponent()
+UPawnCameraComponent* AMyCharacter::GetCameraComponent()
 {
 	return _cameraComponent;
 }

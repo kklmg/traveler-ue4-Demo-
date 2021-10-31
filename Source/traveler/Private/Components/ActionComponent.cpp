@@ -6,7 +6,7 @@
 //#include "Actions/ActionData.h"
 #include "State/CharacterStateBase.h"
 #include "Character/MyCharacter.h"
-#include "Camera/CameraComponent.h"
+#include "Components/PawnCameraComponent.h"
 #include "Components/AttributeComponent.h"
 
 
@@ -133,7 +133,7 @@ void UActionComponent::_LoopActions(float deltaTime)
 		_MapActionsInProgress.Remove(key);
 	}
 
-	//_MapActionsInProgress.Compact();
+	_MapActionsInProgress.Compact();
 
 	//int count = _MapActionsInProgress.Num();
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::FromInt(count));

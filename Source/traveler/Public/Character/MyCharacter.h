@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
-class UCameraComponent;
+class UPawnCameraComponent;
 class UCameraSpringArmComponent;
 class UStateComponent;
 class MovementHandler;
@@ -47,7 +47,7 @@ public:
 	UCameraSpringArmComponent* GetSpringArmComponent();
 
 	UFUNCTION(BlueprintCallable)
-	UCameraComponent* GetCameraComponent();
+	UPawnCameraComponent* GetCameraComponent();
 
 	UFUNCTION(BlueprintCallable)
 	UAttributeComponent* GetAttributeComponent();
@@ -90,7 +90,7 @@ private:
 
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* _cameraComponent;
+	UPawnCameraComponent* _cameraComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraSpringArmComponent* _cameraSpringArmComponent;

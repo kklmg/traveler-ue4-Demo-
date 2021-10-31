@@ -15,5 +15,20 @@ class TRAVELER_API UPawnCameraComponent : public UCameraComponent
 	GENERATED_BODY()
 	
 public:
-	
+	// Sets default values for this component's properties
+	UPawnCameraComponent();
+
+public:
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+public:
+	void BeginDragCamera(FVector offset);
+	void CancelDrag();
+
+private:
+	float _dragSpeed;
+	float _factor;
+	FVector _draggedLocation;
+	FVector _originalLocation;
 };

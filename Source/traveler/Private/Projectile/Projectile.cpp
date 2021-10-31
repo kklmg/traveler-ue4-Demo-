@@ -79,6 +79,12 @@ void AProjectile::Tick(float DeltaTime)
 
 }
 
+void AProjectile::Initialize(float damage,float intialSpeed)
+{
+	_damage = damage;
+	ProjectileMovementComponent->InitialSpeed = intialSpeed;
+}
+
 // Function that initializes the projectile's velocity in the shoot direction.
 void AProjectile::FireInDirection(const FVector& ShootDirection)
 {
