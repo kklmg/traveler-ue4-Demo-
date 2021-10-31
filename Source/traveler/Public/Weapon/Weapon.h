@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+class AMyCharacter;
+
 UCLASS()
 class TRAVELER_API AWeapon : public AActor
 {
@@ -20,7 +22,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	void Initialize(ACharacter* owner);
+	void Initialize(AMyCharacter* owner);
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -30,7 +32,7 @@ private:
 	USkeletalMeshComponent* _skeletalMeshComponent;
 
 protected:
-	ACharacter* _owner;
+	AMyCharacter* _owner;
 
 public:
 	/**/

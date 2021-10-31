@@ -2,6 +2,7 @@
 
 
 #include "Weapon/Weapon.h"
+#include "Character/MyCharacter.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -19,7 +20,7 @@ void AWeapon::BeginPlay()
 	
 }
 
-void AWeapon::Initialize(ACharacter* owner)
+void AWeapon::Initialize(AMyCharacter* owner)
 {
 	_owner = owner;
 }

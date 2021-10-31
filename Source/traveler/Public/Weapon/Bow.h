@@ -6,6 +6,8 @@
 #include "Weapon.h"
 #include "Bow.generated.h"
 
+class AProjectile;
+
 /**
  * 
  */
@@ -19,7 +21,14 @@ public:
 
 	virtual void OnFireEnd() override;
 
+	void AddProjectile(AProjectile* projectile);
+
 private:
+	// Projectile class to spawn.
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<class AProjectile> ProjectileClass;
+
+	TArray<AProjectile*> _projectiles;
 	float _strength;
 	float _power;
 };

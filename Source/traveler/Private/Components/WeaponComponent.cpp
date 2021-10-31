@@ -27,7 +27,7 @@ void UWeaponComponent::BeginPlay()
 	{
 		//FActorSpawnParameters params;
 		AWeapon* bow = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
-		bow->Initialize(Cast<ACharacter>(GetOwner()));
+		bow->Initialize(Cast<AMyCharacter>(GetOwner()));
 		SetWeapon(bow);
 	}
 	// ...
