@@ -27,6 +27,7 @@ public:
 	void CancelDrag();
 
 private:
+	bool _isDragging;
 	float _dragSpeed;
 	float _factor;
 	FVector _draggedLocation;

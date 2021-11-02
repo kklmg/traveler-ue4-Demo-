@@ -22,7 +22,7 @@ void ABow::Fire()
 	_isDrawing = true;
 
 	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
-	cameraComponent->BeginDragCamera(FVector(20,20,20));
+	cameraComponent->BeginDragCamera(FVector(40,40,40));
 }
 
 void ABow::OnFireEnd() 

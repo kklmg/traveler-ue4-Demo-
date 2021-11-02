@@ -52,7 +52,7 @@ private:
 
 private:
 	TArray<UAction*> _actions;
-	TMap<FName, UAction*> _MapActionsInProgress;
+	TMap<FString, UAction*> _MapActionsInProgress;
 
 	UActionData* _actionData;
 

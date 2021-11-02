@@ -8,7 +8,7 @@
 
 UActionMove::UActionMove() 
 {
-	_actionName = "Move";
+	_actionName = TEXT("Move");
 }
 
 void UActionMove::VBegin(AActor* actor, UActionData* actionData)

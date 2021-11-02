@@ -8,7 +8,7 @@
 UAction::UAction() 
 {
 	_state = EActionState::AS_UNINITIALIZED;
-	_actionName = "UnKnown";
+	_actionName = TEXT("UnKnown");
 }
 
 void UAction::VInitialize()
@@ -44,7 +44,7 @@ bool UAction::CanStart()
 	return _state != EActionState::AS_RUNNING;
 }
 
-FName UAction::GetActionName()
+FString UAction::GetActionName()
 {
 	return _actionName;
 }

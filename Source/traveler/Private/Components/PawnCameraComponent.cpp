@@ -6,7 +6,9 @@
 // Sets default values for this component's properties
 UPawnCameraComponent::UPawnCameraComponent() 
 {
-	_dragSpeed = 0.2f;
+	PrimaryComponentTick.bCanEverTick = true;
+
+	_dragSpeed = 0.0f;
 }
 
 // Called every frame
@@ -16,17 +18,28 @@ void UPawnCameraComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 	_factor = FMath::Clamp(_factor + _dragSpeed * DeltaTime, 0.0f, 1.0f);
 
-	SetRelativeLocation(FMath::Lerp(_originalLocation, _draggedLocation, _factor));
+	FVector newLocation = FMath::Lerp(_originalLocation, _draggedLocation, _factor);
+
+	
+	SetRelativeLocation(newLocation);
+	if (_factor == 0.0f) 
+	{
+		_isDragging = false;
+	}
 }
 
 void UPawnCameraComponent::BeginDragCamera(FVector offset) 
 {
-	_originalLocation = GetRelativeLocation();
-	_draggedLocation = GetRelativeLocation() + offset;
-	_dragSpeed = 0.25f;
+	if (_isDragging == false)
+	{
+		_originalLocation = GetRelativeLocation();
+		_draggedLocation = GetRelativeLocation() + offset;
+		_dragSpeed = 4.0f;
+		_isDragging = true;
+	}
 }
 
 void UPawnCameraComponent::CancelDrag() 
 {
-	_dragSpeed = -0.25f;
+	_dragSpeed = -4.0f;
 }

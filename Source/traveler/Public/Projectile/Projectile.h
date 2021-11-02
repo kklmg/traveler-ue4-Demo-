@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Projectile.generated.h"
+
+class UCapsuleComponent;
 
 UCLASS()
 class TRAVELER_API AProjectile : public AActor
@@ -29,8 +30,8 @@ public:
 
 
 	// Sphere collision component.
-	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
-	USphereComponent* CollisionComponent;
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	UCapsuleComponent* CollisionComponent;
 
 	// Projectile movement component.
 	UPROPERTY(VisibleAnywhere, Category = Movement)

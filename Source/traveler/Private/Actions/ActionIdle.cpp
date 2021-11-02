@@ -7,7 +7,7 @@
 
 UActionIdle::UActionIdle() 
 {
-	_actionName = "Idle";
+	_actionName = TEXT("Idle");
 }
 
 
@@ -21,10 +21,6 @@ void UActionIdle::VBegin(AActor* actor, UActionData* actionData)
 	UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
 	check(pAttributeComponent != nullptr);
 
-	UAnimInstance* AnimInstance = pCharacter->GetMesh()->GetAnimInstance();
-
-	UE_LOG(LogTemp,Log,TEXT("ani instance %s"),AnimInstance==nullptr?TEXT("no instance"):TEXT("exist instance"));
-
 	if (_AniMontage != nullptr)
 	{
 		pCharacter->PlayAnimMontage(_AniMontage);
@@ -34,4 +30,5 @@ void UActionIdle::VBegin(AActor* actor, UActionData* actionData)
 
 void UActionIdle::VUpdate(float deltaTime, AActor* actor, UActionData* actionData)
 {
+	SetState(EActionState::AS_FINISHED);
 }

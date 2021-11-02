@@ -49,12 +49,12 @@ public:
 	virtual void VUpdate(float deltaTime,AActor* actor, UActionData *data) PURE_VIRTUAL(UAction::VUpdate.;);
 
 public:
-	FName GetActionName();
+	FString GetActionName();
 
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
-	FName _actionName;
+	FString _actionName;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	UAction* _pNextAction;
