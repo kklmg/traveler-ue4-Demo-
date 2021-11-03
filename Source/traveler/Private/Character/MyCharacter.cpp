@@ -246,3 +246,8 @@ UAttributeComponent* AMyCharacter::GetAttributeComponent()
 	return _attributeComponent;
 }
 
+UWeaponComponent* AMyCharacter::GetWeaponComponent() 
+{
+	return _weaponComponent;
+}
+

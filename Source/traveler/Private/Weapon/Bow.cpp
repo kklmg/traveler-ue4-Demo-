@@ -5,6 +5,7 @@
 #include "Projectile/Projectile.h"
 #include "Character/MyCharacter.h"
 #include "Components/PawnCameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ABow::ABow() 
 {
@@ -22,7 +23,20 @@ void ABow::Fire()
 	_isDrawing = true;
 
 	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
-	cameraComponent->BeginDragCamera(FVector(40,40,40));
+	cameraComponent->BeginDragCamera(FVector(100,100,100));
+}
+
+void ABow::FiringInProgress(float deltaTime)
+{
+	auto movementComponent =_owner->GetMovementComponent();
+
+	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
+
+	FRotator rotator = cameraComponent->GetComponentRotation();
+	rotator.Pitch = 0;
+	rotator.Roll = 0;
+
+	_owner->SetActorRotation(rotator);
 }
 
 void ABow::OnFireEnd() 

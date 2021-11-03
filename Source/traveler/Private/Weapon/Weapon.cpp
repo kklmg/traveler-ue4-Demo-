@@ -31,6 +31,11 @@ void AWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AWeapon::FiringInProgress(float deltaTime)
+{
+
+}
+
 void AWeapon::OnFireEnd() 
 {
 

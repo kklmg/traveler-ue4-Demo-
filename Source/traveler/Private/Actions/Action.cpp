@@ -5,7 +5,7 @@
 #include "Components/ActionComponent.h"
 
 
-UAction::UAction() 
+UAction::UAction()
 {
 	_state = EActionState::AS_UNINITIALIZED;
 	_actionName = TEXT("UnKnown");
@@ -25,8 +25,9 @@ void UAction::Start(UActionComponent* actionComponent)
 		VBegin(actionComponent->GetOwner(), actionComponent->GetActionData());
 	}
 
-	actionComponent->AddToLoop(this);
 	_state = EActionState::AS_RUNNING;
+	actionComponent->AddToLoop(this);
+	
 }
 
 void UAction::Pause()

@@ -44,6 +44,11 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Socket")
 	FName SocketLeftHand;
+
+	UFUNCTION(BluePrintCallable)
+	bool IsFiring();
 private:
 	AWeapon* _aWeapon;
+
+	bool _isFiring;
 };

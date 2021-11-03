@@ -40,6 +40,11 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+
+	if (_aWeapon != nullptr && _isFiring)
+	{
+		_aWeapon->FiringInProgress(DeltaTime);
+	}
 }
 
 void UWeaponComponent::SetWeapon(AWeapon* weapon)
@@ -71,6 +76,7 @@ void UWeaponComponent::OnAttackStart()
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "mouse dowm");
 	if (_aWeapon)
 	{
+		_isFiring = true;
 		_aWeapon->Fire();
 	}
 }
@@ -81,7 +87,13 @@ void UWeaponComponent::OnAttackEnd()
 	if (_aWeapon)
 	{
 		_aWeapon->OnFireEnd();
+		_isFiring = false;
 	}
 }
 
+
+bool UWeaponComponent::IsFiring()
+{
+	return _isFiring;
+}
 

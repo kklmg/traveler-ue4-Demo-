@@ -53,6 +53,9 @@ public:
 	UAttributeComponent* GetAttributeComponent();
 
 	UFUNCTION(BlueprintCallable)
+	UWeaponComponent* GetWeaponComponent();
+
+	UFUNCTION(BlueprintCallable)
 	void LaunchProjectile();
 
 	// Handles input for moving forward and backward.

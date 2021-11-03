@@ -37,6 +37,6 @@ protected:
 public:
 	/**/
 	virtual void Fire() PURE_VIRTUAL(AWeapon::Fire.;);
-
+	virtual void FiringInProgress(float deltaTime);
 	virtual void OnFireEnd();
 };

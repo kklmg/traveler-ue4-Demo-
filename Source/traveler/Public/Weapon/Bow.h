@@ -21,6 +21,7 @@ public:
 	void Tick(float DeltaTime) override;
 
 	virtual void Fire() override;
+	virtual void FiringInProgress(float deltaTime) override;
 	virtual void OnFireEnd() override;
 
 	void AddProjectile(AProjectile* projectile);

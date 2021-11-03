@@ -59,6 +59,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	UAction* _pNextAction;
 
-	UPROPERTY(VisibleAnywhere, Category = "Action")
+	//UPROPERTY(VisibleAnywhere, Category = "Action")
 	EActionState _state;
 };
