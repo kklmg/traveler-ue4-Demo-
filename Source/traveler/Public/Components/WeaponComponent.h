@@ -31,9 +31,11 @@ public:
 
 	void SetArmWeapon(bool isArmed);
 
-	void OnAttackStart();
+	void OnFireStart();
+	void OnFireEnd();
 
-	void OnAttackEnd();
+	void OnAimStart();
+	void OnAimEnd();
 
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
@@ -47,8 +49,12 @@ public:
 
 	UFUNCTION(BluePrintCallable)
 	bool IsFiring();
+
+	UFUNCTION(BluePrintCallable)
+	bool IsAiming();
 private:
 	AWeapon* _aWeapon;
 
 	bool _isFiring;
+	bool _isAiming;
 };

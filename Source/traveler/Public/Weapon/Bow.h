@@ -20,9 +20,13 @@ public:
 public:
 	void Tick(float DeltaTime) override;
 
-	virtual void Fire() override;
+	virtual void OnFireStart() override;
 	virtual void FiringInProgress(float deltaTime) override;
 	virtual void OnFireEnd() override;
+
+	virtual void OnAimStart() override;
+	virtual void AimmingInProgress(float deltaTime) override;
+	virtual void OnAimEnd() override;
 
 	void AddProjectile(AProjectile* projectile);
 
@@ -42,7 +46,13 @@ private:
 	float _maxDamage;
 
 	UPROPERTY(EditAnyWhere, Category = Attribute)
+	float _baseProjectileVelocity;
+
+	UPROPERTY(EditAnyWhere, Category = Attribute)
 	float _maxProjectileVelocity;
+
+	UPROPERTY(EditAnyWhere, Category = Camera)
+	FVector _aimingCameraOffset;
 
 	bool _isDrawing;
 	float _strength;

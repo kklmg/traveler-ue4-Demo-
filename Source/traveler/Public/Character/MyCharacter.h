@@ -55,16 +55,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UWeaponComponent* GetWeaponComponent();
 
-	UFUNCTION(BlueprintCallable)
-	void LaunchProjectile();
-
-	// Handles input for moving forward and backward.
-	UFUNCTION()
-	void MoveForward(float Value);
-
-	// Handles input for moving right and left.
-	UFUNCTION()
-	void MoveRight(float Value);
+	//UFUNCTION(BlueprintCallable)
+	//void LaunchProjectile();
 
 	// Sets jump flag when key is pressed.
 	UFUNCTION()
@@ -73,14 +65,6 @@ public:
 	// Clears jump flag when key is released.
 	UFUNCTION()
 	void StopJump();
-
-	// Function that handles firing projectiles.
-	//UFUNCTION()
-	//void Aim();
-
-	// Function that handles firing projectiles.
-	//UFUNCTION()
-	//void CancelAim();
 
 private:
 	// Gun muzzle offset from the camera location.
@@ -112,6 +96,4 @@ private:
 
 	FVector2D MovementInput;
 	FVector2D CameraInput;
-
-	MovementHandler* _pMovementHandler;
 };

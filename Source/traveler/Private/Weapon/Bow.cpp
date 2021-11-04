@@ -6,6 +6,7 @@
 #include "Character/MyCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "DrawDebugHelpers.h"
 
 ABow::ABow() 
 {
@@ -13,23 +14,44 @@ ABow::ABow()
 	_strength = 0.0f;
 	_maxDamage = 0.0f;
 	_drawingVelocity = 0.5f;
-	_maxProjectileVelocity = 2000.0f;
+	_baseProjectileVelocity = 1000.0f;
+	_maxProjectileVelocity = 3000.0f;
+	_aimingCameraOffset = FVector(100, 100, 100);
 }
 
-void ABow::Fire()
+void ABow::OnFireStart()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "Trigger Fire");
+	if (_isDrawing == false) 
+	{
+		UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
 
-	_isDrawing = true;
+		FRotator rotator = cameraComponent->GetComponentRotation();
+		rotator.Pitch = 0;
+		rotator.Roll = 0;
 
-	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
-	cameraComponent->BeginDragCamera(FVector(100,100,100));
+		_owner->SetActorRotation(rotator);
+	}
+
 }
 
 void ABow::FiringInProgress(float deltaTime)
 {
-	auto movementComponent =_owner->GetMovementComponent();
+}
 
+void ABow::OnFireEnd() 
+{
+	_SpawnProjectile();
+}
+
+void ABow::OnAimStart()
+{
+	_isDrawing = true;
+
+	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
+	cameraComponent->BeginDragCamera(_aimingCameraOffset);
+}
+void ABow::AimmingInProgress(float deltaTime)
+{
 	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
 
 	FRotator rotator = cameraComponent->GetComponentRotation();
@@ -38,12 +60,9 @@ void ABow::FiringInProgress(float deltaTime)
 
 	_owner->SetActorRotation(rotator);
 }
-
-void ABow::OnFireEnd() 
+void ABow::OnAimEnd()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Fire Finished,strength: %f"), _strength));
-	
-	_SpawnProjectile();
 
 	_isDrawing = false;
 	_strength = 0.0f;
@@ -51,6 +70,7 @@ void ABow::OnFireEnd()
 	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
 	cameraComponent->CancelDrag();
 }
+
 
 
 void ABow::AddProjectile(AProjectile* projectile) 
@@ -66,8 +86,6 @@ void ABow::Tick(float DeltaTime)
 	{
 		_strength = FMath::Clamp(_strength + DeltaTime * _drawingVelocity, 0.0f, 1.0f);
 	}
-
-
 }
 void ABow::_SpawnProjectile()
 {
@@ -77,18 +95,41 @@ void ABow::_SpawnProjectile()
 		UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
 
 		// Get actor location
-		FVector actorLocation = _owner->GetPawnViewLocation();
+		FVector weaponLocation = GetActorLocation();
 
-		//Get Camera Rotation Matrix
+		//Get Camera Rotation Rotator
 		FRotator cameraRotator = cameraComponent->GetComponentRotation();
-		FMatrix cameraRotationMatrix = FRotationMatrix(cameraRotator);
 
 		//calculate muzzle position
 		FVector MuzzleOffset;
-		MuzzleOffset.Set(100.0f, 0.0f, 0.0f);
+		MuzzleOffset.Set(50.0f, 0.0f, 0.0f);
 
-		FVector MuzzleLocation = actorLocation + FTransform(cameraRotator).TransformVector(MuzzleOffset);
-		FRotator MuzzleRotation = cameraRotator;
+		FVector MuzzleLocation = weaponLocation + FTransform(cameraRotator).TransformVector(MuzzleOffset);
+		
+
+		FHitResult hitResult;
+		FVector cameraforwardVector = cameraComponent->GetForwardVector();
+		FVector farPlaneCenter = cameraforwardVector * cameraComponent->OrthoFarClipPlane;
+		FCollisionQueryParams CollisionParams;
+
+		FVector hitLocation = farPlaneCenter;
+
+		if (GetWorld()->LineTraceSingleByChannel(hitResult, cameraComponent->GetComponentLocation(), farPlaneCenter, ECC_Visibility, CollisionParams))
+		{
+			if (hitResult.bBlockingHit)
+			{
+				//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("You are hitting: %s"), *hitResult.GetActor()->GetName()));
+				//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Purple, FString::Printf(TEXT("Impact Point: %s"), *hitResult.ImpactPoint.ToString()));
+				//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, FString::Printf(TEXT("Normal Point: %s"), *hitResult.ImpactNormal.ToString()));
+			}
+			hitLocation = hitResult.ImpactPoint;
+		}
+		
+		FVector projectileDirection = hitLocation - MuzzleLocation;
+		projectileDirection.Normalize();
+		FRotator MuzzleRotation = projectileDirection.Rotation();
+
+		DrawDebugLine(GetWorld(), MuzzleLocation, hitLocation, FColor::Blue, false, 2.0f);
 
 		//Spawn Projectile
 		UWorld* World = GetWorld();
@@ -96,16 +137,14 @@ void ABow::_SpawnProjectile()
 		{
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.Owner = this;
-			SpawnParams.Instigator = GetInstigator();
+			SpawnParams.Instigator = _owner;
 
 			// Spawn the projectile at the muzzle.
 			AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 			if (Projectile)
 			{
 				Projectile->Initialize(_CalculateDamage(), _CalculateProjectileSpeed());
-				// Set the projectile's initial trajectory.
-				FVector LaunchDirection = MuzzleRotation.Vector();
-				Projectile->FireInDirection(LaunchDirection);
+				Projectile->FireInDirection(projectileDirection);
 			}
 		}
 	}
@@ -119,5 +158,5 @@ float ABow::_CalculateDamage()
 
 float ABow::_CalculateProjectileSpeed()
 {
-	return _strength * _maxProjectileVelocity;
+	return FMath::Clamp(_strength * _maxProjectileVelocity, _baseProjectileVelocity, _maxProjectileVelocity);
 }

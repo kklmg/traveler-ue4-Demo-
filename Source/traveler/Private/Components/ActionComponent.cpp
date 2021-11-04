@@ -112,7 +112,7 @@ void UActionComponent::AddMovementInputY(float value)
 
 void UActionComponent::AddToLoop(UAction* action)
 {
-	if (action != nullptr && _MapActionsInProgress.Contains(action->GetActionName())==false)
+	if (action != nullptr && _MapActionsInProgress.Contains(*action->GetActionName())==false)
 	{
 		_MapActionsInProgress.Add(action->GetActionName(), action);
 	}

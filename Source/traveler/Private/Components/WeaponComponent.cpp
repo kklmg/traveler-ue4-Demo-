@@ -45,11 +45,16 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	{
 		_aWeapon->FiringInProgress(DeltaTime);
 	}
+
+	if (_aWeapon != nullptr && _isAiming)
+	{
+		_aWeapon->AimmingInProgress(DeltaTime);
+	}
 }
 
 void UWeaponComponent::SetWeapon(AWeapon* weapon)
 {
-	if (_aWeapon != weapon)
+	if (_aWeapon != weapon && _isFiring == false && _isAiming == false)
 	{
 		_aWeapon = weapon;
 
@@ -71,23 +76,42 @@ void UWeaponComponent::SetArmWeapon(bool isArmed)
 }
 
 
-void UWeaponComponent::OnAttackStart() 
+void UWeaponComponent::OnFireStart() 
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "mouse dowm");
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "left mouse dowm");
 	if (_aWeapon)
 	{
 		_isFiring = true;
-		_aWeapon->Fire();
+		_aWeapon->OnFireStart();
 	}
 }
 
-void UWeaponComponent::OnAttackEnd()
+void UWeaponComponent::OnFireEnd()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "mouse up");
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "left mouse up");
 	if (_aWeapon)
 	{
 		_aWeapon->OnFireEnd();
 		_isFiring = false;
+	}
+}
+
+void UWeaponComponent::OnAimStart()
+{
+	if (_aWeapon)
+	{
+		_aWeapon->OnAimStart();
+		_isFiring = false;
+	}
+
+	_isAiming = true;
+}
+void UWeaponComponent::OnAimEnd()
+{
+	if (_aWeapon)
+	{
+		_aWeapon->OnAimEnd();
+		_isAiming = false;
 	}
 }
 
@@ -96,4 +120,11 @@ bool UWeaponComponent::IsFiring()
 {
 	return _isFiring;
 }
+bool UWeaponComponent::IsAiming()
+{
+	return _isAiming;
+}
+
+
+
 

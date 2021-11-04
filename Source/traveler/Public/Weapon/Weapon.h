@@ -36,7 +36,11 @@ protected:
 
 public:
 	/**/
-	virtual void Fire() PURE_VIRTUAL(AWeapon::Fire.;);
+	virtual void OnFireStart() PURE_VIRTUAL(AWeapon::OnFireStart.;);
 	virtual void FiringInProgress(float deltaTime);
 	virtual void OnFireEnd();
+
+	virtual void OnAimStart();
+	virtual void AimmingInProgress(float deltaTime);
+	virtual void OnAimEnd();
 };

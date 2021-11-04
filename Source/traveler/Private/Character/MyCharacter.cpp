@@ -68,21 +68,12 @@ void AMyCharacter::BeginDestroy()
 	Super::BeginDestroy();
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Character BeginPlay"));
-
-	if (_pMovementHandler != nullptr) 
-	{
-		delete(_pMovementHandler);
-		_pMovementHandler = nullptr;
-	}
 }
 
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//_pMovementHandler->HandleMovement(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -93,7 +84,6 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	//movement
 	PlayerInputComponent->BindAxis("MoveForward", _actionComponent, &UActionComponent::AddMovementInputX);
 	PlayerInputComponent->BindAxis("MoveRight", _actionComponent, &UActionComponent::AddMovementInputY);
-	//PlayerInputComponent->bindax
 
 	//jump
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::StartJump);
@@ -104,31 +94,12 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	InputComponent->BindAxis("CameraYaw", _cameraSpringArmComponent, &UCameraSpringArmComponent::Yaw);
 	InputComponent->BindAxis("ZoomInOut", _cameraSpringArmComponent, &UCameraSpringArmComponent::ZoomInOut);
 
-	PlayerInputComponent->BindAction("Attack", IE_Pressed, _weaponComponent, &UWeaponComponent::OnAttackStart);
-	PlayerInputComponent->BindAction("Attack", IE_Released, _weaponComponent, &UWeaponComponent::OnAttackEnd);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, _weaponComponent, &UWeaponComponent::OnFireStart);
+	PlayerInputComponent->BindAction("Fire", IE_Released, _weaponComponent, &UWeaponComponent::OnFireEnd);
+
+	PlayerInputComponent->BindAction("Aim", IE_Pressed, _weaponComponent, &UWeaponComponent::OnAimStart);
+	PlayerInputComponent->BindAction("Aim", IE_Released, _weaponComponent, &UWeaponComponent::OnAimEnd);
 }
-
-void AMyCharacter::MoveForward(float Value)
-{
-	_pMovementHandler->SetMovementInputX(Value);
-	_pMovementHandler->SetCameraRotation(_cameraComponent->GetComponentRotation());
-
-	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, GetVelocity().ToString());
-	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(camreaRotation.Yaw));
-
-	//_actionComponent->Move();
-}
-
-void AMyCharacter::MoveRight(float Value)
-{	
-	_pMovementHandler->SetMovementInputY(Value);
-	_pMovementHandler->SetCameraRotation(_cameraComponent->GetComponentRotation());
-
-	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::SanitizeFloat(camreaRotation.Yaw));
-
-	//_actionComponent->Move();
-}
-
 
 void AMyCharacter::StartJump()
 {
@@ -147,88 +118,6 @@ void AMyCharacter::StopJump()
 UStateComponent* AMyCharacter::GetStateComponent()
 {
 	return _stateComponent;
-}
-
-//void AMyCharacter::Aim()
-//{
-//	//if (_stateComponent) 
-//	//{
-//	//	_stateComponent->equipState = EEquipState::ES_bow;
-//
-//	//	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, " Aim");
-//	//}
-//
-//	//if (_cameraComponent) 
-//	//{
-//	//	//_cameraComponent->AddLocalOffset(FVector(10, 10, 10));
-//	//	//_cameraSpringArm->AddLocalOffset(FVector(10, 10, 10));
-//	//}
-//	//if (_actionComponent) 
-//	//{
-//	//	_actionComponent->TriggerTarget();
-//	//}
-//
-//}
-
-
-//void AMyCharacter::CancelAim()
-//{
-//	/*LaunchProjectile();
-//
-//	if (_stateComponent)
-//	{
-//		_stateComponent->equipState = EEquipState::ES_unEquiped;
-//
-//		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "Cancel Aim");
-//	}
-//	if (_actionComponent)
-//	{
-//		_actionComponent->TriggerTarget();
-//	}*/
-//}
-
-void AMyCharacter::LaunchProjectile() 
-{
-	// Attempt to fire a projectile.
-	if (ProjectileClass)
-	{
-		// Get the camera transform.
-		FVector CameraLocation;
-		FRotator CameraRotation;
-		GetActorEyesViewPoint(CameraLocation, CameraRotation);
-
-		// Set MuzzleOffset to spawn projectiles slightly in front of the camera.
-		MuzzleOffset.Set(100.0f, 0.0f, 0.0f);
-
-		// Transform MuzzleOffset from camera space to world space.
-		FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
-
-		// Skew the aim to be slightly upwards.
-		FRotator MuzzleRotation = CameraRotation;
-		MuzzleRotation.Pitch += 10.0f;
-
-		UWorld* World = GetWorld();
-		if (World)
-		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = this;
-			SpawnParams.Instigator = GetInstigator();
-
-			// Spawn the projectile at the muzzle.
-			AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-			if (Projectile)
-			{
-				// Set the projectile's initial trajectory.
-				FVector LaunchDirection = MuzzleRotation.Vector();
-				Projectile->FireInDirection(LaunchDirection);
-			}
-		}
-	}
-
-	if (_actionComponent)
-	{
-		//_actionComponent->();
-	}
 }
 
 UCameraSpringArmComponent* AMyCharacter::GetSpringArmComponent()
