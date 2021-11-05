@@ -8,8 +8,6 @@
 
 class UPawnCameraComponent;
 class UCameraSpringArmComponent;
-class UStateComponent;
-class MovementHandler;
 class UActionComponent;
 class UWeaponComponent;
 class UAttributeComponent;
@@ -38,10 +36,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
-	UFUNCTION(BlueprintCallable)
-	UStateComponent* GetStateComponent();
 
 	UFUNCTION(BlueprintCallable)
 	UCameraSpringArmComponent* GetSpringArmComponent();
@@ -81,9 +75,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraSpringArmComponent* _cameraSpringArmComponent;
-
-	UPROPERTY(VisibleAnywhere)
-	UStateComponent* _stateComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UActionComponent* _actionComponent;

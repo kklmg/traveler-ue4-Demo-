@@ -31,7 +31,6 @@ void ABow::OnFireStart()
 
 		_owner->SetActorRotation(rotator);
 	}
-
 }
 
 void ABow::FiringInProgress(float deltaTime)
@@ -129,7 +128,7 @@ void ABow::_SpawnProjectile()
 		projectileDirection.Normalize();
 		FRotator MuzzleRotation = projectileDirection.Rotation();
 
-		DrawDebugLine(GetWorld(), MuzzleLocation, hitLocation, FColor::Blue, false, 2.0f);
+		//DrawDebugLine(GetWorld(), MuzzleLocation, hitLocation, FColor::Blue, false, 2.0f);
 
 		//Spawn Projectile
 		UWorld* World = GetWorld();

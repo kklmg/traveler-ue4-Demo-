@@ -5,10 +5,8 @@
 #include "Components/PawnCameraComponent.h"
 #include "Components/CameraSpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Character/MovementHandler.h"
 #include "Components/WeaponComponent.h"
 #include "Components/ActionComponent.h"
-#include "Components/StateComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Projectile/Projectile.h"
 
@@ -31,10 +29,6 @@ AMyCharacter::AMyCharacter()
 	check(_cameraComponent != nullptr);
 	_cameraComponent->SetupAttachment(_cameraSpringArmComponent, USpringArmComponent::SocketName);
 
-	//Create state component
-	_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("stateComponent"));
-	check(_stateComponent != nullptr);
-
 	//Create action component
 	_actionComponent = CreateDefaultSubobject<UActionComponent>(TEXT("ActionComponent"));
 	check(_actionComponent != nullptr);
@@ -49,8 +43,6 @@ AMyCharacter::AMyCharacter()
 
 	//Enable the pawn to control camera rotation.
 	bUseControllerRotationYaw = false;
-
-
 }
 
 // Called when the game starts or when spawned
@@ -115,10 +107,6 @@ void AMyCharacter::StopJump()
 	bPressedJump = false;
 }
 
-UStateComponent* AMyCharacter::GetStateComponent()
-{
-	return _stateComponent;
-}
 
 UCameraSpringArmComponent* AMyCharacter::GetSpringArmComponent()
 {
