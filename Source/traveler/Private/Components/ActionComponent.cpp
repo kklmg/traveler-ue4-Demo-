@@ -112,7 +112,7 @@ void UActionComponent::AddMovementInputY(float value)
 
 void UActionComponent::AddToLoop(UAction* action)
 {
-	if (action != nullptr && _MapActionsInProgress.Contains(*action->GetActionName())==false)
+	if (action != nullptr && _MapActionsInProgress.Contains(action->GetActionName())==false)
 	{
 		_MapActionsInProgress.Add(action->GetActionName(), action);
 	}
@@ -120,22 +120,24 @@ void UActionComponent::AddToLoop(UAction* action)
 
 void UActionComponent::_LoopActions(float deltaTime)
 {
-	TArray<FString> needToDelete;
+	TArray<UAction*> finieshedActions;
+	
 	for (auto pair : _MapActionsInProgress)
 	{
 		pair.Value->VUpdate(deltaTime, GetOwner(), _actionData);
 
 		if (pair.Value->GetState() == EActionState::AS_FINISHED)
 		{
-			needToDelete.Add(pair.Key);
+			finieshedActions.Add(pair.Value);
 		}
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, pair.Value->GetName());
 	}
 
-	for (auto key : needToDelete) 
+	for (auto action : finieshedActions)
 	{
-		_MapActionsInProgress.Remove(key);
+		_MapActionsInProgress.Remove(action->GetActionName());
 	}
+
 
 	//_MapActionsInProgress.Compact();
 

@@ -51,7 +51,7 @@ private:
 	FVector _CalculateMovingDirection();
 
 private:
-	TArray<UAction*> _actions;
+	//TArray<UAction*> _arrayActionsInProgress;
 	TMap<FString, UAction*> _MapActionsInProgress;
 
 	UActionData* _actionData;

@@ -7,6 +7,7 @@
 #include "Components/PawnCameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 ABow::ABow() 
 {
@@ -40,6 +41,10 @@ void ABow::FiringInProgress(float deltaTime)
 void ABow::OnFireEnd() 
 {
 	_SpawnProjectile();
+	if (_fireAnimMontage != nullptr) 
+	{
+		_owner->PlayAnimMontage(_fireAnimMontage);
+	}
 }
 
 void ABow::OnAimStart()
@@ -123,6 +128,16 @@ void ABow::_SpawnProjectile()
 			}
 			hitLocation = hitResult.ImpactPoint;
 		}
+
+
+			//UObject * WorldContextObject, 
+			//FPredictProjectilePathParams PredictParams;
+			//FPredictProjectilePathResult  PredictResult;
+
+
+			//UGameplayStatics::PredictProjectilePath(GetWorld(), PredictParams, PredictResult);
+
+
 		
 		FVector projectileDirection = hitLocation - MuzzleLocation;
 		projectileDirection.Normalize();

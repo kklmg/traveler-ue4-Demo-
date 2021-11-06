@@ -54,6 +54,9 @@ private:
 	UPROPERTY(EditAnyWhere, Category = Camera)
 	FVector _aimingCameraOffset;
 
+	UPROPERTY(EditAnyWhere, Category = Animation)
+	UAnimMontage* _fireAnimMontage;
+
 	bool _isDrawing;
 	float _strength;
 
