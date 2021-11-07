@@ -52,8 +52,10 @@ private:
 
 private:
 	//TArray<UAction*> _arrayActionsInProgress;
+	UPROPERTY()
 	TMap<FString, UAction*> _MapActionsInProgress;
 
+	UPROPERTY()
 	UActionData* _actionData;
 
 	FVector2D _movementInput;
@@ -61,5 +63,6 @@ private:
 	UPROPERTY(EditAnyWhere, Category = State)
 	TSubclassOf<UCharacterStateBase> DefaultCharacterStateClass;
 
+	UPROPERTY()
 	UCharacterStateBase* _pCharacterState;
 };

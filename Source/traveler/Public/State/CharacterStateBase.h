@@ -50,10 +50,16 @@ private:
 	TSubclassOf<class UAction> ActionDashClass;
 
 private:
+	UPROPERTY()
 	UAction* _actionIdle;
+	UPROPERTY()
 	UAction* _actionMove;
+	UPROPERTY()
 	UAction* _actionSprint;
+	UPROPERTY()
 	UAction* _actionJump;
+	UPROPERTY()
 	UAction* _actionTarget;
+	UPROPERTY()
 	UAction* _actionDash;
 };

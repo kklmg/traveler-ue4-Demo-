@@ -71,6 +71,11 @@ void ABow::OnAimEnd()
 	_isDrawing = false;
 	_strength = 0.0f;
 
+	if (_fireAnimMontage != nullptr)
+	{
+		_owner->StopAnimMontage(_fireAnimMontage);
+	}
+
 	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
 	cameraComponent->CancelDrag();
 }
