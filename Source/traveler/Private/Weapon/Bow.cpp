@@ -17,20 +17,20 @@ ABow::ABow()
 	_drawingVelocity = 0.5f;
 	_baseProjectileVelocity = 1000.0f;
 	_maxProjectileVelocity = 3000.0f;
-	_aimingCameraOffset = FVector(100, 100, 100);
+	_aimingCameraOffset = FVector(100, 50, 100);
 }
 
 void ABow::OnFireStart()
 {
 	if (_isDrawing == false) 
 	{
-		UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
+		UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 
 		FRotator rotator = cameraComponent->GetComponentRotation();
 		rotator.Pitch = 0;
 		rotator.Roll = 0;
 
-		_owner->SetActorRotation(rotator);
+		GetWeaponOwner()->SetActorRotation(rotator);
 	}
 }
 
@@ -40,10 +40,16 @@ void ABow::FiringInProgress(float deltaTime)
 
 void ABow::OnFireEnd() 
 {
-	_SpawnProjectile();
-	if (_fireAnimMontage != nullptr) 
+	if (IsReadyToFire() == true)
 	{
-		_owner->PlayAnimMontage(_fireAnimMontage);
+		_SpawnProjectile();
+		SetIsReadyToFire(false);
+	
+		if (_fireAnimMontage != nullptr)
+		{
+			//_fireAnimMontage->noti
+			GetWeaponOwner()->PlayAnimMontage(_fireAnimMontage,1.0f,TEXT("Release"));
+		}
 	}
 }
 
@@ -51,18 +57,18 @@ void ABow::OnAimStart()
 {
 	_isDrawing = true;
 
-	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
+	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 	cameraComponent->BeginDragCamera(_aimingCameraOffset);
 }
 void ABow::AimmingInProgress(float deltaTime)
 {
-	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
+	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 
 	FRotator rotator = cameraComponent->GetComponentRotation();
 	rotator.Pitch = 0;
 	rotator.Roll = 0;
 
-	_owner->SetActorRotation(rotator);
+	GetWeaponOwner()->SetActorRotation(rotator);
 }
 void ABow::OnAimEnd()
 {
@@ -73,10 +79,10 @@ void ABow::OnAimEnd()
 
 	if (_fireAnimMontage != nullptr)
 	{
-		_owner->StopAnimMontage(_fireAnimMontage);
+		GetWeaponOwner()->StopAnimMontage(_fireAnimMontage);
 	}
 
-	UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
+	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 	cameraComponent->CancelDrag();
 }
 
@@ -101,7 +107,7 @@ void ABow::_SpawnProjectile()
 	// Attempt to fire a projectile.
 	if (ProjectileClass)
 	{
-		UPawnCameraComponent* cameraComponent = _owner->GetCameraComponent();
+		UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 
 		// Get actor location
 		FVector weaponLocation = GetActorLocation();
@@ -156,7 +162,7 @@ void ABow::_SpawnProjectile()
 		{
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.Owner = this;
-			SpawnParams.Instigator = _owner;
+			SpawnParams.Instigator = GetWeaponOwner();
 
 			// Spawn the projectile at the muzzle.
 			AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);

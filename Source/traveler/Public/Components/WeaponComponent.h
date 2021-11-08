@@ -47,11 +47,15 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Socket")
 	FName SocketLeftHand;
 
+	UFUNCTION(BlueprintCallable)
+	AWeapon* GetEquipedWeapon();
+
 	UFUNCTION(BluePrintCallable)
 	bool IsFiring();
 
 	UFUNCTION(BluePrintCallable)
 	bool IsAiming();
+
 private:
 	AWeapon* _aWeapon;
 

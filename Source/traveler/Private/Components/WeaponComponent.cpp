@@ -115,6 +115,10 @@ void UWeaponComponent::OnAimEnd()
 	}
 }
 
+AWeapon* UWeaponComponent::GetEquipedWeapon()
+{
+	return _aWeapon;
+}
 
 bool UWeaponComponent::IsFiring()
 {
@@ -124,6 +128,7 @@ bool UWeaponComponent::IsAiming()
 {
 	return _isAiming;
 }
+
 
 
 

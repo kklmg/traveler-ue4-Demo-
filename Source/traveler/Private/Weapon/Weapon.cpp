@@ -10,6 +10,8 @@ AWeapon::AWeapon()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	_isReadyToFire = false;
+
 	_skeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 }
 
@@ -20,15 +22,31 @@ void AWeapon::BeginPlay()
 	
 }
 
-void AWeapon::Initialize(AMyCharacter* owner)
+void AWeapon::Initialize(AMyCharacter* weaponOwner)
 {
-	_owner = owner;
+	_weaponOwner = weaponOwner;
 }
 
 // Called every frame
 void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+
+AMyCharacter* AWeapon::GetWeaponOwner() 
+{
+	return _weaponOwner;
+}
+
+void AWeapon::SetIsReadyToFire(bool fireable)
+{
+	_isReadyToFire = fireable;
+}
+
+bool AWeapon::IsReadyToFire() 
+{
+	return _isReadyToFire;
 }
 
 void AWeapon::FiringInProgress(float deltaTime){}

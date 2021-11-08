@@ -22,7 +22,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	void Initialize(AMyCharacter* owner);
+	void Initialize(AMyCharacter* weaponOwner);
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -31,8 +31,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* _skeletalMeshComponent;
 
-protected:
-	AMyCharacter* _owner;
+	AMyCharacter* _weaponOwner;
+
+	bool _isReadyToFire;
 
 public:
 	/**/
@@ -43,4 +44,14 @@ public:
 	virtual void OnAimStart();
 	virtual void AimmingInProgress(float deltaTime);
 	virtual void OnAimEnd();
+
+public:
+	UFUNCTION(BlueprintCallable)
+	AMyCharacter* GetWeaponOwner();
+
+	UFUNCTION(BlueprintCallable)
+	void SetIsReadyToFire(bool fireable);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsReadyToFire();
 };
