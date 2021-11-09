@@ -57,7 +57,7 @@ private:
 	UPROPERTY(EditAnyWhere, Category = Animation)
 	UAnimMontage* _fireAnimMontage;
 
-	bool _isDrawing;
+	bool _isAiming;
 	float _strength;
 
 	TArray<AProjectile*> _projectiles;

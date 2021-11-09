@@ -11,7 +11,7 @@
 
 ABow::ABow() 
 {
-	_isDrawing = false;
+	_isAiming = false;
 	_strength = 0.0f;
 	_maxDamage = 0.0f;
 	_drawingVelocity = 0.5f;
@@ -22,7 +22,7 @@ ABow::ABow()
 
 void ABow::OnFireStart()
 {
-	if (_isDrawing == false) 
+	if (_isAiming == false)
 	{
 		UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 
@@ -40,22 +40,18 @@ void ABow::FiringInProgress(float deltaTime)
 
 void ABow::OnFireEnd() 
 {
-	if (IsReadyToFire() == true)
+	_SpawnProjectile();
+
+	if (_fireAnimMontage != nullptr)
 	{
-		_SpawnProjectile();
-		SetIsReadyToFire(false);
-	
-		if (_fireAnimMontage != nullptr)
-		{
-			//_fireAnimMontage->noti
-			GetWeaponOwner()->PlayAnimMontage(_fireAnimMontage,1.0f,TEXT("Release"));
-		}
+		//_fireAnimMontage->noti
+		GetWeaponOwner()->PlayAnimMontage(_fireAnimMontage, 1.0f, TEXT("Release"));
 	}
 }
 
 void ABow::OnAimStart()
 {
-	_isDrawing = true;
+	_isAiming = true;
 
 	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 	cameraComponent->BeginDragCamera(_aimingCameraOffset);
@@ -74,7 +70,7 @@ void ABow::OnAimEnd()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Fire Finished,strength: %f"), _strength));
 
-	_isDrawing = false;
+	_isAiming = false;
 	_strength = 0.0f;
 
 	if (_fireAnimMontage != nullptr)
@@ -97,7 +93,7 @@ void ABow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (_isDrawing)
+	if (_isAiming)
 	{
 		_strength = FMath::Clamp(_strength + DeltaTime * _drawingVelocity, 0.0f, 1.0f);
 	}

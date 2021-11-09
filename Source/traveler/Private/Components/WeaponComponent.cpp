@@ -58,6 +58,8 @@ void UWeaponComponent::SetWeapon(AWeapon* weapon)
 	{
 		_aWeapon = weapon;
 
+		onWeaponChanged.Broadcast(_aWeapon);
+
 		//Get Character
 		ACharacter* character = Cast<ACharacter>(GetOwner());
 		check(character != nullptr);
@@ -67,50 +69,55 @@ void UWeaponComponent::SetWeapon(AWeapon* weapon)
 	}
 }
 
-void UWeaponComponent::SetArmWeapon(bool isArmed) 
+void UWeaponComponent::SetWhetherEquipWeapon(bool isEquiped)
 {
 	if (_aWeapon)
 	{
-		_aWeapon->SetActorHiddenInGame(isArmed);
+		_aWeapon->SetActorHiddenInGame(isEquiped);
 	}
 }
 
 
-void UWeaponComponent::OnFireStart() 
+void UWeaponComponent::OnFireButtonDown() 
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "left mouse dowm");
-	if (_aWeapon)
+	if (_aWeapon && _aWeapon->IsReadyToFire())
 	{
 		_isFiring = true;
 		_aWeapon->OnFireStart();
+		onWeaponFireStart.Broadcast(_aWeapon);
 	}
 }
 
-void UWeaponComponent::OnFireEnd()
+void UWeaponComponent::OnFireButtonUp()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "left mouse up");
-	if (_aWeapon)
+	if (_aWeapon && _isFiring == true)
 	{
 		_aWeapon->OnFireEnd();
+		onWeaponFireEnd.Broadcast(_aWeapon);
 		_isFiring = false;
+		//_aWeapon->IsReadyToFire();
 	}
 }
 
-void UWeaponComponent::OnAimStart()
+void UWeaponComponent::OnAimButtonDown()
 {
 	if (_aWeapon)
 	{
 		_aWeapon->OnAimStart();
+		onWeaponAimStart.Broadcast(_aWeapon);
 		_isFiring = false;
 	}
 
 	_isAiming = true;
 }
-void UWeaponComponent::OnAimEnd()
+void UWeaponComponent::OnAimButtonUp()
 {
 	if (_aWeapon)
 	{
 		_aWeapon->OnAimEnd();
+		onWeaponAimEnd.Broadcast(_aWeapon);
 		_isAiming = false;
 	}
 }

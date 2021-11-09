@@ -8,7 +8,7 @@
 
 class AWeapon;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponChanged, AWeapon*,weapon);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeapon*,weapon);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UWeaponComponent : public UActorComponent
@@ -29,17 +29,30 @@ public:
 
 	void SetWeapon(AWeapon* weapon);
 
-	void SetArmWeapon(bool isArmed);
+	void SetWhetherEquipWeapon(bool isEquiped);
 
-	void OnFireStart();
-	void OnFireEnd();
+	void OnFireButtonDown();
+	void OnFireButtonUp();
 
-	void OnAimStart();
-	void OnAimEnd();
+	void OnAimButtonDown();
+	void OnAimButtonUp();
 
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
-	FWeaponChanged onWeaponChanged;
+	FDelegateWeapon onWeaponChanged;
+
+	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
+	FDelegateWeapon onWeaponFireStart;
+
+	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
+	FDelegateWeapon onWeaponFireEnd;
+
+	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
+	FDelegateWeapon onWeaponAimStart;
+
+	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
+	FDelegateWeapon onWeaponAimEnd;
+
 
 	UPROPERTY(EditDefaultsOnly, Category = "DefaultWeapon")
 	TSubclassOf<AWeapon> DefaultWeaponClass;
