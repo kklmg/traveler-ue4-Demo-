@@ -24,6 +24,7 @@ public:
 
 public:
 	void BeginDragCamera(FVector offset);
+
 	void CancelDrag();
 
 private:

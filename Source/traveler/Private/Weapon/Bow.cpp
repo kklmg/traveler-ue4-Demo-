@@ -5,6 +5,7 @@
 #include "Projectile/Projectile.h"
 #include "Character/MyCharacter.h"
 #include "Components/PawnCameraComponent.h"
+#include "Components/CameraSpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
@@ -17,7 +18,7 @@ ABow::ABow()
 	_drawingVelocity = 0.5f;
 	_baseProjectileVelocity = 1000.0f;
 	_maxProjectileVelocity = 3000.0f;
-	_aimingCameraOffset = FVector(100, 50, 100);
+	_aimingCameraOffset = FVector(100, 0, 100);
 }
 
 void ABow::OnFireStart()
@@ -40,20 +41,24 @@ void ABow::FiringInProgress(float deltaTime)
 
 void ABow::OnFireEnd() 
 {
-	_SpawnProjectile();
+	//_SpawnProjectile();
 
-	if (_fireAnimMontage != nullptr)
-	{
-		//_fireAnimMontage->noti
-		GetWeaponOwner()->PlayAnimMontage(_fireAnimMontage, 1.0f, TEXT("Release"));
-	}
+	//if (_fireAnimMontage != nullptr)
+	//{
+	//	//_fireAnimMontage->noti
+	//	//GetWeaponOwner()->PlayAnimMontage(_fireAnimMontage, 1.0f, TEXT("Release"));
+	//}
 }
 
 void ABow::OnAimStart()
 {
 	_isAiming = true;
 
+	UCameraSpringArmComponent* CameraSpringArmComponent = GetWeaponOwner()->GetSpringArmComponent();
 	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
+
+
+	CameraSpringArmComponent->SetPitchRange(-60, 60);
 	cameraComponent->BeginDragCamera(_aimingCameraOffset);
 }
 void ABow::AimmingInProgress(float deltaTime)
@@ -79,9 +84,16 @@ void ABow::OnAimEnd()
 	}
 
 	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
+	UCameraSpringArmComponent* CameraSpringArmComponent = GetWeaponOwner()->GetSpringArmComponent();
+
+	CameraSpringArmComponent->Reset();
 	cameraComponent->CancelDrag();
 }
 
+void ABow::OnAnimFrameStart_Fire()
+{
+	_SpawnProjectile();
+}
 
 
 void ABow::AddProjectile(AProjectile* projectile) 

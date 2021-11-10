@@ -54,3 +54,4 @@ void AWeapon::OnFireEnd() {}
 void AWeapon::OnAimStart() {}
 void AWeapon::AimmingInProgress(float deltaTime) {}
 void AWeapon::OnAimEnd() {}
+void AWeapon::OnAnimFrameStart_Fire() {}

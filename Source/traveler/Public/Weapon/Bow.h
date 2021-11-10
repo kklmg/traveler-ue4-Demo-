@@ -28,6 +28,8 @@ public:
 	virtual void AimmingInProgress(float deltaTime) override;
 	virtual void OnAimEnd() override;
 
+	virtual void OnAnimFrameStart_Fire() override;
+
 	void AddProjectile(AProjectile* projectile);
 
 private:

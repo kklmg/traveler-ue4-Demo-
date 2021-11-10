@@ -45,6 +45,7 @@ public:
 	virtual void AimmingInProgress(float deltaTime);
 	virtual void OnAimEnd();
 
+	virtual void OnAnimFrameStart_Fire();
 public:
 	UFUNCTION(BlueprintCallable)
 	AMyCharacter* GetWeaponOwner();

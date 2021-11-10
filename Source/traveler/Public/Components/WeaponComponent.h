@@ -39,20 +39,21 @@ public:
 
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
-	FDelegateWeapon onWeaponChanged;
+	FDelegateWeapon OnWeaponChanged;
 
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
-	FDelegateWeapon onWeaponFireStart;
+	FDelegateWeapon OnWeaponFireStart;
 
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
-	FDelegateWeapon onWeaponFireEnd;
+	FDelegateWeapon OnWeaponFireEnd;
 
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
-	FDelegateWeapon onWeaponAimStart;
+	FDelegateWeapon OnWeaponAimStart;
 
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
-	FDelegateWeapon onWeaponAimEnd;
+	FDelegateWeapon OnWeaponAimEnd;
 
+public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "DefaultWeapon")
 	TSubclassOf<AWeapon> DefaultWeaponClass;
@@ -60,6 +61,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Socket")
 	FName SocketLeftHand;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Socket")
+	FName SocketRightHand;
+
+public:
+	
 	UFUNCTION(BlueprintCallable)
 	AWeapon* GetEquipedWeapon();
 
@@ -68,6 +74,9 @@ public:
 
 	UFUNCTION(BluePrintCallable)
 	bool IsAiming();
+
+	UFUNCTION(BlueprintCallable,Category = "OnAnimationFrameStart")
+	void OnAnimFrameStart_Fire();
 
 private:
 	AWeapon* _aWeapon;

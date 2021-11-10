@@ -58,7 +58,7 @@ void UWeaponComponent::SetWeapon(AWeapon* weapon)
 	{
 		_aWeapon = weapon;
 
-		onWeaponChanged.Broadcast(_aWeapon);
+		OnWeaponChanged.Broadcast(_aWeapon);
 
 		//Get Character
 		ACharacter* character = Cast<ACharacter>(GetOwner());
@@ -85,7 +85,7 @@ void UWeaponComponent::OnFireButtonDown()
 	{
 		_isFiring = true;
 		_aWeapon->OnFireStart();
-		onWeaponFireStart.Broadcast(_aWeapon);
+		OnWeaponFireStart.Broadcast(_aWeapon);
 	}
 }
 
@@ -95,7 +95,7 @@ void UWeaponComponent::OnFireButtonUp()
 	if (_aWeapon && _isFiring == true)
 	{
 		_aWeapon->OnFireEnd();
-		onWeaponFireEnd.Broadcast(_aWeapon);
+		OnWeaponFireEnd.Broadcast(_aWeapon);
 		_isFiring = false;
 		//_aWeapon->IsReadyToFire();
 	}
@@ -106,7 +106,7 @@ void UWeaponComponent::OnAimButtonDown()
 	if (_aWeapon)
 	{
 		_aWeapon->OnAimStart();
-		onWeaponAimStart.Broadcast(_aWeapon);
+		OnWeaponAimStart.Broadcast(_aWeapon);
 		_isFiring = false;
 	}
 
@@ -117,8 +117,16 @@ void UWeaponComponent::OnAimButtonUp()
 	if (_aWeapon)
 	{
 		_aWeapon->OnAimEnd();
-		onWeaponAimEnd.Broadcast(_aWeapon);
+		OnWeaponAimEnd.Broadcast(_aWeapon);
 		_isAiming = false;
+	}
+}
+
+void UWeaponComponent::OnAnimFrameStart_Fire()
+{
+	if (_aWeapon) 
+	{
+		_aWeapon->OnAnimFrameStart_Fire();
 	}
 }
 

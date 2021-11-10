@@ -22,7 +22,23 @@ public:
 	void Yaw(float AxisValue);
 	void ZoomInOut(float AxisValue);
 
+	void Reset();
+
+	void SetPitchRange(float pitchMin,float pitchMax);
+
+	UFUNCTION(BlueprintCallable, Category = getter)
+	float GetPitch01();
+
 private:
+	UPROPERTY(VisibleAnywhere, Category = pitch)
+	float _pitchMin;
+	UPROPERTY(VisibleAnywhere, Category = pitch)
+	float _pitchMax;
+	UPROPERTY(EditDefaultsOnly, Category = pitch)
+	float _pitchMinDefault;
+	UPROPERTY(EditDefaultsOnly, Category = pitch)
+	float _pitchMaxDefault;
+
 	UPROPERTY(EditAnywhere, Category = zoom)
 	float _zoomMax;
 	UPROPERTY(EditAnywhere, Category = zoom)
