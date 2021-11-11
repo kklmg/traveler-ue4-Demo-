@@ -37,6 +37,12 @@ public:
 	void OnAimButtonDown();
 	void OnAimButtonUp();
 
+	UFUNCTION(BlueprintCallable, Category = "OnAnimationFrameStart")
+	void OnAnimFrameStart_Fire();
+
+	UFUNCTION(BlueprintCallable, Category = "OnAnimationFrameStart")
+	void OnAnimFrameStart_FireReady();
+
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
 	FDelegateWeapon OnWeaponChanged;
@@ -74,9 +80,6 @@ public:
 
 	UFUNCTION(BluePrintCallable)
 	bool IsAiming();
-
-	UFUNCTION(BlueprintCallable,Category = "OnAnimationFrameStart")
-	void OnAnimFrameStart_Fire();
 
 private:
 	AWeapon* _aWeapon;

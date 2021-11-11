@@ -37,6 +37,7 @@ void ABow::OnFireStart()
 
 void ABow::FiringInProgress(float deltaTime)
 {
+	//UGameplayStatics::PredictProjectilePath();
 }
 
 void ABow::OnFireEnd() 

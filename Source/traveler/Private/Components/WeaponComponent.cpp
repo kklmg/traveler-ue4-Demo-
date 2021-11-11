@@ -84,6 +84,7 @@ void UWeaponComponent::OnFireButtonDown()
 	if (_aWeapon && _aWeapon->IsReadyToFire())
 	{
 		_isFiring = true;
+		_aWeapon->SetIsReadyToFire(false);
 		_aWeapon->OnFireStart();
 		OnWeaponFireStart.Broadcast(_aWeapon);
 	}
@@ -127,6 +128,14 @@ void UWeaponComponent::OnAnimFrameStart_Fire()
 	if (_aWeapon) 
 	{
 		_aWeapon->OnAnimFrameStart_Fire();
+	}
+}
+
+void UWeaponComponent::OnAnimFrameStart_FireReady() 
+{
+	if (_aWeapon)
+	{
+		_aWeapon->SetIsReadyToFire(true);
 	}
 }
 
