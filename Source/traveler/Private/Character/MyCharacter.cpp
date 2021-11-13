@@ -78,8 +78,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis("MoveRight", _actionComponent, &UActionComponent::AddMovementInputY);
 
 	//jump
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::StartJump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AMyCharacter::StopJump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, _actionComponent, &UActionComponent::OnJumpButtonDown);
+	PlayerInputComponent->BindAction("Jump", IE_Released, _actionComponent, &UActionComponent::OnJumpButtonUp);
 
 	//camera
 	InputComponent->BindAxis("CameraPitch", _cameraSpringArmComponent, &UCameraSpringArmComponent::Pitch);
@@ -91,20 +91,6 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, _weaponComponent, &UWeaponComponent::OnAimButtonDown);
 	PlayerInputComponent->BindAction("Aim", IE_Released, _weaponComponent, &UWeaponComponent::OnAimButtonUp);
-}
-
-void AMyCharacter::StartJump()
-{
-	_actionComponent->TriggerJump();
-
-	//bPressedJump = true;
-}
-
-void AMyCharacter::StopJump()
-{
-	_actionComponent->TriggerJump();
-
-	bPressedJump = false;
 }
 
 

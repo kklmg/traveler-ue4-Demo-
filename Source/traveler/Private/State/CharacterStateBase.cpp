@@ -5,20 +5,39 @@
 #include "Components/ActionComponent.h"
 
 
-void UCharacterStateBase::Initialize()
+
+void UCharacterStateBase::Initialize(AMyCharacter* character)
 {
-	if(ActionIdleClass!=nullptr)
-	_actionIdle = NewObject<UAction>(this,ActionIdleClass);
+	if (ActionIdleClass != nullptr)
+	{
+		_actionIdle = NewObject<UAction>(this, ActionIdleClass);
+		_actionIdle->VInitialize(character);
+	}
 	if (ActionMoveClass != nullptr)
-	_actionMove = NewObject<UAction>(this, ActionMoveClass);
+	{
+		_actionMove = NewObject<UAction>(this, ActionMoveClass);
+		_actionMove->VInitialize(character);
+	}
 	if (ActionSprintClass != nullptr)
-	_actionSprint = NewObject<UAction>(this, ActionSprintClass);
+	{
+		_actionSprint = NewObject<UAction>(this, ActionSprintClass);
+		_actionSprint->VInitialize(character);
+	}
 	if (ActionJumpClass != nullptr)
-	_actionJump = NewObject<UAction>(this, ActionJumpClass);
+	{
+		_actionJump = NewObject<UAction>(this, ActionJumpClass);
+		_actionJump->VInitialize(character);
+	}
 	if (ActionTargetClass != nullptr)
-	_actionTarget = NewObject<UAction>(this, ActionTargetClass);
+	{
+		_actionTarget = NewObject<UAction>(this, ActionTargetClass);
+		_actionTarget->VInitialize(character);
+	}
 	if (ActionDashClass != nullptr)
-	_actionDash = NewObject<UAction>(this, ActionDashClass);
+	{
+		_actionDash = NewObject<UAction>(this, ActionDashClass);
+		_actionDash->VInitialize(character);
+	}
 }
 
 

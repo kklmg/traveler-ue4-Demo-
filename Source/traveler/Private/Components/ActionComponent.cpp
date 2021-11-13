@@ -31,10 +31,15 @@ void UActionComponent::BeginPlay()
 	_actionData = NewObject<UActionData>(this);
 	
 	// ...
+
+	//Get My Character
+	AMyCharacter* character = Cast<AMyCharacter>(GetOwner());
+	check(character != nullptr);
+
 	if (DefaultCharacterStateClass != nullptr)
 	{
 		_pCharacterState = NewObject<UCharacterStateBase>(this, DefaultCharacterStateClass);
-		_pCharacterState->Initialize();
+		_pCharacterState->Initialize(character);
 		this->TriggerIdle();
 	}
 	
@@ -177,4 +182,14 @@ FVector UActionComponent::_CalculateMovingDirection()
 UActionData* UActionComponent::GetActionData()
 {
 	return _actionData;
+}
+
+void UActionComponent::OnJumpButtonDown()
+{
+	TriggerJump();
+}
+
+void UActionComponent::OnJumpButtonUp()
+{
+
 }

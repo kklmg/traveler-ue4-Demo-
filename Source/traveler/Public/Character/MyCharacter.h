@@ -49,17 +49,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UWeaponComponent* GetWeaponComponent();
 
-	//UFUNCTION(BlueprintCallable)
-	//void LaunchProjectile();
-
-	// Sets jump flag when key is pressed.
-	UFUNCTION()
-	void StartJump();
-
-	// Clears jump flag when key is released.
-	UFUNCTION()
-	void StopJump();
-
 private:
 	// Gun muzzle offset from the camera location.
 	UPROPERTY(EditAnywhere, Category = Gameplay)

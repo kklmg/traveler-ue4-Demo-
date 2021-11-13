@@ -20,8 +20,9 @@ enum class EActionState : uint8
 	AS_FINISHED UMETA(DisplayName = "FINISHED"),
 };
 
-
+class AMyCharacter;
 class UActionComponent;
+
 
 /**
  *
@@ -43,7 +44,7 @@ public:
 	void SetState(EActionState state);
 
 public:
-	virtual void VInitialize();
+	virtual void VInitialize(AMyCharacter* actionOwner);
 public:
 	virtual void VBegin(AActor* actor, UActionData* actionData) PURE_VIRTUAL(UAction::VBegin.;);
 	virtual void VUpdate(float deltaTime,AActor* actor, UActionData *data) PURE_VIRTUAL(UAction::VUpdate.;);
@@ -51,10 +52,14 @@ public:
 public:
 	FString GetActionName();
 
+	AMyCharacter&  GetActionOwner();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FString _actionName;
+
+	UPROPERTY()
+	AMyCharacter* _actionOwner;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	UAction* _pNextAction;

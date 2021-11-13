@@ -7,7 +7,9 @@
 #include "Actions/Action.h"
 #include "CharacterStateBase.generated.h"
 
+class AMyCharacter;
 class UActionComponent;
+
 /**
  * 
  */
@@ -17,7 +19,7 @@ class TRAVELER_API UCharacterStateBase : public UState
 	GENERATED_BODY()
 
 public:
-	void Initialize();
+	void Initialize(AMyCharacter *character);
 
 	void Idle(UActionComponent* actionComponent);
 	void Move(UActionComponent* actionComponent);

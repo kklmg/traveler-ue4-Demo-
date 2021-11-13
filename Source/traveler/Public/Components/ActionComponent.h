@@ -30,6 +30,9 @@ public:
 
 	void SetCharacterState();
 
+	void OnJumpButtonDown();
+	void OnJumpButtonUp();
+
 	void TriggerIdle();
 	void TriggerMove();
 	void TriggerSprint();

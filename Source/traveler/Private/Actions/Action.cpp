@@ -3,6 +3,7 @@
 
 #include "Actions/Action.h"
 #include "Components/ActionComponent.h"
+#include "Character/MyCharacter.h"
 
 
 UAction::UAction()
@@ -11,23 +12,24 @@ UAction::UAction()
 	_actionName = TEXT("UnKnown");
 }
 
-void UAction::VInitialize()
+void UAction::VInitialize(AMyCharacter* actionOwner)
 {
 	_state = EActionState::AS_UNINITIALIZED;
+	_actionOwner = actionOwner;
 }
 
 void UAction::Start(UActionComponent* actionComponent)
 {
 	check(actionComponent != nullptr)
 
-	if (_state == EActionState::AS_UNINITIALIZED)
-	{
-		VBegin(actionComponent->GetOwner(), actionComponent->GetActionData());
-	}
+		if (_state == EActionState::AS_UNINITIALIZED || _state == EActionState::AS_FINISHED)
+		{
+			VBegin(actionComponent->GetOwner(), actionComponent->GetActionData());
+		}
 
 	_state = EActionState::AS_RUNNING;
 	actionComponent->AddToLoop(this);
-	
+
 }
 
 void UAction::Pause()
@@ -59,4 +61,9 @@ EActionState UAction::GetState() const
 void UAction::SetState(EActionState state)
 {
 	_state = state;
+}
+
+AMyCharacter& UAction::GetActionOwner()
+{
+	return *_actionOwner;
 }
