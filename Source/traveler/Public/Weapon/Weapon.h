@@ -46,7 +46,11 @@ public:
 	virtual void OnAimEnd();
 
 	virtual void OnAnimFrameStart_Fire();
+
 public:
+	UFUNCTION(BlueprintCallable)
+	USkeletalMeshComponent* GetMeshComponent();
+
 	UFUNCTION(BlueprintCallable)
 	AMyCharacter* GetWeaponOwner();
 

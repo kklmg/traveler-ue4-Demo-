@@ -33,6 +33,11 @@ void AWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+USkeletalMeshComponent* AWeapon::GetMeshComponent()
+{
+	return _skeletalMeshComponent;
+}
+
 
 AMyCharacter* AWeapon::GetWeaponOwner() 
 {

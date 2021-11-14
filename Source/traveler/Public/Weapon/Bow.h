@@ -32,6 +32,8 @@ public:
 
 	void AddProjectile(AProjectile* projectile);
 
+	void Drawing();
+
 private:
 	float _CalculateDamage();
 	float _CalculateProjectileSpeed();

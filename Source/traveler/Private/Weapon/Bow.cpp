@@ -194,3 +194,12 @@ float ABow::_CalculateProjectileSpeed()
 {
 	return FMath::Clamp(_strength * _maxProjectileVelocity, _baseProjectileVelocity, _maxProjectileVelocity);
 }
+
+
+void ABow::Drawing() 
+{
+	GetMeshComponent()->GetBoneLocation(TEXT("t_pullSide"));
+	GetMeshComponent()->GetBoneLocation(TEXT("b_pullSide"));
+
+	GetWeaponOwner()->GetMesh()->GetSocketLocation(TEXT("RightHandThumb3Socket"));
+}
