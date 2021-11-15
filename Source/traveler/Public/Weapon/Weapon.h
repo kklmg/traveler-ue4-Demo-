@@ -7,6 +7,7 @@
 #include "Weapon.generated.h"
 
 class AMyCharacter;
+class UPoseableMeshComponent;
 
 UCLASS()
 class TRAVELER_API AWeapon : public AActor
@@ -28,8 +29,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	//UPROPERTY(EditAnywhere)
+	//USkeletalMeshComponent* _skeletalMeshComponent;
+
 	UPROPERTY(EditAnywhere)
-	USkeletalMeshComponent* _skeletalMeshComponent;
+	UPoseableMeshComponent* _poseableMeshComponent;
 
 	AMyCharacter* _weaponOwner;
 
@@ -45,11 +49,22 @@ public:
 	virtual void AimmingInProgress(float deltaTime);
 	virtual void OnAimEnd();
 
-	virtual void OnAnimFrameStart_Fire();
+	virtual void OnEnterAnimFrame_ReloadStart();
+	virtual void OnTickAnimFrame_Reloading();
+	virtual void OnEnterAnimFrame_ReloadCompleted();
+
+	virtual void OnEnterAnimFrame_Launch();
 
 public:
+	//UFUNCTION(BlueprintCallable)
+	//USkeletalMeshComponent* GetMeshComponent();
+
 	UFUNCTION(BlueprintCallable)
-	USkeletalMeshComponent* GetMeshComponent();
+	FORCEINLINE	UPoseableMeshComponent* GetMeshComponent() 
+	{
+		return _poseableMeshComponent;
+	}
+	
 
 	UFUNCTION(BlueprintCallable)
 	AMyCharacter* GetWeaponOwner();

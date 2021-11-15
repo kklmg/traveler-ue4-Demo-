@@ -14,6 +14,15 @@ class UAttributeComponent;
 
 class AProjectile;
 
+UENUM(BlueprintType)
+enum class EMeshSocketType : uint8
+{
+	MST_LeftHand UMETA(DisplayName = "LeftHand"),
+	MST_RightHand UMETA(DisplayName = "RightHand"),
+	MST_LeftHandDraw UMETA(DisplayName = "LeftHandDraw"),
+	MST_RightHandDraw UMETA(DisplayName = "RightHandDraw"),
+};
+
 
 UCLASS()
 class TRAVELER_API AMyCharacter : public ACharacter
@@ -49,15 +58,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UWeaponComponent* GetWeaponComponent();
 
+	UFUNCTION(BlueprintCallable)
+	bool GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace,FTransform& outTransform);
+
 private:
-	// Gun muzzle offset from the camera location.
-	UPROPERTY(EditAnywhere, Category = Gameplay)
-	FVector MuzzleOffset;
-
-	// Projectile class to spawn.
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TSubclassOf<class AProjectile> ProjectileClass;
-
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
 	UPawnCameraComponent* _cameraComponent;
@@ -74,6 +78,6 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* _attributeComponent;
 
-	FVector2D MovementInput;
-	FVector2D CameraInput;
+	UPROPERTY(EditDefaultsOnly, Category = Sockets)
+	TMap<EMeshSocketType,FName> _socketsMap;
 };

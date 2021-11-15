@@ -28,17 +28,29 @@ public:
 	virtual void AimmingInProgress(float deltaTime) override;
 	virtual void OnAimEnd() override;
 
-	virtual void OnAnimFrameStart_Fire() override;
+	virtual void OnEnterAnimFrame_ReloadStart() override;
+	virtual void OnTickAnimFrame_Reloading() override;
+	virtual void OnEnterAnimFrame_ReloadCompleted() override;
 
+	virtual void OnEnterAnimFrame_Launch() override;
+	
 	void AddProjectile(AProjectile* projectile);
 
-	void Drawing();
+	void DrawBowString();
+
+	void ResetBowString();
 
 private:
 	float _CalculateDamage();
 	float _CalculateProjectileSpeed();
 	void _SpawnProjectile();
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Bone")
+	FName _bonePullTop;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Bone")
+	FName _bonePullBottom;
+
 	// Projectile class to spawn.
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<class AProjectile> ProjectileClass;

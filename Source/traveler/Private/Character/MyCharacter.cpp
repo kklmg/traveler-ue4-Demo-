@@ -49,10 +49,6 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Character BeginPlay"));
-
-	//_pMovementHandler = new MovementHandler(this);
 }
 
 void AMyCharacter::BeginDestroy()
@@ -112,5 +108,24 @@ UAttributeComponent* AMyCharacter::GetAttributeComponent()
 UWeaponComponent* AMyCharacter::GetWeaponComponent() 
 {
 	return _weaponComponent;
+}
+
+bool AMyCharacter::GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
+{
+	if (_socketsMap.Contains(meshSocketType)) 
+	{
+		outTransform = GetMesh()->GetSocketTransform(_socketsMap[meshSocketType]);
+		return true;
+	}
+	else
+	{
+		const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
+		if (EnumPtr) 
+		{
+			FString enumName = EnumPtr->GetEnumName((int32)meshSocketType);
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
+		}
+		return false;
+	}
 }
 

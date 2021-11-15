@@ -3,6 +3,7 @@
 
 #include "Weapon/Weapon.h"
 #include "Character/MyCharacter.h"
+#include "Components/PoseableMeshComponent.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -12,7 +13,9 @@ AWeapon::AWeapon()
 
 	_isReadyToFire = false;
 
-	_skeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
+	//_skeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
+
+	_poseableMeshComponent = CreateDefaultSubobject<UPoseableMeshComponent>(TEXT("PoseableMeshComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -33,10 +36,11 @@ void AWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-USkeletalMeshComponent* AWeapon::GetMeshComponent()
-{
-	return _skeletalMeshComponent;
-}
+//USkeletalMeshComponent* AWeapon::GetMeshComponent()
+//{
+//	return _skeletalMeshComponent;
+//}
+
 
 
 AMyCharacter* AWeapon::GetWeaponOwner() 
@@ -59,4 +63,8 @@ void AWeapon::OnFireEnd() {}
 void AWeapon::OnAimStart() {}
 void AWeapon::AimmingInProgress(float deltaTime) {}
 void AWeapon::OnAimEnd() {}
-void AWeapon::OnAnimFrameStart_Fire() {}
+
+void AWeapon::OnEnterAnimFrame_ReloadStart() {}
+void AWeapon::OnTickAnimFrame_Reloading() {}
+void AWeapon::OnEnterAnimFrame_ReloadCompleted() {}
+void AWeapon::OnEnterAnimFrame_Launch(){}

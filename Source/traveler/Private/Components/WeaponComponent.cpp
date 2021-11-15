@@ -127,7 +127,7 @@ void UWeaponComponent::OnAnimFrameStart_Fire()
 {
 	if (_aWeapon) 
 	{
-		_aWeapon->OnAnimFrameStart_Fire();
+		_aWeapon->OnEnterAnimFrame_Launch();
 	}
 }
 

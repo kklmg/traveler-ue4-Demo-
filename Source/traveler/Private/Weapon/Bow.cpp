@@ -5,6 +5,7 @@
 #include "Projectile/Projectile.h"
 #include "Character/MyCharacter.h"
 #include "Components/PawnCameraComponent.h"
+#include "Components/PoseableMeshComponent.h"
 #include "Components/CameraSpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
@@ -58,7 +59,6 @@ void ABow::OnAimStart()
 	UCameraSpringArmComponent* CameraSpringArmComponent = GetWeaponOwner()->GetSpringArmComponent();
 	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 
-
 	CameraSpringArmComponent->SetPitchRange(-60, 60);
 	cameraComponent->BeginDragCamera(_aimingCameraOffset);
 }
@@ -71,6 +71,9 @@ void ABow::AimmingInProgress(float deltaTime)
 	rotator.Roll = 0;
 
 	GetWeaponOwner()->SetActorRotation(rotator);
+
+	DrawBowString();
+
 }
 void ABow::OnAimEnd()
 {
@@ -89,11 +92,27 @@ void ABow::OnAimEnd()
 
 	CameraSpringArmComponent->Reset();
 	cameraComponent->CancelDrag();
+
+	ResetBowString();
 }
 
-void ABow::OnAnimFrameStart_Fire()
+void ABow::OnEnterAnimFrame_ReloadStart()
+{
+}
+
+void ABow::OnTickAnimFrame_Reloading() 
+{
+	DrawBowString();
+}
+
+void ABow::OnEnterAnimFrame_ReloadCompleted()
+{
+}
+
+void ABow::OnEnterAnimFrame_Launch()
 {
 	_SpawnProjectile();
+	ResetBowString();
 }
 
 
@@ -196,10 +215,18 @@ float ABow::_CalculateProjectileSpeed()
 }
 
 
-void ABow::Drawing() 
+void ABow::DrawBowString()
 {
-	GetMeshComponent()->GetBoneLocation(TEXT("t_pullSide"));
-	GetMeshComponent()->GetBoneLocation(TEXT("b_pullSide"));
+	FTransform outTransform;
+	if (GetWeaponOwner()->GetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw, ERelativeTransformSpace::RTS_World, outTransform))
+	{
+		GetMeshComponent()->SetBoneLocationByName(_bonePullBottom, outTransform.GetLocation(), EBoneSpaces::WorldSpace);
+		GetMeshComponent()->SetBoneLocationByName(_bonePullTop, outTransform.GetLocation(), EBoneSpaces::WorldSpace);
+	}
+}
 
-	GetWeaponOwner()->GetMesh()->GetSocketLocation(TEXT("RightHandThumb3Socket"));
+void ABow::ResetBowString() 
+{
+	GetMeshComponent()->ResetBoneTransformByName(_bonePullBottom);
+	GetMeshComponent()->ResetBoneTransformByName(_bonePullTop);
 }
