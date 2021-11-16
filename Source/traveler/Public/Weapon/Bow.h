@@ -6,6 +6,8 @@
 #include "Weapon.h"
 #include "Bow.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
+
 class AProjectile;
 
 /**
@@ -32,24 +34,22 @@ public:
 	virtual void OnTickAnimFrame_Reloading() override;
 	virtual void OnEnterAnimFrame_ReloadCompleted() override;
 
+	UFUNCTION(BlueprintCallable)
+	void OnEnterAnimFrame_StartDrawingBow();
+
 	virtual void OnEnterAnimFrame_Launch() override;
 	
 	void AddProjectile(AProjectile* projectile);
 
-	void DrawBowString();
-
-	void ResetBowString();
+	UFUNCTION(BlueprintCallable)
+	bool isDrawing();
+	//FOnBoolChanged DrawingStateChanged;
 
 private:
 	float _CalculateDamage();
 	float _CalculateProjectileSpeed();
 	void _SpawnProjectile();
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "Bone")
-	FName _bonePullTop;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Bone")
-	FName _bonePullBottom;
 
 	// Projectile class to spawn.
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
@@ -74,6 +74,8 @@ private:
 	UAnimMontage* _fireAnimMontage;
 
 	bool _isAiming;
+	bool _isDrawing;
+
 	float _strength;
 
 	TArray<AProjectile*> _projectiles;

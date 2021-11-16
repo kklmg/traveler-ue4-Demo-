@@ -4,6 +4,7 @@
 #include "Weapon/Weapon.h"
 #include "Weapon/Bow.h"
 #include "Character/MyCharacter.h"
+#include "Components/PoseableMeshComponent.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -61,11 +62,15 @@ void UWeaponComponent::SetWeapon(AWeapon* weapon)
 		OnWeaponChanged.Broadcast(_aWeapon);
 
 		//Get Character
-		ACharacter* character = Cast<ACharacter>(GetOwner());
+		AMyCharacter* character = Cast<AMyCharacter>(GetOwner());
 		check(character != nullptr);
 
 		//Attach Weapon 
-		_aWeapon->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketLeftHand);
+		FName leftHandSocketName = character->GetMeshSocketNameByType(EMeshSocketType::MST_LeftHand);		
+
+		_aWeapon->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
+		//_aWeapon->AttachToActor(character, FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
+		
 	}
 }
 

@@ -8,21 +8,24 @@
 // Sets default values
 AWeapon::AWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	_isReadyToFire = false;
+	WeaponType = EWeaponType::WT_UnKnown;
 
-	//_skeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
+	_skeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 
-	_poseableMeshComponent = CreateDefaultSubobject<UPoseableMeshComponent>(TEXT("PoseableMeshComponent"));
+	//_poseableMeshComponent = CreateDefaultSubobject<UPoseableMeshComponent>(TEXT("PoseableMeshComponent"));
+	SetRootComponent(_skeletalMeshComponent);
+	//_poseableMeshComponent->attac
 }
 
 // Called when the game starts or when spawned
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void AWeapon::Initialize(AMyCharacter* weaponOwner)
@@ -36,10 +39,10 @@ void AWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-//USkeletalMeshComponent* AWeapon::GetMeshComponent()
-//{
-//	return _skeletalMeshComponent;
-//}
+USkeletalMeshComponent* AWeapon::GetMeshComponent()
+{
+	return _skeletalMeshComponent;
+}
 
 
 

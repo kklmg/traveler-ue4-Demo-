@@ -64,12 +64,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "DefaultWeapon")
 	TSubclassOf<AWeapon> DefaultWeaponClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Socket")
-	FName SocketLeftHand;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Socket")
-	FName SocketRightHand;
-
 public:
 	
 	UFUNCTION(BlueprintCallable)

@@ -13,6 +13,8 @@
 
 ABow::ABow() 
 {
+	WeaponType = EWeaponType::WT_Bow;
+
 	_isAiming = false;
 	_strength = 0.0f;
 	_maxDamage = 0.0f;
@@ -71,16 +73,10 @@ void ABow::AimmingInProgress(float deltaTime)
 	rotator.Roll = 0;
 
 	GetWeaponOwner()->SetActorRotation(rotator);
-
-	DrawBowString();
-
 }
 void ABow::OnAimEnd()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Fire Finished,strength: %f"), _strength));
-
-	_isAiming = false;
-	_strength = 0.0f;
 
 	if (_fireAnimMontage != nullptr)
 	{
@@ -90,19 +86,21 @@ void ABow::OnAimEnd()
 	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 	UCameraSpringArmComponent* CameraSpringArmComponent = GetWeaponOwner()->GetSpringArmComponent();
 
+	_isAiming = false;
+	_isDrawing = false;
+	_strength = 0.0f;
 	CameraSpringArmComponent->Reset();
 	cameraComponent->CancelDrag();
-
-	ResetBowString();
 }
 
 void ABow::OnEnterAnimFrame_ReloadStart()
 {
+	Super::OnEnterAnimFrame_ReloadStart();
 }
 
 void ABow::OnTickAnimFrame_Reloading() 
 {
-	DrawBowString();
+	
 }
 
 void ABow::OnEnterAnimFrame_ReloadCompleted()
@@ -112,7 +110,12 @@ void ABow::OnEnterAnimFrame_ReloadCompleted()
 void ABow::OnEnterAnimFrame_Launch()
 {
 	_SpawnProjectile();
-	ResetBowString();
+	_isDrawing = false;
+}
+
+void ABow::OnEnterAnimFrame_StartDrawingBow()
+{
+	_isDrawing = true;
 }
 
 
@@ -214,19 +217,7 @@ float ABow::_CalculateProjectileSpeed()
 	return FMath::Clamp(_strength * _maxProjectileVelocity, _baseProjectileVelocity, _maxProjectileVelocity);
 }
 
-
-void ABow::DrawBowString()
+bool ABow::isDrawing() 
 {
-	FTransform outTransform;
-	if (GetWeaponOwner()->GetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw, ERelativeTransformSpace::RTS_World, outTransform))
-	{
-		GetMeshComponent()->SetBoneLocationByName(_bonePullBottom, outTransform.GetLocation(), EBoneSpaces::WorldSpace);
-		GetMeshComponent()->SetBoneLocationByName(_bonePullTop, outTransform.GetLocation(), EBoneSpaces::WorldSpace);
-	}
-}
-
-void ABow::ResetBowString() 
-{
-	GetMeshComponent()->ResetBoneTransformByName(_bonePullBottom);
-	GetMeshComponent()->ResetBoneTransformByName(_bonePullTop);
+	return _isDrawing;
 }

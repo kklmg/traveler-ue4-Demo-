@@ -9,6 +9,16 @@
 class AMyCharacter;
 class UPoseableMeshComponent;
 
+UENUM(BlueprintType)
+enum class EWeaponType : uint8
+{
+	WT_UnKnown UMETA(DisplayName = "UnKnown"),
+	WT_Sword UMETA(DisplayName = "Sword"),
+	WT_DualSword UMETA(DisplayName = "DualSword"),
+	WT_Knife UMETA(DisplayName = "Knife"),
+	WT_Bow UMETA(DisplayName = "Bow"),
+};
+
 UCLASS()
 class TRAVELER_API AWeapon : public AActor
 {
@@ -29,15 +39,18 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	//UPROPERTY(EditAnywhere)
-	//USkeletalMeshComponent* _skeletalMeshComponent;
+	UPROPERTY(VisibleAnywhere)
+	USkeletalMeshComponent* _skeletalMeshComponent;
 
-	UPROPERTY(EditAnywhere)
-	UPoseableMeshComponent* _poseableMeshComponent;
-
+	UPROPERTY(VisibleAnywhere)
 	AMyCharacter* _weaponOwner;
 
 	bool _isReadyToFire;
+
+public:
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+	EWeaponType WeaponType;
+
 
 public:
 	/**/
@@ -56,15 +69,9 @@ public:
 	virtual void OnEnterAnimFrame_Launch();
 
 public:
-	//UFUNCTION(BlueprintCallable)
-	//USkeletalMeshComponent* GetMeshComponent();
-
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE	UPoseableMeshComponent* GetMeshComponent() 
-	{
-		return _poseableMeshComponent;
-	}
-	
+	USkeletalMeshComponent* GetMeshComponent();
+
 
 	UFUNCTION(BlueprintCallable)
 	AMyCharacter* GetWeaponOwner();

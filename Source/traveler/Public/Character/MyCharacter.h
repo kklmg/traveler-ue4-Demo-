@@ -12,6 +12,7 @@ class UActionComponent;
 class UWeaponComponent;
 class UAttributeComponent;
 
+class AWeapon;
 class AProjectile;
 
 UENUM(BlueprintType)
@@ -57,6 +58,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UWeaponComponent* GetWeaponComponent();
+
+	UFUNCTION(BlueprintCallable)
+	AWeapon* GetEquippedWeapon();
+
+	UFUNCTION(BlueprintCallable)
+	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
 
 	UFUNCTION(BlueprintCallable)
 	bool GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace,FTransform& outTransform);

@@ -9,6 +9,7 @@
 #include "Components/ActionComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Projectile/Projectile.h"
+#include "Weapon/Weapon.h"
 
 
 // Sets default values
@@ -108,6 +109,27 @@ UAttributeComponent* AMyCharacter::GetAttributeComponent()
 UWeaponComponent* AMyCharacter::GetWeaponComponent() 
 {
 	return _weaponComponent;
+}
+AWeapon* AMyCharacter::GetEquippedWeapon()
+{
+	return _weaponComponent->GetEquipedWeapon();
+}
+FName AMyCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType) 
+{
+	if (_socketsMap.Contains(meshSocketType))
+	{
+		return _socketsMap[meshSocketType];
+	}
+	else
+	{
+		const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
+		if (EnumPtr)
+		{
+			FString enumName = EnumPtr->GetEnumName((int32)meshSocketType);
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
+		}
+		return "";
+	}
 }
 
 bool AMyCharacter::GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)

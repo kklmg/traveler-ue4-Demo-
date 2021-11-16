@@ -14,16 +14,27 @@ void UAnimNotifyState_Reloading::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 }
 void UAnimNotifyState_Reloading::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime) 
 {
+	AActor* actor = MeshComp->GetOwner();
+	if (actor == nullptr) 
+	{
+		return;
+	}
+	AMyCharacter* character = Cast<AMyCharacter>(actor);
+	if (character == nullptr) 
+	{
+		return;
+	}
 
+	AWeapon* weapon = character->GetEquippedWeapon();
+	if (weapon == nullptr)
+	{
+		return;
+	}
+
+	weapon->OnTickAnimFrame_Reloading();
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("notify Tick"));
 }
 void UAnimNotifyState_Reloading::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) 
 {
-	AActor* actor = MeshComp->GetOwner();
-	AMyCharacter* character = Cast<AMyCharacter>(actor);
-
-	AWeapon* weapon = character->GetWeaponComponent()->GetEquipedWeapon();
-	if (weapon != nullptr)
-	{
-		weapon->OnTickAnimFrame_Reloading();
-	}
+	
 }
