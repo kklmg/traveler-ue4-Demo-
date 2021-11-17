@@ -11,32 +11,32 @@ AProjectile::AProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 
-	if (!RootComponent)
-	{
-		RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSceneComponent"));
-	}
-	if (!CollisionComponent)
-	{
-		// Use a sphere as a simple collision representation.
-		CollisionComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
-		// Set the sphere's collision radius.
-		CollisionComponent->InitCapsuleSize(10, 10);
-		// Set the root component to be the collision component.
-		RootComponent = CollisionComponent;
+	//if (!RootComponent)
+	//{
+	//	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSceneComponent"));
+	//}
+	//if (!CollisionComponent)
+	//{
+	//	// Use a sphere as a simple collision representation.
+	//	CollisionComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	//	// Set the sphere's collision radius.
+	//	CollisionComponent->InitCapsuleSize(10, 10);
+	//	// Set the root component to be the collision component.
+	//	RootComponent = CollisionComponent;
 
-		// Set the sphere's collision profile name to "Projectile".
-		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
+	//	// Set the sphere's collision profile name to "Projectile".
+	//	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
 
-		// Event called when component hits something.
-		CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
-	}
+	//	// Event called when component hits something.
+	//	CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+	//}
 
 	if (!ProjectileMovementComponent)
 	{
 		// Use this component to drive this projectile's movement.
 		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
-		ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-		ProjectileMovementComponent->InitialSpeed = 3000.0f;
+		//ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
+		ProjectileMovementComponent->InitialSpeed = 0.0f;
 		ProjectileMovementComponent->MaxSpeed = 3000.0f;
 		ProjectileMovementComponent->bRotationFollowsVelocity = true;
 		ProjectileMovementComponent->bShouldBounce = false;
@@ -47,24 +47,15 @@ AProjectile::AProjectile()
 	if (!ProjectileMeshComponent)
 	{
 		ProjectileMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMeshComponent"));
-		/*static ConstructorHelpers::FObjectFinder<UStaticMesh>Mesh(TEXT("'/Game/Sphere.Sphere'"));
-		if (Mesh.Succeeded())
-		{
-			ProjectileMeshComponent->SetStaticMesh(Mesh.Object);
-		}*/
+		SetRootComponent(ProjectileMeshComponent);
 	}
 	
-	//static ConstructorHelpers::FObjectFinder<UMaterial>Material(TEXT("'/Game/SphereMaterial.SphereMaterial'"));
-	//if (Material.Succeeded())
-	//{
-	//	ProjectileMaterialInstance = UMaterialInstanceDynamic::Create(Material.Object, ProjectileMeshComponent);
-	//}
-	ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
-	ProjectileMeshComponent->SetRelativeScale3D(FVector(0.09f, 0.09f, 0.09f));
-	ProjectileMeshComponent->SetupAttachment(RootComponent);
+	//ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
+	//ProjectileMeshComponent->SetRelativeScale3D(FVector(0.09f, 0.09f, 0.09f));
+	//ProjectileMeshComponent->SetupAttachment(RootComponent);
 
 	// Delete the projectile after 3 seconds.
-	InitialLifeSpan = 3.0f;
+	InitialLifeSpan = 10.0f;
 }
 
 // Called when the game starts or when spawned

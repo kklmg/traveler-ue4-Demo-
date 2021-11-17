@@ -30,8 +30,8 @@ public:
 
 
 	// Sphere collision component.
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	UCapsuleComponent* CollisionComponent;
+	//UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	//UCapsuleComponent* CollisionComponent;
 
 	// Projectile movement component.
 	UPROPERTY(VisibleAnywhere, Category = Movement)

@@ -41,6 +41,10 @@ void ABow::OnFireStart()
 void ABow::FiringInProgress(float deltaTime)
 {
 	//UGameplayStatics::PredictProjectilePath();
+
+	//FiringInProgress();
+
+
 }
 
 void ABow::OnFireEnd() 
@@ -63,6 +67,7 @@ void ABow::OnAimStart()
 
 	CameraSpringArmComponent->SetPitchRange(-60, 60);
 	cameraComponent->BeginDragCamera(_aimingCameraOffset);
+	
 }
 void ABow::AimmingInProgress(float deltaTime)
 {
@@ -73,15 +78,31 @@ void ABow::AimmingInProgress(float deltaTime)
 	rotator.Roll = 0;
 
 	GetWeaponOwner()->SetActorRotation(rotator);
+
+
+
+	FTransform rightHandTransform, weaponTransform;
+	GetWeaponOwner()->GetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw,ERelativeTransformSpace::RTS_World, rightHandTransform);
+	weaponTransform = this->GetTransform();
+
+
+	FVector dir = weaponTransform.GetLocation() - rightHandTransform.GetLocation();
+	FRotator projectileRot = dir.Rotation();
+	projectileRot.Pitch += 20;
+
+	for(AProjectile* projectile : _arraySpawnedProjectiles)
+	{
+		if (projectile != NULL)
+		{
+			projectile->SetActorLocation(rightHandTransform.GetLocation());
+			projectile->SetActorRotation(projectileRot);
+			projectileRot.Pitch -= 10;
+		}
+	}
 }
 void ABow::OnAimEnd()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Fire Finished,strength: %f"), _strength));
-
-	if (_fireAnimMontage != nullptr)
-	{
-		GetWeaponOwner()->StopAnimMontage(_fireAnimMontage);
-	}
 
 	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 	UCameraSpringArmComponent* CameraSpringArmComponent = GetWeaponOwner()->GetSpringArmComponent();
@@ -109,13 +130,22 @@ void ABow::OnEnterAnimFrame_ReloadCompleted()
 
 void ABow::OnEnterAnimFrame_Launch()
 {
-	_SpawnProjectile();
+	//_SpawnProjectile();
 	_isDrawing = false;
 }
 
 void ABow::OnEnterAnimFrame_StartDrawingBow()
 {
 	_isDrawing = true;
+}
+
+void ABow::OnEnterAnimFrame_GrabArrow() 
+{
+	_SpawnProjectile();
+	_SpawnProjectile();
+	_SpawnProjectile();
+	_SpawnProjectile();
+	_SpawnProjectile();
 }
 
 
@@ -178,7 +208,7 @@ void ABow::_SpawnProjectile()
 
 
 			//UGameplayStatics::PredictProjectilePath(GetWorld(), PredictParams, PredictResult);
-
+		
 
 		
 		FVector projectileDirection = hitLocation - MuzzleLocation;
@@ -196,12 +226,20 @@ void ABow::_SpawnProjectile()
 			SpawnParams.Instigator = GetWeaponOwner();
 
 			// Spawn the projectile at the muzzle.
-			AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-			if (Projectile)
+			//AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+
+			/*if (Projectile)
 			{
 				Projectile->Initialize(_CalculateDamage(), _CalculateProjectileSpeed());
 				Projectile->FireInDirection(projectileDirection);
-			}
+			}*/
+
+			AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass);
+			//Projectile->AttachToComponent(GetMeshComponent(), FAttachmentTransformRules::KeepRelativeTransform, _meshSocketBowStringCenter);
+
+			_arraySpawnedProjectiles.Add(Projectile);
+			//Projectile->AttachToComponent(GetWeaponOwner()->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, GetWeaponOwner()->GetMeshSocketNameByType(EMeshSocketType::MST_RightHandDraw));
+			
 		}
 	}
 }

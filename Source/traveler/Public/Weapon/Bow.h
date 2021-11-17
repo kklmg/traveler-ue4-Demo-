@@ -37,6 +37,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnEnterAnimFrame_StartDrawingBow();
 
+	UFUNCTION(BlueprintCallable)
+	void OnEnterAnimFrame_GrabArrow();
+
 	virtual void OnEnterAnimFrame_Launch() override;
 	
 	void AddProjectile(AProjectile* projectile);
@@ -52,8 +55,12 @@ private:
 private:
 
 	// Projectile class to spawn.
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	UPROPERTY(EditDefaultsOnly, Category = ProjectileClass)
 	TSubclassOf<class AProjectile> ProjectileClass;
+
+	// Projectile class to spawn.
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TArray<AProjectile*> _arraySpawnedProjectiles;
 
 	UPROPERTY(EditAnyWhere, Category = Attribute, meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float _drawingVelocity;
@@ -70,8 +77,9 @@ private:
 	UPROPERTY(EditAnyWhere, Category = Camera)
 	FVector _aimingCameraOffset;
 
-	UPROPERTY(EditAnyWhere, Category = Animation)
-	UAnimMontage* _fireAnimMontage;
+	UPROPERTY(EditDefaultsOnly, Category = MeshSocket)
+	FName _meshSocketBowStringCenter;
+
 
 	bool _isAiming;
 	bool _isDrawing;
