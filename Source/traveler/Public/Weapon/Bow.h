@@ -51,7 +51,12 @@ public:
 private:
 	float _CalculateDamage();
 	float _CalculateProjectileSpeed();
+
 	void _SpawnProjectile();
+	void _SpawnProjectile(int count);
+
+	void _UpdateProjectileTransform(float interval);
+
 private:
 
 	// Projectile class to spawn.

@@ -55,7 +55,7 @@ AProjectile::AProjectile()
 	//ProjectileMeshComponent->SetupAttachment(RootComponent);
 
 	// Delete the projectile after 3 seconds.
-	InitialLifeSpan = 10.0f;
+	//InitialLifeSpan = 10.0f;
 }
 
 // Called when the game starts or when spawned

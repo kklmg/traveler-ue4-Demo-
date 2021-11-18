@@ -80,25 +80,7 @@ void ABow::AimmingInProgress(float deltaTime)
 	GetWeaponOwner()->SetActorRotation(rotator);
 
 
-
-	FTransform rightHandTransform, weaponTransform;
-	GetWeaponOwner()->GetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw,ERelativeTransformSpace::RTS_World, rightHandTransform);
-	weaponTransform = this->GetTransform();
-
-
-	FVector dir = weaponTransform.GetLocation() - rightHandTransform.GetLocation();
-	FRotator projectileRot = dir.Rotation();
-	projectileRot.Pitch += 20;
-
-	for(AProjectile* projectile : _arraySpawnedProjectiles)
-	{
-		if (projectile != NULL)
-		{
-			projectile->SetActorLocation(rightHandTransform.GetLocation());
-			projectile->SetActorRotation(projectileRot);
-			projectileRot.Pitch -= 10;
-		}
-	}
+	_UpdateProjectileTransform(5);
 }
 void ABow::OnAimEnd()
 {
@@ -112,6 +94,35 @@ void ABow::OnAimEnd()
 	_strength = 0.0f;
 	CameraSpringArmComponent->Reset();
 	cameraComponent->CancelDrag();
+}
+
+
+void ABow::_UpdateProjectileTransform(float interval) 
+{
+	//get weapon,hand transform
+	FTransform rightHandTransform, weaponTransform;
+	GetWeaponOwner()->GetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
+	weaponTransform = this->GetTransform();
+
+	//compute Projectile Transform
+	FVector dir = weaponTransform.GetLocation() - rightHandTransform.GetLocation();
+	FRotator projectileRot = dir.Rotation();
+
+
+	//_arraySpawnedProjectiles.RemoveAll()
+
+	for (int i = 0; i < _arraySpawnedProjectiles.Num(); ++i)
+	{
+		FRotator rot = projectileRot;
+		rot.Pitch += interval * i * -1;
+
+		if (_arraySpawnedProjectiles[i] != NULL)
+		{
+			_arraySpawnedProjectiles[i]->SetActorLocation(rightHandTransform.GetLocation());
+			_arraySpawnedProjectiles[i]->SetActorRotation(rot);
+		}
+	}
+	
 }
 
 void ABow::OnEnterAnimFrame_ReloadStart()
@@ -141,11 +152,8 @@ void ABow::OnEnterAnimFrame_StartDrawingBow()
 
 void ABow::OnEnterAnimFrame_GrabArrow() 
 {
-	_SpawnProjectile();
-	_SpawnProjectile();
-	_SpawnProjectile();
-	_SpawnProjectile();
-	_SpawnProjectile();
+	//_SpawnProjectile(5);
+	_SpawnProjectile(10);
 }
 
 
@@ -240,6 +248,31 @@ void ABow::_SpawnProjectile()
 			_arraySpawnedProjectiles.Add(Projectile);
 			//Projectile->AttachToComponent(GetWeaponOwner()->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, GetWeaponOwner()->GetMeshSocketNameByType(EMeshSocketType::MST_RightHandDraw));
 			
+		}
+	}
+}
+
+void ABow::_SpawnProjectile(int count)
+{
+	int needSpawn = count - _arraySpawnedProjectiles.Num();
+
+	if (needSpawn < 1) return;
+	//Spawn Projectile
+	UWorld* World = GetWorld();
+
+	// Attempt to fire a projectile.
+	if (ProjectileClass && World)
+	{
+		//set spawnParameter
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetWeaponOwner();
+
+
+		for (int i = 0; i < needSpawn; ++i)
+		{
+			AProjectile* projectile = World->SpawnActor<AProjectile>(ProjectileClass,SpawnParams);
+			_arraySpawnedProjectiles.Add(projectile);
 		}
 	}
 }
