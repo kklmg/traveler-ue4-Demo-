@@ -22,17 +22,19 @@ public:
 public:
 	void Tick(float DeltaTime) override;
 
-	virtual void OnFireStart() override;
-	virtual void FiringInProgress(float deltaTime) override;
-	virtual void OnFireEnd() override;
+	virtual void OnFireButtonDown() override;
+	virtual void OnFireButtonPress(float deltaTime) override;
+	virtual void OnFireButtonUp() override;
 
-	virtual void OnAimStart() override;
-	virtual void AimmingInProgress(float deltaTime) override;
-	virtual void OnAimEnd() override;
+	virtual void OnAimButtonDown() override;
+	virtual void OnAimButtonPress(float deltaTime) override;
+	virtual void OnAimButtonUp() override;
 
 	virtual void OnEnterAnimFrame_ReloadStart() override;
 	virtual void OnTickAnimFrame_Reloading() override;
 	virtual void OnEnterAnimFrame_ReloadCompleted() override;
+
+	virtual FTransform GetMuzzleTransform() override;
 
 	UFUNCTION(BlueprintCallable)
 	void OnEnterAnimFrame_StartDrawingBow();
@@ -40,6 +42,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnEnterAnimFrame_GrabArrow();
 
+	UFUNCTION(BlueprintCallable)
 	virtual void OnEnterAnimFrame_Launch() override;
 	
 	void AddProjectile(AProjectile* projectile);
@@ -52,7 +55,6 @@ private:
 	float _CalculateDamage();
 	float _CalculateProjectileSpeed();
 
-	void _SpawnProjectile();
 	void _SpawnProjectile(int count);
 
 	void _UpdateProjectileTransform(float interval);
@@ -70,20 +72,26 @@ private:
 	UPROPERTY(EditAnyWhere, Category = Attribute, meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float _drawingVelocity;
 
-	UPROPERTY(EditAnyWhere, Category = Attribute)
+	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _spawnProjectileCount;
+
+	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _ProjectilesInterval;
+
+	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _maxDamage;
 
-	UPROPERTY(EditAnyWhere, Category = Attribute)
+	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _baseProjectileVelocity;
 
-	UPROPERTY(EditAnyWhere, Category = Attribute)
+	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _maxProjectileVelocity;
 
 	UPROPERTY(EditAnyWhere, Category = Camera)
 	FVector _aimingCameraOffset;
 
 	UPROPERTY(EditDefaultsOnly, Category = MeshSocket)
-	FName _meshSocketBowStringCenter;
+	FName _meshSocketMuzzle;
 
 
 	bool _isAiming;

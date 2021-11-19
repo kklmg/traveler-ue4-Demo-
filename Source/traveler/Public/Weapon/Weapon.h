@@ -54,17 +54,19 @@ public:
 
 public:
 	/**/
-	virtual void OnFireStart() PURE_VIRTUAL(AWeapon::OnFireStart.;);
-	virtual void FiringInProgress(float deltaTime);
-	virtual void OnFireEnd();
+	virtual void OnFireButtonDown() PURE_VIRTUAL(AWeapon::OnFireButtonDown.;);
+	virtual void OnFireButtonPress(float deltaTime);
+	virtual void OnFireButtonUp();
 
-	virtual void OnAimStart();
-	virtual void AimmingInProgress(float deltaTime);
-	virtual void OnAimEnd();
+	virtual void OnAimButtonDown();
+	virtual void OnAimButtonPress(float deltaTime);
+	virtual void OnAimButtonUp();
 
 	virtual void OnEnterAnimFrame_ReloadStart();
 	virtual void OnTickAnimFrame_Reloading();
 	virtual void OnEnterAnimFrame_ReloadCompleted();
+
+	virtual FTransform GetMuzzleTransform();
 
 	virtual void OnEnterAnimFrame_Launch();
 

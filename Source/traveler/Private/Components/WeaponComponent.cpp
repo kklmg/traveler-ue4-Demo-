@@ -44,12 +44,12 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 	if (_aWeapon != nullptr && _isFiring)
 	{
-		_aWeapon->FiringInProgress(DeltaTime);
+		_aWeapon->OnFireButtonPress(DeltaTime);
 	}
 
 	if (_aWeapon != nullptr && _isAiming)
 	{
-		_aWeapon->AimmingInProgress(DeltaTime);
+		_aWeapon->OnAimButtonPress(DeltaTime);
 	}
 }
 
@@ -90,7 +90,7 @@ void UWeaponComponent::OnFireButtonDown()
 	{
 		_isFiring = true;
 		_aWeapon->SetIsReadyToFire(false);
-		_aWeapon->OnFireStart();
+		_aWeapon->OnFireButtonDown();
 		OnWeaponFireStart.Broadcast(_aWeapon);
 	}
 }
@@ -100,7 +100,7 @@ void UWeaponComponent::OnFireButtonUp()
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "left mouse up");
 	if (_aWeapon && _isFiring == true)
 	{
-		_aWeapon->OnFireEnd();
+		_aWeapon->OnFireButtonUp();
 		OnWeaponFireEnd.Broadcast(_aWeapon);
 		_isFiring = false;
 		//_aWeapon->IsReadyToFire();
@@ -111,7 +111,7 @@ void UWeaponComponent::OnAimButtonDown()
 {
 	if (_aWeapon)
 	{
-		_aWeapon->OnAimStart();
+		_aWeapon->OnAimButtonDown();
 		OnWeaponAimStart.Broadcast(_aWeapon);
 		_isFiring = false;
 	}
@@ -122,7 +122,7 @@ void UWeaponComponent::OnAimButtonUp()
 {
 	if (_aWeapon)
 	{
-		_aWeapon->OnAimEnd();
+		_aWeapon->OnAimButtonUp();
 		OnWeaponAimEnd.Broadcast(_aWeapon);
 		_isAiming = false;
 	}

@@ -22,9 +22,22 @@ ABow::ABow()
 	_baseProjectileVelocity = 1000.0f;
 	_maxProjectileVelocity = 3000.0f;
 	_aimingCameraOffset = FVector(100, 0, 100);
+
+	_spawnProjectileCount = 5;
+	_ProjectilesInterval = 2;
 }
 
-void ABow::OnFireStart()
+void ABow::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (_isAiming)
+	{
+		_strength = FMath::Clamp(_strength + DeltaTime * _drawingVelocity, 0.0f, 1.0f);
+	}
+}
+
+void ABow::OnFireButtonDown()
 {
 	if (_isAiming == false)
 	{
@@ -37,8 +50,7 @@ void ABow::OnFireStart()
 		GetWeaponOwner()->SetActorRotation(rotator);
 	}
 }
-
-void ABow::FiringInProgress(float deltaTime)
+void ABow::OnFireButtonPress(float deltaTime)
 {
 	//UGameplayStatics::PredictProjectilePath();
 
@@ -46,8 +58,7 @@ void ABow::FiringInProgress(float deltaTime)
 
 
 }
-
-void ABow::OnFireEnd() 
+void ABow::OnFireButtonUp()
 {
 	//_SpawnProjectile();
 
@@ -58,7 +69,7 @@ void ABow::OnFireEnd()
 	//}
 }
 
-void ABow::OnAimStart()
+void ABow::OnAimButtonDown()
 {
 	_isAiming = true;
 
@@ -67,9 +78,9 @@ void ABow::OnAimStart()
 
 	CameraSpringArmComponent->SetPitchRange(-60, 60);
 	cameraComponent->BeginDragCamera(_aimingCameraOffset);
-	
 }
-void ABow::AimmingInProgress(float deltaTime)
+
+void ABow::OnAimButtonPress(float deltaTime)
 {
 	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
 
@@ -80,9 +91,9 @@ void ABow::AimmingInProgress(float deltaTime)
 	GetWeaponOwner()->SetActorRotation(rotator);
 
 
-	_UpdateProjectileTransform(5);
+	_UpdateProjectileTransform(_ProjectilesInterval);
 }
-void ABow::OnAimEnd()
+void ABow::OnAimButtonUp()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Fire Finished,strength: %f"), _strength));
 
@@ -100,21 +111,25 @@ void ABow::OnAimEnd()
 void ABow::_UpdateProjectileTransform(float interval) 
 {
 	//get weapon,hand transform
-	FTransform rightHandTransform, weaponTransform;
+	FTransform rightHandTransform, muzzleTransform;
 	GetWeaponOwner()->GetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
-	weaponTransform = this->GetTransform();
+	muzzleTransform = GetMuzzleTransform();
 
 	//compute Projectile Transform
-	FVector dir = weaponTransform.GetLocation() - rightHandTransform.GetLocation();
+	FVector dir = muzzleTransform.GetLocation() - rightHandTransform.GetLocation();
+
 	FRotator projectileRot = dir.Rotation();
 
 
 	//_arraySpawnedProjectiles.RemoveAll()
+	float deltaPitch = 0;
+	float deltaYaw = 0;
 
 	for (int i = 0; i < _arraySpawnedProjectiles.Num(); ++i)
 	{
+		deltaPitch = (i % 2) ? interval * i  : interval * i*-1;
 		FRotator rot = projectileRot;
-		rot.Pitch += interval * i * -1;
+		rot.Pitch += deltaPitch;
 
 		if (_arraySpawnedProjectiles[i] != NULL)
 		{
@@ -132,7 +147,6 @@ void ABow::OnEnterAnimFrame_ReloadStart()
 
 void ABow::OnTickAnimFrame_Reloading() 
 {
-	
 }
 
 void ABow::OnEnterAnimFrame_ReloadCompleted()
@@ -141,7 +155,18 @@ void ABow::OnEnterAnimFrame_ReloadCompleted()
 
 void ABow::OnEnterAnimFrame_Launch()
 {
-	//_SpawnProjectile();
+	
+	for (auto projectile : _arraySpawnedProjectiles) 
+	{
+		if (projectile) 
+		{
+			projectile->Launch(3000);
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("launched projectile"));
+		}
+	}
+	_arraySpawnedProjectiles.Empty();
+	
+
 	_isDrawing = false;
 }
 
@@ -153,103 +178,13 @@ void ABow::OnEnterAnimFrame_StartDrawingBow()
 void ABow::OnEnterAnimFrame_GrabArrow() 
 {
 	//_SpawnProjectile(5);
-	_SpawnProjectile(10);
+	_SpawnProjectile(_spawnProjectileCount);
 }
 
 
 void ABow::AddProjectile(AProjectile* projectile) 
 {
 	_projectiles.Add(projectile);
-}
-
-void ABow::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	if (_isAiming)
-	{
-		_strength = FMath::Clamp(_strength + DeltaTime * _drawingVelocity, 0.0f, 1.0f);
-	}
-}
-void ABow::_SpawnProjectile()
-{
-	// Attempt to fire a projectile.
-	if (ProjectileClass)
-	{
-		UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
-
-		// Get actor location
-		FVector weaponLocation = GetActorLocation();
-
-		//Get Camera Rotation Rotator
-		FRotator cameraRotator = cameraComponent->GetComponentRotation();
-
-		//calculate muzzle position
-		FVector MuzzleOffset;
-		MuzzleOffset.Set(50.0f, 0.0f, 0.0f);
-
-		FVector MuzzleLocation = weaponLocation + FTransform(cameraRotator).TransformVector(MuzzleOffset);
-		
-
-		FHitResult hitResult;
-		FVector cameraforwardVector = cameraComponent->GetForwardVector();
-		FVector farPlaneCenter = cameraforwardVector * cameraComponent->OrthoFarClipPlane;
-		FCollisionQueryParams CollisionParams;
-
-		FVector hitLocation = farPlaneCenter;
-
-		if (GetWorld()->LineTraceSingleByChannel(hitResult, cameraComponent->GetComponentLocation(), farPlaneCenter, ECC_Visibility, CollisionParams))
-		{
-			if (hitResult.bBlockingHit)
-			{
-				//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("You are hitting: %s"), *hitResult.GetActor()->GetName()));
-				//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Purple, FString::Printf(TEXT("Impact Point: %s"), *hitResult.ImpactPoint.ToString()));
-				//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, FString::Printf(TEXT("Normal Point: %s"), *hitResult.ImpactNormal.ToString()));
-			}
-			hitLocation = hitResult.ImpactPoint;
-		}
-
-
-			//UObject * WorldContextObject, 
-			//FPredictProjectilePathParams PredictParams;
-			//FPredictProjectilePathResult  PredictResult;
-
-
-			//UGameplayStatics::PredictProjectilePath(GetWorld(), PredictParams, PredictResult);
-		
-
-		
-		FVector projectileDirection = hitLocation - MuzzleLocation;
-		projectileDirection.Normalize();
-		FRotator MuzzleRotation = projectileDirection.Rotation();
-
-		//DrawDebugLine(GetWorld(), MuzzleLocation, hitLocation, FColor::Blue, false, 2.0f);
-
-		//Spawn Projectile
-		UWorld* World = GetWorld();
-		if (World)
-		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = this;
-			SpawnParams.Instigator = GetWeaponOwner();
-
-			// Spawn the projectile at the muzzle.
-			//AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-
-			/*if (Projectile)
-			{
-				Projectile->Initialize(_CalculateDamage(), _CalculateProjectileSpeed());
-				Projectile->FireInDirection(projectileDirection);
-			}*/
-
-			AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass);
-			//Projectile->AttachToComponent(GetMeshComponent(), FAttachmentTransformRules::KeepRelativeTransform, _meshSocketBowStringCenter);
-
-			_arraySpawnedProjectiles.Add(Projectile);
-			//Projectile->AttachToComponent(GetWeaponOwner()->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, GetWeaponOwner()->GetMeshSocketNameByType(EMeshSocketType::MST_RightHandDraw));
-			
-		}
-	}
 }
 
 void ABow::_SpawnProjectile(int count)
@@ -291,4 +226,9 @@ float ABow::_CalculateProjectileSpeed()
 bool ABow::isDrawing() 
 {
 	return _isDrawing;
+}
+
+FTransform ABow::GetMuzzleTransform() 
+{
+	return  GetMeshComponent()->GetSocketTransform(_meshSocketMuzzle, ERelativeTransformSpace::RTS_World);
 }

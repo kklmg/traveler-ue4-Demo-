@@ -9,6 +9,8 @@
 
 class UCapsuleComponent;
 
+class AWeapon;
+
 UCLASS()
 class TRAVELER_API AProjectile : public AActor
 {
@@ -45,8 +47,11 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Movement)
 	UMaterialInstanceDynamic* ProjectileMaterialInstance;
 
+
 	// Function that initializes the projectile's velocity in the shoot direction.
 	void FireInDirection(const FVector& ShootDirection);
+
+	void Launch(float speed);
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);

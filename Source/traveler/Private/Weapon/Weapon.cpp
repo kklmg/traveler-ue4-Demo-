@@ -61,13 +61,18 @@ bool AWeapon::IsReadyToFire()
 	return _isReadyToFire;
 }
 
-void AWeapon::FiringInProgress(float deltaTime){}
-void AWeapon::OnFireEnd() {}
-void AWeapon::OnAimStart() {}
-void AWeapon::AimmingInProgress(float deltaTime) {}
-void AWeapon::OnAimEnd() {}
+void AWeapon::OnFireButtonPress(float deltaTime){}
+void AWeapon::OnFireButtonUp() {}
+void AWeapon::OnAimButtonDown() {}
+void AWeapon::OnAimButtonPress(float deltaTime) {}
+void AWeapon::OnAimButtonUp() {}
 
 void AWeapon::OnEnterAnimFrame_ReloadStart() {}
 void AWeapon::OnTickAnimFrame_Reloading() {}
 void AWeapon::OnEnterAnimFrame_ReloadCompleted() {}
 void AWeapon::OnEnterAnimFrame_Launch(){}
+
+FTransform AWeapon::GetMuzzleTransform()
+{
+	return FTransform::Identity;
+}
