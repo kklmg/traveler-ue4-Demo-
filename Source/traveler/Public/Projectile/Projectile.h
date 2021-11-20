@@ -30,6 +30,17 @@ public:
 
 	void Initialize(float damage, float intialSpeed = 3000.0f);
 
+	void SetFlyingDirection(FVector direction);
+
+	void Launch(float speed);
+
+	// Function that initializes the projectile's velocity in the shoot direction.
+	void FireInDirection(const FVector& ShootDirection);
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+private:
 
 	// Sphere collision component.
 	//UPROPERTY(EditDefaultsOnly, Category = Projectile)
@@ -47,15 +58,7 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Movement)
 	UMaterialInstanceDynamic* ProjectileMaterialInstance;
 
-
-	// Function that initializes the projectile's velocity in the shoot direction.
-	void FireInDirection(const FVector& ShootDirection);
-
-	void Launch(float speed);
-
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
-
-private:
 	float _damage;
+
+	FVector _flyingDir;
 };

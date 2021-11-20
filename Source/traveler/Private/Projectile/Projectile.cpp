@@ -89,62 +89,17 @@ void AProjectile::FireInDirection(const FVector& ShootDirection)
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 }
 
+void AProjectile::SetFlyingDirection(FVector direction)
+{
+	direction.Normalize();
+	_flyingDir = direction;
+}
+
 
 void AProjectile::Launch(float speed)
 {
-	//get character
-	AActor* instigator = GetInstigator();
-	check(instigator != nullptr);
-
-	AMyCharacter* character = Cast<AMyCharacter>(instigator);
-	check(character != nullptr);
-
-	//get weapon
-	AActor* owner = GetOwner();
-	check(owner != nullptr);
-
-	AWeapon* weapon = Cast<AWeapon>(owner);
-	check(character != nullptr);
-
-	//get camera
-	UPawnCameraComponent* cameraComponent = character->GetCameraComponent();
-	check(cameraComponent != nullptr);
-
-	//Get Camera Rotation Rotator
-	FRotator cameraRotator = cameraComponent->GetComponentRotation();
-
-	//get projectile location
-	FVector projectileLocation = GetActorLocation();
-
-
-	FHitResult hitResult;
-	FVector cameraforwardVector = cameraComponent->GetForwardVector();
-	FVector farPlaneCenter = cameraforwardVector * cameraComponent->OrthoFarClipPlane;
-	FCollisionQueryParams CollisionParams;
-
-	FVector hitLocation = farPlaneCenter;
-
-	if (GetWorld()->LineTraceSingleByChannel(hitResult, cameraComponent->GetComponentLocation(), farPlaneCenter, ECC_Visibility, CollisionParams))
-	{
-		if (hitResult.bBlockingHit)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("hitted something"));
-			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("You are hitting: %s"), *hitResult.GetActor()->GetName()));
-			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Purple, FString::Printf(TEXT("Impact Point: %s"), *hitResult.ImpactPoint.ToString()));
-			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, FString::Printf(TEXT("Normal Point: %s"), *hitResult.ImpactNormal.ToString()));
-		}
-		hitLocation = hitResult.ImpactPoint;
-	}
-
-
-	FVector projectileDirection = hitLocation - projectileLocation;
-	projectileDirection.Normalize();
-	//FRotator MuzzleRotation = projectileDirection.Rotation();
-	
-
 	//apply speed
-	ProjectileMovementComponent->Velocity = projectileDirection * speed;
-
+	ProjectileMovementComponent->Velocity = _flyingDir * speed;
 
 	//DrawDebugLine(GetWorld(), MuzzleLocation, hitLocation, FColor::Blue, false, 2.0f);
 }

@@ -57,7 +57,7 @@ private:
 
 	void _SpawnProjectile(int count);
 
-	void _UpdateProjectileTransform(float interval);
+	void _UpdateProjectileTransform(float deltaDegree);
 
 private:
 

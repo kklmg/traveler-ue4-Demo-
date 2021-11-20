@@ -108,36 +108,67 @@ void ABow::OnAimButtonUp()
 }
 
 
-void ABow::_UpdateProjectileTransform(float interval) 
+void ABow::_UpdateProjectileTransform(float deltaDegree) 
 {
+
+	//get camera
+	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
+	check(cameraComponent != nullptr);
+
+	//Get Camera Rotator
+	FRotator cameraRotator = cameraComponent->GetComponentRotation();
+
+	//do line tracing
+	FHitResult hitResult;
+	FCollisionQueryParams CollisionParams;
+	FVector farPlaneCenter = cameraComponent->GetForwardVector() * cameraComponent->OrthoFarClipPlane;
+	FVector hitLocation = farPlaneCenter;
+
+	if (GetWorld()->LineTraceSingleByChannel(hitResult, cameraComponent->GetComponentLocation(), farPlaneCenter, ECC_Visibility, CollisionParams))
+	{
+		hitLocation = hitResult.ImpactPoint;
+	}
+
+
+	//--------------------------------------------------------------------------------------------------------------------
+
+
 	//get weapon,hand transform
 	FTransform rightHandTransform, muzzleTransform;
 	GetWeaponOwner()->GetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
 	muzzleTransform = GetMuzzleTransform();
 
 	//compute Projectile Transform
-	FVector dir = muzzleTransform.GetLocation() - rightHandTransform.GetLocation();
+	FVector projectileForward = muzzleTransform.GetLocation() - rightHandTransform.GetLocation();
+	FVector dirToHit = hitLocation - rightHandTransform.GetLocation();
 
-	FRotator projectileRot = dir.Rotation();
 
+	FQuat projectileQuat = projectileForward.ToOrientationQuat();
+	FQuat ToHitQuat = dirToHit.ToOrientationQuat();
 
-	//_arraySpawnedProjectiles.RemoveAll()
-	float deltaPitch = 0;
-	float deltaYaw = 0;
+	FVector weaponLeft = muzzleTransform.GetRotation().RotateVector(FVector::LeftVector);
+	
+
+	float curDeltaDegree = 0;
+	FQuat curDeltaQuat;
 
 	for (int i = 0; i < _arraySpawnedProjectiles.Num(); ++i)
 	{
-		deltaPitch = (i % 2) ? interval * i  : interval * i*-1;
-		FRotator rot = projectileRot;
-		rot.Pitch += deltaPitch;
+		//compute quaternian
+		curDeltaDegree = (i % 2) ? deltaDegree * i  : deltaDegree * i*-1;
+		curDeltaQuat = FQuat(weaponLeft, FMath::DegreesToRadians(curDeltaDegree));
 
+
+		projectileQuat = curDeltaQuat * projectileQuat;
+		ToHitQuat = curDeltaQuat * ToHitQuat;
+		
+		//apply location,rotation
 		if (_arraySpawnedProjectiles[i] != NULL)
 		{
-			_arraySpawnedProjectiles[i]->SetActorLocation(rightHandTransform.GetLocation());
-			_arraySpawnedProjectiles[i]->SetActorRotation(rot);
+			_arraySpawnedProjectiles[i]->SetActorLocationAndRotation(rightHandTransform.GetLocation(), projectileQuat);
+			_arraySpawnedProjectiles[i]->SetFlyingDirection(ToHitQuat.Vector());
 		}
 	}
-	
 }
 
 void ABow::OnEnterAnimFrame_ReloadStart()
