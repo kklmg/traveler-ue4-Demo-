@@ -105,6 +105,14 @@ void ABow::OnAimButtonUp()
 	_strength = 0.0f;
 	CameraSpringArmComponent->Reset();
 	cameraComponent->CancelDrag();
+
+
+	for (auto projectile : _arraySpawnedProjectiles) 
+	{
+		projectile->Destroy();
+	}
+	
+	_arraySpawnedProjectiles.Empty();
 }
 
 
