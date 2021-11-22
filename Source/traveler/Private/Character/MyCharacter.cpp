@@ -125,7 +125,7 @@ FName AMyCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
 		const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
 		if (EnumPtr)
 		{
-			FString enumName = EnumPtr->GetEnumName((int32)meshSocketType);
+			FString enumName = EnumPtr->GetNameStringByIndex((int32)meshSocketType);
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
 		}
 		return "";
@@ -144,7 +144,7 @@ bool AMyCharacter::GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelat
 		const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
 		if (EnumPtr) 
 		{
-			FString enumName = EnumPtr->GetEnumName((int32)meshSocketType);
+			FString enumName = EnumPtr->GetNameStringByIndex((int32)meshSocketType);
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
 		}
 		return false;

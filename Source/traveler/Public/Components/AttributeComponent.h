@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "AttributeComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAttributeChanged, AActor*, Actor, float, NewValue, float, Delta);
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UAttributeComponent : public UActorComponent
@@ -24,15 +26,40 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-private:
-	UPROPERTY(Category = Attribute, EditAnyWhere)
-	float _velocity;
-	UPROPERTY(Category = Attribute, EditAnyWhere)
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = Attributes)
 	float _health;
-	UPROPERTY(Category = Attribute, EditAnyWhere)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = Attributes)
+	float _healthMax;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = Attributes)
+	float _mana;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = Attributes)
+	float _manaMax;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
+	float _velocity;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
 	float _strength;
-	UPROPERTY(Category = Attribute, EditAnyWhere)
-	float _energy;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
+	float _level;
+public:
+	UPROPERTY(BlueprintAssignable, Category = Attributes)
+	FOnAttributeChanged OnHealthChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = Attributes)
+	FOnAttributeChanged OnManaChangedDelegate;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetHealth(float newValue);
+	UFUNCTION(BlueprintCallable)
+	void SetHealMax(float newValue);
+	UFUNCTION(BlueprintCallable)
+	void SetMana(float newValue);
+	UFUNCTION(BlueprintCallable)
+	void SetManaMax(float newValue);
+
 public:
 	float GetVelocity();
 };

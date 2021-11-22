@@ -120,19 +120,26 @@ void ABow::_UpdateProjectileTransform(float deltaDegree)
 {
 
 	//get camera
-	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
-	check(cameraComponent != nullptr);
+	UPawnCameraComponent* cameraComp = GetWeaponOwner()->GetCameraComponent();
+	check(cameraComp != nullptr);
+
+	UCameraSpringArmComponent* cameraSpringArmComp = GetWeaponOwner()->GetSpringArmComponent();
+	check(cameraSpringArmComp != nullptr);
+
+	
 
 	//Get Camera Rotator
-	FRotator cameraRotator = cameraComponent->GetComponentRotation();
+	FRotator cameraRotator = cameraComp->GetComponentRotation();
+	
 
 	//do line tracing
 	FHitResult hitResult;
 	FCollisionQueryParams CollisionParams;
-	FVector farPlaneCenter = cameraComponent->GetForwardVector() * cameraComponent->OrthoFarClipPlane;
+	FVector LineTraceStart = cameraComp->GetComponentLocation() + cameraComp->GetForwardVector() * cameraSpringArmComp->TargetArmLength;
+	FVector farPlaneCenter = cameraComp->GetComponentLocation() + cameraComp->GetForwardVector() * cameraComp->OrthoFarClipPlane;
 	FVector hitLocation = farPlaneCenter;
 
-	if (GetWorld()->LineTraceSingleByChannel(hitResult, cameraComponent->GetComponentLocation(), farPlaneCenter, ECC_Visibility, CollisionParams))
+	if (GetWorld()->LineTraceSingleByChannel(hitResult, LineTraceStart, farPlaneCenter, ECC_Visibility, CollisionParams))
 	{
 		hitLocation = hitResult.ImpactPoint;
 	}
