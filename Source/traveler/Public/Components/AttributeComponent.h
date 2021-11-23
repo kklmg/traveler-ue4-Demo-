@@ -38,7 +38,10 @@ protected:
 	float _manaMax;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
-	float _velocity;
+	float _walkSpeed;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
+	float _runSpeed;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
 	float _strength;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
@@ -61,5 +64,6 @@ public:
 	void SetManaMax(float newValue);
 
 public:
-	float GetVelocity();
+	float GetWalkSpeed();
+	float GetRunSpeed();
 };

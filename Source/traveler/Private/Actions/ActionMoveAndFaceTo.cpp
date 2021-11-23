@@ -4,6 +4,7 @@
 #include "Actions/ActionMoveAndFaceTo.h"
 #include "Character/MyCharacter.h"
 #include "Components/AttributeComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UActionMoveAndFaceTo::UActionMoveAndFaceTo() 
 {
@@ -18,6 +19,8 @@ void UActionMoveAndFaceTo::VBegin(AActor* actor, UActionData* actionData)
 	//Get Attribute
 	UAttributeComponent* pAttributeComponent = character->GetAttributeComponent();
 	check(pAttributeComponent != nullptr);
+
+
 	/*if (_AniMontage != nullptr)
 	{
 		UE_LOG(LogTemp,Log,TEXT("playing walking animation"))
@@ -37,7 +40,9 @@ void UActionMoveAndFaceTo::VUpdate(float deltaTime, AActor* actor, UActionData* 
 	check(pAttributeComponent != nullptr);
 
 	pCharacter->SetActorRotation(actionData->Direction.Rotation());
-	pCharacter->AddMovementInput(actionData->Direction, pAttributeComponent->GetVelocity() * deltaTime);
+
+
+	pCharacter->AddMovementInput(actionData->Direction);
 
 	SetState(EActionState::AS_FINISHED);
 }

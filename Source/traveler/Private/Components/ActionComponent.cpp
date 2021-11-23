@@ -3,11 +3,11 @@
 
 #include "Components/ActionComponent.h"
 #include "Actions/Action.h"
-//#include "Actions/ActionData.h"
 #include "State/CharacterStateBase.h"
 #include "Character/MyCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/AttributeComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values for this component's properties
@@ -192,4 +192,26 @@ void UActionComponent::OnJumpButtonDown()
 void UActionComponent::OnJumpButtonUp()
 {
 
+}
+
+void UActionComponent::OnSprintButtonDown()
+{
+	_bSprintButtonPress = true;
+
+	//Get My Character
+	AMyCharacter* pCharacter = Cast<AMyCharacter>(GetOwner());
+	check(pCharacter != nullptr);
+
+	pCharacter->GetCharacterMovement()->MaxWalkSpeed = pCharacter->GetAttributeComponent()->GetRunSpeed();
+}
+
+void UActionComponent::OnSprintButtonUp()
+{
+	_bSprintButtonPress = false;
+
+	//Get My Character
+	AMyCharacter* pCharacter = Cast<AMyCharacter>(GetOwner());
+	check(pCharacter != nullptr);
+
+	pCharacter->GetCharacterMovement()->MaxWalkSpeed = pCharacter->GetAttributeComponent()->GetWalkSpeed();
 }

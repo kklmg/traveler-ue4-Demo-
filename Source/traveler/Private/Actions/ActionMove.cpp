@@ -25,7 +25,8 @@ void UActionMove::VUpdate(float deltaTime, AActor* actor, UActionData* actionDat
 	UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
 	check(pAttributeComponent != nullptr);
 
-	pCharacter->AddMovementInput(actionData->Direction, pAttributeComponent->GetVelocity() * deltaTime);
+
+	pCharacter->AddMovementInput(actionData->Direction);
 
 	SetState(EActionState::AS_FINISHED);
 }

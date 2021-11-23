@@ -33,6 +33,9 @@ public:
 	void OnJumpButtonDown();
 	void OnJumpButtonUp();
 
+	void OnSprintButtonDown();
+	void OnSprintButtonUp();
+
 	void TriggerIdle();
 	void TriggerMove();
 	void TriggerSprint();
@@ -68,4 +71,6 @@ private:
 
 	UPROPERTY()
 	UCharacterStateBase* _pCharacterState;
+
+	bool _bSprintButtonPress;
 };

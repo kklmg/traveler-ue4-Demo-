@@ -14,9 +14,11 @@ UAttributeComponent::UAttributeComponent()
 	// ...
 	_health = 80;
 	_healthMax = 100;
-	_mana = 100;
+	_mana = 80;
 	_manaMax = 100;
-	_velocity = 100;
+
+	_walkSpeed = 600;
+	_runSpeed = 1200;
 }
 
 
@@ -38,11 +40,14 @@ void UAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	// ...
 }
 
-float UAttributeComponent::GetVelocity()
+float UAttributeComponent::GetWalkSpeed() 
 {
-	return _velocity;
+	return _walkSpeed;
 }
-
+float UAttributeComponent::GetRunSpeed() 
+{
+	return _runSpeed;
+}
 
 void UAttributeComponent::SetHealth(float newValue)
 {

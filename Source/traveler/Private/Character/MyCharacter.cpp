@@ -70,13 +70,17 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	//movement
+	//walk
 	PlayerInputComponent->BindAxis("MoveForward", _actionComponent, &UActionComponent::AddMovementInputX);
 	PlayerInputComponent->BindAxis("MoveRight", _actionComponent, &UActionComponent::AddMovementInputY);
 
 	//jump
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, _actionComponent, &UActionComponent::OnJumpButtonDown);
 	PlayerInputComponent->BindAction("Jump", IE_Released, _actionComponent, &UActionComponent::OnJumpButtonUp);
+
+	//Sprint
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, _actionComponent, &UActionComponent::OnSprintButtonDown);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, _actionComponent, &UActionComponent::OnSprintButtonUp);
 
 	//camera
 	InputComponent->BindAxis("CameraPitch", _cameraSpringArmComponent, &UCameraSpringArmComponent::Pitch);
