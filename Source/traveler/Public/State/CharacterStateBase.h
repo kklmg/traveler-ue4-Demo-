@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "State.h"
-#include "Actions/Action.h"
 #include "CharacterStateBase.generated.h"
 
 class AMyCharacter;
@@ -19,7 +18,7 @@ class TRAVELER_API UCharacterStateBase : public UState
 	GENERATED_BODY()
 
 public:
-	void Initialize(AMyCharacter *character);
+	void Initialize(ACharacter *character);
 
 	void Idle(UActionComponent* actionComponent);
 	void Move(UActionComponent* actionComponent);

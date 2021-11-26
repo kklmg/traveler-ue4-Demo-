@@ -12,7 +12,7 @@ UAction::UAction()
 	_actionName = TEXT("UnKnown");
 }
 
-void UAction::VInitialize(AMyCharacter* actionOwner)
+void UAction::VInitialize(ACharacter* actionOwner)
 {
 	_state = EActionState::AS_UNINITIALIZED;
 	_actionOwner = actionOwner;
@@ -38,7 +38,7 @@ void UAction::Pause()
 }
 
 
-void UAction::Stop() 
+void UAction::Abort() 
 {
 }
 
@@ -47,7 +47,7 @@ bool UAction::CanStart()
 	return _state != EActionState::AS_RUNNING;
 }
 
-FString UAction::GetActionName()
+FName UAction::GetActionName()
 {
 	return _actionName;
 }
@@ -63,7 +63,12 @@ void UAction::SetState(EActionState state)
 	_state = state;
 }
 
-AMyCharacter& UAction::GetActionOwner()
+ACharacter& UAction::GetActionOwner()
 {
 	return *_actionOwner;
+}
+
+bool UAction::IsInstantAction() 
+{
+	return true;
 }

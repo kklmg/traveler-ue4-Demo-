@@ -37,29 +37,29 @@ public:
 	void Start(UActionComponent* actionComponent);
 
 	void Pause();
-	void Stop();
+	void Abort();
 
 	bool CanStart();
 	EActionState GetState() const;
 	void SetState(EActionState state);
 
 public:
-	virtual void VInitialize(AMyCharacter* actionOwner);
-public:
+	virtual void VInitialize(ACharacter* actionOwner);
 	virtual void VBegin(AActor* actor, UActionData* actionData) PURE_VIRTUAL(UAction::VBegin.;);
 	virtual void VUpdate(float deltaTime,AActor* actor, UActionData *data) PURE_VIRTUAL(UAction::VUpdate.;);
+	virtual bool IsInstantAction();
 
 public:
-	FString GetActionName();
+	FName GetActionName();
 
-	AMyCharacter&  GetActionOwner();
+	ACharacter& GetActionOwner();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
-	FString _actionName;
+	FName _actionName;
 
 	UPROPERTY()
-	AMyCharacter* _actionOwner;
+	ACharacter* _actionOwner;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	UAction* _pNextAction;

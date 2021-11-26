@@ -6,7 +6,7 @@
 
 
 
-void UCharacterStateBase::Initialize(AMyCharacter* character)
+void UCharacterStateBase::Initialize(ACharacter* character)
 {
 	if (ActionIdleClass != nullptr)
 	{

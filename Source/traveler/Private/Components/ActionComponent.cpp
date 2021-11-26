@@ -32,14 +32,26 @@ void UActionComponent::BeginPlay()
 	
 	// ...
 
-	//Get My Character
-	AMyCharacter* character = Cast<AMyCharacter>(GetOwner());
+	//Get Character
+	ACharacter* character = Cast<ACharacter>(GetOwner());
 	check(character != nullptr);
+
+	UCharacterMovementComponent* movementComp = character->GetCharacterMovement();
+	check(movementComp != nullptr);
+	
+	//set Action Group
+	OnCharacterMovementModeChanged(character, EMovementMode::MOVE_None, 0);
+
+	//bind MovementModeChanged event
+	character->MovementModeChangedDelegate.AddDynamic(this, &UActionComponent::OnCharacterMovementModeChanged);
+
+	
+
 
 	if (DefaultCharacterStateClass != nullptr)
 	{
-		_pCharacterState = NewObject<UCharacterStateBase>(this, DefaultCharacterStateClass);
-		_pCharacterState->Initialize(character);
+		_pCurrentCharacterState = NewObject<UCharacterStateBase>(this, DefaultCharacterStateClass);
+		_pCurrentCharacterState->Initialize(character);
 		this->TriggerIdle();
 	}
 	
@@ -57,7 +69,7 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		this->TriggerMove();
 	}
 
-	_LoopActions(DeltaTime);
+	_TickActionProcess(DeltaTime);
 }
 
 void UActionComponent::SetCharacterState()
@@ -65,44 +77,44 @@ void UActionComponent::SetCharacterState()
 }
 void UActionComponent::TriggerIdle()
 {
-	if (_pCharacterState != nullptr)
+	if (_pCurrentCharacterState != nullptr)
 	{
-		_pCharacterState->Idle(this);
+		_pCurrentCharacterState->Idle(this);
 	}
 }
 void UActionComponent::TriggerMove()
 {
-	if (_pCharacterState != nullptr) 
+	if (_pCurrentCharacterState != nullptr)
 	{
-		_pCharacterState->Move(this);
+		_pCurrentCharacterState->Move(this);
 	}
 }
 void UActionComponent::TriggerSprint()
 {
-	if (_pCharacterState != nullptr)
+	if (_pCurrentCharacterState != nullptr)
 	{
-		_pCharacterState->Sprint(this);
+		_pCurrentCharacterState->Sprint(this);
 	}
 }
 void UActionComponent::TriggerJump()
 {
-	if (_pCharacterState != nullptr)
+	if (_pCurrentCharacterState != nullptr)
 	{
-		_pCharacterState->Jump(this);
+		_pCurrentCharacterState->Jump(this);
 	}
 }
 void UActionComponent::TriggerTarget()
 {
-	if (_pCharacterState != nullptr)
+	if (_pCurrentCharacterState != nullptr)
 	{
-		_pCharacterState->Target(this);
+		_pCurrentCharacterState->Target(this);
 	}
 }
 void UActionComponent::TriggerDash() 
 {
-	if (_pCharacterState != nullptr)
+	if (_pCurrentCharacterState != nullptr)
 	{
-		_pCharacterState->Dash(this);
+		_pCurrentCharacterState->Dash(this);
 	}
 }
 
@@ -117,17 +129,17 @@ void UActionComponent::AddMovementInputY(float value)
 
 void UActionComponent::AddToLoop(UAction* action)
 {
-	if (action != nullptr && _MapActionsInProgress.Contains(action->GetActionName())==false)
+	if (action != nullptr)
 	{
-		_MapActionsInProgress.Add(action->GetActionName(), action);
+		_mapActionProcessPool.Add(action->GetActionName(), action);
 	}
 }
 
-void UActionComponent::_LoopActions(float deltaTime)
+void UActionComponent::_TickActionProcess(float deltaTime)
 {
 	TArray<UAction*> finieshedActions;
 	
-	for (auto pair : _MapActionsInProgress)
+	for (auto pair : _mapActionProcessPool)
 	{
 		pair.Value->VUpdate(deltaTime, GetOwner(), _actionData);
 
@@ -140,7 +152,7 @@ void UActionComponent::_LoopActions(float deltaTime)
 
 	for (auto action : finieshedActions)
 	{
-		_MapActionsInProgress.Remove(action->GetActionName());
+		_mapActionProcessPool.Remove(action->GetActionName());
 	}
 
 
@@ -215,3 +227,55 @@ void UActionComponent::OnSprintButtonUp()
 
 	pCharacter->GetCharacterMovement()->MaxWalkSpeed = pCharacter->GetAttributeComponent()->GetWalkSpeed();
 }
+
+
+void UActionComponent::ExecuteAction(FName actionName)
+{
+	UAction* action;
+
+	if (_pCurrentCharacterState->TryGetActionInstance(actionName, &action))
+	{
+		action->Start(this);
+
+		if (action->IsInstantAction()) 
+		{
+			if (_mapActionProcessPool.Contains(actionName) )
+			{
+			}
+		}
+	}
+}
+
+void UActionComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode) 
+{
+	UCharacterMovementComponent* movementComp = Character->GetCharacterMovement();
+	check(movementComp != nullptr);
+
+	if (_mapActionGroup.Contains(movementComp->MovementMode)) 
+	{
+		//clear process pool
+		ClearActionProcessPool();
+
+		//Instaciate Action Group Class
+		TSubclassOf<UCharacterStateBase> ActionGroupClass = _mapActionGroup[movementComp->MovementMode];
+		UCharacterStateBase* actionGroupIns = NewObject<UCharacterStateBase>(ActionGroupClass);
+
+		//initialize Action Group
+		actionGroupIns->Initialize(Character);
+		actionGroupIns->Enter();
+
+		//Set Current Action Group
+		_pCurrentCharacterState->MarkPendingKill();
+		_pCurrentCharacterState = actionGroupIns;
+	}
+}
+
+void UActionComponent::ClearActionProcessPool()
+{
+	for (auto pair : _mapActionProcessPool)
+	{
+		pair.Value->Abort();
+	}
+	_mapActionProcessPool.Empty();
+}
+

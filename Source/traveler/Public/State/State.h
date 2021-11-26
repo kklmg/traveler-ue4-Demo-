@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "UObject/NoExportTypes.h"
+#include "Actions/Action.h"
 #include "State.generated.h"
 
 /**
@@ -17,4 +17,21 @@ class TRAVELER_API UState : public UObject
 public:
 	void virtual Enter();
 	void virtual Leave();
+
+	bool TryGetActionInstance(FName actionName, UAction** outActionInstance);
+	bool TryGetActionClass(FName actionName, TSubclassOf<UAction> outActionClass);
+
+	virtual EMovementMode GetMovementMode();
+
+	void MakeActionInstances();
+
+private:
+	UPROPERTY(VisibleAnyWhere)
+	TMap<FName, UAction*> _mapActionInstaces;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<TSubclassOf<UAction>> _arrayActionClasses;
+
+	UPROPERTY(EditDefaultsOnly)
+	TEnumAsByte<EMovementMode> _movementMode;
 };

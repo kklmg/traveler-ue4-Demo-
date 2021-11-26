@@ -48,29 +48,42 @@ public:
 
 	void AddToLoop(UAction* action);
 
+	void OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
+
 public:
 	UActionData* GetActionData();
 
+	void ExecuteAction(FName actionName);
+
+	void ClearActionProcessPool();
+
 private:
-	void _LoopActions(float deltaTime);
+	void _TickActionProcess(float deltaTime);
 
 	FVector _CalculateMovingDirection();
 
 private:
 	//TArray<UAction*> _arrayActionsInProgress;
 	UPROPERTY()
-	TMap<FString, UAction*> _MapActionsInProgress;
+	TMap<FName, UAction*> _mapActionProcessPool;
 
 	UPROPERTY()
 	UActionData* _actionData;
 
+
+//	TAarray<>
+
+
 	FVector2D _movementInput;
 
-	UPROPERTY(EditAnyWhere, Category = State)
+	UPROPERTY(EditDefaultsOnly, Category = State)
 	TSubclassOf<UCharacterStateBase> DefaultCharacterStateClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = State)
+	TMap<TEnumAsByte<EMovementMode>, TSubclassOf<UCharacterStateBase>> _mapActionGroup;
+
 	UPROPERTY()
-	UCharacterStateBase* _pCharacterState;
+	UCharacterStateBase* _pCurrentCharacterState;
 
 	bool _bSprintButtonPress;
 };

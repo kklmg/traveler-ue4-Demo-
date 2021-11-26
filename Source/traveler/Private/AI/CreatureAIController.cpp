@@ -5,8 +5,21 @@
 
 void ACreatureAIController::BeginPlay() 
 {
-	if (_behaviorTree) 
+	Super::BeginPlay();
+}
+
+
+void ACreatureAIController::OnPossess(APawn* InPawn) 
+{
+	Super::OnPossess(InPawn);
+
+	//Run behavior Tree
+	if (_behaviorTree)
 	{
 		RunBehaviorTree(_behaviorTree);
 	}
+}
+void ACreatureAIController::OnUnPossess() 
+{
+	Super::OnUnPossess();
 }
