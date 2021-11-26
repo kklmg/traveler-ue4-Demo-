@@ -18,18 +18,8 @@ class TRAVELER_API UCharacterStateBase : public UState
 	GENERATED_BODY()
 
 public:
-	void Initialize(ACharacter *character);
-
-	void Idle(UActionComponent* actionComponent);
-	void Move(UActionComponent* actionComponent);
-	void Sprint(UActionComponent* actionComponent);
-	void Jump(UActionComponent* actionComponent);
-	void Target(UActionComponent* actionComponent);
-	void Dash(UActionComponent* actionComponent);
-
-public:
-	void virtual Enter() override;
-	void virtual Leave() override;
+	void virtual VEnter() override;
+	void virtual VLeave() override;
 
 private:
 	UPROPERTY(EditAnywhere, Category = Action)
@@ -45,22 +35,8 @@ private:
 	TSubclassOf<class UAction> ActionJumpClass;
 
 	UPROPERTY(EditAnywhere, Category = Action)
-	TSubclassOf<class UAction> ActionTargetClass;
+	TSubclassOf<class UAction> ActionAimClass;
 
 	UPROPERTY(EditAnywhere, Category = Action)
-	TSubclassOf<class UAction> ActionDashClass;
-
-private:
-	UPROPERTY()
-	UAction* _actionIdle;
-	UPROPERTY()
-	UAction* _actionMove;
-	UPROPERTY()
-	UAction* _actionSprint;
-	UPROPERTY()
-	UAction* _actionJump;
-	UPROPERTY()
-	UAction* _actionTarget;
-	UPROPERTY()
-	UAction* _actionDash;
+	TSubclassOf<class UAction> ActionDodgeClass;
 };

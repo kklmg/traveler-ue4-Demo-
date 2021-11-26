@@ -16,8 +16,8 @@ class TRAVELER_API UActionJump : public UAction
 public:
 	UActionJump();
 
-	virtual void VBegin(AActor* actor, UActionData* actionData) override;
-	virtual void VUpdate(float deltaTime, AActor* actor, UActionData* data) override;
+	virtual void VExecute() override;
+	virtual void VTick(float deltaTime) override;
 
 
 	UFUNCTION()

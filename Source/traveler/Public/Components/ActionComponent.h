@@ -36,26 +36,25 @@ public:
 	void OnSprintButtonDown();
 	void OnSprintButtonUp();
 
-	void TriggerIdle();
-	void TriggerMove();
-	void TriggerSprint();
-	void TriggerJump();
-	void TriggerTarget();
-	void TriggerDash();
-
 	void AddMovementInputX(float value);
 	void AddMovementInputY(float value);
 
-	void AddToLoop(UAction* action);
+	void AddToActionProcessPool(UAction* action);
+	void ClearActionProcessPool();
 
 	void OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 
 public:
-	UActionData* GetActionData();
-
 	void ExecuteAction(FName actionName);
+	void ExecuteIdle();
+	void ExecuteMove();
+	void ExecuteSprint();
+	void ExecuteJump();
+	void ExecuteAim();
+	void ExecuteDodge();
 
-	void ClearActionProcessPool();
+	UActionData* GetActionData();
+	
 
 private:
 	void _TickActionProcess(float deltaTime);
@@ -69,9 +68,6 @@ private:
 
 	UPROPERTY()
 	UActionData* _actionData;
-
-
-//	TAarray<>
 
 
 	FVector2D _movementInput;

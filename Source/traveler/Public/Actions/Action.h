@@ -9,16 +9,28 @@
 UENUM(BlueprintType)
 enum class EActionState : uint8
 {
-	AS_UNINITIALIZED UMETA(DisplayName = "UNINITIALIZED"),
+	AS_UnInitialized UMETA(DisplayName = "UnInitialized"),
+	AS_ReadyToExecute UMETA(DisplayName = "ReadyToExecute"),
 	// Living processes
-	AS_RUNNING UMETA(DisplayName = "RUNNING"),  // initialized and running
-	AS_PAUSED UMETA(DisplayName = "PAUSED"),  // initialized but paused
+	AS_Running UMETA(DisplayName = "Running"),  // initialized and running
+	AS_Paused UMETA(DisplayName = "Paused"),  // initialized but paused
 
 	// Dead processes
 	//AS_SUCCEEDED UMETA(DisplayName = "SUCCEEDED"),  // completed successfully
 	//AS_FAILED UMETA(DisplayName = "FAILED"),  // failed to complete
-	AS_FINISHED UMETA(DisplayName = "FINISHED"),
+	AS_Finished UMETA(DisplayName = "Finished"),
+	AS_Aborted UMETA(DisplayName = "Aborted"),
 };
+
+namespace ActionName 
+{
+	const FName JUMP = FName(TEXT("jump"));
+	const FName SPRINT = FName(TEXT("sprint"));
+	const FName DODGE = FName(TEXT("dodge"));
+	const FName MOVE = FName(TEXT("move"));
+	const FName IDLE = FName(TEXT("idle"));
+	const FName AIM = FName(TEXT("aim"));
+}
 
 class AMyCharacter;
 class UActionComponent;
@@ -34,20 +46,22 @@ class TRAVELER_API UAction : public UObject
 public:
 	UAction();
 public:
-	void Start(UActionComponent* actionComponent);
+	void Initialize(UActionComponent* actionComponent, UActionData* actionData);
 
 	void Pause();
 	void Abort();
 
 	bool CanStart();
 	EActionState GetState() const;
-	void SetState(EActionState state);
+	//void SetState(EActionState state);
+
+	bool IsInstantAction();
 
 public:
-	virtual void VInitialize(ACharacter* actionOwner);
-	virtual void VBegin(AActor* actor, UActionData* actionData) PURE_VIRTUAL(UAction::VBegin.;);
-	virtual void VUpdate(float deltaTime,AActor* actor, UActionData *data) PURE_VIRTUAL(UAction::VUpdate.;);
-	virtual bool IsInstantAction();
+	
+	virtual void VExecute();
+	virtual void VTick(float deltaTime);
+
 
 public:
 	FName GetActionName();
@@ -55,11 +69,22 @@ public:
 	ACharacter& GetActionOwner();
 
 protected:
+	UPROPERTY()
+	ACharacter* _actionOwner;
+
+	UPROPERTY()
+	UActionData* _actionData;
+
+	UPROPERTY()
+	UActionComponent* _actionComp;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName _actionName;
 
-	UPROPERTY()
-	ACharacter* _actionOwner;
+	UPROPERTY(EditDefaultsOnly, Category = "Action")
+	bool _bInstantAction;
+
+
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	UAction* _pNextAction;

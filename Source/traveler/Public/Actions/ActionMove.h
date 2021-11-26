@@ -17,7 +17,6 @@ class TRAVELER_API UActionMove : public UAction
 public:
 	UActionMove();
 public:
-	virtual void VBegin(AActor* actor, UActionData* actionData) override;
-
-	virtual void VUpdate(float deltaTime, AActor* actor, UActionData* data) override;
+	virtual void VExecute() override;
+	virtual void VTick(float deltaTime) override;
 };

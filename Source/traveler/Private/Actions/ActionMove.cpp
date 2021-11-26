@@ -8,25 +8,21 @@
 
 UActionMove::UActionMove() 
 {
-	_actionName = TEXT("Move");
+	_actionName = ActionName::MOVE;
 }
 
-void UActionMove::VBegin(AActor* actor, UActionData* actionData)
+void UActionMove::VExecute()
 {
+	Super::VExecute();
+
+	_actionOwner->AddMovementInput(_actionData->Direction);
 }
 
-void UActionMove::VUpdate(float deltaTime, AActor* actor, UActionData* actionData)
+void UActionMove::VTick(float deltaTime)
 {
-	//Get My Character
-	AMyCharacter* pCharacter = Cast<AMyCharacter>(actor);
-	check(pCharacter != nullptr);
+	Super::VTick(deltaTime);
 
 	//Get Attribute
-	UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
-	check(pAttributeComponent != nullptr);
-
-
-	pCharacter->AddMovementInput(actionData->Direction);
-
-	SetState(EActionState::AS_FINISHED);
+	//UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
+	//check(pAttributeComponent != nullptr);
 }

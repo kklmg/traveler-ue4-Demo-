@@ -3,21 +3,34 @@
 
 #include "State/State.h"
 
-void UState::Enter()
+void UState::VEnter()
 {
 
 }
-void UState::Leave() 
+void UState::VLeave() 
 {
 	_mapActionInstaces.Empty();
 }
 
 bool UState::TryGetActionInstance(FName actionName, UAction** outActionInstance)
 {
+	//try find action instance and return
 	if (_mapActionInstaces.Contains(actionName))
 	{
 		*outActionInstance = _mapActionInstaces[actionName];
 		return true;
+	}
+
+	//try make instance of the action and return
+	else
+	{
+		UAction* actionInstance = MakeActionInstance(actionName);
+
+		if (actionInstance)
+		{
+			*outActionInstance = actionInstance;
+			return true;
+		}
 	}
 
 	return false;
@@ -36,7 +49,26 @@ bool UState::TryGetActionClass(FName actionName, TSubclassOf<UAction> outActionC
 	return false;
 }
 
-void UState::MakeActionInstances() 
+UAction* UState::MakeActionInstance(FName actionName)
+{
+	for (auto actionClass : _arrayActionClasses)
+	{
+		if (actionClass.GetDefaultObject()->GetActionName() == actionName)
+		{
+			UAction* action = NewObject<UAction>(actionClass);
+			if (action != nullptr)
+			{
+				_mapActionInstaces.Add(action->GetActionName(), action);
+				return action;
+			}
+			UE_LOG(LogTemp, Warning, TEXT("Make instance of UAction Failed!"));
+			return nullptr;
+		}
+	}
+	return nullptr;
+}
+
+void UState::MakeAllActionInstances() 
 {
 	for (auto actionClass : _arrayActionClasses)
 	{
@@ -52,6 +84,14 @@ void UState::MakeActionInstances()
 
 			_mapActionInstaces.Add(action->GetActionName(), action);
 		}
+	}
+}
+
+void UState::AddActionClass(TSubclassOf<UAction> actionClass)
+{
+	if (actionClass) 
+	{
+		_arrayActionClasses.Add(actionClass);
 	}
 }
 

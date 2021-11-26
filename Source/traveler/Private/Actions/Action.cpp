@@ -8,43 +8,47 @@
 
 UAction::UAction()
 {
-	_state = EActionState::AS_UNINITIALIZED;
+	_state = EActionState::AS_UnInitialized;
+	_bInstantAction = true;
 	_actionName = TEXT("UnKnown");
 }
 
-void UAction::VInitialize(ACharacter* actionOwner)
+void UAction::Initialize(UActionComponent* actionComponent, UActionData* actionData)
 {
-	_state = EActionState::AS_UNINITIALIZED;
-	_actionOwner = actionOwner;
+	_actionData = actionData;
+	_actionComp = actionComponent;
+	_actionOwner = Cast<ACharacter>(actionComponent->GetOwner());
+
+	_state = EActionState::AS_ReadyToExecute;
 }
 
-void UAction::Start(UActionComponent* actionComponent)
-{
-	check(actionComponent != nullptr)
-
-		if (_state == EActionState::AS_UNINITIALIZED || _state == EActionState::AS_FINISHED)
-		{
-			VBegin(actionComponent->GetOwner(), actionComponent->GetActionData());
-		}
-
-	_state = EActionState::AS_RUNNING;
-	actionComponent->AddToLoop(this);
-
-}
 
 void UAction::Pause()
 {
-
+	_state = EActionState::AS_Paused;
 }
 
+void UAction::VExecute() 
+{
+	if (_state != EActionState::AS_ReadyToExecute)
+	{
+		return;
+	}
+	_state = _bInstantAction ? EActionState::AS_Finished : EActionState::AS_Running;
+}
+
+void UAction::VTick(float deltaTime) 
+{
+}
 
 void UAction::Abort() 
 {
+	_state = EActionState::AS_Aborted;
 }
 
 bool UAction::CanStart() 
 {
-	return _state != EActionState::AS_RUNNING;
+	return _state == EActionState::AS_ReadyToExecute;
 }
 
 FName UAction::GetActionName()
@@ -58,10 +62,10 @@ EActionState UAction::GetState() const
 	return _state;
 }
 
-void UAction::SetState(EActionState state)
-{
-	_state = state;
-}
+//void UAction::SetState(EActionState state)
+//{
+//	_state = state;
+//}
 
 ACharacter& UAction::GetActionOwner()
 {
@@ -70,5 +74,5 @@ ACharacter& UAction::GetActionOwner()
 
 bool UAction::IsInstantAction() 
 {
-	return true;
+	return _bInstantAction;
 }

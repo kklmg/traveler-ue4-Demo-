@@ -15,16 +15,18 @@ class TRAVELER_API UState : public UObject
 	GENERATED_BODY()
 
 public:
-	void virtual Enter();
-	void virtual Leave();
+	void virtual VEnter();
+	void virtual VLeave();
 
 	bool TryGetActionInstance(FName actionName, UAction** outActionInstance);
 	bool TryGetActionClass(FName actionName, TSubclassOf<UAction> outActionClass);
 
 	virtual EMovementMode GetMovementMode();
 
-	void MakeActionInstances();
+	UAction* MakeActionInstance(FName actionName);
+	void MakeAllActionInstances();
 
+	void AddActionClass(TSubclassOf<UAction> actionClass);
 private:
 	UPROPERTY(VisibleAnyWhere)
 	TMap<FName, UAction*> _mapActionInstaces;

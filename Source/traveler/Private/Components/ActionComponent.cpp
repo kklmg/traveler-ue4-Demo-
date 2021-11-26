@@ -45,14 +45,11 @@ void UActionComponent::BeginPlay()
 	//bind MovementModeChanged event
 	character->MovementModeChangedDelegate.AddDynamic(this, &UActionComponent::OnCharacterMovementModeChanged);
 
-	
-
 
 	if (DefaultCharacterStateClass != nullptr)
 	{
 		_pCurrentCharacterState = NewObject<UCharacterStateBase>(this, DefaultCharacterStateClass);
-		_pCurrentCharacterState->Initialize(character);
-		this->TriggerIdle();
+		_pCurrentCharacterState->VEnter();
 	}
 	
 }
@@ -66,7 +63,7 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	if (_movementInput.IsZero() == false) 
 	{
 		_actionData->Direction = _CalculateMovingDirection();
-		this->TriggerMove();
+		ExecuteMove();
 	}
 
 	_TickActionProcess(DeltaTime);
@@ -75,47 +72,51 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 void UActionComponent::SetCharacterState()
 {
 }
-void UActionComponent::TriggerIdle()
+
+void UActionComponent::ExecuteAction(FName actionName)
 {
-	if (_pCurrentCharacterState != nullptr)
+	if (_pCurrentCharacterState == nullptr || _mapActionProcessPool.Contains(actionName))
 	{
-		_pCurrentCharacterState->Idle(this);
+		return;
+	}
+
+	UAction* action;
+
+	if (_pCurrentCharacterState->TryGetActionInstance(actionName, &action))
+	{
+		action->Abort();
+		action->Initialize(this, _actionData);
+		action->VExecute();
+
+		if (action->IsInstantAction() == false)
+		{
+			AddToActionProcessPool(action);
+		}
 	}
 }
-void UActionComponent::TriggerMove()
+void UActionComponent::ExecuteIdle()
 {
-	if (_pCurrentCharacterState != nullptr)
-	{
-		_pCurrentCharacterState->Move(this);
-	}
+	ExecuteAction(ActionName::IDLE);
 }
-void UActionComponent::TriggerSprint()
+void UActionComponent::ExecuteMove()
 {
-	if (_pCurrentCharacterState != nullptr)
-	{
-		_pCurrentCharacterState->Sprint(this);
-	}
+	ExecuteAction(ActionName::MOVE);
 }
-void UActionComponent::TriggerJump()
+void UActionComponent::ExecuteSprint()
 {
-	if (_pCurrentCharacterState != nullptr)
-	{
-		_pCurrentCharacterState->Jump(this);
-	}
+	ExecuteAction(ActionName::SPRINT);
 }
-void UActionComponent::TriggerTarget()
+void UActionComponent::ExecuteJump()
 {
-	if (_pCurrentCharacterState != nullptr)
-	{
-		_pCurrentCharacterState->Target(this);
-	}
+	ExecuteAction(ActionName::JUMP);
 }
-void UActionComponent::TriggerDash() 
+void UActionComponent::ExecuteAim()
 {
-	if (_pCurrentCharacterState != nullptr)
-	{
-		_pCurrentCharacterState->Dash(this);
-	}
+	ExecuteAction(ActionName::AIM);
+}
+void UActionComponent::ExecuteDodge()
+{
+	ExecuteAction(ActionName::DODGE);
 }
 
 void UActionComponent::AddMovementInputX(float value) 
@@ -127,12 +128,11 @@ void UActionComponent::AddMovementInputY(float value)
 	_movementInput.Y = value;
 }
 
-void UActionComponent::AddToLoop(UAction* action)
+void UActionComponent::AddToActionProcessPool(UAction* action)
 {
-	if (action != nullptr)
-	{
-		_mapActionProcessPool.Add(action->GetActionName(), action);
-	}
+	if (action == nullptr) return;
+
+	_mapActionProcessPool.Add(action->GetActionName(), action);
 }
 
 void UActionComponent::_TickActionProcess(float deltaTime)
@@ -141,25 +141,22 @@ void UActionComponent::_TickActionProcess(float deltaTime)
 	
 	for (auto pair : _mapActionProcessPool)
 	{
-		pair.Value->VUpdate(deltaTime, GetOwner(), _actionData);
+		//Tick Actions
+		pair.Value->VTick(deltaTime);
 
-		if (pair.Value->GetState() == EActionState::AS_FINISHED)
+		//find out finished action to remove
+		EActionState actionState = pair.Value->GetState();
+		if (actionState == EActionState::AS_Finished && actionState == EActionState::AS_Aborted)
 		{
 			finieshedActions.Add(pair.Value);
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, pair.Value->GetName());
 	}
 
+	//remove finished actions
 	for (auto action : finieshedActions)
 	{
 		_mapActionProcessPool.Remove(action->GetActionName());
 	}
-
-
-	//_MapActionsInProgress.Compact();
-
-	//int count = _MapActionsInProgress.Num();
-	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::FromInt(count));
 }
 
 FVector UActionComponent::_CalculateMovingDirection()
@@ -198,7 +195,7 @@ UActionData* UActionComponent::GetActionData()
 
 void UActionComponent::OnJumpButtonDown()
 {
-	TriggerJump();
+	ExecuteJump();
 }
 
 void UActionComponent::OnJumpButtonUp()
@@ -229,22 +226,6 @@ void UActionComponent::OnSprintButtonUp()
 }
 
 
-void UActionComponent::ExecuteAction(FName actionName)
-{
-	UAction* action;
-
-	if (_pCurrentCharacterState->TryGetActionInstance(actionName, &action))
-	{
-		action->Start(this);
-
-		if (action->IsInstantAction()) 
-		{
-			if (_mapActionProcessPool.Contains(actionName) )
-			{
-			}
-		}
-	}
-}
 
 void UActionComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode) 
 {
@@ -261,10 +242,10 @@ void UActionComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMo
 		UCharacterStateBase* actionGroupIns = NewObject<UCharacterStateBase>(ActionGroupClass);
 
 		//initialize Action Group
-		actionGroupIns->Initialize(Character);
-		actionGroupIns->Enter();
+		actionGroupIns->VEnter();
 
 		//Set Current Action Group
+		_pCurrentCharacterState->VLeave();
 		_pCurrentCharacterState->MarkPendingKill();
 		_pCurrentCharacterState = actionGroupIns;
 	}

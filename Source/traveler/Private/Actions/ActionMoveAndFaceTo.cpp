@@ -8,17 +8,22 @@
 
 UActionMoveAndFaceTo::UActionMoveAndFaceTo() 
 {
-	_actionName = TEXT("MoveAndFaceTo");
+	_actionName = ActionName::MOVE;
 }
-void UActionMoveAndFaceTo::VBegin(AActor* actor, UActionData* actionData)
+void UActionMoveAndFaceTo::VExecute()
 {
-	//Get My Character
-	AMyCharacter* character = Cast<AMyCharacter>(actor);
-	check(character != nullptr);
+	Super::VExecute();
+
+	//rotation
+	_actionOwner->SetActorRotation(_actionData->Direction.Rotation());
+
+	//Movement
+
+	_actionOwner->AddMovementInput(_actionData->Direction);
 
 	//Get Attribute
-	UAttributeComponent* pAttributeComponent = character->GetAttributeComponent();
-	check(pAttributeComponent != nullptr);
+	//UAttributeComponent* pAttributeComponent = character->GetAttributeComponent();
+	//check(pAttributeComponent != nullptr);
 
 
 	/*if (_AniMontage != nullptr)
@@ -29,20 +34,7 @@ void UActionMoveAndFaceTo::VBegin(AActor* actor, UActionData* actionData)
 	}*/
 }
 
-void UActionMoveAndFaceTo::VUpdate(float deltaTime, AActor* actor, UActionData* actionData)
+void UActionMoveAndFaceTo::VTick(float deltaTime)
 {
-	//Get My Character
-	AMyCharacter* pCharacter = Cast<AMyCharacter>(actor);
-	check(pCharacter != nullptr);
-
-	//Get Attribute
-	UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
-	check(pAttributeComponent != nullptr);
-
-	pCharacter->SetActorRotation(actionData->Direction.Rotation());
-
-
-	pCharacter->AddMovementInput(actionData->Direction);
-
-	SetState(EActionState::AS_FINISHED);
+	Super::VTick(deltaTime);
 }

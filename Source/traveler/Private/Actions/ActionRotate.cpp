@@ -3,10 +3,12 @@
 
 #include "Actions/ActionRotate.h"
 
-void UActionRotate::VBegin(AActor* actor, UActionData* actionData) 
+void UActionRotate::VExecute()
 {
+	Super::VExecute();
 }
 
-void UActionRotate::VUpdate(float deltaTime, AActor* actor, UActionData* data) 
+void UActionRotate::VTick(float deltaTime) 
 {
+	Super::VTick(deltaTime);
 }

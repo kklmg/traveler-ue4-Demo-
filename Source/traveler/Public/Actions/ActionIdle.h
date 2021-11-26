@@ -17,9 +17,8 @@ public:
 	UActionIdle();
 
 public:
-	virtual void VBegin(AActor* actor, UActionData* actionData) override;
-
-	virtual void VUpdate(float deltaTime, AActor* actor, UActionData* data) override;
+	virtual void VExecute() override;
+	virtual void VTick(float deltaTime) override;
 
 private:
 	UPROPERTY(EditAnyWhere, Category = animation)

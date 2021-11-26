@@ -8,13 +8,15 @@
 
 UActionJump::UActionJump() 
 {
-	_actionName = TEXT("ActionJump");
+	_actionName = ActionName::JUMP;
 }
 
-void UActionJump::VBegin(AActor* actor, UActionData* actionData)
+void UActionJump::VExecute()
 {
+	Super::VExecute();
+
 	//Get My Character
-	AMyCharacter* character = Cast<AMyCharacter>(actor);
+	AMyCharacter* character = Cast<AMyCharacter>(_actionOwner);
 	check(character != nullptr);
 
 	//Get Attribute
@@ -32,30 +34,14 @@ void UActionJump::VBegin(AActor* actor, UActionData* actionData)
 	}
 }
 
-void UActionJump::VUpdate(float deltaTime, AActor* actor, UActionData* data)
+void UActionJump::VTick(float deltaTime)
 {
-	//Get My Character
-	AMyCharacter* character = Cast<AMyCharacter>(actor);
-	check(character != nullptr);
-
-
-	////Get My Character
-	//AMyCharacter* pCharacter = Cast<AMyCharacter>(actor);
-	//check(pCharacter != nullptr);
-
-	////Get Attribute
-	//UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
-	//check(pAttributeComponent != nullptr);
-
-	//pCharacter->SetActorRotation(actionData->Direction.Rotation());
-	//pCharacter->AddMovementInput(actionData->Direction, pAttributeComponent->GetVelocity() * deltaTime);
-
+	Super::VTick(deltaTime);
 }
 
 
 void UActionJump::OnMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
-
 	if (/*PrevMovementMode ==  && */Character->GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Walking)
 	{
 		//Get My Character
@@ -65,7 +51,6 @@ void UActionJump::OnMovementModeChanged(ACharacter* Character, EMovementMode Pre
 		{
 			Character->StopAnimMontage(_aniMontage);
 		}
-		SetState(EActionState::AS_FINISHED);
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("landed"));
 		Character->MovementModeChangedDelegate.RemoveDynamic(this, &UActionJump::OnMovementModeChanged);
 	}

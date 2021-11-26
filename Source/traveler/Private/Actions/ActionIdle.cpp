@@ -7,28 +7,21 @@
 
 UActionIdle::UActionIdle() 
 {
-	_actionName = TEXT("Idle");
+	_actionName = ActionName::IDLE;
 }
 
 
-void UActionIdle::VBegin(AActor* actor, UActionData* actionData)
+void UActionIdle::VExecute()
 {
-	//Get My Character
-	AMyCharacter* pCharacter = Cast<AMyCharacter>(actor);
-	check(pCharacter != nullptr);
+	Super::VExecute();
 
 	//Get Attribute
-	UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
-	check(pAttributeComponent != nullptr);
+	//UAttributeComponent* pAttributeComponent = _actionOwner->GetAttributeComponent();
+	//check(pAttributeComponent != nullptr);
 
-	if (_AniMontage != nullptr)
-	{
-		pCharacter->PlayAnimMontage(_AniMontage);
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Trigger Character Idle"));
-	}
 }
 
-void UActionIdle::VUpdate(float deltaTime, AActor* actor, UActionData* actionData)
+void UActionIdle::VTick(float deltaTime)
 {
-	SetState(EActionState::AS_FINISHED);
+	Super::VTick(deltaTime);
 }

@@ -3,10 +3,12 @@
 
 #include "Actions/ActionLaunchProjectile.h"
 
-void UActionLaunchProjectile::VBegin(AActor* actor, UActionData* actionData)
+void UActionLaunchProjectile::VExecute()
 {
+	Super::VExecute();
 }
 
-void UActionLaunchProjectile::VUpdate(float deltaTime, AActor* actor, UActionData* data)
+void UActionLaunchProjectile::VTick(float deltaTime)
 {
+	Super::VTick(deltaTime);
 }
