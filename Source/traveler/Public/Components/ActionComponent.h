@@ -42,6 +42,7 @@ public:
 	void AddToActionProcessPool(UAction* action);
 	void ClearActionProcessPool();
 
+	UFUNCTION()
 	void OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 
 public:
@@ -71,9 +72,6 @@ private:
 
 
 	FVector2D _movementInput;
-
-	UPROPERTY(EditDefaultsOnly, Category = State)
-	TSubclassOf<UCharacterStateBase> DefaultCharacterStateClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = State)
 	TMap<TEnumAsByte<EMovementMode>, TSubclassOf<UCharacterStateBase>> _mapActionGroup;

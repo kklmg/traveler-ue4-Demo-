@@ -44,14 +44,6 @@ void UActionComponent::BeginPlay()
 
 	//bind MovementModeChanged event
 	character->MovementModeChangedDelegate.AddDynamic(this, &UActionComponent::OnCharacterMovementModeChanged);
-
-
-	if (DefaultCharacterStateClass != nullptr)
-	{
-		_pCurrentCharacterState = NewObject<UCharacterStateBase>(this, DefaultCharacterStateClass);
-		_pCurrentCharacterState->VEnter();
-	}
-	
 }
 
 
@@ -229,6 +221,7 @@ void UActionComponent::OnSprintButtonUp()
 
 void UActionComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode) 
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("movementmode changed"));
 	UCharacterMovementComponent* movementComp = Character->GetCharacterMovement();
 	check(movementComp != nullptr);
 
@@ -238,15 +231,15 @@ void UActionComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMo
 		ClearActionProcessPool();
 
 		//Instaciate Action Group Class
-		TSubclassOf<UCharacterStateBase> ActionGroupClass = _mapActionGroup[movementComp->MovementMode];
-		UCharacterStateBase* actionGroupIns = NewObject<UCharacterStateBase>(ActionGroupClass);
-
-		//initialize Action Group
+		UCharacterStateBase* actionGroupIns = NewObject<UCharacterStateBase>(this,_mapActionGroup[movementComp->MovementMode]);
 		actionGroupIns->VEnter();
 
 		//Set Current Action Group
-		_pCurrentCharacterState->VLeave();
-		_pCurrentCharacterState->MarkPendingKill();
+		if (_pCurrentCharacterState != nullptr) 
+		{
+			_pCurrentCharacterState->VLeave();
+			_pCurrentCharacterState->MarkPendingKill();
+		}
 		_pCurrentCharacterState = actionGroupIns;
 	}
 }

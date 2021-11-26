@@ -55,7 +55,7 @@ UAction* UState::MakeActionInstance(FName actionName)
 	{
 		if (actionClass.GetDefaultObject()->GetActionName() == actionName)
 		{
-			UAction* action = NewObject<UAction>(actionClass);
+			UAction* action = NewObject<UAction>(this,actionClass);
 			if (action != nullptr)
 			{
 				_mapActionInstaces.Add(action->GetActionName(), action);
@@ -74,7 +74,7 @@ void UState::MakeAllActionInstances()
 	{
 		if (_mapActionInstaces.Contains(actionClass.GetDefaultObject()->GetActionName()) == false)
 		{
-			static UAction* action = NewObject<UAction>(actionClass);
+			static UAction* action = NewObject<UAction>(this, actionClass);
 		
 			if (action == nullptr)
 			{
