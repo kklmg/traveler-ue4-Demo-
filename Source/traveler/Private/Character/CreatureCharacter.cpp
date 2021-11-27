@@ -15,9 +15,6 @@ ACreatureCharacter::ACreatureCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	//Create action component
 	_actionComponent = CreateDefaultSubobject<UActionComponent>(TEXT("ActionComponent"));
 	check(_actionComponent != nullptr);
@@ -28,7 +25,6 @@ ACreatureCharacter::ACreatureCharacter()
 
 	//Enable the pawn to control camera rotation.
 	bUseControllerRotationYaw = false;
-
 }
 
 // Called when the game starts or when spawned
@@ -49,17 +45,27 @@ void ACreatureCharacter::Tick(float DeltaTime)
 void ACreatureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
-void ACreatureCharacter::Ascend() 
+UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
 {
-	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
-	AddMovementInput(FVector::UpVector);
-
-	
-
-	//FQuat pitch = FQuat(FVector::RightVector,FMath::DegreesToRadians(-1));
-	//AddActorWorldRotation(pitch);
+	return _attributeComponent;
 }
 
+UActionComponent* ACreatureCharacter::GetActionComponent()
+{
+	return _actionComponent;
+}
+
+void ACreatureCharacter::ExecuteAction(FName actionName)
+{
+	if (_actionComponent) 
+	{
+		_actionComponent->ExecuteAction(actionName);
+	}
+}
+
+UActionData* ACreatureCharacter::GetActionData()
+{
+	return _actionComponent->GetActionData();
+}

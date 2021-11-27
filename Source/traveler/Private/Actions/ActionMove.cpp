@@ -15,7 +15,7 @@ void UActionMove::VExecute()
 {
 	Super::VExecute();
 
-	_actionOwner->AddMovementInput(_actionData->Direction);
+	_actionOwner->AddMovementInput(_actionData->GetMovementInput());
 }
 
 void UActionMove::VTick(float deltaTime)

@@ -57,6 +57,9 @@ public:
 	UAttributeComponent* GetAttributeComponent();
 
 	UFUNCTION(BlueprintCallable)
+	UActionComponent* GetActionComponent();
+
+	UFUNCTION(BlueprintCallable)
 	UWeaponComponent* GetWeaponComponent();
 
 	UFUNCTION(BlueprintCallable)

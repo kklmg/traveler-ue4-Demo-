@@ -110,6 +110,11 @@ UAttributeComponent* AMyCharacter::GetAttributeComponent()
 	return _attributeComponent;
 }
 
+UActionComponent* AMyCharacter::GetActionComponent()
+{
+	return _actionComponent;
+}
+
 UWeaponComponent* AMyCharacter::GetWeaponComponent() 
 {
 	return _weaponComponent;

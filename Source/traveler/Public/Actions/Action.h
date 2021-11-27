@@ -30,6 +30,10 @@ namespace ActionName
 	const FName MOVE = FName(TEXT("move"));
 	const FName IDLE = FName(TEXT("idle"));
 	const FName AIM = FName(TEXT("aim"));
+	const FName ASCEND = FName(TEXT("ascend"));
+	const FName FLY = FName(TEXT("fly"));
+	const FName TAKEOFF = FName(TEXT("takeoff"));
+	const FName TELEPORT = FName(TEXT("teleport"));
 }
 
 class AMyCharacter;

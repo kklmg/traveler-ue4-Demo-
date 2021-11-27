@@ -3,7 +3,7 @@
 
 #include "Components/ActionComponent.h"
 #include "Actions/Action.h"
-#include "State/CharacterStateBase.h"
+#include "Actions/CharacterActionSet.h"
 #include "Character/MyCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/AttributeComponent.h"
@@ -52,10 +52,11 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (_movementInput.IsZero() == false) 
+	ACharacter* character = GetOwner<ACharacter>();
+
+	if (character && character->IsPlayerControlled() && _userMovementInput.IsZero() == false)
 	{
-		_actionData->Direction = _CalculateMovingDirection();
-		ExecuteMove();
+		ExecuteMove(_ComputeCameraSpaceMovingDirection());
 	}
 
 	_TickActionProcess(DeltaTime);
@@ -67,14 +68,14 @@ void UActionComponent::SetCharacterState()
 
 void UActionComponent::ExecuteAction(FName actionName)
 {
-	if (_pCurrentCharacterState == nullptr || _mapActionProcessPool.Contains(actionName))
+	if (_pCurrentActionSet == nullptr || _mapActionProcessPool.Contains(actionName))
 	{
 		return;
 	}
 
 	UAction* action;
 
-	if (_pCurrentCharacterState->TryGetActionInstance(actionName, &action))
+	if (_pCurrentActionSet->TryGetActionInstance(actionName, &action))
 	{
 		action->Abort();
 		action->Initialize(this, _actionData);
@@ -90,8 +91,9 @@ void UActionComponent::ExecuteIdle()
 {
 	ExecuteAction(ActionName::IDLE);
 }
-void UActionComponent::ExecuteMove()
+void UActionComponent::ExecuteMove(FVector movement)
 {
+	_actionData->SetMovementInput(movement);
 	ExecuteAction(ActionName::MOVE);
 }
 void UActionComponent::ExecuteSprint()
@@ -113,11 +115,11 @@ void UActionComponent::ExecuteDodge()
 
 void UActionComponent::AddMovementInputX(float value) 
 {
-	_movementInput.X = value;
+	_userMovementInput.X = value;
 }
 void UActionComponent::AddMovementInputY(float value) 
 {
-	_movementInput.Y = value;
+	_userMovementInput.Y = value;
 }
 
 void UActionComponent::AddToActionProcessPool(UAction* action)
@@ -151,8 +153,11 @@ void UActionComponent::_TickActionProcess(float deltaTime)
 	}
 }
 
-FVector UActionComponent::_CalculateMovingDirection()
+FVector UActionComponent::_ComputeCameraSpaceMovingDirection()
 {
+	//Get Input Direction
+	FVector inputDirection(_userMovementInput.X, _userMovementInput.Y, 0);
+
 	//Get My Character
 	AMyCharacter* pCharacter = Cast<AMyCharacter>(GetOwner());
 	check(pCharacter != nullptr);
@@ -161,12 +166,6 @@ FVector UActionComponent::_CalculateMovingDirection()
 	UCameraComponent* pCamera = pCharacter->GetCameraComponent();
 	check(pCamera != nullptr);
 
-	//Get Attribute
-	UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
-	check(pAttributeComponent != nullptr);
-
-	//Get Input Direction
-	FVector inputDirection(_movementInput.X, _movementInput.Y, 0);
 
 	//Get Camera Rotation Matrix
 	FRotator cameraRotator = pCamera->GetComponentRotation();
@@ -225,22 +224,22 @@ void UActionComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMo
 	UCharacterMovementComponent* movementComp = Character->GetCharacterMovement();
 	check(movementComp != nullptr);
 
-	if (_mapActionGroup.Contains(movementComp->MovementMode)) 
+	if (_mapActionSet.Contains(movementComp->MovementMode)) 
 	{
 		//clear process pool
 		ClearActionProcessPool();
 
 		//Instaciate Action Group Class
-		UCharacterStateBase* actionGroupIns = NewObject<UCharacterStateBase>(this,_mapActionGroup[movementComp->MovementMode]);
-		actionGroupIns->VEnter();
+		UCharacterActionSet* actionSetIns = NewObject<UCharacterActionSet>(this,_mapActionSet[movementComp->MovementMode]);
+		actionSetIns->VEnter();
 
 		//Set Current Action Group
-		if (_pCurrentCharacterState != nullptr) 
+		if (_pCurrentActionSet != nullptr)
 		{
-			_pCurrentCharacterState->VLeave();
-			_pCurrentCharacterState->MarkPendingKill();
+			_pCurrentActionSet->VLeave();
+			_pCurrentActionSet->MarkPendingKill();
 		}
-		_pCurrentCharacterState = actionGroupIns;
+		_pCurrentActionSet = actionSetIns;
 	}
 }
 

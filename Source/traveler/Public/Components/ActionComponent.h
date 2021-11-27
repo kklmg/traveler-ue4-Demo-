@@ -8,7 +8,7 @@
 
 class UAction;
 class UActionData;
-class UCharacterStateBase;
+class UCharacterActionSet;
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -46,12 +46,19 @@ public:
 	void OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 
 public:
+	UFUNCTION(BlueprintCallable)
 	void ExecuteAction(FName actionName);
+	UFUNCTION(BlueprintCallable)
 	void ExecuteIdle();
-	void ExecuteMove();
+	UFUNCTION(BlueprintCallable)
+	void ExecuteMove(FVector movement);
+	UFUNCTION(BlueprintCallable)
 	void ExecuteSprint();
+	UFUNCTION(BlueprintCallable)
 	void ExecuteJump();
+	UFUNCTION(BlueprintCallable)
 	void ExecuteAim();
+	UFUNCTION(BlueprintCallable)
 	void ExecuteDodge();
 
 	UActionData* GetActionData();
@@ -60,24 +67,22 @@ public:
 private:
 	void _TickActionProcess(float deltaTime);
 
-	FVector _CalculateMovingDirection();
+	FVector _ComputeCameraSpaceMovingDirection();
 
 private:
-	//TArray<UAction*> _arrayActionsInProgress;
+	FVector _userMovementInput;
+
 	UPROPERTY()
 	TMap<FName, UAction*> _mapActionProcessPool;
 
 	UPROPERTY()
 	UActionData* _actionData;
 
-
-	FVector2D _movementInput;
-
-	UPROPERTY(EditDefaultsOnly, Category = State)
-	TMap<TEnumAsByte<EMovementMode>, TSubclassOf<UCharacterStateBase>> _mapActionGroup;
+	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
+	TMap<TEnumAsByte<EMovementMode>, TSubclassOf<UCharacterActionSet>> _mapActionSet;
 
 	UPROPERTY()
-	UCharacterStateBase* _pCurrentCharacterState;
+	UCharacterActionSet* _pCurrentActionSet;
 
 	bool _bSprintButtonPress;
 };

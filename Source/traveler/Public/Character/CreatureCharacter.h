@@ -11,6 +11,7 @@ class UAttributeComponent;
 
 class AWeapon;
 class AProjectile;
+class UActionData;
 
 UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter
@@ -31,9 +32,18 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+public:
+	UFUNCTION(BlueprintCallable)
+	UAttributeComponent* GetAttributeComponent();
 
 	UFUNCTION(BlueprintCallable)
-	void Ascend();
+	UActionComponent* GetActionComponent();
+
+	UFUNCTION(BlueprintCallable)
+	void ExecuteAction(FName actionName);
+
+	UFUNCTION(BlueprintCallable)
+	UActionData* GetActionData();
 
 private:
 	UPROPERTY(VisibleAnywhere)

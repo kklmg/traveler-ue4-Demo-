@@ -15,11 +15,11 @@ void UActionMoveAndFaceTo::VExecute()
 	Super::VExecute();
 
 	//rotation
-	_actionOwner->SetActorRotation(_actionData->Direction.Rotation());
+	_actionOwner->SetActorRotation(_actionData->GetMovementInput().Rotation());
 
 	//Movement
 
-	_actionOwner->AddMovementInput(_actionData->Direction);
+	_actionOwner->AddMovementInput(_actionData->GetMovementInput());
 
 	//Get Attribute
 	//UAttributeComponent* pAttributeComponent = character->GetAttributeComponent();
