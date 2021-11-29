@@ -2,7 +2,7 @@
 
 
 #include "Actions/ActionTeleport.h"
-#include "Character/MyCharacter.h"
+#include "GameFramework/Character.h"
 
 UActionTeleport::UActionTeleport()
 {

@@ -2,9 +2,9 @@
 
 
 #include "Actions/ActionTakeOff.h"
-#include "Character/MyCharacter.h"
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Character.h"
 
 UActionTakeOff::UActionTakeOff()
 {

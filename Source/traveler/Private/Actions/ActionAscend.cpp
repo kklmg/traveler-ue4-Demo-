@@ -2,7 +2,8 @@
 
 
 #include "Actions/ActionAscend.h"
-#include "Character/MyCharacter.h"
+#include "GameFramework/Character.h"
+
 
 UActionAscend::UActionAscend()
 {

@@ -3,8 +3,7 @@
 #include "Components/WeaponComponent.h"
 #include "Weapon/Weapon.h"
 #include "Weapon/Bow.h"
-#include "Character/MyCharacter.h"
-#include "Components/PoseableMeshComponent.h"
+#include "Character/HumanCharacter.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -28,7 +27,7 @@ void UWeaponComponent::BeginPlay()
 	{
 		//FActorSpawnParameters params;
 		AWeapon* bow = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
-		bow->Initialize(Cast<AMyCharacter>(GetOwner()));
+		bow->Initialize(GetOwner<AHumanCharacter>());
 		SetWeapon(bow);
 	}
 	// ...
@@ -62,7 +61,7 @@ void UWeaponComponent::SetWeapon(AWeapon* weapon)
 		OnWeaponChanged.Broadcast(_aWeapon);
 
 		//Get Character
-		AMyCharacter* character = Cast<AMyCharacter>(GetOwner());
+		AHumanCharacter* character = Cast<AHumanCharacter>(GetOwner());
 		check(character != nullptr);
 
 		//Attach Weapon 

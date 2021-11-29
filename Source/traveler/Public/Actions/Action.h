@@ -36,7 +36,6 @@ namespace ActionName
 	const FName TELEPORT = FName(TEXT("teleport"));
 }
 
-class AMyCharacter;
 class UActionComponent;
 
 

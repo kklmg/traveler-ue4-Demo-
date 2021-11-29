@@ -69,3 +69,40 @@ UActionData* ACreatureCharacter::GetActionData()
 {
 	return _actionComponent->GetActionData();
 }
+
+FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
+{
+	if (_socketsMap.Contains(meshSocketType))
+	{
+		return _socketsMap[meshSocketType];
+	}
+	else
+	{
+		const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
+		if (EnumPtr)
+		{
+			FString enumName = EnumPtr->GetNameStringByIndex((int32)meshSocketType);
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
+		}
+		return "";
+	}
+}
+
+bool ACreatureCharacter::GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
+{
+	if (_socketsMap.Contains(meshSocketType))
+	{
+		outTransform = GetMesh()->GetSocketTransform(_socketsMap[meshSocketType]);
+		return true;
+	}
+	else
+	{
+		const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
+		if (EnumPtr)
+		{
+			FString enumName = EnumPtr->GetNameStringByIndex((int32)meshSocketType);
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
+		}
+		return false;
+	}
+}

@@ -4,10 +4,11 @@
 #include "Components/ActionComponent.h"
 #include "Actions/Action.h"
 #include "Actions/CharacterActionSet.h"
-#include "Character/MyCharacter.h"
+#include "Character/HumanCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameSystem/MyBlueprintFunctionLibrary.h"
 
 
 // Sets default values for this component's properties
@@ -52,11 +53,15 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	ACharacter* character = GetOwner<ACharacter>();
+	AHumanCharacter* character = GetOwner<AHumanCharacter>();
 
 	if (character && character->IsPlayerControlled() && _userMovementInput.IsZero() == false)
 	{
-		ExecuteMove(_ComputeCameraSpaceMovingDirection());
+		//Get Camera
+		UCameraComponent* cameraComp = character->GetCameraComponent();
+		check(cameraComp != nullptr);
+
+		ExecuteMove(UMyBlueprintFunctionLibrary::InptAxisToCameraDirection(_userMovementInput, cameraComp));
 	}
 
 	_TickActionProcess(DeltaTime);
@@ -153,32 +158,6 @@ void UActionComponent::_TickActionProcess(float deltaTime)
 	}
 }
 
-FVector UActionComponent::_ComputeCameraSpaceMovingDirection()
-{
-	//Get Input Direction
-	FVector inputDirection(_userMovementInput.X, _userMovementInput.Y, 0);
-
-	//Get My Character
-	AMyCharacter* pCharacter = Cast<AMyCharacter>(GetOwner());
-	check(pCharacter != nullptr);
-
-	//Get Camera
-	UCameraComponent* pCamera = pCharacter->GetCameraComponent();
-	check(pCamera != nullptr);
-
-
-	//Get Camera Rotation Matrix
-	FRotator cameraRotator = pCamera->GetComponentRotation();
-	FMatrix cameraRotationMatrix = FRotationMatrix(cameraRotator);
-
-	//Calculate moving direction
-	FVector moveDirection = cameraRotationMatrix.TransformVector(inputDirection);
-	moveDirection.Z = 0;
-	moveDirection.Normalize();
-
-	return moveDirection;
-}
-
 UActionData* UActionComponent::GetActionData()
 {
 	return _actionData;
@@ -199,10 +178,10 @@ void UActionComponent::OnSprintButtonDown()
 	_bSprintButtonPress = true;
 
 	//Get My Character
-	AMyCharacter* pCharacter = Cast<AMyCharacter>(GetOwner());
-	check(pCharacter != nullptr);
+	AHumanCharacter* humanCharacter = Cast<AHumanCharacter>(GetOwner());
+	check(humanCharacter != nullptr);
 
-	pCharacter->GetCharacterMovement()->MaxWalkSpeed = pCharacter->GetAttributeComponent()->GetRunSpeed();
+	humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->GetRunSpeed();
 }
 
 void UActionComponent::OnSprintButtonUp()
@@ -210,10 +189,10 @@ void UActionComponent::OnSprintButtonUp()
 	_bSprintButtonPress = false;
 
 	//Get My Character
-	AMyCharacter* pCharacter = Cast<AMyCharacter>(GetOwner());
-	check(pCharacter != nullptr);
+	AHumanCharacter* humanCharacter = Cast<AHumanCharacter>(GetOwner());
+	check(humanCharacter != nullptr);
 
-	pCharacter->GetCharacterMovement()->MaxWalkSpeed = pCharacter->GetAttributeComponent()->GetWalkSpeed();
+	humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->GetWalkSpeed();
 }
 
 

@@ -3,7 +3,7 @@
 
 #include "Weapon/Bow.h"
 #include "Projectile/Projectile.h"
-#include "Character/MyCharacter.h"
+#include "Character/HumanCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/PoseableMeshComponent.h"
 #include "Components/CameraSpringArmComponent.h"

@@ -4,7 +4,6 @@
 #include "Projectile/Projectile.h"
 #include "Components/CapsuleComponent.h"
 #include "Weapon/Weapon.h"
-#include "Character/MyCharacter.h"
 #include "Components/PawnCameraComponent.h"
 
 // Sets default values

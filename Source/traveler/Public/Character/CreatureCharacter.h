@@ -13,6 +13,16 @@ class AWeapon;
 class AProjectile;
 class UActionData;
 
+UENUM(BlueprintType)
+enum class EMeshSocketType : uint8
+{
+	MST_LeftHand UMETA(DisplayName = "LeftHand"),
+	MST_RightHand UMETA(DisplayName = "RightHand"),
+	MST_LeftHandDraw UMETA(DisplayName = "LeftHandDraw"),
+	MST_RightHandDraw UMETA(DisplayName = "RightHandDraw"),
+};
+
+
 UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter
 {
@@ -45,10 +55,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UActionData* GetActionData();
 
-private:
+	UFUNCTION(BlueprintCallable)
+	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
+
+	UFUNCTION(BlueprintCallable)
+	bool GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform);
+
+protected:
 	UPROPERTY(VisibleAnywhere)
 	UActionComponent* _actionComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* _attributeComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = Sockets)
+	TMap<EMeshSocketType, FName> _socketsMap;
 };

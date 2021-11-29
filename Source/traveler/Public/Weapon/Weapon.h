@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
-class AMyCharacter;
+class AHumanCharacter;
 class UPoseableMeshComponent;
 
 UENUM(BlueprintType)
@@ -33,7 +33,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	void Initialize(AMyCharacter* weaponOwner);
+	void Initialize(AHumanCharacter* weaponOwner);
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -43,7 +43,7 @@ private:
 	USkeletalMeshComponent* _skeletalMeshComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	AMyCharacter* _weaponOwner;
+	AHumanCharacter* _weaponOwner;
 
 	bool _isReadyToFire;
 
@@ -74,9 +74,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	USkeletalMeshComponent* GetMeshComponent();
 
-
 	UFUNCTION(BlueprintCallable)
-	AMyCharacter* GetWeaponOwner();
+	AHumanCharacter* GetWeaponOwner();
 
 	UFUNCTION(BlueprintCallable)
 	void SetIsReadyToFire(bool fireable);

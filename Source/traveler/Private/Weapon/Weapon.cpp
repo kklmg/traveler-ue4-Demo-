@@ -2,7 +2,7 @@
 
 
 #include "Weapon/Weapon.h"
-#include "Character/MyCharacter.h"
+#include "Character/HumanCharacter.h"
 #include "Components/PoseableMeshComponent.h"
 
 // Sets default values
@@ -28,7 +28,7 @@ void AWeapon::BeginPlay()
 
 }
 
-void AWeapon::Initialize(AMyCharacter* weaponOwner)
+void AWeapon::Initialize(AHumanCharacter* weaponOwner)
 {
 	_weaponOwner = weaponOwner;
 }
@@ -46,7 +46,7 @@ USkeletalMeshComponent* AWeapon::GetMeshComponent()
 
 
 
-AMyCharacter* AWeapon::GetWeaponOwner() 
+AHumanCharacter* AWeapon::GetWeaponOwner()
 {
 	return _weaponOwner;
 }

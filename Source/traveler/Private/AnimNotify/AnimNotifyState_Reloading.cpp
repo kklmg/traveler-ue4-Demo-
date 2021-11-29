@@ -2,7 +2,7 @@
 
 
 #include "AnimNotify/AnimNotifyState_Reloading.h"
-#include "Character/MyCharacter.h"
+#include "Character/HumanCharacter.h"
 #include "Components/WeaponComponent.h"
 #include "Weapon/Weapon.h"
 
@@ -19,7 +19,7 @@ void UAnimNotifyState_Reloading::NotifyTick(USkeletalMeshComponent* MeshComp, UA
 	{
 		return;
 	}
-	AMyCharacter* character = Cast<AMyCharacter>(actor);
+	AHumanCharacter* character = Cast<AHumanCharacter>(actor);
 	if (character == nullptr) 
 	{
 		return;

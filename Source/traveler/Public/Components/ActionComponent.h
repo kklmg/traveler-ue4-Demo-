@@ -67,8 +67,6 @@ public:
 private:
 	void _TickActionProcess(float deltaTime);
 
-	FVector _ComputeCameraSpaceMovingDirection();
-
 private:
 	FVector _userMovementInput;
 

@@ -2,7 +2,6 @@
 
 
 #include "Actions/ActionIdle.h"
-#include "Character/MyCharacter.h"
 #include "Components/AttributeComponent.h"
 
 UActionIdle::UActionIdle() 

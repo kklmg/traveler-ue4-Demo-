@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Actions/ActionJump.h"
-#include "Character/MyCharacter.h"
 #include "Components/AttributeComponent.h"
+#include "Character/CreatureCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -16,7 +16,7 @@ void UActionJump::VExecute()
 	Super::VExecute();
 
 	//Get My Character
-	AMyCharacter* character = Cast<AMyCharacter>(_actionOwner);
+	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
 	check(character != nullptr);
 
 	//Get Attribute

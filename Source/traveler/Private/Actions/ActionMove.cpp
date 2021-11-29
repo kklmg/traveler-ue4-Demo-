@@ -2,8 +2,8 @@
 
 
 #include "Actions/ActionMove.h"
-#include "Character/MyCharacter.h"
 #include "Components/AttributeComponent.h"
+#include "GameFramework/Character.h"
 
 
 UActionMove::UActionMove() 

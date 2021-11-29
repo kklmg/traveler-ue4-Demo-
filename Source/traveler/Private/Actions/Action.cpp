@@ -3,7 +3,7 @@
 
 #include "Actions/Action.h"
 #include "Components/ActionComponent.h"
-#include "Character/MyCharacter.h"
+#include "GameFramework/Character.h"
 
 
 UAction::UAction()
