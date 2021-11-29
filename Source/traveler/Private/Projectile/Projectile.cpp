@@ -2,9 +2,11 @@
 
 
 #include "Projectile/Projectile.h"
+#include "Character/HumanCharacter.h"
 #include "Components/CapsuleComponent.h"
-#include "Weapon/Weapon.h"
 #include "Components/PawnCameraComponent.h"
+#include "Weapon/Weapon.h"
+#include "Actions/Action.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -100,6 +102,13 @@ void AProjectile::Launch(float speed)
 	//apply speed
 	ProjectileMovementComponent->Velocity = _flyingDir * speed;
 
+
+	//Bind Special Action
+	AHumanCharacter* character = GetInstigator<AHumanCharacter>();
+	if (character) 
+	{
+		character->Action3ButtonDownDelegate.BindUFunction(this, FName("VExecuteSpecialAction"));
+	}
 	//DrawDebugLine(GetWorld(), MuzzleLocation, hitLocation, FColor::Blue, false, 2.0f);
 }
 
@@ -121,5 +130,11 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 		Destroy();
 
 	}), WaitTime, false);
+}
+
+void AProjectile::VExecuteSpecialAction()
+{
+	UE_LOG(LogTemp, Warning, TEXT("called not implemented function: ExecuteSpecialAction"));
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("projectile action"));
 }
 

@@ -13,6 +13,8 @@ class UWeaponComponent;
 class AWeapon;
 class AProjectile;
 
+DECLARE_DELEGATE(FButtonSignature);
+
 
 UCLASS()
 class TRAVELER_API AHumanCharacter : public ACreatureCharacter
@@ -36,6 +38,19 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION()
+	void OnAction1ButtonDown();
+	UFUNCTION()
+	void OnAction1ButtonUp();
+	UFUNCTION()
+	void OnAction2ButtonDown();
+	UFUNCTION()
+	void OnAction2ButtonUp();
+	UFUNCTION()
+	void OnAction3ButtonDown();
+	UFUNCTION()
+	void OnAction3ButtonUp();
+
 	UFUNCTION(BlueprintCallable)
 	UCameraSpringArmComponent* GetSpringArmComponent();
 
@@ -58,4 +73,15 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UWeaponComponent* _weaponComponent;
+
+	//delegates
+public:
+	FButtonSignature Action1ButtonDownDelegate;
+	FButtonSignature Action1ButtonUpDelegate;
+
+	FButtonSignature Action2ButtonDownDelegate;
+	FButtonSignature Action2ButtonUpDelegate;
+
+	FButtonSignature Action3ButtonDownDelegate;
+	FButtonSignature Action3ButtonUpDelegate;
 };

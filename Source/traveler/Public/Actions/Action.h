@@ -65,7 +65,6 @@ public:
 	virtual void VExecute();
 	virtual void VTick(float deltaTime);
 
-
 public:
 	FName GetActionName();
 

@@ -17,7 +17,7 @@ void UAction::Initialize(UActionComponent* actionComponent, UActionData* actionD
 {
 	_actionData = actionData;
 	_actionComp = actionComponent;
-	_actionOwner = Cast<ACharacter>(actionComponent->GetOwner());
+	_actionOwner = actionComponent->GetOwner<ACharacter>();
 
 	_state = EActionState::AS_ReadyToExecute;
 }

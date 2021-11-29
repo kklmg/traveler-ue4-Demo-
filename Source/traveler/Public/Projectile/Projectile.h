@@ -40,6 +40,9 @@ public:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
+	UFUNCTION()
+	virtual void VExecuteSpecialAction();
+
 private:
 
 	// Sphere collision component.
@@ -61,4 +64,8 @@ private:
 	float _damage;
 
 	FVector _flyingDir;
+
+	// special action
+	UPROPERTY(EditDefaultsOnly, Category = Action)
+	FName _specialActionName;
 };

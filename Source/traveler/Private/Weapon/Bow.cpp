@@ -143,6 +143,11 @@ void ABow::_UpdateProjectileTransform(float deltaDegree)
 	{
 		hitLocation = hitResult.ImpactPoint;
 	}
+	else
+	{
+		//hitLocation = cameraComp->GetComponentLocation() + cameraComp->GetForwardVector() * 1500;
+		hitLocation = farPlaneCenter;
+	}
 
 
 	//--------------------------------------------------------------------------------------------------------------------
@@ -206,13 +211,13 @@ void ABow::OnEnterAnimFrame_Launch()
 	{
 		if (projectile) 
 		{
-			projectile->Launch(3000);
+			projectile->Launch(5000);
+
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("launched projectile"));
 		}
 	}
 	_arraySpawnedProjectiles.Empty();
 	
-
 	_isDrawing = false;
 }
 

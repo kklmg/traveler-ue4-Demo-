@@ -80,11 +80,46 @@ void AHumanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	InputComponent->BindAxis("CameraYaw", _cameraSpringArmComponent, &UCameraSpringArmComponent::Yaw);
 	InputComponent->BindAxis("ZoomInOut", _cameraSpringArmComponent, &UCameraSpringArmComponent::ZoomInOut);
 
+	//weapon fire
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, _weaponComponent, &UWeaponComponent::OnFireButtonDown);
 	PlayerInputComponent->BindAction("Fire", IE_Released, _weaponComponent, &UWeaponComponent::OnFireButtonUp);
 
+	//weapon aim
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, _weaponComponent, &UWeaponComponent::OnAimButtonDown);
 	PlayerInputComponent->BindAction("Aim", IE_Released, _weaponComponent, &UWeaponComponent::OnAimButtonUp);
+
+	//Special Actions
+	PlayerInputComponent->BindAction("Action1", IE_Pressed, this, &AHumanCharacter::OnAction1ButtonDown);
+	PlayerInputComponent->BindAction("Action1", IE_Released, this, &AHumanCharacter::OnAction1ButtonUp);
+	PlayerInputComponent->BindAction("Action2", IE_Pressed, this, &AHumanCharacter::OnAction2ButtonDown);
+	PlayerInputComponent->BindAction("Action2", IE_Released, this, &AHumanCharacter::OnAction2ButtonUp);
+	PlayerInputComponent->BindAction("Action3", IE_Pressed, this, &AHumanCharacter::OnAction3ButtonDown);
+	PlayerInputComponent->BindAction("Action3", IE_Released, this, &AHumanCharacter::OnAction3ButtonUp);
+}
+
+void AHumanCharacter::OnAction1ButtonDown()
+{
+	Action1ButtonDownDelegate.ExecuteIfBound();
+}
+void AHumanCharacter::OnAction1ButtonUp() 
+{
+	Action1ButtonUpDelegate.ExecuteIfBound();
+}
+void AHumanCharacter::OnAction2ButtonDown() 
+{
+	Action2ButtonDownDelegate.ExecuteIfBound();
+}
+void AHumanCharacter::OnAction2ButtonUp() 
+{
+	Action2ButtonUpDelegate.ExecuteIfBound();
+}
+void AHumanCharacter::OnAction3ButtonDown() 
+{
+	Action3ButtonDownDelegate.ExecuteIfBound();
+}
+void AHumanCharacter::OnAction3ButtonUp() 
+{
+	Action3ButtonUpDelegate.ExecuteIfBound();
 }
 
 

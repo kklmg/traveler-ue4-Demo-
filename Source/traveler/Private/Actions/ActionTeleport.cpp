@@ -14,7 +14,7 @@ void UActionTeleport::VExecute()
 	Super::VExecute();
 
 	FVector location;
-	if (_actionData->TryReadVectorData(ActionKey::TeleportLocation, location)) 
+	if (_actionData->TryReadVectorData(ActionData::TeleportLocation, location)) 
 	{
 		_actionOwner->SetActorLocation(location);
 	}

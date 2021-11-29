@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "UObject/NoExportTypes.h"
 #include "ActionData.generated.h"
 
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnVectorValueChanged, FVector);
 
-namespace ActionKey 
+namespace ActionData 
 {
 	const FName TeleportLocation = FName(TEXT("TeleportLocation"));
 	const FName MovementAddition = FName(TEXT("MovementAddition"));
 }
+
 
 /**
  * 
