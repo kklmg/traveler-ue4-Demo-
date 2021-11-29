@@ -75,6 +75,10 @@ void AHumanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, _actionComponent, &UActionComponent::OnSprintButtonDown);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, _actionComponent, &UActionComponent::OnSprintButtonUp);
 
+	//Dodge
+	PlayerInputComponent->BindAction("Dodge", IE_Pressed, _actionComponent, &UActionComponent::OnDodgeButtonDown);
+	PlayerInputComponent->BindAction("Dodge", IE_Released, _actionComponent, &UActionComponent::OnDodgeButtonUp);
+
 	//camera
 	InputComponent->BindAxis("CameraPitch", _cameraSpringArmComponent, &UCameraSpringArmComponent::Pitch);
 	InputComponent->BindAxis("CameraYaw", _cameraSpringArmComponent, &UCameraSpringArmComponent::Yaw);

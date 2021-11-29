@@ -36,6 +36,9 @@ public:
 	void OnSprintButtonDown();
 	void OnSprintButtonUp();
 
+	void OnDodgeButtonDown();
+	void OnDodgeButtonUp();
+
 	void AddMovementInputX(float value);
 	void AddMovementInputY(float value);
 

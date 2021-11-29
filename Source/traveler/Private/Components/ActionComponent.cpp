@@ -136,25 +136,28 @@ void UActionComponent::AddToActionProcessPool(UAction* action)
 
 void UActionComponent::_TickActionProcess(float deltaTime)
 {
-	TArray<UAction*> finieshedActions;
-	
+	TArray<FName> finieshedActionKeys;
+
+	//find out all finished actions
 	for (auto pair : _mapActionProcessPool)
 	{
-		//Tick Actions
-		pair.Value->VTick(deltaTime);
-
-		//find out finished action to remove
 		EActionState actionState = pair.Value->GetState();
-		if (actionState == EActionState::AS_Finished && actionState == EActionState::AS_Aborted)
+		if (actionState == EActionState::AS_Finished || actionState == EActionState::AS_Aborted)
 		{
-			finieshedActions.Add(pair.Value);
+			finieshedActionKeys.Add(pair.Key);
 		}
 	}
 
-	//remove finished actions
-	for (auto action : finieshedActions)
+	//remove all finished actions
+	for (auto key : finieshedActionKeys)
 	{
-		_mapActionProcessPool.Remove(action->GetActionName());
+		_mapActionProcessPool.Remove(key);
+	}
+
+	//tick actions
+	for (auto pair : _mapActionProcessPool)
+	{
+		pair.Value->VTick(deltaTime);
 	}
 }
 
@@ -193,6 +196,14 @@ void UActionComponent::OnSprintButtonUp()
 	check(humanCharacter != nullptr);
 
 	humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->GetWalkSpeed();
+}
+
+void UActionComponent::OnDodgeButtonDown() 
+{
+	ExecuteDodge();
+}
+void UActionComponent::OnDodgeButtonUp() 
+{
 }
 
 
