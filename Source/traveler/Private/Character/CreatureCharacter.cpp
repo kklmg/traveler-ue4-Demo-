@@ -31,6 +31,8 @@ ACreatureCharacter::ACreatureCharacter()
 void ACreatureCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	MovementModeChangedDelegate.AddDynamic(this, &ACreatureCharacter::OnCharacterMovementModeChanged);
 	
 }
 
@@ -104,5 +106,48 @@ bool ACreatureCharacter::GetMeshSocketTransform(EMeshSocketType meshSocketType, 
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
 		}
 		return false;
+	}
+}
+
+
+void ACreatureCharacter::SetCharacterState(ECharacterState characterState) 
+{
+	if (_characterState != characterState) 
+	{
+		_characterState = characterState;
+		OnCharacterStateChangedDelegate.Broadcast(_characterState);
+	}
+}
+
+ECharacterState ACreatureCharacter::GetCharacterState()
+{
+	return _characterState;
+}
+
+
+void ACreatureCharacter::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+{
+	EMovementMode curMovementMode = GetCharacterMovement()->MovementMode;
+
+	switch (curMovementMode)
+	{
+	case MOVE_None: 
+		break;
+	case MOVE_Walking: SetCharacterState(ECharacterState::CS_GroundNormal);
+		break;
+	case MOVE_NavWalking:
+		break;
+	case MOVE_Falling: SetCharacterState(ECharacterState::CS_AirFalling);
+		break;
+	case MOVE_Swimming:SetCharacterState(ECharacterState::CS_Swimming);
+		break;
+	case MOVE_Flying: SetCharacterState(ECharacterState::CS_AirFlying);
+		break;
+	case MOVE_Custom:
+		break;
+	case MOVE_MAX:
+		break;
+	default:
+		break;
 	}
 }

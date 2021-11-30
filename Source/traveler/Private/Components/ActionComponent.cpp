@@ -34,17 +34,13 @@ void UActionComponent::BeginPlay()
 	// ...
 
 	//Get Character
-	ACharacter* character = Cast<ACharacter>(GetOwner());
+	ACreatureCharacter* character = GetOwner<ACreatureCharacter>();
 	check(character != nullptr);
-
-	UCharacterMovementComponent* movementComp = character->GetCharacterMovement();
-	check(movementComp != nullptr);
 	
-	//set Action Group
-	OnCharacterMovementModeChanged(character, EMovementMode::MOVE_None, 0);
+	OnCharacterStateChanged(character->GetCharacterState());
 
-	//bind MovementModeChanged event
-	character->MovementModeChangedDelegate.AddDynamic(this, &UActionComponent::OnCharacterMovementModeChanged);
+	//bind Character changed event
+	character->OnCharacterStateChangedDelegate.AddDynamic(this, &UActionComponent::OnCharacterStateChanged);
 }
 
 
@@ -206,24 +202,27 @@ void UActionComponent::OnDodgeButtonUp()
 {
 }
 
-
-
-void UActionComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode) 
+void UActionComponent::OnCharacterStateChanged(ECharacterState characterState)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("movementmode changed"));
-	UCharacterMovementComponent* movementComp = Character->GetCharacterMovement();
-	check(movementComp != nullptr);
+	ACreatureCharacter* character = GetOwner<ACreatureCharacter>();
+	check(character != nullptr);
 
-	if (_mapActionSet.Contains(movementComp->MovementMode)) 
+	if (_mapActionSet.Contains(characterState))
 	{
 		//clear process pool
 		ClearActionProcessPool();
 
-		//Instaciate Action Group Class
-		UCharacterActionSet* actionSetIns = NewObject<UCharacterActionSet>(this,_mapActionSet[movementComp->MovementMode]);
-		actionSetIns->VEnter();
+		//Make instace of ActionSetClass
+		TSubclassOf<UCharacterActionSet> actionSetClass = _mapActionSet[characterState];
 
-		//Set Current Action Group
+		UCharacterActionSet* actionSetIns = actionSetClass ? 
+			NewObject<UCharacterActionSet>(this, actionSetClass) 
+			: NewObject<UCharacterActionSet>(this);
+
+			actionSetIns->VEnter();
+		
+
+		//Set Current Action set
 		if (_pCurrentActionSet != nullptr)
 		{
 			_pCurrentActionSet->VLeave();

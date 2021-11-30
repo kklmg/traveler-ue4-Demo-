@@ -11,6 +11,7 @@ class UActionData;
 class UCharacterActionSet;
 
 
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UActionComponent : public UActorComponent
 {
@@ -46,7 +47,7 @@ public:
 	void ClearActionProcessPool();
 
 	UFUNCTION()
-	void OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
+	void OnCharacterStateChanged(ECharacterState characterState);
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -80,7 +81,7 @@ private:
 	UActionData* _actionData;
 
 	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
-	TMap<TEnumAsByte<EMovementMode>, TSubclassOf<UCharacterActionSet>> _mapActionSet;
+	TMap<TEnumAsByte<ECharacterState>, TSubclassOf<UCharacterActionSet>> _mapActionSet;
 
 	UPROPERTY()
 	UCharacterActionSet* _pCurrentActionSet;

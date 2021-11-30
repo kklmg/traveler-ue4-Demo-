@@ -22,6 +22,19 @@ enum class EMeshSocketType : uint8
 	MST_RightHandDraw UMETA(DisplayName = "RightHandDraw"),
 };
 
+UENUM(BlueprintType)
+enum class ECharacterState : uint8
+{
+	CS_GroundNormal UMETA(DisplayName = "GroundNormal"),
+	CS_GroundDodging UMETA(DisplayName = "GroundDodging"),
+	CS_AirFalling UMETA(DisplayName = "AirFalling"),
+	CS_AirNormal UMETA(DisplayName = "AirNormal"),
+	CS_AirFlying UMETA(DisplayName = "AirFlying"),
+	CS_Swimming UMETA(DisplayName = "Swimming"),
+	CS_Stunning UMETA(DisplayName = "Stunning"),
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStateChanged, ECharacterState, characterState);
 
 UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter
@@ -42,6 +55,11 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	//delegates
+public:
+	FOnCharacterStateChanged OnCharacterStateChangedDelegate;
+
 public:
 	UFUNCTION(BlueprintCallable)
 	UAttributeComponent* GetAttributeComponent();
@@ -61,6 +79,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform);
 
+	void OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCharacterState(ECharacterState characterState);
+
+	UFUNCTION(BlueprintCallable)
+	ECharacterState GetCharacterState();
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UActionComponent* _actionComponent;
@@ -68,6 +94,10 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* _attributeComponent;
 
+	UPROPERTY(VisibleAnywhere)
+	ECharacterState _characterState;
+
 	UPROPERTY(EditDefaultsOnly, Category = Sockets)
 	TMap<EMeshSocketType, FName> _socketsMap;
+
 };
