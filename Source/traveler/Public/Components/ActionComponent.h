@@ -51,7 +51,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void ExecuteAction(FName actionName);
+	UAction* ExecuteAction(FName actionName);
 	UFUNCTION(BlueprintCallable)
 	void ExecuteIdle();
 	UFUNCTION(BlueprintCallable)

@@ -16,8 +16,8 @@ enum class EActionState : uint8
 	AS_Paused UMETA(DisplayName = "Paused"),  // initialized but paused
 
 	// Dead processes
-	//AS_SUCCEEDED UMETA(DisplayName = "SUCCEEDED"),  // completed successfully
-	//AS_FAILED UMETA(DisplayName = "FAILED"),  // failed to complete
+	AS_SUCCEEDED UMETA(DisplayName = "SUCCEEDED"),  // execution succeed
+	AS_FAILED UMETA(DisplayName = "FAILED"),  // execution failed 
 	AS_Finished UMETA(DisplayName = "Finished"),
 	AS_Aborted UMETA(DisplayName = "Aborted"),
 };
@@ -34,6 +34,7 @@ namespace ActionName
 	const FName FLY = FName(TEXT("fly"));
 	const FName TAKEOFF = FName(TEXT("takeoff"));
 	const FName TELEPORT = FName(TEXT("teleport"));
+	const FName FlyTo = FName(TEXT("FlyTo"));
 }
 
 class UActionComponent;
@@ -48,27 +49,38 @@ class TRAVELER_API UAction : public UObject
 	GENERATED_BODY()
 public:
 	UAction();
-public:
-	void Initialize(UActionComponent* actionComponent, UActionData* actionData);
-
-	void Pause();
-	void Abort();
-
-	bool CanStart();
-	EActionState GetState() const;
-	//void SetState(EActionState state);
-
-	bool IsInstantAction();
 
 public:
-	
 	virtual void VExecute();
 	virtual void VTick(float deltaTime);
 
 public:
+	void Initialize(UActionComponent* actionComponent, UActionData* actionData);
+
+	UFUNCTION(BlueprintCallable)
+	void Pause();
+
+	UFUNCTION(BlueprintCallable)
+	void Abort();
+
+	UFUNCTION(BlueprintCallable)
+	bool CanStart();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsInstantAction();
+
+	UFUNCTION(BlueprintCallable)
 	FName GetActionName();
 
+	UFUNCTION(BlueprintCallable)
+	bool IsCompleted();
+
+	UFUNCTION(BlueprintCallable)
+	EActionState GetActionState();
+
+
 	ACharacter& GetActionOwner();
+
 
 protected:
 	UPROPERTY()
@@ -86,11 +98,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool _bInstantAction;
 
-
-
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	UAction* _pNextAction;
 
-	//UPROPERTY(VisibleAnywhere, Category = "Action")
+	UPROPERTY(VisibleAnywhere, Category = "Action")
 	EActionState _state;
 };

@@ -56,16 +56,15 @@ FName UAction::GetActionName()
 	return _actionName;
 }
 
+bool UAction::IsCompleted()
+{
+	return (_state == EActionState::AS_SUCCEEDED || _state == EActionState::AS_FAILED || _state == EActionState::AS_Aborted);
+}
 
-EActionState UAction::GetState() const
+EActionState UAction::GetActionState()
 {
 	return _state;
 }
-
-//void UAction::SetState(EActionState state)
-//{
-//	_state = state;
-//}
 
 ACharacter& UAction::GetActionOwner()
 {

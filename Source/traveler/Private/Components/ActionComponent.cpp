@@ -67,14 +67,14 @@ void UActionComponent::SetCharacterState()
 {
 }
 
-void UActionComponent::ExecuteAction(FName actionName)
+UAction* UActionComponent::ExecuteAction(FName actionName)
 {
 	if (_pCurrentActionSet == nullptr || _mapActionProcessPool.Contains(actionName))
 	{
-		return;
+		return nullptr;
 	}
 
-	UAction* action;
+	UAction* action = nullptr;
 
 	if (_pCurrentActionSet->TryGetActionInstance(actionName, &action))
 	{
@@ -87,6 +87,7 @@ void UActionComponent::ExecuteAction(FName actionName)
 			AddToActionProcessPool(action);
 		}
 	}
+	return action;
 }
 void UActionComponent::ExecuteIdle()
 {
@@ -137,7 +138,7 @@ void UActionComponent::_TickActionProcess(float deltaTime)
 	//find out all finished actions
 	for (auto pair : _mapActionProcessPool)
 	{
-		EActionState actionState = pair.Value->GetState();
+		EActionState actionState = pair.Value->GetActionState();
 		if (actionState == EActionState::AS_Finished || actionState == EActionState::AS_Aborted)
 		{
 			finieshedActionKeys.Add(pair.Key);

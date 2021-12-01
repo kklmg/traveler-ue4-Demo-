@@ -25,6 +25,8 @@ ACreatureCharacter::ACreatureCharacter()
 
 	//Enable the pawn to control camera rotation.
 	bUseControllerRotationYaw = false;
+
+	_characterState = ECharacterState::CS_GroundNormal;
 }
 
 // Called when the game starts or when spawned
@@ -59,12 +61,13 @@ UActionComponent* ACreatureCharacter::GetActionComponent()
 	return _actionComponent;
 }
 
-void ACreatureCharacter::ExecuteAction(FName actionName)
+UAction* ACreatureCharacter::ExecuteAction(FName actionName)
 {
 	if (_actionComponent) 
 	{
-		_actionComponent->ExecuteAction(actionName);
+		return _actionComponent->ExecuteAction(actionName);
 	}
+	return nullptr;
 }
 
 UActionData* ACreatureCharacter::GetActionData()

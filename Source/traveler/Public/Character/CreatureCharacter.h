@@ -10,6 +10,7 @@ class UActionComponent;
 class UAttributeComponent;
 
 class AWeapon;
+class UAction;
 class AProjectile;
 class UActionData;
 
@@ -68,7 +69,7 @@ public:
 	UActionComponent* GetActionComponent();
 
 	UFUNCTION(BlueprintCallable)
-	void ExecuteAction(FName actionName);
+	UAction* ExecuteAction(FName actionName);
 
 	UFUNCTION(BlueprintCallable)
 	UActionData* GetActionData();
@@ -79,6 +80,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform);
 
+	UFUNCTION()
 	void OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 
 	UFUNCTION(BlueprintCallable)

@@ -11,6 +11,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnVectorValueChanged, FVector);
 namespace ActionData 
 {
 	const FName TeleportLocation = FName(TEXT("TeleportLocation"));
+	const FName FlyToLocation = FName(TEXT("FlyToLocation"));
 	const FName MovementAddition = FName(TEXT("MovementAddition"));
 }
 
