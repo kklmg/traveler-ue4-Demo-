@@ -56,6 +56,12 @@ void AHumanCharacter::BeginDestroy()
 void AHumanCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//FRotator rotator = GetActorRotation();
+
+	//GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Orange, "yaw: " + FString::SanitizeFloat(rotator.Yaw));
+	//GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Orange, "pitch: " + FString::SanitizeFloat(rotator.Pitch));
+	//GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Orange, "roll: " + FString::SanitizeFloat(rotator.Roll));
 }
 
 // Called to bind functionality to input

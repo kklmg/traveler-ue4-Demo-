@@ -24,6 +24,9 @@ private:
 	float _flyingSpeed;
 
 	UPROPERTY(EditDefaultsOnly, Category = speed)
+	float _turnningSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = speed)
 	float _limitedRollDegree;
 
 	UPROPERTY(EditDefaultsOnly, Category = speed)
@@ -37,5 +40,9 @@ private:
 	float _preRoll;
 
 
-	//void _TurnTo();
+	FQuat _YawTurnning();
+	FQuat _RollTunning();
+
+	void _TurnLeft();
+	void _TurnRight();
 };
