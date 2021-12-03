@@ -15,3 +15,4 @@ FVector UMyBlueprintFunctionLibrary::InptAxisToCameraDirection(FVector inputAxis
 
 	return moveDirection;
 }
+

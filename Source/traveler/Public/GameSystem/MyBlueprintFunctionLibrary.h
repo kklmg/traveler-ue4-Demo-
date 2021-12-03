@@ -17,6 +17,5 @@ class TRAVELER_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	static FVector InptAxisToCameraDirection(FVector inputAxis,UCameraComponent* cameraComp);
-	
+	static FVector InptAxisToCameraDirection(FVector inputAxis,UCameraComponent* cameraComp);	
 };

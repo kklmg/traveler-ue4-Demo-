@@ -40,8 +40,8 @@ private:
 	float _preRoll;
 
 
-	FQuat _YawTurnning();
-	FQuat _RollTunning();
+	float _YawTurnning(FVector dirToDestination, FVector dirForward, float deltaTime);
+	float _RollTunning(FQuat curQuat, float deltaYaw, float deltaTime);
 
 	void _TurnLeft();
 	void _TurnRight();
