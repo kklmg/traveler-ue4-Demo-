@@ -18,11 +18,10 @@ enum class EActionState : uint8
 	// Dead processes
 	AS_SUCCEEDED UMETA(DisplayName = "SUCCEEDED"),  // execution succeed
 	AS_FAILED UMETA(DisplayName = "FAILED"),  // execution failed 
-	AS_Finished UMETA(DisplayName = "Finished"),
 	AS_Aborted UMETA(DisplayName = "Aborted"),
 };
 
-namespace ActionName 
+namespace ActionName
 {
 	const FName JUMP = FName(TEXT("jump"));
 	const FName SPRINT = FName(TEXT("sprint"));
@@ -35,6 +34,7 @@ namespace ActionName
 	const FName TAKEOFF = FName(TEXT("takeoff"));
 	const FName TELEPORT = FName(TEXT("teleport"));
 	const FName FlyTo = FName(TEXT("FlyTo"));
+	const FName ProjectileAttack = FName(TEXT("ProjectileAttack"));
 }
 
 class UActionComponent;
@@ -83,6 +83,9 @@ public:
 
 
 protected:
+	UFUNCTION(BlueprintCallable)
+	void SetActionState(EActionState state);
+
 	UPROPERTY()
 	ACharacter* _actionOwner;
 

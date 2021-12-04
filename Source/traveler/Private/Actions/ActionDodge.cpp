@@ -58,5 +58,5 @@ void UActionDodge::OnAnimationFinished(UAnimMontage* montage,bool interrupted)
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("End Dodge animation"));
 
 	character->SetCharacterState(ECharacterState::CS_GroundNormal);
-	_state = EActionState::AS_Finished;
+	_state = EActionState::AS_SUCCEEDED;
 }

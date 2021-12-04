@@ -34,7 +34,7 @@ void UAction::VExecute()
 	{
 		return;
 	}
-	_state = _bInstantAction ? EActionState::AS_Finished : EActionState::AS_Running;
+	_state = _bInstantAction ? EActionState::AS_SUCCEEDED : EActionState::AS_Running;
 }
 
 void UAction::VTick(float deltaTime) 
@@ -69,6 +69,12 @@ EActionState UAction::GetActionState()
 ACharacter& UAction::GetActionOwner()
 {
 	return *_actionOwner;
+}
+
+
+void UAction::SetActionState(EActionState state)
+{
+	_state = state;
 }
 
 bool UAction::IsInstantAction() 

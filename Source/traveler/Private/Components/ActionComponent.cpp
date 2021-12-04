@@ -138,8 +138,7 @@ void UActionComponent::_TickActionProcess(float deltaTime)
 	//find out all finished actions
 	for (auto pair : _mapActionProcessPool)
 	{
-		EActionState actionState = pair.Value->GetActionState();
-		if (actionState == EActionState::AS_Finished || actionState == EActionState::AS_Aborted)
+		if (pair.Value->IsCompleted())
 		{
 			finieshedActionKeys.Add(pair.Key);
 		}

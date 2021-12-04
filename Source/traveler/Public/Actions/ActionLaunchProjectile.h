@@ -6,6 +6,7 @@
 #include "Action.h"
 #include "ActionLaunchProjectile.generated.h"
 
+class AProjectile;
 /**
  * 
  */
@@ -15,6 +16,16 @@ class TRAVELER_API UActionLaunchProjectile : public UAction
 	GENERATED_BODY()
 	
 public:
+	UActionLaunchProjectile();
+
 	virtual void VExecute() override;
 	virtual void VTick(float deltaTime) override;
+
+private:
+
+	UPROPERTY(EditDefaultsOnly, Category = projectileClass)
+	TSubclassOf<AProjectile> projectileClass;
+
+	UPROPERTY()
+	TArray<AProjectile*> arrayProjectiles;
 };

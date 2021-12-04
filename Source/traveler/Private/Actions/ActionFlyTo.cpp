@@ -32,7 +32,7 @@ void UActionFlyTo::VExecute()
 	}
 	else
 	{
-		_state = EActionState::AS_Finished;
+		_state = EActionState::AS_FAILED;
 	}
 	
 }
@@ -71,6 +71,8 @@ void UActionFlyTo::VTick(float deltaTime)
 
 	FVector destLocXY(_destination.X, _destination.Y, curLocation.Z);
 
+	float distance = (_destination - curLocation).Size();
+
 	
 	DrawDebugLine(GetWorld(), curLocation, _destination, FColor::Red, false, -1.0f, 0U, 30.0f);
 	DrawDebugLine(GetWorld(), curLocation, destLocXY, FColor::Green, false, -1.0f, 0U, 30.0f);
@@ -78,12 +80,12 @@ void UActionFlyTo::VTick(float deltaTime)
 
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Current Location: " + (curLocation).ToString());
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Dest Location: " + (destLocXY).ToString());
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat((_destination - curLocation).Size()));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat(distance));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Velocity: " + FString::SanitizeFloat((character->GetVelocity()).Size()));
-	if ((destLocXY - curLocation).Size() < character->GetSimpleCollisionRadius())
+	if (distance < character->GetSimpleCollisionRadius()+1000)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "fly to completed ");
-		_state = EActionState::AS_Finished;
+		_state = EActionState::AS_SUCCEEDED;
 		return;
 	}
 
@@ -91,46 +93,20 @@ void UActionFlyTo::VTick(float deltaTime)
 
 
 	float r = _flyingSpeed / FMath::DegreesToRadians(_yawDegreePerSecond);
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "RRRRR: " + FString::SanitizeFloat(r));
+
 	DrawDebugLine(GetWorld(), curLocation - rightVector * r, curLocation, FColor::Purple, false, -1.0f, 0, 30.f);
 	DrawDebugLine(GetWorld(), curLocation + rightVector * r, curLocation, FColor::Purple, false, -1.0f, 0, 30.f);
 
 
 
-	//rightVector* r;
-
-	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::SanitizeFloat(dot));
-	//
-	//if (dot == 1.0f)
-	//{
-	//	_yawDegreePerSecond = 0;
-
-	//	_state = EActionState::AS_Finished;
-	//	return;
-	//}
-	//else
-	//{
-	//	float dotR = FVector::DotProduct(rightVector, dirToDestination);
-
-	//	if (dotR > 0)
-	//	{
-	//		_yawDegreePerSecond = -_yawDegreePerSecond;
-	//		_rollDegreePerSecond = -_rollDegreePerSecond;
-	//	}
-	//	else
-	//	{
-
-	//	}
-	//}
-
-	//_TurnTo();
-
-
-
+	FQuat deltaQuat = FQuat::Identity;
+	
 	//Yaw
 	//-------------------------------------------------------------------------------------------------------------
 	float deltaYaw = _YawTurnning(dirToDestination, forwardVector, deltaTime);
 	FQuat quatYaw(FVector::UpVector, FMath::DegreesToRadians(deltaYaw));
-	
+
 
 	//Pitch
 	//-------------------------------------------------------------------------------------------------------------
@@ -143,17 +119,12 @@ void UActionFlyTo::VTick(float deltaTime)
 	FQuat quatRoll = FQuat(forwardVector, FMath::DegreesToRadians(deltaRoll));
 
 
-
-
+	deltaQuat = quatYaw /** quatRoll*/;
 	
+
 	//apply movement
 	//-------------------------------------------------------------------------------------------------------------
-	FQuat combinedRotation = quatYaw /** quatRoll*/;
-
-	FRotator rototor;
-
-
-	character->AddActorWorldRotation(combinedRotation);
+	character->AddActorWorldRotation(deltaQuat);
 	character->AddMovementInput(forwardVector);
 
 
