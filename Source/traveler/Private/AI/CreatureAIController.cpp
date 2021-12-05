@@ -2,6 +2,18 @@
 
 
 #include "AI/CreatureAIController.h"
+#include "Perception/AIPerceptionComponent.h"
+
+ACreatureAIController::ACreatureAIController()
+{
+	PrimaryActorTick.bCanEverTick = true;
+
+	//Create ai perception Component
+	UAIPerceptionComponent* perceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("CameraSpringArmComponent"));
+	check(perceptionComponent != nullptr);
+
+	SetPerceptionComponent(*perceptionComponent);
+}
 
 void ACreatureAIController::BeginPlay() 
 {
@@ -23,3 +35,5 @@ void ACreatureAIController::OnUnPossess()
 {
 	Super::OnUnPossess();
 }
+
+

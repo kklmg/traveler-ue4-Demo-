@@ -3,6 +3,8 @@
 
 #include "Weapon/Bow.h"
 #include "Projectile/Projectile.h"
+
+#include "Character/CreatureCharacter.h"
 #include "Character/HumanCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/PoseableMeshComponent.h"
@@ -10,6 +12,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Command/CommandActor.h"
 
 ABow::ABow() 
 {
@@ -25,6 +28,23 @@ ABow::ABow()
 
 	_spawnProjectileCount = 5;
 	_ProjectilesInterval = 2;
+}
+
+
+void ABow::VInitialize(AHumanCharacter* weaponOwner) 
+{
+	Super::VInitialize(weaponOwner);
+	if (_aimButtonCommandClass)
+	{
+		_aimButtonCommand = NewObject<UCommandActor>(this, _aimButtonCommandClass);
+		_aimButtonCommand->Initialize(weaponOwner);
+	}
+
+}
+
+void ABow::BeginPlay()
+{
+	Super::BeginPlay();
 }
 
 void ABow::Tick(float DeltaTime)
@@ -78,6 +98,11 @@ void ABow::OnAimButtonDown()
 
 	CameraSpringArmComponent->SetPitchRange(-60, 60);
 	cameraComponent->BeginDragCamera(_aimingCameraOffset);
+
+	if (_aimButtonCommand) 
+	{
+		_aimButtonCommand->VExecute();
+	}
 }
 
 void ABow::OnAimButtonPress(float deltaTime)
@@ -111,10 +136,24 @@ void ABow::OnAimButtonUp()
 	{
 		projectile->Destroy();
 	}
+
+	if (_aimButtonCommand)
+	{
+		_aimButtonCommand->VUndo();
+	}
+
 	
 	_arraySpawnedProjectiles.Empty();
 }
 
+
+//void ABow::OnCharacterStateChanged(ECharacterState characterState)
+//{
+//	if (characterState == ECharacterState::CS_GroundNormal) 
+//	{
+//		OnAimButtonUp();
+//	}
+//}
 
 void ABow::_UpdateProjectileTransform(float deltaDegree) 
 {
@@ -174,7 +213,7 @@ void ABow::_UpdateProjectileTransform(float deltaDegree)
 
 	for (int i = 0; i < _arraySpawnedProjectiles.Num(); ++i)
 	{
-		//compute quaternian
+		//compute quaternion
 		curDeltaDegree = (i % 2) ? deltaDegree * i  : deltaDegree * i*-1;
 		curDeltaQuat = FQuat(weaponLeft, FMath::DegreesToRadians(curDeltaDegree));
 

@@ -17,8 +17,8 @@ class TRAVELER_API UCommandCameraDrag : public UCommandCamera
 public:
 	void SetOffset();
 
-	virtual void Execute() override;
-	virtual void Undo() override;
+	virtual void VExecute() override;
+	virtual void VUndo() override;
 
 private:
 	FVector _offset;

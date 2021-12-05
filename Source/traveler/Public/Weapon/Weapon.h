@@ -33,7 +33,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	void Initialize(AHumanCharacter* weaponOwner);
+	virtual void VInitialize(AHumanCharacter* weaponOwner);
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

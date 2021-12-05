@@ -28,7 +28,7 @@ void AWeapon::BeginPlay()
 
 }
 
-void AWeapon::Initialize(AHumanCharacter* weaponOwner)
+void AWeapon::VInitialize(AHumanCharacter* weaponOwner)
 {
 	_weaponOwner = weaponOwner;
 }

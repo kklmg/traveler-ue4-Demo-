@@ -16,7 +16,7 @@ UActionFlyTo::UActionFlyTo()
 
 	//Roll
 	_limitedRollDegree = 70.0f;
-	_yawDegreePerSecond = 60;
+	_yawDegreePerSecond = 90;
 	_rollDegreePerSecond = -30;
 }
 

@@ -13,14 +13,13 @@ UCLASS()
 class TRAVELER_API ACreatureAIController : public AAIController
 {
 	GENERATED_BODY()
+public:
+	ACreatureAIController();
 private:
 	virtual void BeginPlay() override;
 
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void OnUnPossess() override;
-
-
-
 
 	UPROPERTY(EditDefaultsOnly, Category = AI)
 	UBehaviorTree* _behaviorTree;

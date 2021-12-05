@@ -9,6 +9,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
 
 class AProjectile;
+class UCommandActor;
 
 /**
  * 
@@ -20,6 +21,8 @@ class TRAVELER_API ABow : public AWeapon
 public:
 	ABow();
 public:
+	void VInitialize(AHumanCharacter* weaponOwner) override;
+	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 
 	virtual void OnFireButtonDown() override;
@@ -29,6 +32,8 @@ public:
 	virtual void OnAimButtonDown() override;
 	virtual void OnAimButtonPress(float deltaTime) override;
 	virtual void OnAimButtonUp() override;
+
+	//void OnCharacterStateChanged(ECharacterState characterState);
 
 	virtual void OnEnterAnimFrame_ReloadStart() override;
 	virtual void OnTickAnimFrame_Reloading() override;
@@ -100,4 +105,10 @@ private:
 	float _strength;
 
 	TArray<AProjectile*> _projectiles;
+
+	UPROPERTY(EditDefaultsOnly, Category = Button)
+	TSubclassOf<UCommandActor> _aimButtonCommandClass;
+
+	UPROPERTY()
+	UCommandActor* _aimButtonCommand;
 };

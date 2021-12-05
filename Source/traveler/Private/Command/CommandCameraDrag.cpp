@@ -7,9 +7,9 @@ void UCommandCameraDrag::SetOffset()
 {
 }
 
-void UCommandCameraDrag::Execute() 
+void UCommandCameraDrag::VExecute() 
 {
 }
-void UCommandCameraDrag::Undo()
+void UCommandCameraDrag::VUndo()
 {
 }

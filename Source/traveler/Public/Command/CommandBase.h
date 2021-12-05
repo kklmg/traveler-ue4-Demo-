@@ -14,7 +14,7 @@ class TRAVELER_API UCommandBase : public UObject
 {
 	GENERATED_BODY()
 public:
-	virtual void Execute() PURE_VIRTUAL(UcommandBase::Execute);
+	virtual void VExecute() PURE_VIRTUAL(UcommandBase::VExecute);
 
-	virtual void Undo() PURE_VIRTUAL(UcommandBase::Undo);
+	virtual void VUndo() PURE_VIRTUAL(UcommandBase::VUndo);
 };
