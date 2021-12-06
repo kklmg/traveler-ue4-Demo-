@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ActionData.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Action.generated.h"
 
 UENUM(BlueprintType)
@@ -38,6 +39,7 @@ namespace ActionName
 }
 
 class UActionComponent;
+class UBlackboardComponent;
 
 
 /**
@@ -55,7 +57,7 @@ public:
 	virtual void VTick(float deltaTime);
 
 public:
-	void Initialize(UActionComponent* actionComponent, UActionData* actionData);
+	void Initialize(UActionComponent* actionComponent, UActionData* actionData,UBlackboardComponent* actionblackBoard);
 
 	UFUNCTION(BlueprintCallable)
 	void Pause();
@@ -91,6 +93,9 @@ protected:
 
 	UPROPERTY()
 	UActionData* _actionData;
+
+	UPROPERTY()
+	UBlackboardComponent* _actionBlackBoard;
 
 	UPROPERTY()
 	UActionComponent* _actionComp;

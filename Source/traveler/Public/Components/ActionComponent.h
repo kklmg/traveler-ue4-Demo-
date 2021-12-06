@@ -9,6 +9,7 @@
 class UAction;
 class UActionData;
 class UCharacterActionSet;
+class UBlackboardComponent;
 
 
 
@@ -66,6 +67,7 @@ public:
 	void ExecuteDodge();
 
 	UActionData* GetActionData();
+	UBlackboardComponent* GetBlackBoard();
 	
 
 private:
@@ -73,6 +75,9 @@ private:
 
 private:
 	FVector _userMovementInput;
+
+	UPROPERTY(EditDefaultsOnly, Category = ActionData)
+	UBlackboardComponent* _blackBoardComponent;
 
 	UPROPERTY()
 	TMap<FName, UAction*> _mapActionProcessPool;

@@ -75,6 +75,12 @@ UActionData* ACreatureCharacter::GetActionData()
 	return _actionComponent->GetActionData();
 }
 
+
+UBlackboardComponent* ACreatureCharacter::GetActionBlackBoard()
+{
+	return _actionComponent->GetBlackBoard();
+}
+
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
 {
 	if (_socketsMap.Contains(meshSocketType))

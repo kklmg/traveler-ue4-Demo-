@@ -13,10 +13,11 @@ UAction::UAction()
 	_actionName = TEXT("UnKnown");
 }
 
-void UAction::Initialize(UActionComponent* actionComponent, UActionData* actionData)
+void UAction::Initialize(UActionComponent* actionComponent, UActionData* actionData, UBlackboardComponent* actionblackBoard)
 {
 	_actionData = actionData;
 	_actionComp = actionComponent;
+	_actionBlackBoard = actionblackBoard;
 	_actionOwner = actionComponent->GetOwner<ACharacter>();
 
 	_state = EActionState::AS_ReadyToExecute;

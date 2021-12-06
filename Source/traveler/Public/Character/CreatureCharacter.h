@@ -75,6 +75,9 @@ public:
 	UActionData* GetActionData();
 
 	UFUNCTION(BlueprintCallable)
+	UBlackboardComponent* GetActionBlackBoard();
+
+	UFUNCTION(BlueprintCallable)
 	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
 
 	UFUNCTION(BlueprintCallable)

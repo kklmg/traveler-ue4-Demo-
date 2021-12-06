@@ -26,14 +26,16 @@ void UActionFlyTo::VExecute()
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Execute Fly To"));
 
-	if (_actionData->TryReadVectorData(ActionData::FlyToLocation, _destination))
+	_destination = _actionBlackBoard->GetValueAsVector(ActionData::FlyToLocation);
+
+	/*if (_actionData->TryReadVectorData(ActionData::FlyToLocation, _destination))
 	{
 		_actionOwner->GetCharacterMovement()->MaxFlySpeed;
 	}
 	else
 	{
 		_state = EActionState::AS_FAILED;
-	}
+	}*/
 	
 }
 

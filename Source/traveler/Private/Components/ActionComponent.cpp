@@ -9,6 +9,7 @@
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyBlueprintFunctionLibrary.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 
 // Sets default values for this component's properties
@@ -19,6 +20,9 @@ UActionComponent::UActionComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	_blackBoardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackBoard"));
+	check(_blackBoardComponent != nullptr);
+	
 	
 	
 }
@@ -79,7 +83,7 @@ UAction* UActionComponent::ExecuteAction(FName actionName)
 	if (_pCurrentActionSet->TryGetActionInstance(actionName, &action))
 	{
 		action->Abort();
-		action->Initialize(this, _actionData);
+		action->Initialize(this, _actionData,_blackBoardComponent);
 		action->VExecute();
 
 		if (action->IsInstantAction() == false)
@@ -160,6 +164,11 @@ void UActionComponent::_TickActionProcess(float deltaTime)
 UActionData* UActionComponent::GetActionData()
 {
 	return _actionData;
+}
+
+UBlackboardComponent* UActionComponent::GetBlackBoard()
+{
+	return _blackBoardComponent;
 }
 
 void UActionComponent::OnJumpButtonDown()
