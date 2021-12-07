@@ -16,3 +16,37 @@ FVector UMyBlueprintFunctionLibrary::InptAxisToCameraDirection(FVector inputAxis
 	return moveDirection;
 }
 
+float UMyBlueprintFunctionLibrary::ComputeDistance(FVector from, FVector to, EPlane plane /*= Plane_None*/)
+{
+	FVector dirFromTo = to - from;
+
+	switch (plane)
+	{
+		case Plane_None:
+		{
+			return dirFromTo.Size();
+		}
+		break;
+		case Plane_XY:
+		{
+			dirFromTo.Z = 0;
+			dirFromTo.Size();
+		}
+		break;
+		case Plane_XZ: 
+		{
+			dirFromTo.Y = 0;
+			dirFromTo.Size();
+		}
+			break;
+		case Plane_YZ: 
+		{
+			dirFromTo.X = 0;
+			dirFromTo.Size();
+		}
+		break;
+	}
+	
+	return dirFromTo.Size();
+}
+

@@ -11,6 +11,15 @@ class UCameraComponent;
 /**
  * 
  */
+
+enum EPlane
+{
+	Plane_None,
+	Plane_XY,
+	Plane_XZ,
+	Plane_YZ,
+};
+
 UCLASS()
 class TRAVELER_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 {
@@ -18,4 +27,6 @@ class TRAVELER_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrar
 
 public:
 	static FVector InptAxisToCameraDirection(FVector inputAxis,UCameraComponent* cameraComp);	
+
+	static float ComputeDistance(FVector from, FVector to, EPlane plane = Plane_None);
 };
