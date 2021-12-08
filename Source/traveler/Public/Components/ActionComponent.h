@@ -86,7 +86,7 @@ private:
 	UActionData* _actionData;
 
 	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
-	TMap<TEnumAsByte<ECharacterState>, TSubclassOf<UCharacterActionSet>> _mapActionSet;
+	TMap<ECharacterState, TSubclassOf<UCharacterActionSet>> _mapActionSet;
 
 	UPROPERTY()
 	UCharacterActionSet* _pCurrentActionSet;

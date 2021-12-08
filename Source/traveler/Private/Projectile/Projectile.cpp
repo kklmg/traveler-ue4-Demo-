@@ -130,6 +130,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 		Destroy();
 
 	}), WaitTime, false);
+
+
+	//OtherActor->ReceiveAnyDamage(50,UDamageType::);
+
 }
 
 void AProjectile::VExecuteSpecialAction()

@@ -48,6 +48,8 @@ void UActionFlyTo::VTick(float deltaTime)
 	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
 	check(character != nullptr);
 
+	_flyingSpeed = character->GetCharacterMovement()->MaxFlySpeed;
+
 	//Current Transform State
 	//-------------------------------------------------------------------------------------------------------------
 	FTransform curTransform = _actionOwner->GetActorTransform();
@@ -128,10 +130,12 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	//compute delta Degree 
 	float currentYaw = dirForward.Rotation().Yaw;
 	float destYaw = dirToDestination.Rotation().Yaw;
-	float angleBetween_Forward_ToDest = FMath::FindDeltaAngleDegrees(destYaw, currentYaw);
-	float deltaYaw = angleBetween_Forward_ToDest < 0 ? _yawDegreePerSecond * deltaTime : -_yawDegreePerSecond * deltaTime;
+	float angle_Forward_ToDest = FMath::FindDeltaAngleDegrees(currentYaw,destYaw);
 
-	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "angleBetween_Front_ToDest: " + FString::SanitizeFloat(angleBetween_Forward_ToDest));
+	float deltaYaw = _yawDegreePerSecond * deltaTime;
+	if (angle_Forward_ToDest < 0) deltaYaw = -deltaYaw;
+
+	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "angleBetween_Front_ToDest: " + FString::SanitizeFloat(angle_Forward_ToDest));
 
 
 	
@@ -140,9 +144,9 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	//Compute Turning Radius, CircleCenter 
 	//-------------------------------------------------------------------------------------------------------------
 	float turningRadius = _flyingSpeed / FMath::DegreesToRadians(_yawDegreePerSecond);
-	FVector circleCenter = angleBetween_Forward_ToDest < 0
-		? _actionOwner->GetActorLocation() + _actionOwner->GetActorRightVector() * turningRadius
-		: _actionOwner->GetActorLocation() - _actionOwner->GetActorRightVector() * turningRadius;
+	FVector circleCenter = angle_Forward_ToDest < 0
+		? _actionOwner->GetActorLocation() - _actionOwner->GetActorRightVector() * turningRadius
+		: _actionOwner->GetActorLocation() + _actionOwner->GetActorRightVector() * turningRadius;
 
 	//float distanceFronCurLocToDest = UMyBlueprintFunctionLibrary::ComputeDistance(_actionOwner->GetActorLocation(), _destination, EPlane::Plane_XY);
 	float distanceFronDestLocToCircleCenter = UMyBlueprintFunctionLibrary::ComputeDistance(_destination, circleCenter, EPlane::Plane_XY);
@@ -155,43 +159,39 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("DistanceToCircleCenter ") + FString::SanitizeFloat(distanceFronDestLocToCircleCenter));
 
 
+	float resultDeltaYaw = deltaYaw;
+
 	if (distanceFronDestLocToCircleCenter < turningRadius)
 	{
-		deltaYaw = 0;
+		resultDeltaYaw = 0;
 	}
 
-	else if (FMath::Abs(angleBetween_Forward_ToDest) == 0)
+	else if (FMath::Abs(angle_Forward_ToDest) == 0.0f)
 	{
-		deltaYaw = 0;
+		resultDeltaYaw = 0;
 		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, "turned to completed ");
 	}
 	else
 	{
 		
-	/*	float yawAfterRotation = currentYaw + deltaYaw;
-		if (yawAfterRotation > 180) 
+		float angle_Forward_ToDest_AfterRotation = angle_Forward_ToDest - deltaYaw;
+		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "afterYaw: " + FString::SanitizeFloat(angle_Forward_ToDest_AfterRotation));
+
+		if (deltaYaw > 0 && angle_Forward_ToDest_AfterRotation <0)
 		{
-			yawAfterRotation -= 180;
-		}
-		if (yawAfterRotation < -180) 
-		{
-			yawAfterRotation += 180;
+			resultDeltaYaw = deltaYaw - angle_Forward_ToDest_AfterRotation;
 		}
 
-		if (deltaYaw > 0 && yawAfterRotation > destYaw)
+		else if (deltaYaw < 0 && angle_Forward_ToDest_AfterRotation > 0)
 		{
-			deltaYaw = yawAfterRotation - destYaw;
+			resultDeltaYaw =  deltaYaw - angle_Forward_ToDest_AfterRotation;
 		}
-
-		if (deltaYaw < 0 && yawAfterRotation < destYaw)
-		{
-			deltaYaw = yawAfterRotation - destYaw;
-		}*/
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "currevtYaw: " + FString::SanitizeFloat(currentYaw));
+	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "DestYaw: " + FString::SanitizeFloat(destYaw));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "DeltaYaw: " + FString::SanitizeFloat(resultDeltaYaw));
 
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "DeltaYaw: " + FString::SanitizeFloat(deltaYaw));
-
-	return deltaYaw;
+	return resultDeltaYaw;
 }
 
 float UActionFlyTo::_RollTunning(FQuat curQuat,float deltaYaw, float deltaTime)
@@ -209,12 +209,12 @@ float UActionFlyTo::_RollTunning(FQuat curQuat,float deltaYaw, float deltaTime)
 		float rollAfterRotation = curRoll + deltaRoll;
 		if (deltaRoll > 0 && rollAfterRotation > _limitedRollDegree)
 		{
-			deltaRoll = rollAfterRotation - _limitedRollDegree;
+			deltaRoll = _limitedRollDegree - curRoll;
 		}
 
 		if (deltaRoll < 0 && rollAfterRotation < -_limitedRollDegree)
 		{
-			deltaRoll = _limitedRollDegree - rollAfterRotation;
+			deltaRoll = _limitedRollDegree - curRoll;
 		}
 	}
 	return deltaRoll;

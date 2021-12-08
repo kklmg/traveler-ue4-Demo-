@@ -29,4 +29,6 @@ public:
 	static FVector InptAxisToCameraDirection(FVector inputAxis,UCameraComponent* cameraComp);	
 
 	static float ComputeDistance(FVector from, FVector to, EPlane plane = Plane_None);
+
+	//static bool CanFaceToDirection(FVector direction, FVector CurLocation,float forwardSpeed,float turningSpeed);
 };
