@@ -30,10 +30,16 @@ private:
 	float _limitedRollDegree;
 
 	UPROPERTY(EditDefaultsOnly, Category = speed)
+	float _limitedPitchDegree;
+
+	UPROPERTY(EditDefaultsOnly, Category = speed)
 	float _rollDegreePerSecond;
 
 	UPROPERTY(EditDefaultsOnly, Category = speed)
 	float _yawDegreePerSecond;
+
+	UPROPERTY(EditDefaultsOnly, Category = speed)
+	float _pitchDegreePerSecond;
 
 	FVector _destination;
 

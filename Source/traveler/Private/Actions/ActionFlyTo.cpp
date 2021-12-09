@@ -16,8 +16,10 @@ UActionFlyTo::UActionFlyTo()
 	_turnningSpeed = 500;
 
 	//Roll
-	_limitedRollDegree = 70.0f;
+	_limitedRollDegree = 80.0f;
+	_limitedPitchDegree = 80.0f;
 	_yawDegreePerSecond = 25;
+	_pitchDegreePerSecond = 10;
 	_rollDegreePerSecond = -30;
 }
 
@@ -94,7 +96,43 @@ void UActionFlyTo::VTick(float deltaTime)
 
 	//Pitch
 	//-------------------------------------------------------------------------------------------------------------
-	FQuat quatPitch = FQuat(rightVector, FMath::DegreesToRadians(_yawDegreePerSecond * deltaTime));
+	float curPitch = curTransform.Rotator().Pitch;
+
+
+	float heightOffset = _destination.Z - curLocation.Z;
+	float deltaPitch = _pitchDegreePerSecond * deltaTime;
+
+	if (FMath::Abs(heightOffset) < 100) 
+	{
+		if (curPitch == 0) 
+		{
+			deltaPitch = 0;
+		}
+		else
+		{
+			deltaPitch = curPitch;
+		}
+	}
+	else
+	{
+		if (heightOffset > 0)
+		{
+			deltaPitch = -deltaPitch;
+		}
+
+		float pitchAfterRotation = curPitch + deltaPitch;
+
+		if (deltaPitch > 0 && pitchAfterRotation > _limitedPitchDegree)
+		{
+			deltaPitch = _limitedPitchDegree - curPitch;
+		}
+		else if (deltaPitch < 0 && pitchAfterRotation < -_limitedPitchDegree)
+		{
+			deltaPitch = -_limitedPitchDegree - curPitch;
+		}
+	}
+
+	FQuat quatPitch = FQuat(rightVector, FMath::DegreesToRadians(deltaPitch));
 
 
 	//Roll
@@ -103,14 +141,14 @@ void UActionFlyTo::VTick(float deltaTime)
 	FQuat quatRoll = FQuat(forwardVector, FMath::DegreesToRadians(deltaRoll));
 
 
-	FQuat deltaQuat = quatYaw /** quatRoll*/;
+	FQuat deltaQuat = quatPitch /** quatYaw * quatRoll*/;
 	
 
 	//apply movement
 	//-------------------------------------------------------------------------------------------------------------
 	character->AddActorWorldRotation(deltaQuat);
 	character->AddMovementInput(forwardVector);
-
+	//character->AddMovementInput(FVector::UpVector);
 
 }
 
@@ -144,9 +182,12 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	//Compute Turning Radius, CircleCenter 
 	//-------------------------------------------------------------------------------------------------------------
 	float turningRadius = _flyingSpeed / FMath::DegreesToRadians(_yawDegreePerSecond);
+	FVector dirRight = _actionOwner->GetActorRightVector();
+	dirRight.Z = 0;
+	dirRight.Normalize();
 	FVector circleCenter = angle_Forward_ToDest < 0
-		? _actionOwner->GetActorLocation() - _actionOwner->GetActorRightVector() * turningRadius
-		: _actionOwner->GetActorLocation() + _actionOwner->GetActorRightVector() * turningRadius;
+		? _actionOwner->GetActorLocation() - dirRight * turningRadius
+		: _actionOwner->GetActorLocation() + dirRight * turningRadius;
 
 	//float distanceFronCurLocToDest = UMyBlueprintFunctionLibrary::ComputeDistance(_actionOwner->GetActorLocation(), _destination, EPlane::Plane_XY);
 	float distanceFronDestLocToCircleCenter = UMyBlueprintFunctionLibrary::ComputeDistance(_destination, circleCenter, EPlane::Plane_XY);
@@ -173,7 +214,6 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	}
 	else
 	{
-		
 		float angle_Forward_ToDest_AfterRotation = angle_Forward_ToDest - deltaYaw;
 		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "afterYaw: " + FString::SanitizeFloat(angle_Forward_ToDest_AfterRotation));
 
@@ -197,26 +237,43 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 float UActionFlyTo::_RollTunning(FQuat curQuat,float deltaYaw, float deltaTime)
 {
 	float curRoll = FMath::RadiansToDegrees(curQuat.GetTwistAngle(FVector::ForwardVector));
-	float deltaRoll = deltaYaw > 0 ? _rollDegreePerSecond * deltaTime : -_rollDegreePerSecond * deltaTime;
+	float deltaRoll = _rollDegreePerSecond * deltaTime;
 
-	//limit delta roll degree
-	if (FMath::Abs(curRoll) == _limitedRollDegree)
+	if (deltaYaw == 0) 
 	{
-		deltaRoll = 0;
+		if (curRoll != 0) 
+		{
+			deltaRoll = -curRoll;
+		}
+		else
+		{
+			deltaRoll = 0;
+		}
 	}
 	else
 	{
-		float rollAfterRotation = curRoll + deltaRoll;
-		if (deltaRoll > 0 && rollAfterRotation > _limitedRollDegree)
-		{
-			deltaRoll = _limitedRollDegree - curRoll;
-		}
+		if (deltaYaw < 0) deltaRoll = -deltaRoll;
 
-		if (deltaRoll < 0 && rollAfterRotation < -_limitedRollDegree)
+		//limit delta roll degree
+		if (FMath::Abs(curRoll) == _limitedRollDegree)
 		{
-			deltaRoll = _limitedRollDegree - curRoll;
+			deltaRoll = 0;
+		}
+		else
+		{
+			float rollAfterRotation = curRoll + deltaRoll;
+			if (deltaRoll > 0 && rollAfterRotation > _limitedRollDegree)
+			{
+				deltaRoll = _limitedRollDegree - curRoll;
+			}
+
+			if (deltaRoll < 0 && rollAfterRotation < -_limitedRollDegree)
+			{
+				deltaRoll = -_limitedRollDegree - curRoll;
+			}
 		}
 	}
+
 	return deltaRoll;
 }
 
