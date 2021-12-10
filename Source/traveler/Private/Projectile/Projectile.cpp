@@ -7,6 +7,7 @@
 #include "Components/PawnCameraComponent.h"
 #include "Weapon/Weapon.h"
 #include "Actions/Action.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -62,13 +63,24 @@ AProjectile::AProjectile()
 		ProjectileMovementComponent->Bounciness = 0.3f;
 		ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 	}
+
+	_damage = 10;
 }
 
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (GetInstigator())
+	{
+		ProjectileMeshComponent->IgnoreActorWhenMoving(GetInstigator(), true);
+	}
+	if (_damageTypeClass) 
+	{
+		_damageType = NewObject<UDamageType>(this, _damageTypeClass);
+	}
+
 }
 
 // Called every frame
@@ -131,9 +143,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 	}), WaitTime, false);
 
-
-	//OtherActor->ReceiveAnyDamage(50,UDamageType::);
-
+	UGameplayStatics::ApplyDamage(OtherActor, _damage, GetInstigator()->GetController(), this, _damageTypeClass);
 }
 
 void AProjectile::VExecuteSpecialAction()

@@ -61,11 +61,19 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = Movement)
 	UMaterialInstanceDynamic* ProjectileMaterialInstance;
 
+	//Damage
+	UPROPERTY(EditDefaultsOnly, Category = Damage)
 	float _damage;
 
-	FVector _flyingDir;
+	UPROPERTY()
+	UDamageType* _damageType;
+	
+	UPROPERTY(EditDefaultsOnly, Category = Damage)
+	TSubclassOf<UDamageType> _damageTypeClass;
 
 	// special action
 	UPROPERTY(EditDefaultsOnly, Category = Action)
 	FName _specialActionName;
+
+	FVector _flyingDir;
 };

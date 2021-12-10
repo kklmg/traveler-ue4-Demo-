@@ -51,6 +51,20 @@ void ACreatureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	float actualDamage = Super::TakeDamage(DamageAmount,DamageEvent,EventInstigator,DamageCauser);
+
+
+	//GetAttributeComponent()->SetHealth()
+
+
+
+	GEngine->AddOnScreenDebugMessage(-1, -5, FColor::Red, "TakeDamage: " + FString::SanitizeFloat(actualDamage));
+
+	return actualDamage;
+}
+
 UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
 {
 	return _attributeComponent;

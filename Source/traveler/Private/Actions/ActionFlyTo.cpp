@@ -141,7 +141,7 @@ void UActionFlyTo::VTick(float deltaTime)
 	FQuat quatRoll = FQuat(forwardVector, FMath::DegreesToRadians(deltaRoll));
 
 
-	FQuat deltaQuat = quatPitch /** quatYaw * quatRoll*/;
+	FQuat deltaQuat =  quatYaw * quatRoll * quatPitch;
 	
 
 	//apply movement
@@ -207,7 +207,7 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 		resultDeltaYaw = 0;
 	}
 
-	else if (FMath::Abs(angle_Forward_ToDest) == 0.0f)
+	else if (FMath::Abs(angle_Forward_ToDest) < 0.001f)
 	{
 		resultDeltaYaw = 0;
 		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, "turned to completed ");
@@ -239,7 +239,7 @@ float UActionFlyTo::_RollTunning(FQuat curQuat,float deltaYaw, float deltaTime)
 	float curRoll = FMath::RadiansToDegrees(curQuat.GetTwistAngle(FVector::ForwardVector));
 	float deltaRoll = _rollDegreePerSecond * deltaTime;
 
-	if (deltaYaw == 0) 
+	/*if (deltaYaw == 0) 
 	{
 		if (curRoll != 0) 
 		{
@@ -250,7 +250,7 @@ float UActionFlyTo::_RollTunning(FQuat curQuat,float deltaYaw, float deltaTime)
 			deltaRoll = 0;
 		}
 	}
-	else
+	else*/
 	{
 		if (deltaYaw < 0) deltaRoll = -deltaRoll;
 
