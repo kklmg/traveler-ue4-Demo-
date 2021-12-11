@@ -6,8 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "AttributeComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAttributeChanged, AActor*, Actor, float, NewValue, float, Delta);
-
+class UCharacterAttribute;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UAttributeComponent : public UActorComponent
@@ -26,44 +25,35 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = Attributes)
-	float _health;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = Attributes)
-	float _healthMax;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = Attributes)
-	float _mana;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = Attributes)
-	float _manaMax;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
-	float _walkSpeed;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
-	float _runSpeed;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
-	float _strength;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
-	float _level;
-public:
-	UPROPERTY(BlueprintAssignable, Category = Attributes)
-	FOnAttributeChanged OnHealthChangedDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = Attributes)
-	FOnAttributeChanged OnManaChangedDelegate;
-
-public:
 	UFUNCTION(BlueprintCallable)
-	void SetHealth(float newValue);
-	UFUNCTION(BlueprintCallable)
-	void SetHealMax(float newValue);
-	UFUNCTION(BlueprintCallable)
-	void SetMana(float newValue);
-	UFUNCTION(BlueprintCallable)
-	void SetManaMax(float newValue);
+	UCharacterAttribute* GetAttribute(FName name);
+private:
+	void InitializeAttributes();
 
-public:
-	float GetWalkSpeed();
-	float GetRunSpeed();
+	UPROPERTY(EditDefaultsOnly, Category = Attributes)
+	TMap<FName,UCharacterAttribute*> _mapAttributes;
+
+	UPROPERTY(EditDefaultsOnly, Category = AttributeClasses)
+	TArray<TSubclassOf<UCharacterAttribute>> _ArrayAttributeClasses;
+
+	UPROPERTY(EditDefaultsOnly,  Replicated, Category = Attributes)
+	UCharacterAttribute* _health;
+
+	UPROPERTY(EditDefaultsOnly,  Replicated, Category = Attributes)
+	UCharacterAttribute* _mana;
+
+	UPROPERTY(EditDefaultsOnly,  Replicated, Category = Attributes)
+	UCharacterAttribute* _energy;
+
+	UPROPERTY(EditDefaultsOnly,  Category = Attributes)
+	UCharacterAttribute* _level;
+
+	UPROPERTY(EditDefaultsOnly,  Category = Attributes)
+	UCharacterAttribute* _walkingSpeed;
+
+	UPROPERTY(EditDefaultsOnly,  Category = Attributes)
+	UCharacterAttribute* _runningSpeed;
+
+	UPROPERTY(EditDefaultsOnly,  Category = Attributes)
+	UCharacterAttribute* _strength;
 };

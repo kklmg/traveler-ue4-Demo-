@@ -2,7 +2,9 @@
 
 
 #include "Components/AttributeComponent.h"
+#include "Data/CharacterAttribute.h"
 #include "Net/UnrealNetwork.h"
+
 
 // Sets default values for this component's properties
 UAttributeComponent::UAttributeComponent()
@@ -12,13 +14,35 @@ UAttributeComponent::UAttributeComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_health = 80;
-	_healthMax = 100;
-	_mana = 80;
-	_manaMax = 100;
 
-	_walkSpeed = 600;
-	_runSpeed = 1200;
+	_health = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Health);
+	_health->Initialize(AttributeName::Health,90, 0, 100);
+	_mapAttributes.Add(_health->GetName(),_health);
+
+	_mana = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Mana);
+	_mana->Initialize(AttributeName::Mana, 90, 0, 100);
+	_mapAttributes.Add(_mana->GetName(), _mana);
+
+	_energy = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Energy);
+	_energy->Initialize(AttributeName::Energy, 90, 0, 100);
+	_mapAttributes.Add(_energy->GetName(), _energy);
+
+	_level = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Level);
+	_level->Initialize(AttributeName::Level, 90, 0, 100);
+	_mapAttributes.Add(_level->GetName(), _level);
+
+	_walkingSpeed = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::WalkingSpeed);
+	_walkingSpeed->Initialize(AttributeName::WalkingSpeed, 90, 0, 100);
+	_mapAttributes.Add(_walkingSpeed->GetName(), _walkingSpeed);
+
+	_runningSpeed = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::RuningSpeed);
+	_runningSpeed->Initialize(AttributeName::RuningSpeed, 90, 0, 100);
+	_mapAttributes.Add(_runningSpeed->GetName(), _runningSpeed);
+
+	_strength = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Strength);
+	_strength->Initialize(AttributeName::Strength, 90, 0, 100);
+	_mapAttributes.Add(_strength->GetName(), _strength);
+
 }
 
 
@@ -28,7 +52,7 @@ void UAttributeComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	InitializeAttributes();
 }
 
 
@@ -40,46 +64,39 @@ void UAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	// ...
 }
 
-float UAttributeComponent::GetWalkSpeed() 
+//
+UCharacterAttribute* UAttributeComponent::GetAttribute(FName name)
 {
-	return _walkSpeed;
-}
-float UAttributeComponent::GetRunSpeed() 
-{
-	return _runSpeed;
-}
-
-void UAttributeComponent::SetHealth(float newValue)
-{
-	float deltaValue = newValue - _health;
-	_health = FMath::Clamp(newValue, 0.0f, _healthMax);
-
-	OnHealthChangedDelegate.Broadcast(GetOwner(), _health, deltaValue);
-}
-void UAttributeComponent::SetHealMax(float newValue) 
-{
-	_healthMax = FMath::Max(1.0f, newValue);
-}
-void UAttributeComponent::SetMana(float newValue) 
-{
-	float deltaValue = newValue - _mana;
-	_mana = FMath::Clamp(newValue, 0.0f, _manaMax);
-
-	OnManaChangedDelegate.Broadcast(GetOwner(), _mana, deltaValue);
-}
-void UAttributeComponent::SetManaMax(float newValue) 
-{
-	_manaMax = FMath::Max(1.0f, newValue);
+	if (_mapAttributes.Contains(name)) 
+	{
+		return _mapAttributes[name];
+	}
+	return nullptr;
 }
 
+void UAttributeComponent::InitializeAttributes()
+{
+	for(TSubclassOf<UCharacterAttribute> attributeClass: _ArrayAttributeClasses)
+	{
+		UCharacterAttribute* attribute = NewObject<UCharacterAttribute>(this, attributeClass);
+
+		if (_mapAttributes.Contains(attribute->GetName()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("trying add duplicated attribute"));
+		}
+		else
+		{
+			_mapAttributes.Add(attribute->GetName(), attribute);
+		}
+	}
+}
 
 void UAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UAttributeComponent, _health);
-	DOREPLIFETIME(UAttributeComponent, _healthMax);
-
 	DOREPLIFETIME(UAttributeComponent, _mana);
-	DOREPLIFETIME(UAttributeComponent, _manaMax);
+	DOREPLIFETIME(UAttributeComponent, _energy);
 }
+

@@ -189,7 +189,7 @@ void UActionComponent::OnSprintButtonDown()
 	AHumanCharacter* humanCharacter = Cast<AHumanCharacter>(GetOwner());
 	check(humanCharacter != nullptr);
 
-	humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->GetRunSpeed();
+	//humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->RunSpeed->GetValue();
 }
 
 void UActionComponent::OnSprintButtonUp()
@@ -200,7 +200,7 @@ void UActionComponent::OnSprintButtonUp()
 	AHumanCharacter* humanCharacter = Cast<AHumanCharacter>(GetOwner());
 	check(humanCharacter != nullptr);
 
-	humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->GetWalkSpeed();
+	//humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->WalkSpeed->GetValue();
 }
 
 void UActionComponent::OnDodgeButtonDown() 

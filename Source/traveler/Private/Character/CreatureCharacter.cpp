@@ -56,7 +56,7 @@ float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent con
 	float actualDamage = Super::TakeDamage(DamageAmount,DamageEvent,EventInstigator,DamageCauser);
 
 
-	//GetAttributeComponent()->SetHealth()
+	//GetAttributeComponent()->SetHealth();
 
 
 
@@ -65,12 +65,12 @@ float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent con
 	return actualDamage;
 }
 
-UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
+FORCEINLINE UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
 {
 	return _attributeComponent;
 }
 
-UActionComponent* ACreatureCharacter::GetActionComponent()
+FORCEINLINE UActionComponent* ACreatureCharacter::GetActionComponent()
 {
 	return _actionComponent;
 }
@@ -84,7 +84,7 @@ UAction* ACreatureCharacter::ExecuteAction(FName actionName)
 	return nullptr;
 }
 
-UActionData* ACreatureCharacter::GetActionData()
+FORCEINLINE UActionData* ACreatureCharacter::GetActionData()
 {
 	return _actionComponent->GetActionData();
 }
@@ -142,7 +142,7 @@ void ACreatureCharacter::SetCharacterState(ECharacterState characterState)
 	}
 }
 
-ECharacterState ACreatureCharacter::GetCharacterState()
+FORCEINLINE ECharacterState ACreatureCharacter::GetCharacterState()
 {
 	return _characterState;
 }
