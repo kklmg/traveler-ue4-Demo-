@@ -7,6 +7,7 @@
 #include "AttributeComponent.generated.h"
 
 class UCharacterAttribute;
+class UDataTable;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UAttributeComponent : public UActorComponent
@@ -56,4 +57,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly,  Category = Attributes)
 	UCharacterAttribute* _strength;
+
+	UPROPERTY(EditDefaultsOnly, Category = Attributes)
+	UDataTable* _attributeTable;
 };

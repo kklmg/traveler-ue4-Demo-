@@ -3,7 +3,9 @@
 
 #include "Components/AttributeComponent.h"
 #include "Data/CharacterAttribute.h"
+#include "Data/AttributeData.h"
 #include "Net/UnrealNetwork.h"
+#include "Engine/DataTable.h"
 
 
 // Sets default values for this component's properties
@@ -76,6 +78,19 @@ UCharacterAttribute* UAttributeComponent::GetAttribute(FName name)
 
 void UAttributeComponent::InitializeAttributes()
 {
+	FString contextString;
+	TArray<FAttributeRow*> rows;
+	_attributeTable->GetAllRows<FAttributeRow>(contextString, rows);
+
+
+	FAttributeRow** row = rows.FindByPredicate([](const FAttributeRow* attribute) {return attribute->Level == 1; });
+
+	if (row) 
+	{
+		(*row)->Level;
+	}
+
+
 	for(TSubclassOf<UCharacterAttribute> attributeClass: _ArrayAttributeClasses)
 	{
 		UCharacterAttribute* attribute = NewObject<UCharacterAttribute>(this, attributeClass);
