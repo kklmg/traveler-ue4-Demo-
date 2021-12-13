@@ -39,15 +39,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ApplyValueChange(float deltaValue);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	float GetValue();
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	float GetMinValue();
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	float GetMaxValue();
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	float GetPreviousValue();
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	FName GetName();
 
 public:

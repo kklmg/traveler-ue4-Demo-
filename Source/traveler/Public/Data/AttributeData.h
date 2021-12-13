@@ -8,20 +8,6 @@
 #include "AttributeData.generated.h"
 
 
-USTRUCT(BlueprintType)
-struct FAttribute
-{
-	GENERATED_USTRUCT_BODY()
-
-public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
-	FName Name;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
-	int32 value;
-};
-
-
 
 USTRUCT(BlueprintType)
 struct FAttributeRow : public FTableRowBase
@@ -29,17 +15,14 @@ struct FAttributeRow : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
+	FName Name;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
+	float value;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
+	float GrowthRate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
-	int32 Level;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
-	int32 MaxHealth;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
-	int32 maxMana;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
-	int32 maxEnergy;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
-	FAttribute test;
+	float GetGrowedValue(int level);
 };
 
 

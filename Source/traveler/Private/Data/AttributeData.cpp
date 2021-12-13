@@ -25,3 +25,7 @@ void AAttributeData::Tick(float DeltaTime)
 
 }
 
+float FAttributeRow::GetGrowedValue(int level)
+{
+	return value + GrowthRate * level;
+}

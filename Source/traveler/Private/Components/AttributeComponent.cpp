@@ -17,34 +17,8 @@ UAttributeComponent::UAttributeComponent()
 
 	// ...
 
-	_health = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Health);
-	_health->Initialize(AttributeName::Health,90, 0, 100);
-	_mapAttributes.Add(_health->GetName(),_health);
-
-	_mana = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Mana);
-	_mana->Initialize(AttributeName::Mana, 90, 0, 100);
-	_mapAttributes.Add(_mana->GetName(), _mana);
-
-	_energy = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Energy);
-	_energy->Initialize(AttributeName::Energy, 90, 0, 100);
-	_mapAttributes.Add(_energy->GetName(), _energy);
-
 	_level = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Level);
 	_level->Initialize(AttributeName::Level, 90, 0, 100);
-	_mapAttributes.Add(_level->GetName(), _level);
-
-	_walkingSpeed = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::WalkingSpeed);
-	_walkingSpeed->Initialize(AttributeName::WalkingSpeed, 90, 0, 100);
-	_mapAttributes.Add(_walkingSpeed->GetName(), _walkingSpeed);
-
-	_runningSpeed = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::RuningSpeed);
-	_runningSpeed->Initialize(AttributeName::RuningSpeed, 90, 0, 100);
-	_mapAttributes.Add(_runningSpeed->GetName(), _runningSpeed);
-
-	_strength = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Strength);
-	_strength->Initialize(AttributeName::Strength, 90, 0, 100);
-	_mapAttributes.Add(_strength->GetName(), _strength);
-
 }
 
 
@@ -78,40 +52,63 @@ UCharacterAttribute* UAttributeComponent::GetAttribute(FName name)
 
 void UAttributeComponent::InitializeAttributes()
 {
-	FString contextString;
-	TArray<FAttributeRow*> rows;
-	_attributeTable->GetAllRows<FAttributeRow>(contextString, rows);
-
-
-	FAttributeRow** row = rows.FindByPredicate([](const FAttributeRow* attribute) {return attribute->Level == 1; });
-
-	if (row) 
+	if (_level)
 	{
-		(*row)->Level;
+		_mapAttributes.Add(_level->GetName(), _level);
 	}
 
-
-	for(TSubclassOf<UCharacterAttribute> attributeClass: _ArrayAttributeClasses)
+	if (_attributeTable)
 	{
-		UCharacterAttribute* attribute = NewObject<UCharacterAttribute>(this, attributeClass);
+		FString contextString;
+		TArray<FAttributeRow*> rows;
 
-		if (_mapAttributes.Contains(attribute->GetName()))
+		//get all rows from table
+		_attributeTable->GetAllRows<FAttributeRow>(contextString, rows);
+
+
+		for (FAttributeRow* row : rows)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("trying add duplicated attribute"));
+			//Attribute Name is valid,not duplicated
+			if (row->Name.IsValid() && _mapAttributes.Contains(row->Name) == false)
+			{
+				//new instance
+				UCharacterAttribute* attribute = NewObject<UCharacterAttribute>(this);
+
+				if (attribute)
+				{
+					//Initialize
+					float LevelMapedValue = _level ? row->GetGrowedValue(_level->GetValue()) : row->value;
+					attribute->Initialize(row->Name, 0, LevelMapedValue, LevelMapedValue);
+
+					//Add to attribute map
+					_mapAttributes.Add(row->Name, attribute);
+				}
+			}
 		}
-		else
-		{
-			_mapAttributes.Add(attribute->GetName(), attribute);
-		}
+
 	}
+
+	//for(TSubclassOf<UCharacterAttribute> attributeClass: _ArrayAttributeClasses)
+	//{
+	//	UCharacterAttribute* attribute = NewObject<UCharacterAttribute>(this, attributeClass);
+
+	//	if (_mapAttributes.Contains(attribute->GetName()))
+	//	{
+	//		UE_LOG(LogTemp, Warning, TEXT("trying add duplicated attribute"));
+	//	}
+	//	else
+	//	{
+	//		_mapAttributes.Add(attribute->GetName(), attribute);
+	//	}
+	//}
 }
 
-void UAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(UAttributeComponent, _health);
-	DOREPLIFETIME(UAttributeComponent, _mana);
-	DOREPLIFETIME(UAttributeComponent, _energy);
-}
+//void UAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//
+//	DOREPLIFETIME(UAttributeComponent, _health);
+//	DOREPLIFETIME(UAttributeComponent, _mana);
+//	DOREPLIFETIME(UAttributeComponent, _energy);
+//}
 

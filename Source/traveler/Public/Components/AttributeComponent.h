@@ -26,7 +26,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	UCharacterAttribute* GetAttribute(FName name);
 private:
 	void InitializeAttributes();
@@ -34,29 +34,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Attributes)
 	TMap<FName,UCharacterAttribute*> _mapAttributes;
 
-	UPROPERTY(EditDefaultsOnly, Category = AttributeClasses)
-	TArray<TSubclassOf<UCharacterAttribute>> _ArrayAttributeClasses;
-
-	UPROPERTY(EditDefaultsOnly,  Replicated, Category = Attributes)
-	UCharacterAttribute* _health;
-
-	UPROPERTY(EditDefaultsOnly,  Replicated, Category = Attributes)
-	UCharacterAttribute* _mana;
-
-	UPROPERTY(EditDefaultsOnly,  Replicated, Category = Attributes)
-	UCharacterAttribute* _energy;
-
 	UPROPERTY(EditDefaultsOnly,  Category = Attributes)
 	UCharacterAttribute* _level;
-
-	UPROPERTY(EditDefaultsOnly,  Category = Attributes)
-	UCharacterAttribute* _walkingSpeed;
-
-	UPROPERTY(EditDefaultsOnly,  Category = Attributes)
-	UCharacterAttribute* _runningSpeed;
-
-	UPROPERTY(EditDefaultsOnly,  Category = Attributes)
-	UCharacterAttribute* _strength;
 
 	UPROPERTY(EditDefaultsOnly, Category = Attributes)
 	UDataTable* _attributeTable;
