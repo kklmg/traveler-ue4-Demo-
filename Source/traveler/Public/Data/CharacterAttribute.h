@@ -32,7 +32,8 @@ class TRAVELER_API UCharacterAttribute : public UObject
 public:
 	UCharacterAttribute();
 
-	void Initialize(FName attributeName, float minValue, float maxValue, float value);
+	void Initialize(FName attributeName, float value);
+	void Initialize(FName attributeName, float value, float minValue, float maxValue);
 
 	UFUNCTION(BlueprintCallable)
 	void SetValue(float newValue);

@@ -41,6 +41,8 @@ private:
 	UPROPERTY(BlueprintAssignable)
 	FOnPawnChanged OnPawnChanged;
 
+	void _CreateCharacterHud();
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();

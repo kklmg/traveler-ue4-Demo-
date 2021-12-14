@@ -68,6 +68,12 @@ public:
 	UAttributeComponent* GetAttributeComponent();
 
 	UFUNCTION(BlueprintCallable)
+	bool SetAttribute(FName name, float newValue);
+
+	UFUNCTION(BlueprintCallable)
+	bool SetAttributeChange(FName name, float deltaValue);
+
+	UFUNCTION(BlueprintCallable)
 	UActionComponent* GetActionComponent();
 
 	UFUNCTION(BlueprintCallable)
@@ -94,6 +100,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ECharacterState GetCharacterState();
 
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UActionComponent* _actionComponent;
@@ -107,4 +114,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Sockets)
 	TMap<EMeshSocketType, FName> _socketsMap;
 
+
+
+	///test 
+	bool isAppliedDamage;
 };

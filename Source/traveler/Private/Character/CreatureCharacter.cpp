@@ -2,9 +2,9 @@
 
 
 #include "Character/CreatureCharacter.h"
-
 #include "Components/CapsuleComponent.h"
 #include "Components/ActionComponent.h"
+#include "Data/CharacterAttribute.h"
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -36,6 +36,7 @@ void ACreatureCharacter::BeginPlay()
 
 	MovementModeChangedDelegate.AddDynamic(this, &ACreatureCharacter::OnCharacterMovementModeChanged);
 	
+
 }
 
 // Called every frame
@@ -43,6 +44,13 @@ void ACreatureCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+	//test code
+	if (isAppliedDamage == false) 
+	{
+		SetAttribute(AttributeName::Health, -50);
+		isAppliedDamage = true;
+	}
 }
 
 // Called to bind functionality to input
@@ -57,8 +65,7 @@ float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent con
 
 
 	//GetAttributeComponent()->SetHealth();
-
-
+	_attributeComponent->SetAttributeChange(AttributeName::Health, -actualDamage);
 
 	GEngine->AddOnScreenDebugMessage(-1, -5, FColor::Red, "TakeDamage: " + FString::SanitizeFloat(actualDamage));
 
@@ -68,6 +75,16 @@ float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent con
 FORCEINLINE UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
 {
 	return _attributeComponent;
+}
+
+bool ACreatureCharacter::SetAttribute(FName name, float newValue)
+{
+	return _attributeComponent->SetAttribute(name, newValue);
+}
+
+bool ACreatureCharacter::SetAttributeChange(FName name, float deltaValue)
+{
+	return _attributeComponent->SetAttributeChange(name, deltaValue);
 }
 
 FORCEINLINE UActionComponent* ACreatureCharacter::GetActionComponent()

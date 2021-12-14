@@ -6,7 +6,7 @@
 UCharacterAttribute::UCharacterAttribute()
 {
 	_currentValue = 0;
-	_minValue = 0; /*TNumericLimits<float>::Min();*/
+	_minValue = TNumericLimits<float>::Min();
 	_maxValue = TNumericLimits<float>::Max();
 	_previousValue = 0;
 }
@@ -16,9 +16,14 @@ FORCEINLINE FName UCharacterAttribute::GetName()
 	return _AttributeName;
 }
 
+void UCharacterAttribute::Initialize(FName attributeName, float value)
+{
+	_AttributeName = attributeName;
+	_currentValue = value;
+	_previousValue = value;
+}
 
-
-void UCharacterAttribute::Initialize(FName attributeName, float minValue, float maxValue, float value)
+void UCharacterAttribute::Initialize(FName attributeName, float value, float minValue, float maxValue)
 {
 	_AttributeName = attributeName;
 	_minValue = minValue;
@@ -39,7 +44,7 @@ void UCharacterAttribute::SetValue(float newValue)
 
 void UCharacterAttribute::ApplyValueChange(float deltaValue)
 {
-	SetValue(_currentValue - deltaValue);
+	SetValue(_currentValue + deltaValue);
 }
 
 FORCEINLINE float UCharacterAttribute::GetValue()

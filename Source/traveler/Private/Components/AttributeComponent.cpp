@@ -18,17 +18,21 @@ UAttributeComponent::UAttributeComponent()
 	// ...
 
 	_level = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Level);
-	_level->Initialize(AttributeName::Level, 90, 0, 100);
+	_level->Initialize(AttributeName::Level, 2, 0, 100);
+
+	bWantsInitializeComponent = true;
 }
 
+
+void UAttributeComponent::InitializeComponent()
+{
+	InitializeAttributes();
+}
 
 // Called when the game starts
 void UAttributeComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	InitializeAttributes();
 }
 
 
@@ -50,6 +54,29 @@ UCharacterAttribute* UAttributeComponent::GetAttribute(FName name)
 	return nullptr;
 }
 
+
+bool UAttributeComponent::SetAttribute(FName name,float newValue)
+{
+	UCharacterAttribute* attribute = GetAttribute(name);
+	if (attribute) 
+	{
+		attribute->SetValue(newValue);
+		return true;
+	}
+	return false;
+}
+
+bool UAttributeComponent::SetAttributeChange(FName name, float deltaValue)
+{
+	UCharacterAttribute* attribute = GetAttribute(name);
+	if (attribute)
+	{
+		attribute->ApplyValueChange(deltaValue);
+		return true;
+	}
+	return false;
+}
+
 void UAttributeComponent::InitializeAttributes()
 {
 	if (_level)
@@ -65,7 +92,6 @@ void UAttributeComponent::InitializeAttributes()
 		//get all rows from table
 		_attributeTable->GetAllRows<FAttributeRow>(contextString, rows);
 
-
 		for (FAttributeRow* row : rows)
 		{
 			//Attribute Name is valid,not duplicated
@@ -78,7 +104,7 @@ void UAttributeComponent::InitializeAttributes()
 				{
 					//Initialize
 					float LevelMapedValue = _level ? row->GetGrowedValue(_level->GetValue()) : row->value;
-					attribute->Initialize(row->Name, 0, LevelMapedValue, LevelMapedValue);
+					attribute->Initialize(row->Name, LevelMapedValue, 0, LevelMapedValue);
 
 					//Add to attribute map
 					_mapAttributes.Add(row->Name, attribute);
@@ -88,7 +114,7 @@ void UAttributeComponent::InitializeAttributes()
 
 	}
 
-	//for(TSubclassOf<UCharacterAttribute> attributeClass: _ArrayAttributeClasses)
+	//for(TSubclasrAttribute> atsOf<UCharactetributeClass: _ArrayAttributeClasses)
 	//{
 	//	UCharacterAttribute* attribute = NewObject<UCharacterAttribute>(this, attributeClass);
 
@@ -102,6 +128,8 @@ void UAttributeComponent::InitializeAttributes()
 	//	}
 	//}
 }
+
+
 
 //void UAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 //{

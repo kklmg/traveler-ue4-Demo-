@@ -17,8 +17,9 @@ class TRAVELER_API UAttributeComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UAttributeComponent();
-
 protected:
+
+	virtual void InitializeComponent() override;
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
@@ -28,6 +29,14 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	UCharacterAttribute* GetAttribute(FName name);
+
+	UFUNCTION(BlueprintCallable)
+	bool SetAttribute(FName name, float newValue);
+
+	UFUNCTION(BlueprintCallable)
+	bool SetAttributeChange(FName name, float deltaValue);
+
+
 private:
 	void InitializeAttributes();
 

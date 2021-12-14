@@ -16,7 +16,6 @@ void AMyPlayerController::BeginPlay()
 			_characterWidget->AddToViewport(100);
 		}
 	}
-
 }
 
 void AMyPlayerController::TogglePauseMenu()
@@ -70,5 +69,12 @@ void AMyPlayerController::SetPawn(APawn* newPawn)
 
 	OnPawnChanged.Broadcast(newPawn);
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, TEXT("set pawn"));
+}
+
+void AMyPlayerController::_CreateCharacterHud()
+{
+
+
+
 }
 
