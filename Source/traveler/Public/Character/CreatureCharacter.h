@@ -8,6 +8,8 @@
 
 class UActionComponent;
 class UAttributeComponent;
+class UWidgetComponent;
+class UBillboardComponent;
 
 class AWeapon;
 class UAction;
@@ -113,9 +115,4 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = Sockets)
 	TMap<EMeshSocketType, FName> _socketsMap;
-
-
-
-	///test 
-	bool isAppliedDamage;
 };

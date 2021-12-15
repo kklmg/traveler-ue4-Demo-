@@ -7,6 +7,8 @@
 #include "Data/CharacterAttribute.h"
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Components/BillboardComponent.h"
 
 
 // Sets default values
@@ -16,14 +18,20 @@ ACreatureCharacter::ACreatureCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Create action component
-	_actionComponent = CreateDefaultSubobject<UActionComponent>(TEXT("ActionComponent"));
-	check(_actionComponent != nullptr);
+	if (_actionComponent == nullptr)
+	{
+		_actionComponent = CreateDefaultSubobject<UActionComponent>(TEXT("ActionComponent"));
+		check(_actionComponent != nullptr);
+	}
 
 	//Create Attribute component
-	_attributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
-	check(_attributeComponent != nullptr);
+	if (_attributeComponent == nullptr)
+	{
+		_attributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
+		check(_attributeComponent != nullptr);
+	}
 
-	//Enable the pawn to control camera rotation.
+
 	bUseControllerRotationYaw = false;
 
 	_characterState = ECharacterState::CS_GroundNormal;
@@ -35,22 +43,12 @@ void ACreatureCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	MovementModeChangedDelegate.AddDynamic(this, &ACreatureCharacter::OnCharacterMovementModeChanged);
-	
-
 }
 
 // Called every frame
 void ACreatureCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-
-	//test code
-	if (isAppliedDamage == false) 
-	{
-		SetAttribute(AttributeName::Health, -50);
-		isAppliedDamage = true;
-	}
 }
 
 // Called to bind functionality to input
