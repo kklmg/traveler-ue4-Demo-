@@ -143,7 +143,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 	}), WaitTime, false);
 
-	UGameplayStatics::ApplyDamage(OtherActor, _damage, GetInstigator()->GetController(), this, _damageTypeClass);
+	if (OtherActor != GetInstigator())
+	{
+		UGameplayStatics::ApplyDamage(OtherActor, _damage, GetInstigator()->GetController(), this, _damageTypeClass);
+	}
 }
 
 void AProjectile::VExecuteSpecialAction()

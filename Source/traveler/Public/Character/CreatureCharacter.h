@@ -10,6 +10,7 @@ class UActionComponent;
 class UAttributeComponent;
 class UWidgetComponent;
 class UBillboardComponent;
+class UBillBoardWidgetComponent;
 
 class AWeapon;
 class UAction;
@@ -112,6 +113,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	ECharacterState _characterState;
+	
+	UPROPERTY(VisibleAnywhere)
+	UBillBoardWidgetComponent* _billboardWidgetComponent;
+
 
 	UPROPERTY(EditDefaultsOnly, Category = Sockets)
 	TMap<EMeshSocketType, FName> _socketsMap;

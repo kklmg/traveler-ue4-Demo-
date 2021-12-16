@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/BillboardComponent.h"
+#include "Components/BillBoardWidgetComponent.h"
 
 
 // Sets default values
@@ -29,6 +30,13 @@ ACreatureCharacter::ACreatureCharacter()
 	{
 		_attributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
 		check(_attributeComponent != nullptr);
+	}
+
+	//Create billboard component
+	if (_billboardWidgetComponent == nullptr)
+	{
+		_billboardWidgetComponent = CreateDefaultSubobject<UBillBoardWidgetComponent>(TEXT("BillBoardWidgetComponent"));
+		check(_billboardWidgetComponent != nullptr);
 	}
 
 
