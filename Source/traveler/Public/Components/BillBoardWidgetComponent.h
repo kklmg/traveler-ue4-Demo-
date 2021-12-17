@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/PrimitiveComponent.h"
+#include "UI/BillBoardWidget.h"
 #include "BillBoardWidgetComponent.generated.h"
 
 
@@ -25,19 +26,22 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void showWidget(EWidgetType widgeType);
+	void HideWidget(EWidgetType widgeType);
+
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> _widgetClass;
-
-	UPROPERTY(EditDefaultsOnly)
-	FVector _widgetOffset;
+	TMap<EWidgetType,FWidgetData> _mapWidgetClass;
 
 	UPROPERTY()
-	UUserWidget* _widget;
+	TMap<EWidgetType, UBillBoardWidget*> _mapWidgetInstance;
+
+	UPROPERTY()
+	UBillBoardWidget* _widget;
 
 private:
-	void _updateWidgetLocation();
+	//void _updateWidgetLocation();
 };

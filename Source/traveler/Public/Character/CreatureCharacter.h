@@ -71,6 +71,9 @@ public:
 	UAttributeComponent* GetAttributeComponent();
 
 	UFUNCTION(BlueprintCallable)
+	UCharacterAttribute* GetAttribute(FName name);
+
+	UFUNCTION(BlueprintCallable)
 	bool SetAttribute(FName name, float newValue);
 
 	UFUNCTION(BlueprintCallable)

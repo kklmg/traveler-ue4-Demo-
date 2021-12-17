@@ -83,6 +83,11 @@ FORCEINLINE UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
 	return _attributeComponent;
 }
 
+UCharacterAttribute* ACreatureCharacter::GetAttribute(FName name)
+{
+	return _attributeComponent->GetAttribute(name);
+}
+
 bool ACreatureCharacter::SetAttribute(FName name, float newValue)
 {
 	return _attributeComponent->SetAttribute(name, newValue);

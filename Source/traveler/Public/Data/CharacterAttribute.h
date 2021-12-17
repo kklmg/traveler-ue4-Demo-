@@ -47,6 +47,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	float GetMaxValue();
 	UFUNCTION(BlueprintPure)
+	float GetPercentage();
+
+	UFUNCTION(BlueprintPure)
 	float GetPreviousValue();
 	UFUNCTION(BlueprintPure)
 	FName GetName();

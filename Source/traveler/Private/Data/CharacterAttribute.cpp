@@ -63,6 +63,11 @@ FORCEINLINE float UCharacterAttribute::GetMaxValue()
 	return _maxValue;
 }
 
+float UCharacterAttribute::GetPercentage()
+{
+	return _currentValue/_maxValue;
+}
+
 FORCEINLINE float UCharacterAttribute::GetPreviousValue()
 {
 	return _previousValue;
