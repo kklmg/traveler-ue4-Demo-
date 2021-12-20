@@ -47,7 +47,7 @@ private:
 
 
 	float _YawTurnning(FVector dirToDestination, FVector dirForward, float deltaTime);
-	float _RollTunning(FQuat curQuat, float deltaYaw, float deltaTime);
+	float _RollTunning(FQuat curQuat, FVector dirForward, float deltaYaw, float deltaTime);
 
 	void _TurnLeft();
 	void _TurnRight();

@@ -137,11 +137,14 @@ void UActionFlyTo::VTick(float deltaTime)
 
 	//Roll
 	//-------------------------------------------------------------------------------------------------------------
-	float deltaRoll = _RollTunning(curQuat, deltaYaw, deltaTime);
+	FQuat quatChanged = quatPitch*quatYaw;
+	FVector forwardChanged = quatChanged.RotateVector(forwardVector);
+
+	float deltaRoll = _RollTunning(curQuat, forwardChanged, deltaYaw, deltaTime);
 	FQuat quatRoll = FQuat(forwardVector, FMath::DegreesToRadians(deltaRoll));
 
 
-	FQuat deltaQuat =  quatYaw * quatRoll * quatPitch;
+	FQuat deltaQuat =  quatRoll * quatPitch * quatYaw;
 	
 
 	//apply movement
@@ -234,9 +237,9 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	return resultDeltaYaw;
 }
 
-float UActionFlyTo::_RollTunning(FQuat curQuat,float deltaYaw, float deltaTime)
+float UActionFlyTo::_RollTunning(FQuat curQuat,FVector dirForward,float deltaYaw, float deltaTime)
 {
-	float curRoll = FMath::RadiansToDegrees(curQuat.GetTwistAngle(FVector::ForwardVector));
+	float curRoll = FMath::RadiansToDegrees(curQuat.GetTwistAngle(dirForward));
 	float deltaRoll = _rollDegreePerSecond * deltaTime;
 
 	/*if (deltaYaw == 0) 
@@ -252,7 +255,7 @@ float UActionFlyTo::_RollTunning(FQuat curQuat,float deltaYaw, float deltaTime)
 	}
 	else*/
 	{
-		if (deltaYaw < 0) deltaRoll = -deltaRoll;
+		//if (deltaYaw < 0) deltaRoll = -deltaRoll;
 
 		//limit delta roll degree
 		if (FMath::Abs(curRoll) == _limitedRollDegree)
