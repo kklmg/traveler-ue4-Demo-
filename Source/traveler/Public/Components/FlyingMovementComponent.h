@@ -31,6 +31,9 @@ public:
 
 	void ClearPitchRoll();
 
+
+
+
 	//virtual void VExecute() override;
 	//virtual void VTick(float deltaTime) override;
 
@@ -38,6 +41,7 @@ private:
 	float _localPitchInput;
 	float _localRollInput;
 	float _worldYawInput;
+	bool _bHasInput;
 
 
 	UPROPERTY(EditDefaultsOnly, Category = speed)

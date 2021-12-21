@@ -22,11 +22,11 @@ void UBillBoardWidgetComponent::BeginPlay()
 	Super::BeginPlay();
 
 
-	showWidget(EWidgetType::WT_HealthBar);
+	ShowWidget(EWidgetType::WT_HealthBar);
 
 }
 
-void UBillBoardWidgetComponent::showWidget(EWidgetType widgeType)
+void UBillBoardWidgetComponent::ShowWidget(EWidgetType widgeType)
 {
 	if (_mapWidgetInstance.Contains(widgeType))
 	{

@@ -73,6 +73,8 @@ float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent con
 	//GetAttributeComponent()->SetHealth();
 	_attributeComponent->SetAttributeChange(AttributeName::Health, -actualDamage);
 
+	_billboardWidgetComponent->ShowWidget(EWidgetType::WT_HealthBar);
+
 	GEngine->AddOnScreenDebugMessage(-1, -5, FColor::Red, "TakeDamage: " + FString::SanitizeFloat(actualDamage));
 
 	return actualDamage;

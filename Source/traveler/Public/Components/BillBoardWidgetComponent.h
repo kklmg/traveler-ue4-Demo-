@@ -26,12 +26,14 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void showWidget(EWidgetType widgeType);
-	void HideWidget(EWidgetType widgeType);
-
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void ShowWidget(EWidgetType widgeType);
+	void HideWidget(EWidgetType widgeType);
+
+private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TMap<EWidgetType,FWidgetData> _mapWidgetClass;
@@ -42,6 +44,4 @@ public:
 	UPROPERTY()
 	UBillBoardWidget* _widget;
 
-private:
-	//void _updateWidgetLocation();
 };
