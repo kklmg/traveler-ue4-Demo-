@@ -21,6 +21,8 @@ UActionFlyTo::UActionFlyTo()
 	_yawDegreePerSecond = 25;
 	_pitchDegreePerSecond = 10;
 	_rollDegreePerSecond = -30;
+	_resetFactor = 0;
+	_resetFactorSpeed = 0.5f;
 }
 
 void UActionFlyTo::VExecute()
@@ -57,11 +59,13 @@ void UActionFlyTo::VTick(float deltaTime)
 	FTransform curTransform = _actionOwner->GetActorTransform();
 	FVector curLocation = curTransform.GetLocation();
 	FQuat curQuat = curTransform.GetRotation();
+	FRotator curRotator = curQuat.Rotator();
 
 	FVector forwardVector = character->GetActorForwardVector();
 	FVector upVector = character->GetActorUpVector();
 	FVector rightVector = character->GetActorRightVector();
 
+	
 
 	//Destination
 	//-------------------------------------------------------------------------------------------------------------
@@ -71,9 +75,9 @@ void UActionFlyTo::VTick(float deltaTime)
 
 
 	//debug message
-	//DrawDebugLine(GetWorld(), curLocation, _destination, FColor::Red, false, -1.0f, 0U, 30.0f);
-	//DrawDebugLine(GetWorld(), curLocation, destLocXY, FColor::Green, false, -1.0f, 0U, 30.0f);
-	//DrawDebugLine(GetWorld(), _actionOwner->GetActorLocation(), _actionOwner->GetActorLocation() + forwardVector * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
+	DrawDebugLine(GetWorld(), curLocation, _destination, FColor::Red, false, -1.0f, 0U, 30.0f);
+	DrawDebugLine(GetWorld(), curLocation, destLocXY, FColor::Green, false, -1.0f, 0U, 30.0f);
+	DrawDebugLine(GetWorld(), _actionOwner->GetActorLocation(), _actionOwner->GetActorLocation() + forwardVector * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat(distance));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Velocity: " + FString::SanitizeFloat((character->GetVelocity()).Size()));
 
@@ -83,34 +87,56 @@ void UActionFlyTo::VTick(float deltaTime)
 	//-------------------------------------------------------------------------------------------------------------
 	if (distance < 1000)
 	{
-		_state = EActionState::AS_SUCCEEDED;
-		return;
+		if(_resetFactor==1.0f)
+		{
+			_state = EActionState::AS_SUCCEEDED;
+			_resetFactor = 0;
+			return;
+		}
+		else
+		{	
+			_resetFactor += _resetFactorSpeed * deltaTime;
+
+			_resetFactor=FMath::Clamp(_resetFactor,0.0f,1.0f);
+
+			FRotator standard(0,curRotator.Yaw, 0);
+			FQuat quat = FQuat::Slerp(curQuat, standard.Quaternion(), _resetFactor);
+			character->SetActorRotation(quat);
+
+			return;
+		}
 	}
+
+
+	FRotator newRotation = forwardVector.Rotation();
+	FVector newForwardVector = forwardVector;
 
 
 	//Yaw
 	//-------------------------------------------------------------------------------------------------------------
 	float deltaYaw = _YawTurnning(dirToDestination, forwardVector, deltaTime);
-	FQuat quatYaw(FVector::UpVector, FMath::DegreesToRadians(deltaYaw));
+	newRotation.Yaw += deltaYaw;
 
 
 	//Pitch
 	//-------------------------------------------------------------------------------------------------------------
-	float yaw = curQuat.Rotator().Yaw;
-	FQuat quatWorldyaw(FVector::UpVector,yaw);
+	float curPitch = forwardVector.Rotation().Pitch;
 
-	FVector right_XY(rightVector.X,rightVector.Y,0);
-	right_XY.Normalize();
+	//float verticalSpeed = _flyingSpeed * FMath::Sin(curPitch);
+	//float HorizontalSpeed = _flyingSpeed * FMath::Cos(curPitch);
 
-	DrawDebugLine(GetWorld(), curLocation, curLocation+right_XY*500, FColor::Blue, false, -1.0f, 0U, 30.0f);
-
-
-	float curPitch = FMath::RadiansToDegrees(curQuat.GetTwistAngle(right_XY));
-
+	//float s = curPitch / _pitchDegreePerSecond;
+	//float d = verticalSpeed
 
 	float heightOffset = _destination.Z - curLocation.Z;
+
+	//if(heightOffset)
+
+
 	float deltaPitch = _pitchDegreePerSecond * deltaTime;
 
+
+	float pitchAfterRotation = 0;
 	if (FMath::Abs(heightOffset) < 100)
 	{
 		if (curPitch == 0)
@@ -119,47 +145,35 @@ void UActionFlyTo::VTick(float deltaTime)
 		}
 		else
 		{
-			deltaPitch = curPitch;
+			deltaPitch = -curPitch;
 		}
 	}
 	else
 	{
-		if (heightOffset > 0)
+		if (heightOffset < 0)
 		{
 			deltaPitch = -deltaPitch;
 		}
+		pitchAfterRotation = curPitch + deltaPitch;
+		pitchAfterRotation = FMath::Clamp(pitchAfterRotation, -_limitedPitchDegree, _limitedPitchDegree);
 
-		float pitchAfterRotation = FMath::Clamp(curPitch + deltaPitch, -_limitedPitchDegree, _limitedPitchDegree);
 		deltaPitch = pitchAfterRotation - curPitch;
 	}
 
-	FQuat quatPitch = FQuat(right_XY, FMath::DegreesToRadians(deltaPitch));
 
-	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Red, "currentPitch: " + FString::SanitizeFloat(curPitch));
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "DeltaPitch: " + FString::SanitizeFloat(deltaPitch));
-
+	newRotation.Pitch += deltaPitch;
+	newForwardVector = newRotation.Vector();
 
 
-	//Roll
-	//-------------------------------------------------------------------------------------------------------------
-	FQuat quatChanged = quatYaw * quatPitch * curQuat;
-	FVector forwardChanged = quatChanged.Vector();
-	forwardChanged.Normalize();
-
-	float deltaRoll = _RollTunning(quatChanged, forwardChanged, deltaYaw, deltaTime);
-	FQuat quatRoll = FQuat(forwardChanged, FMath::DegreesToRadians(deltaRoll));
-
-
-	FQuat deltaQuat =/* quatRoll **/ /*quatYaw * */quatPitch;
-
+	FQuat turnQuat = FQuat::FindBetween(forwardVector,newForwardVector);
 
 	//apply movement
 	//-------------------------------------------------------------------------------------------------------------
-	character->AddActorWorldRotation(deltaQuat);
+	character->AddActorWorldRotation(turnQuat);
 	character->AddMovementInput(forwardVector);
-	//character->AddMovementInput(FVector::UpVector);
-
 }
+
+
 
 
 float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, float deltaTime)
@@ -204,9 +218,9 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	
 	//debug message
 	DrawDebugLine(GetWorld(), _actionOwner->GetActorLocation(), circleCenter, FColor::Emerald, false, -1.0f, 0U, 30.0f);
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Circle Center: " + (circleCenter).ToString());
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("Turnning Radius: ") + FString::SanitizeFloat(turningRadius));
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("DistanceToCircleCenter ") + FString::SanitizeFloat(distanceFronDestLocToCircleCenter));
+	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Circle Center: " + (circleCenter).ToString());
+	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("Turnning Radius: ") + FString::SanitizeFloat(turningRadius));
+	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("DistanceToCircleCenter ") + FString::SanitizeFloat(distanceFronDestLocToCircleCenter));
 
 
 	float resultDeltaYaw = deltaYaw;
@@ -224,11 +238,13 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	else
 	{
 		float angle_Forward_ToDest_AfterRotation = angle_Forward_ToDest - deltaYaw;
-		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "afterYaw: " + FString::SanitizeFloat(angle_Forward_ToDest_AfterRotation));
 
 		if (deltaYaw > 0 && angle_Forward_ToDest_AfterRotation <0)
 		{
 			resultDeltaYaw = deltaYaw - angle_Forward_ToDest_AfterRotation;
+
+
+
 		}
 
 		else if (deltaYaw < 0 && angle_Forward_ToDest_AfterRotation > 0)
@@ -243,66 +259,3 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	return resultDeltaYaw;
 }
 
-float UActionFlyTo::_RollTunning(FQuat curQuat,FVector dirForward,float deltaYaw, float deltaTime)
-{
-	float curRoll = FMath::RadiansToDegrees(curQuat.GetTwistAngle(dirForward));
-	//float curRoll = curQuat.Rotator().Roll;
-	
-	float deltaRoll = _rollDegreePerSecond * deltaTime;
-
-	//if (deltaYaw == 0)
-	//{
-	//	if (curRoll != 0)
-	//	{
-	//		deltaRoll = -curRoll;
-	//	}/*
-	//	else
-	//	{
-	//		deltaRoll = 0;
-	//	}*/
-	//}
-	//else
-	{
-		//if (deltaYaw < 0) deltaRoll = -deltaRoll;
-
-		//limit delta roll degree
-	/*	if (FMath::Abs(curRoll) >= _limitedRollDegree)
-		{
-			deltaRoll = 0;
-		}
-		else*/
-		{
-			//float rollAfterRotation = curRoll + deltaRoll;
-
-			float rollAfterRotation = FMath::Clamp(curRoll+deltaRoll,-_limitedRollDegree,_limitedRollDegree); 
-			deltaRoll = rollAfterRotation - curRoll;
-
-			//if (deltaRoll > 0 && rollAfterRotation > _limitedRollDegree)
-			//{
-			//	deltaRoll = _limitedRollDegree - curRoll;
-			//}
-
-			//if (deltaRoll < 0 && rollAfterRotation < -_limitedRollDegree)
-			//{
-			//	deltaRoll = -_limitedRollDegree - curRoll;
-			//}
-		}
-	}
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "CurRoll: " + FString::SanitizeFloat(curRoll));
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "DeltaRoll: " + FString::SanitizeFloat(deltaRoll));
-
-	return deltaRoll;
-}
-
-
-void UActionFlyTo::_TurnLeft()
-{
-
-
-
-
-}
-void UActionFlyTo::_TurnRight()
-{
-
-}
