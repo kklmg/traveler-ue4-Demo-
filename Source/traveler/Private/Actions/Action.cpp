@@ -47,27 +47,27 @@ void UAction::Abort()
 	_state = EActionState::AS_Aborted;
 }
 
-bool UAction::CanStart() 
+FORCEINLINE bool UAction::CanStart()
 {
 	return _state == EActionState::AS_ReadyToExecute;
 }
 
-FName UAction::GetActionName()
+FORCEINLINE FName UAction::GetActionName()
 {
 	return _actionName;
 }
 
-bool UAction::IsCompleted()
+FORCEINLINE bool UAction::IsCompleted()
 {
 	return (_state == EActionState::AS_SUCCEEDED || _state == EActionState::AS_FAILED || _state == EActionState::AS_Aborted);
 }
 
-EActionState UAction::GetActionState()
+FORCEINLINE EActionState UAction::GetActionState()
 {
 	return _state;
 }
 
-ACharacter& UAction::GetActionOwner()
+FORCEINLINE ACharacter& UAction::GetActionOwner()
 {
 	return *_actionOwner;
 }
@@ -78,7 +78,7 @@ void UAction::SetActionState(EActionState state)
 	_state = state;
 }
 
-bool UAction::IsInstantAction() 
+FORCEINLINE bool UAction::IsInstantAction()
 {
 	return _bInstantAction;
 }

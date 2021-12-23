@@ -24,6 +24,7 @@ enum class EActionState : uint8
 
 namespace ActionName
 {
+	const FName SPREADATTACK = FName(TEXT("SPREADATTACK"));
 	const FName JUMP = FName(TEXT("jump"));
 	const FName SPRINT = FName(TEXT("sprint"));
 	const FName DODGE = FName(TEXT("dodge"));
