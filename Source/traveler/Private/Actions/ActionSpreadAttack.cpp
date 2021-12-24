@@ -32,3 +32,12 @@ void UActionSpreadAttack::VTick(float deltaTime)
 	Super::VTick(deltaTime);
 
 }
+
+void UActionSpreadAttack::OnEnterAniFrameAttack()
+{
+	
+
+
+
+
+}

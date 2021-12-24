@@ -18,10 +18,13 @@ public:
 
 	virtual void VExecute() override;
 	virtual void VTick(float deltaTime) override;
-//private:
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+private:
+	UPROPERTY(EditDefaultsOnly)
 	UAnimMontage *_animMontage;
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly)
 	FName _boneName;
+public:
+	UFUNCTION()
+	void OnEnterAniFrameAttack();
 };

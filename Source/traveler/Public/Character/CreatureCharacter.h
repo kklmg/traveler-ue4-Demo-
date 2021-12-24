@@ -11,6 +11,7 @@ class UAttributeComponent;
 class UWidgetComponent;
 class UBillboardComponent;
 class UBillBoardWidgetComponent;
+class UAnimationEventComponent;
 
 class AWeapon;
 class UAction;
@@ -67,8 +68,6 @@ public:
 public:
 	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	UFUNCTION(BlueprintCallable)
-	UAttributeComponent* GetAttributeComponent();
 
 	UFUNCTION(BlueprintCallable)
 	UCharacterAttribute* GetAttribute(FName name);
@@ -79,8 +78,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool SetAttributeChange(FName name, float deltaValue);
 
-	UFUNCTION(BlueprintCallable)
-	UActionComponent* GetActionComponent();
 
 	UFUNCTION(BlueprintCallable)
 	UAction* ExecuteAction(FName actionName);
@@ -106,6 +103,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ECharacterState GetCharacterState();
 
+	UFUNCTION(BlueprintCallable)
+	UActionComponent* GetActionComponent();
+
+	UFUNCTION(BlueprintCallable)
+	UAttributeComponent* GetAttributeComponent();
+
+	UFUNCTION(BlueprintCallable)
+	UAnimationEventComponent* GetAanimationEventComponent();
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -115,11 +120,13 @@ protected:
 	UAttributeComponent* _attributeComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	ECharacterState _characterState;
-	
-	UPROPERTY(VisibleAnywhere)
 	UBillBoardWidgetComponent* _billboardWidgetComponent;
 
+	UPROPERTY(VisibleAnywhere)
+	UAnimationEventComponent* _animationEventComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	ECharacterState _characterState;
 
 	UPROPERTY(EditDefaultsOnly, Category = Sockets)
 	TMap<EMeshSocketType, FName> _socketsMap;

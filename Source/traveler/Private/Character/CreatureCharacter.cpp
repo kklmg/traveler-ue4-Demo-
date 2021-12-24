@@ -10,6 +10,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/BillboardComponent.h"
 #include "Components/BillBoardWidgetComponent.h"
+#include "Components/AnimationEventComponent.h"
 
 
 // Sets default values
@@ -39,6 +40,11 @@ ACreatureCharacter::ACreatureCharacter()
 		check(_billboardWidgetComponent != nullptr);
 	}
 
+	if (_animationEventComponent == nullptr)
+	{
+		_animationEventComponent = CreateDefaultSubobject<UAnimationEventComponent>(TEXT("AnimationEventComponent"));
+		check(_billboardWidgetComponent != nullptr);
+	}
 
 	bUseControllerRotationYaw = false;
 
@@ -85,7 +91,12 @@ FORCEINLINE UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
 	return _attributeComponent;
 }
 
-UCharacterAttribute* ACreatureCharacter::GetAttribute(FName name)
+FORCEINLINE UAnimationEventComponent* ACreatureCharacter::GetAanimationEventComponent()
+{
+return _animationEventComponent;
+}
+
+FORCEINLINE UCharacterAttribute* ACreatureCharacter::GetAttribute(FName name)
 {
 	return _attributeComponent->GetAttribute(name);
 }
