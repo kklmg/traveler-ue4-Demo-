@@ -26,7 +26,7 @@ void UActionDodge::VExecute()
 	if (_aniMontage && animInstance)
 	{
 		//bind 
-		animInstance->OnMontageEnded.AddDynamic(this, &UActionDodge::OnAnimationFinished);
+		animInstance->OnMontageEnded.AddDynamic(this, &UActionDodge::OnAnimMontageFinished);
 
 		//play montage
 		character->PlayAnimMontage(_aniMontage);
@@ -43,18 +43,19 @@ void UActionDodge::VTick(float deltaTime)
 }
 
 
-void UActionDodge::OnAnimationFinished(UAnimMontage* montage,bool interrupted)
+void UActionDodge::OnAnimMontageFinished(UAnimMontage* montage,bool interrupted)
 {
-	check(_actionOwner != nullptr);
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
-	check(character != nullptr);
+	if(montage != _aniMontage)return;
+	if(_actionOwner == nullptr) return;
 
-	
+	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
+	if (character == nullptr) return;
+
 	UAnimInstance* animInstance = _actionOwner->GetMesh()->GetAnimInstance();
-	if (animInstance && montage== _aniMontage)
-	{
-		animInstance->OnMontageEnded.RemoveDynamic(this, &UActionDodge::OnAnimationFinished);
-	}
+	if (animInstance == nullptr) return;
+
+	animInstance->OnMontageEnded.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
+	
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("End Dodge animation"));
 
 	character->SetCharacterState(ECharacterState::CS_GroundNormal);

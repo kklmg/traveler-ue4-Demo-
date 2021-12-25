@@ -82,7 +82,7 @@ public:
 	EActionState GetActionState();
 
 
-	ACharacter& GetActionOwner();
+	ACharacter* GetActionOwner();
 
 
 protected:

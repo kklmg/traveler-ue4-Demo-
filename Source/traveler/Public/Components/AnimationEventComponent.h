@@ -55,4 +55,10 @@ void UAnimationEventComponent::Subscribe(EAnimNorifyKey notifyKey, UObjectTempla
 	{
 		_mapSubscribers[notifyKey].Delegate.AddUFunction(objectTemplate, InFunctionName);
 	}
+	else
+	{
+		FAnimNotifyDelegateData animNotifyDelegateData;
+		animNotifyDelegateData.Delegate.AddUFunction(objectTemplate,InFunctionName);
+		_mapSubscribers.Add(notifyKey, animNotifyDelegateData);
+	}
 }

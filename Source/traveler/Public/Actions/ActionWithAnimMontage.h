@@ -4,27 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "Actions/Action.h"
-#include "ActionDodge.generated.h"
+#include "ActionWithAnimMontage.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UActionDodge : public UAction
+class TRAVELER_API UActionWithAnimMontage : public UAction
 {
 	GENERATED_BODY()
+
 public:
-	UActionDodge();
+	UActionWithAnimMontage();
 
 	virtual void VExecute() override;
-	virtual void VTick(float deltaTime) override;
 
 	UFUNCTION()
-	void OnAnimMontageFinished(UAnimMontage* montage, bool interrupted);
-private:
-	UPROPERTY(EditDefaultsOnly, Category = speed)
-	float _dodgeSpeed;
+	virtual void VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted);
 
+private:
 	UPROPERTY(EditDefaultsOnly, Category = animation)
 	UAnimMontage* _aniMontage;
+	
 };

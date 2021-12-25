@@ -3,6 +3,8 @@
 
 #include "Actions/ActionSpreadAttack.h"
 #include "GameFramework/Character.h"
+#include "Character/CreatureCharacter.h"
+#include "Components/AnimationEventComponent.h"
 
 UActionSpreadAttack::UActionSpreadAttack()
 {
@@ -14,16 +16,13 @@ void UActionSpreadAttack::VExecute()
 {
 	Super::VExecute();
 
-	if(_animMontage)
-	{
-		GetActionOwner().PlayAnimMontage(_animMontage);
+	if (GetActionOwner() == nullptr) return;
 
-		//_animMontage->Notifies.
-	}
+	ACreatureCharacter* character = Cast<ACreatureCharacter>(GetActionOwner());
+	if(character == nullptr) return;
 
-	
-
-
+	UAnimationEventComponent* animEventComp = character->GetAanimationEventComponent();
+	animEventComp->Subscribe(EAnimNorifyKey::ANK_StartSpreadAttack, this, FName("OnEnterAniFrameAttack"));
 
 }
 
@@ -35,9 +34,19 @@ void UActionSpreadAttack::VTick(float deltaTime)
 
 void UActionSpreadAttack::OnEnterAniFrameAttack()
 {
-	
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("enter frame attack"));
+
+}
+
+void UActionSpreadAttack::VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted)
+{
+	Super::VOnAnimMontageFinished(montage, interrupted);
+
+
+	//animEventComp->Subscribe(EAnimNorifyKey::ANK_StartSpreadAttack, this, FName("OnEnterAniFrameAttack"));
 
 
 
 
 }
+

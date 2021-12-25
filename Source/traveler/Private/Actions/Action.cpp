@@ -67,9 +67,9 @@ FORCEINLINE EActionState UAction::GetActionState()
 	return _state;
 }
 
-FORCEINLINE ACharacter& UAction::GetActionOwner()
+FORCEINLINE ACharacter* UAction::GetActionOwner()
 {
-	return *_actionOwner;
+	return _actionOwner;
 }
 
 

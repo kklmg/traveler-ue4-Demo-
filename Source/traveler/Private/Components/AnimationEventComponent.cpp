@@ -37,10 +37,8 @@ void UAnimationEventComponent::notify(EAnimNorifyKey notifyKey)
 {
 	if (_mapSubscribers.Contains(notifyKey))
 	{
-		//_mapSubscribers[notifyKey].Broadcast();
+		_mapSubscribers[notifyKey].Delegate.Broadcast();
 	}
-
-	
 }
 
 
