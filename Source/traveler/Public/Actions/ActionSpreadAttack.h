@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actions/ActionWithAnimMontage.h"
+#include "Data/EnumMeshSocketType.h"
 #include "ActionSpreadAttack.generated.h"
 
 /**
@@ -22,11 +23,20 @@ public:
 private:
 
 	UPROPERTY(EditDefaultsOnly)
-	FName _boneName;
+	EMeshSocketType _meshSocektType;
+
+	UPROPERTY(EditDefaultsOnly)
+	float _spreadDistance;
+
 
 public:
 	UFUNCTION()
-	void OnEnterAniFrameAttack();
+	void OnAttackNotifyBegin(float durationTime);
+	UFUNCTION()
+	void OnAttackNotifyTick(float frameDeltaTime);
+	UFUNCTION()
+	void OnAttackNotifyEnd();
+	
 
 	void VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted) override;
 };

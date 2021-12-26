@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Data/EnumMeshSocketType.h"
 #include "CreatureCharacter.generated.h"
 
 class UActionComponent;
@@ -18,14 +19,7 @@ class UAction;
 class AProjectile;
 class UActionData;
 
-UENUM(BlueprintType)
-enum class EMeshSocketType : uint8
-{
-	MST_LeftHand UMETA(DisplayName = "LeftHand"),
-	MST_RightHand UMETA(DisplayName = "RightHand"),
-	MST_LeftHandDraw UMETA(DisplayName = "LeftHandDraw"),
-	MST_RightHandDraw UMETA(DisplayName = "RightHandDraw"),
-};
+
 
 UENUM(BlueprintType)
 enum class ECharacterState : uint8

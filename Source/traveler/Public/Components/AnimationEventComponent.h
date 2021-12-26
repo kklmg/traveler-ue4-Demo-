@@ -7,25 +7,14 @@
 #include "AnimNotify/AnimNotifyKey.h"
 #include "AnimationEventComponent.generated.h"
 
+class UAnimNotifyHandler;
 
-DECLARE_MULTICAST_DELEGATE(FOnEnterAnimFrame);
-
-USTRUCT()
-struct FAnimNotifyDelegateData
-{
-	GENERATED_USTRUCT_BODY()
-
-	//UPROPERTY()
-	FOnEnterAnimFrame Delegate;
-};
-
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TRAVELER_API UAnimationEventComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UAnimationEventComponent();
 
@@ -33,32 +22,20 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void notify(EAnimNorifyKey notifyKey);
+	void notifyBegin(EAnimNorifyKey notifyKey, float totalTime);
+	void notifyTick(EAnimNorifyKey notifyKey, float frameDeltaTime);
+	void notifyEnd(EAnimNorifyKey notifyKey);
 
-	template <typename UObjectTemplate, typename... VarTypes> 
-	void Subscribe(EAnimNorifyKey notifyKey, UObjectTemplate objectTemplate, const FName& InFunctionName);
+	UAnimNotifyHandler* GetHNotifyHandler(EAnimNorifyKey notifyKey);
 
 private:
 	UPROPERTY()
-	TMap<EAnimNorifyKey, FAnimNotifyDelegateData> _mapSubscribers;
-		
+	TMap<EAnimNorifyKey, UAnimNotifyHandler*> _mapSubscribers;
+
 };
 
-template <typename UObjectTemplate, typename... VarTypes>
-void UAnimationEventComponent::Subscribe(EAnimNorifyKey notifyKey, UObjectTemplate objectTemplate, const FName& InFunctionName)
-{
-	if (_mapSubscribers.Contains(notifyKey))
-	{
-		_mapSubscribers[notifyKey].Delegate.AddUFunction(objectTemplate, InFunctionName);
-	}
-	else
-	{
-		FAnimNotifyDelegateData animNotifyDelegateData;
-		animNotifyDelegateData.Delegate.AddUFunction(objectTemplate,InFunctionName);
-		_mapSubscribers.Add(notifyKey, animNotifyDelegateData);
-	}
-}
+

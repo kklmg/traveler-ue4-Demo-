@@ -4,16 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
+#include "AnimNotify/EnumAnimNotify.h"
 #include "AnimNotifyKey.generated.h"
-
-
-UENUM(BlueprintType)
-enum class EAnimNorifyKey : uint8
-{
-	ANK_StartSpreadAttack UMETA(DisplayName = "StartSpreadAttack"),
-	ANK_StartMeleeAttack UMETA(DisplayName = "StartMeleeAttack"),
-	ANK_StartSpitAttack UMETA(DisplayName = "StartSpitAttack"),
-};
 
 
 

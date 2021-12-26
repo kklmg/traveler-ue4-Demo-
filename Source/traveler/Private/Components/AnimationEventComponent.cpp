@@ -2,6 +2,7 @@
 
 
 #include "Components/AnimationEventComponent.h"
+#include "AnimNotify/AnimNotifyHandler.h"
 
 
 // Sets default values for this component's properties
@@ -21,7 +22,7 @@ void UAnimationEventComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+
 }
 
 
@@ -33,12 +34,47 @@ void UAnimationEventComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	// ...
 }
 
-void UAnimationEventComponent::notify(EAnimNorifyKey notifyKey)
+UAnimNotifyHandler* UAnimationEventComponent::GetHNotifyHandler(EAnimNorifyKey notifyKey)
 {
 	if (_mapSubscribers.Contains(notifyKey))
 	{
-		_mapSubscribers[notifyKey].Delegate.Broadcast();
+		return _mapSubscribers[notifyKey];
+	}
+	else
+	{
+		UAnimNotifyHandler* notifyHandler = NewObject<UAnimNotifyHandler>(this);
+		_mapSubscribers.Add(notifyKey, notifyHandler);
+		return notifyHandler;
 	}
 }
+
+
+
+void UAnimationEventComponent::notifyBegin(EAnimNorifyKey notifyKey, float frameDeltaTime)
+{
+	if (_mapSubscribers.Contains(notifyKey))
+	{
+		_mapSubscribers[notifyKey]->OnNotifyBegin.Broadcast(frameDeltaTime);
+	}
+}
+
+void UAnimationEventComponent::notifyTick(EAnimNorifyKey notifyKey, float frameDeltaTime)
+{
+	if (_mapSubscribers.Contains(notifyKey))
+	{
+		_mapSubscribers[notifyKey]->OnNotifyTick.Broadcast(frameDeltaTime);
+	}
+}
+
+void UAnimationEventComponent::notifyEnd(EAnimNorifyKey notifyKey)
+{
+	if (_mapSubscribers.Contains(notifyKey))
+	{
+		_mapSubscribers[notifyKey]->OnNotifyEnd.Broadcast();
+	}
+
+
+}
+
 
 

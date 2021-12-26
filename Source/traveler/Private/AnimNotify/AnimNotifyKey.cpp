@@ -15,5 +15,5 @@ void UAnimNotifyKey::Notify(class USkeletalMeshComponent* MeshComp, class UAnimS
 	UAnimationEventComponent* animEventComp= character->GetAanimationEventComponent();
 	if(animEventComp == nullptr) return;
 
-	animEventComp->notify(NotifyKey);
+	animEventComp->notifyBegin(NotifyKey,0);
 }

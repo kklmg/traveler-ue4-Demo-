@@ -13,7 +13,8 @@
 				"CoreUObject",
 				"AIModule",
 				"UMG",
-				"Niagara"
+				"Niagara",
+				"NiagaraAnimNotifies"
 			]
 		}
 	],
