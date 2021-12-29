@@ -26,8 +26,10 @@ private:
 	EMeshSocketType _meshSocektType;
 
 	UPROPERTY(EditDefaultsOnly)
-	float _spreadDistance;
+	TSubclassOf<AActor> _effectClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	AActor* _effect;
 
 public:
 	UFUNCTION()

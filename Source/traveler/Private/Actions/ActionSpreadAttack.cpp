@@ -12,7 +12,7 @@ UActionSpreadAttack::UActionSpreadAttack()
 {
 	_actionName = ActionName::SPREADATTACK;
 	_bInstantAction = false;
-	_spreadDistance = 1000;
+	//_spreadDistance = 1000;
 }
 
 void UActionSpreadAttack::VExecute()
@@ -41,6 +41,22 @@ void UActionSpreadAttack::VTick(float deltaTime)
 
 void UActionSpreadAttack::OnAttackNotifyBegin(float durationTime)
 {
+	if (GetWorld() == nullptr)	return;
+
+	FActorSpawnParameters spawnParameters;
+	spawnParameters.Instigator = GetActionOwner();
+	spawnParameters.Owner = GetActionOwner();
+	
+
+	if (_effect == nullptr)
+	{
+		_effect = GetWorld()->SpawnActor<AActor>(_effectClass, spawnParameters);
+	}
+	else
+	{
+
+	}
+
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("attack notify Begin"));
 
 }
@@ -58,23 +74,36 @@ void UActionSpreadAttack::OnAttackNotifyTick(float frameDeltaTime)
 		FVector launchLocation = outTransform.GetLocation();
 		FVector launchDir = outTransform.GetRotation().RotateVector(FVector::ForwardVector);
 
-		//do line tracing
-		FHitResult hitResult;
-		FCollisionQueryParams CollisionParams;
-		FVector hitLocation = launchLocation + launchDir * _spreadDistance;
-
-		if (GetWorld()->LineTraceSingleByChannel(hitResult, launchLocation, launchLocation + launchDir * _spreadDistance, ECC_Visibility, CollisionParams))
+		if(_effect)
 		{
-			hitLocation = hitResult.ImpactPoint;
+			_effect->SetActorTransform(outTransform);
 		
 		}
-		DrawDebugLine(GetWorld(), launchLocation, hitLocation, FColor::Red, false, -1.0f, 0U, 30.0f);
+
+
+		////do line tracing
+		//FHitResult hitResult;
+		//FCollisionQueryParams CollisionParams;
+		//FVector hitLocation = launchLocation + launchDir * _spreadDistance;
+
+		//if (GetWorld()->LineTraceSingleByChannel(hitResult, launchLocation, launchLocation + launchDir * _spreadDistance, ECC_Visibility, CollisionParams))
+		//{
+		//	hitLocation = hitResult.ImpactPoint;
+		//
+		//}
+		//DrawDebugLine(GetWorld(), launchLocation, hitLocation, FColor::Red, false, -1.0f, 0U, 30.0f);
 	}
 }
 
 void UActionSpreadAttack::OnAttackNotifyEnd()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("attack notify End"));
+
+	if(_effect)
+	{
+		_effect->Destroy();
+		_effect = nullptr;
+	}
 }
 
 
