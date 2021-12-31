@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Data/EnumAttributeType.h"
 #include "AttributeComponent.generated.h"
 
 class UCharacterAttribute;
@@ -28,20 +29,20 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintPure)
-	UCharacterAttribute* GetAttribute(FName name);
+	UCharacterAttribute* GetAttribute(EAttributeType attributeType);
 
 	UFUNCTION(BlueprintCallable)
-	bool SetAttribute(FName name, float newValue);
+	bool SetAttribute(EAttributeType attributeType, float newValue);
 
 	UFUNCTION(BlueprintCallable)
-	bool SetAttributeChange(FName name, float deltaValue);
+	bool SetAttributeChange(EAttributeType attributeType, float deltaValue);
 
 
 private:
 	void InitializeAttributes();
 
 	UPROPERTY(EditDefaultsOnly, Category = Attributes)
-	TMap<FName,UCharacterAttribute*> _mapAttributes;
+	TMap<EAttributeType,UCharacterAttribute*> _mapAttributes;
 
 	UPROPERTY(EditDefaultsOnly,  Category = Attributes)
 	UCharacterAttribute* _level;

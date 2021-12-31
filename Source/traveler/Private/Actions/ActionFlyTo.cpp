@@ -11,6 +11,8 @@
 UActionFlyTo::UActionFlyTo()
 {
 	_actionName = ActionName::FlyTo;
+	_actionType = EActionType::EACT_FlyTo;
+
 	_bInstantAction = false;
 	_flyingSpeed = 2000;
 	_turnningSpeed = 500;

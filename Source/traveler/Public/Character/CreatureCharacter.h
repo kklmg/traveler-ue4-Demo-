@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Data/EnumMeshSocketType.h"
+#include "Data/EnumAttributeType.h"
 #include "CreatureCharacter.generated.h"
 
 class UActionComponent;
@@ -64,17 +65,17 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	UCharacterAttribute* GetAttribute(FName name);
+	UCharacterAttribute* GetAttribute(EAttributeType attributeType);
 
 	UFUNCTION(BlueprintCallable)
-	bool SetAttribute(FName name, float newValue);
+	bool SetAttribute(EAttributeType attributeType, float newValue);
 
 	UFUNCTION(BlueprintCallable)
-	bool SetAttributeChange(FName name, float deltaValue);
+	bool SetAttributeChange(EAttributeType attributeType, float deltaValue);
 
 
 	UFUNCTION(BlueprintCallable)
-	UAction* ExecuteAction(FName actionName);
+	UAction* ExecuteAction(EActionType actionType);
 
 	UFUNCTION(BlueprintCallable)
 	UActionData* GetActionData();

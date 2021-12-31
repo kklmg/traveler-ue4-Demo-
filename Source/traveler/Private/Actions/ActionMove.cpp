@@ -9,6 +9,7 @@
 UActionMove::UActionMove() 
 {
 	_actionName = ActionName::MOVE;
+	_actionType = EActionType::EACT_Moving;
 }
 
 void UActionMove::VExecute()

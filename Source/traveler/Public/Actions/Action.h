@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ActionData.h"
+#include "Actions/ActionData.h"
+#include "Data/EnumActionType.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Action.generated.h"
 
@@ -76,6 +77,9 @@ public:
 	FName GetActionName();
 
 	UFUNCTION(BlueprintCallable)
+	EActionType GetActionType();
+
+	UFUNCTION(BlueprintCallable)
 	bool IsCompleted();
 
 	UFUNCTION(BlueprintCallable)
@@ -103,6 +107,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName _actionName;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Action")
+	EActionType _actionType;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool _bInstantAction;

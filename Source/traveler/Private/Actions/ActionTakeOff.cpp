@@ -9,6 +9,7 @@
 UActionTakeOff::UActionTakeOff()
 {
 	_actionName = ActionName::TAKEOFF;
+	_actionType = EActionType::EACT_TakeOff;
 }
 
 void UActionTakeOff::VExecute()

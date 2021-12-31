@@ -8,6 +8,7 @@
 UActionLaunchProjectile::UActionLaunchProjectile()
 {
 	_actionName = ActionName::ProjectileAttack;
+	_actionType = EActionType::EACT_LaunchProjectile;
 }
 
 void UActionLaunchProjectile::VExecute()

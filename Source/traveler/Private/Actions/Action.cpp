@@ -11,6 +11,7 @@ UAction::UAction()
 	_state = EActionState::AS_UnInitialized;
 	_bInstantAction = true;
 	_actionName = TEXT("UnKnown");
+	_actionType = EActionType::EACT_None;
 }
 
 void UAction::Initialize(UActionComponent* actionComponent, UActionData* actionData, UBlackboardComponent* actionblackBoard)
@@ -55,6 +56,12 @@ FORCEINLINE bool UAction::CanStart()
 FORCEINLINE FName UAction::GetActionName()
 {
 	return _actionName;
+}
+
+
+EActionType UAction::GetActionType()
+{
+	return _actionType;
 }
 
 FORCEINLINE bool UAction::IsCompleted()

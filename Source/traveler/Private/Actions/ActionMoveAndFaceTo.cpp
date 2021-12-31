@@ -9,6 +9,7 @@
 UActionMoveAndFaceTo::UActionMoveAndFaceTo() 
 {
 	_actionName = ActionName::MOVE;
+	_actionType = EActionType::EACT_Moving;
 }
 void UActionMoveAndFaceTo::VExecute()
 {

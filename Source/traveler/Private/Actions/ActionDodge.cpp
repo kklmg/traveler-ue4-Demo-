@@ -9,6 +9,7 @@
 UActionDodge::UActionDodge()
 {
 	_actionName = ActionName::DODGE;
+	_actionType = EActionType::EACT_Dodge;
 	_bInstantAction = false;
 	_dodgeSpeed = 250;
 }

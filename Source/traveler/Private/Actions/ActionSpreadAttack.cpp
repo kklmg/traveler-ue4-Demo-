@@ -11,6 +11,7 @@
 UActionSpreadAttack::UActionSpreadAttack()
 {
 	_actionName = ActionName::SPREADATTACK;
+	_actionType = EActionType::EACT_SpreadAttack;
 	_bInstantAction = false;
 	//_spreadDistance = 1000;
 }
@@ -71,12 +72,16 @@ void UActionSpreadAttack::OnAttackNotifyTick(float frameDeltaTime)
 	FTransform outTransform;
 	if (character->GetMeshSocketTransform(_meshSocektType, ERelativeTransformSpace::RTS_World, outTransform))
 	{
-		FVector launchLocation = outTransform.GetLocation();
-		FVector launchDir = outTransform.GetRotation().RotateVector(FVector::ForwardVector);
+		FTransform result;
+		result.SetLocation(outTransform.GetLocation());
+
+		FVector dir = character->GetActorForwardVector();
+		result.SetRotation(dir.ToOrientationQuat());
+		result.SetScale3D(outTransform.GetScale3D());
 
 		if(_effect)
 		{
-			_effect->SetActorTransform(outTransform);
+			_effect->SetActorTransform(result);
 		
 		}
 

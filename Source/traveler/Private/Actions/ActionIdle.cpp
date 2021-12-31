@@ -7,6 +7,7 @@
 UActionIdle::UActionIdle() 
 {
 	_actionName = ActionName::IDLE;
+	_actionType = EActionType::EACT_Idle;
 }
 
 

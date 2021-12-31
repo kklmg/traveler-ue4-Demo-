@@ -71,16 +71,16 @@ void UActionComponent::SetCharacterState()
 {
 }
 
-UAction* UActionComponent::ExecuteAction(FName actionName)
+UAction* UActionComponent::ExecuteAction(EActionType actionType)
 {
-	if (_pCurrentActionSet == nullptr || _mapActionProcessPool.Contains(actionName))
+	if (_pCurrentActionSet == nullptr || _mapActionProcessPool.Contains(actionType))
 	{
 		return nullptr;
 	}
 
 	UAction* action = nullptr;
 
-	if (_pCurrentActionSet->TryGetActionInstance(actionName, &action))
+	if (_pCurrentActionSet->TryGetActionInstance(actionType, &action))
 	{
 		action->Abort();
 		action->Initialize(this, _actionData,_blackBoardComponent);
@@ -95,28 +95,28 @@ UAction* UActionComponent::ExecuteAction(FName actionName)
 }
 void UActionComponent::ExecuteIdle()
 {
-	ExecuteAction(ActionName::IDLE);
+	ExecuteAction(EActionType::EACT_Idle);
 }
 void UActionComponent::ExecuteMove(FVector movement)
 {
 	_actionData->SetMovementInput(movement);
-	ExecuteAction(ActionName::MOVE);
+	ExecuteAction(EActionType::EACT_Moving);
 }
 void UActionComponent::ExecuteSprint()
 {
-	ExecuteAction(ActionName::SPRINT);
+	ExecuteAction(EActionType::EACT_Sprint);
 }
 void UActionComponent::ExecuteJump()
 {
-	ExecuteAction(ActionName::JUMP);
+	ExecuteAction(EActionType::EACT_Jumping);
 }
 void UActionComponent::ExecuteAim()
 {
-	ExecuteAction(ActionName::AIM);
+	ExecuteAction(EActionType::EACT_Aiming);
 }
 void UActionComponent::ExecuteDodge()
 {
-	ExecuteAction(ActionName::DODGE);
+	ExecuteAction(EActionType::EACT_Dodge);
 }
 
 void UActionComponent::AddMovementInputX(float value) 
@@ -132,12 +132,12 @@ void UActionComponent::AddToActionProcessPool(UAction* action)
 {
 	if (action == nullptr) return;
 
-	_mapActionProcessPool.Add(action->GetActionName(), action);
+	_mapActionProcessPool.Add(action->GetActionType(), action);
 }
 
 void UActionComponent::_TickActionProcess(float deltaTime)
 {
-	TArray<FName> finieshedActionKeys;
+	TArray<EActionType> finieshedActionKeys;
 
 	//find out all finished actions
 	for (auto pair : _mapActionProcessPool)

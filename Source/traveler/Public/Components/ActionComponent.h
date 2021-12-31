@@ -52,7 +52,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	UAction* ExecuteAction(FName actionName);
+	UAction* ExecuteAction(EActionType actionType);
 	UFUNCTION(BlueprintCallable)
 	void ExecuteIdle();
 	UFUNCTION(BlueprintCallable)
@@ -80,7 +80,7 @@ private:
 	UBlackboardComponent* _blackBoardComponent;
 
 	UPROPERTY()
-	TMap<FName, UAction*> _mapActionProcessPool;
+	TMap<EActionType, UAction*> _mapActionProcessPool;
 
 	UPROPERTY()
 	UActionData* _actionData;

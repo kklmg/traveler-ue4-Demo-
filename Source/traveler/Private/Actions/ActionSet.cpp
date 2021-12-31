@@ -14,19 +14,19 @@ void UActionSet::VLeave()
 	_mapActionInstaces.Empty();
 }
 
-bool UActionSet::TryGetActionInstance(FName actionName, UAction** outActionInstance)
+bool UActionSet::TryGetActionInstance(EActionType actionType, UAction** outActionInstance)
 {
 	//try find action instance and return
-	if (_mapActionInstaces.Contains(actionName))
+	if (_mapActionInstaces.Contains(actionType))
 	{
-		*outActionInstance = _mapActionInstaces[actionName];
+		*outActionInstance = _mapActionInstaces[actionType];
 		return true;
 	}
 
 	//try make instance of the action and return
 	else
 	{
-		UAction* actionInstance = MakeActionInstance(actionName);
+		UAction* actionInstance = MakeActionInstance(actionType);
 
 		if (actionInstance)
 		{
@@ -38,11 +38,11 @@ bool UActionSet::TryGetActionInstance(FName actionName, UAction** outActionInsta
 	return false;
 }
 
-bool UActionSet::TryGetActionClass(FName actionName, TSubclassOf<UAction> outActionClass)
+bool UActionSet::TryGetActionClass(EActionType actionType, TSubclassOf<UAction> outActionClass)
 {
 	for (auto actionClass : _arrayActionClasses)
 	{
-		if (actionClass.GetDefaultObject()->GetActionName() == actionName)
+		if (actionClass.GetDefaultObject()->GetActionType() == actionType)
 		{
 			outActionClass = actionClass;
 			return true;
@@ -51,16 +51,16 @@ bool UActionSet::TryGetActionClass(FName actionName, TSubclassOf<UAction> outAct
 	return false;
 }
 
-UAction* UActionSet::MakeActionInstance(FName actionName)
+UAction* UActionSet::MakeActionInstance(EActionType actionType)
 {
 	for (auto actionClass : _arrayActionClasses)
 	{
-		if (actionClass.GetDefaultObject()->GetActionName() == actionName)
+		if (actionClass.GetDefaultObject()->GetActionType() == actionType)
 		{
 			UAction* action = NewObject<UAction>(this, actionClass);
 			if (action != nullptr)
 			{
-				_mapActionInstaces.Add(action->GetActionName(), action);
+				_mapActionInstaces.Add(action->GetActionType(), action);
 				return action;
 			}
 			UE_LOG(LogTemp, Warning, TEXT("Make instance of UAction Failed!"));
@@ -74,7 +74,7 @@ void UActionSet::MakeAllActionInstances()
 {
 	for (auto actionClass : _arrayActionClasses)
 	{
-		if (_mapActionInstaces.Contains(actionClass.GetDefaultObject()->GetActionName()) == false)
+		if (_mapActionInstaces.Contains(actionClass.GetDefaultObject()->GetActionType()) == false)
 		{
 			static UAction* action = NewObject<UAction>(this, actionClass);
 
@@ -84,7 +84,7 @@ void UActionSet::MakeAllActionInstances()
 				continue;
 			}
 
-			_mapActionInstaces.Add(action->GetActionName(), action);
+			_mapActionInstaces.Add(action->GetActionType(), action);
 		}
 	}
 }

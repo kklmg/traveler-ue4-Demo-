@@ -8,6 +8,7 @@
 UActionAscend::UActionAscend()
 {
 	_actionName = ActionName::ASCEND;
+	_actionType = EActionType::EACT_Ascend;
 }
 
 void UActionAscend::VExecute()

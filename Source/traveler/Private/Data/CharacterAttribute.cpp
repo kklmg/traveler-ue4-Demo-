@@ -2,6 +2,7 @@
 
 
 #include "Data/CharacterAttribute.h"
+#include "Data/AttributeData.h"
 
 UCharacterAttribute::UCharacterAttribute()
 {
@@ -11,26 +12,41 @@ UCharacterAttribute::UCharacterAttribute()
 	_previousValue = 0;
 }
 
-FORCEINLINE FName UCharacterAttribute::GetName()
+void UCharacterAttribute::Initialize(FAttributeRow* attributeRow , int level)
 {
-	return _AttributeName;
+	_attributeType = attributeRow->AttributeType;
+	_attributeText = attributeRow->GetLocaleText();
+
+	_currentValue = attributeRow->GetGrowedValue(level);
+	_previousValue = _currentValue;
+
+	_minValue = 0;
+	_maxValue = _currentValue;
+
+	_growthRate = attributeRow->GrowthRate;
 }
 
-void UCharacterAttribute::Initialize(FName attributeName, float value)
+void UCharacterAttribute::Initialize(EAttributeType attributeType, FText attributeText, float value, float growthRate)
 {
-	_AttributeName = attributeName;
+	_attributeType = attributeType;
+	_attributeText = attributeText;
 	_currentValue = value;
 	_previousValue = value;
+	_growthRate = growthRate;
 }
 
-void UCharacterAttribute::Initialize(FName attributeName, float value, float minValue, float maxValue)
+void UCharacterAttribute::Initialize(EAttributeType attributeType, FText attributeText, float value, float minValue, float maxValue, float growthRate)
 {
-	_AttributeName = attributeName;
+	_attributeType = attributeType;
+	_attributeText = attributeText;
 	_minValue = minValue;
 	_maxValue = maxValue;
 	_currentValue = value;
 	_previousValue = value;
+	_growthRate = growthRate;
 }
+
+
 
 void UCharacterAttribute::SetValue(float newValue)
 {
@@ -45,6 +61,16 @@ void UCharacterAttribute::SetValue(float newValue)
 void UCharacterAttribute::ApplyValueChange(float deltaValue)
 {
 	SetValue(_currentValue + deltaValue);
+}
+
+FORCEINLINE EAttributeType UCharacterAttribute::GetAttributeType()
+{
+	return _attributeType;
+}
+
+FORCEINLINE FText UCharacterAttribute::GetText()
+{
+	return _attributeText;
 }
 
 FORCEINLINE float UCharacterAttribute::GetValue()

@@ -31,6 +31,8 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	AActor* _effect;
 
+	FVector _shootDirection;
+
 public:
 	UFUNCTION()
 	void OnAttackNotifyBegin(float durationTime);

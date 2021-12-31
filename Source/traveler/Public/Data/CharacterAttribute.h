@@ -4,23 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Data/EnumAttributeType.h"
 #include "CharacterAttribute.generated.h"
 
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAttributeChanged, float, PreviousValue, float, NewValue);
 
-namespace AttributeName 
-{
-	const FName Health = FName(TEXT("Health"));
-	const FName Mana = FName(TEXT("Mana"));
-	const FName Energy = FName(TEXT("Energy"));
-	const FName WalkingSpeed = FName(TEXT("WalkingSpeed"));
-	const FName RuningSpeed = FName(TEXT("RuningSpeed"));
-	const FName FlyingSpeed = FName(TEXT("FlyingSpeed"));
-	const FName Level = FName(TEXT("Level"));
-	const FName Strength = FName(TEXT("Strength"));
-}
+struct FAttributeRow;
 
 /**
  * 
@@ -32,8 +23,9 @@ class TRAVELER_API UCharacterAttribute : public UObject
 public:
 	UCharacterAttribute();
 
-	void Initialize(FName attributeName, float value);
-	void Initialize(FName attributeName, float value, float minValue, float maxValue);
+	void Initialize(FAttributeRow* attributeRow, int level = 0);
+	void Initialize(EAttributeType attributeType, FText attributeText, float value, float growthRate = 1.0f);
+	void Initialize(EAttributeType attributeType, FText attributeText, float value, float minValue, float maxValue, float growthRate = 1.0f);
 
 	UFUNCTION(BlueprintCallable)
 	void SetValue(float newValue);
@@ -51,8 +43,12 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	float GetPreviousValue();
+
 	UFUNCTION(BlueprintPure)
-	FName GetName();
+	EAttributeType GetAttributeType();
+
+	UFUNCTION(BlueprintPure)
+	FText GetText();
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -60,7 +56,10 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	FName _AttributeName;
+	EAttributeType _attributeType;
+
+	UPROPERTY(EditDefaultsOnly)
+	FText _attributeText;
 
 	UPROPERTY(EditDefaultsOnly)
 	float _minValue;
@@ -70,6 +69,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	float _currentValue;
+
+	UPROPERTY(EditDefaultsOnly)
+	float _growthRate;
 
 	float _previousValue;
 };

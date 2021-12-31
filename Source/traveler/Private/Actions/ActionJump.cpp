@@ -9,6 +9,7 @@
 UActionJump::UActionJump() 
 {
 	_actionName = ActionName::JUMP;
+	_actionType = EActionType::EACT_Jumping;
 }
 
 void UActionJump::VExecute()

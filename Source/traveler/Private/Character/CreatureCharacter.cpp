@@ -77,7 +77,7 @@ float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent con
 
 
 	//GetAttributeComponent()->SetHealth();
-	_attributeComponent->SetAttributeChange(AttributeName::Health, -actualDamage);
+	_attributeComponent->SetAttributeChange(EAttributeType::EATT_Health, -actualDamage);
 
 	_billboardWidgetComponent->ShowWidget(EWidgetType::WT_HealthBar);
 
@@ -96,19 +96,19 @@ FORCEINLINE UAnimationEventComponent* ACreatureCharacter::GetAanimationEventComp
 return _animationEventComponent;
 }
 
-FORCEINLINE UCharacterAttribute* ACreatureCharacter::GetAttribute(FName name)
+FORCEINLINE UCharacterAttribute* ACreatureCharacter::GetAttribute(EAttributeType attributeType)
 {
-	return _attributeComponent->GetAttribute(name);
+	return _attributeComponent->GetAttribute(attributeType);
 }
 
-bool ACreatureCharacter::SetAttribute(FName name, float newValue)
+bool ACreatureCharacter::SetAttribute(EAttributeType attributeType, float newValue)
 {
-	return _attributeComponent->SetAttribute(name, newValue);
+	return _attributeComponent->SetAttribute(attributeType, newValue);
 }
 
-bool ACreatureCharacter::SetAttributeChange(FName name, float deltaValue)
+bool ACreatureCharacter::SetAttributeChange(EAttributeType attributeType, float deltaValue)
 {
-	return _attributeComponent->SetAttributeChange(name, deltaValue);
+	return _attributeComponent->SetAttributeChange(attributeType, deltaValue);
 }
 
 FORCEINLINE UActionComponent* ACreatureCharacter::GetActionComponent()
@@ -116,11 +116,11 @@ FORCEINLINE UActionComponent* ACreatureCharacter::GetActionComponent()
 	return _actionComponent;
 }
 
-UAction* ACreatureCharacter::ExecuteAction(FName actionName)
+UAction* ACreatureCharacter::ExecuteAction(EActionType actionType)
 {
 	if (_actionComponent) 
 	{
-		return _actionComponent->ExecuteAction(actionName);
+		return _actionComponent->ExecuteAction(actionType);
 	}
 	return nullptr;
 }

@@ -7,6 +7,7 @@
 UActionTeleport::UActionTeleport()
 {
 	_actionName = ActionName::TELEPORT;
+	_actionType = EActionType::EACT_Teleport;
 }
 
 void UActionTeleport::VExecute()

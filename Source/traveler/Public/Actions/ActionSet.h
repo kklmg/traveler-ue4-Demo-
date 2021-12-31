@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Data/EnumActionType.h"
 #include "ActionSet.generated.h"
 
 class UAction;
@@ -19,16 +20,16 @@ public:
 	void virtual VEnter();
 	void virtual VLeave();
 
-	bool TryGetActionInstance(FName actionName, UAction** outActionInstance);
-	bool TryGetActionClass(FName actionName, TSubclassOf<UAction> outActionClass);
+	bool TryGetActionInstance(EActionType actionType, UAction** outActionInstance);
+	bool TryGetActionClass(EActionType actionType, TSubclassOf<UAction> outActionClass);
 
-	UAction* MakeActionInstance(FName actionName);
+	UAction* MakeActionInstance(EActionType actionType);
 	void MakeAllActionInstances();
 
 	void AddActionClass(TSubclassOf<UAction> actionClass);
 private:
 	UPROPERTY(VisibleAnyWhere)
-	TMap<FName, UAction*> _mapActionInstaces;
+	TMap<EActionType, UAction*> _mapActionInstaces;
 
 	UPROPERTY(EditDefaultsOnly,Category = ActionClass)
 	TArray<TSubclassOf<UAction>> _arrayActionClasses;

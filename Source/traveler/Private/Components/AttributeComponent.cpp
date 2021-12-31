@@ -17,8 +17,8 @@ UAttributeComponent::UAttributeComponent()
 
 	// ...
 
-	_level = CreateDefaultSubobject<UCharacterAttribute>(AttributeName::Level);
-	_level->Initialize(AttributeName::Level, 2, 0, 100);
+	_level = CreateDefaultSubobject<UCharacterAttribute>(TEXT("Level"));
+	_level->Initialize(EAttributeType::EATT_Level,FText(), 2, 0, 100);
 
 	bWantsInitializeComponent = true;
 }
@@ -45,19 +45,19 @@ void UAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 }
 
 //
-UCharacterAttribute* UAttributeComponent::GetAttribute(FName name)
+UCharacterAttribute* UAttributeComponent::GetAttribute(EAttributeType attributeType)
 {
-	if (_mapAttributes.Contains(name)) 
+	if (_mapAttributes.Contains(attributeType))
 	{
-		return _mapAttributes[name];
+		return _mapAttributes[attributeType];
 	}
 	return nullptr;
 }
 
 
-bool UAttributeComponent::SetAttribute(FName name,float newValue)
+bool UAttributeComponent::SetAttribute(EAttributeType attributeType,float newValue)
 {
-	UCharacterAttribute* attribute = GetAttribute(name);
+	UCharacterAttribute* attribute = GetAttribute(attributeType);
 	if (attribute) 
 	{
 		attribute->SetValue(newValue);
@@ -66,9 +66,9 @@ bool UAttributeComponent::SetAttribute(FName name,float newValue)
 	return false;
 }
 
-bool UAttributeComponent::SetAttributeChange(FName name, float deltaValue)
+bool UAttributeComponent::SetAttributeChange(EAttributeType attributeType, float deltaValue)
 {
-	UCharacterAttribute* attribute = GetAttribute(name);
+	UCharacterAttribute* attribute = GetAttribute(attributeType);
 	if (attribute)
 	{
 		attribute->ApplyValueChange(deltaValue);
@@ -81,7 +81,7 @@ void UAttributeComponent::InitializeAttributes()
 {
 	if (_level)
 	{
-		_mapAttributes.Add(_level->GetName(), _level);
+		_mapAttributes.Add(_level->GetAttributeType(), _level);
 	}
 
 	if (_attributeTable)
@@ -95,7 +95,7 @@ void UAttributeComponent::InitializeAttributes()
 		for (FAttributeRow* row : rows)
 		{
 			//Attribute Name is valid,not duplicated
-			if (row->Name.IsValid() && _mapAttributes.Contains(row->Name) == false)
+			if (row && _mapAttributes.Contains(row->AttributeType) == false)
 			{
 				//new instance
 				UCharacterAttribute* attribute = NewObject<UCharacterAttribute>(this);
@@ -103,11 +103,11 @@ void UAttributeComponent::InitializeAttributes()
 				if (attribute)
 				{
 					//Initialize
-					float LevelMapedValue = _level ? row->GetGrowedValue(_level->GetValue()) : row->value;
-					attribute->Initialize(row->Name, LevelMapedValue, 0, LevelMapedValue);
+					int level = _level ? _level->GetValue() : 0;
+					attribute->Initialize(row, level);
 
 					//Add to attribute map
-					_mapAttributes.Add(row->Name, attribute);
+					_mapAttributes.Add(attribute->GetAttributeType(), attribute);
 				}
 			}
 		}
