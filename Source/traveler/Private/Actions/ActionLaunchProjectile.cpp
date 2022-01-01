@@ -3,6 +3,7 @@
 
 #include "Actions/ActionLaunchProjectile.h"
 #include "Projectile/Projectile.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 
 
 UActionLaunchProjectile::UActionLaunchProjectile()
@@ -20,9 +21,9 @@ void UActionLaunchProjectile::VExecute()
 	float speed = 0.0f;
 
 
-	_actionData->TryReadVectorData(ActionData::Projectile_SpawnLocation, spawnLocation);
-	_actionData->TryReadVectorData(ActionData::Projectile_Direction, flyDirection);
-	_actionData->TryReadFloatData(ActionData::Projectile_Direction, speed);
+	_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_Peojectile_SpawnedLocation, spawnLocation);
+	_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_Peojectile_FlyingDirection, flyDirection);
+	_actionBlackBoard->TryGetData_Float(EActionData::EACTD_Peojectile_FlyingSpeed, speed);
 
 	if (projectileClass != nullptr) 
 	{

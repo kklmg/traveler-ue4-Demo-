@@ -6,9 +6,9 @@
 #include "Components/ActionComponent.h"
 #include "Data/CharacterAttribute.h"
 #include "Components/AttributeComponent.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Components/BillboardComponent.h"
 #include "Components/BillBoardWidgetComponent.h"
 #include "Components/AnimationEventComponent.h"
 
@@ -125,15 +125,10 @@ UAction* ACreatureCharacter::ExecuteAction(EActionType actionType)
 	return nullptr;
 }
 
-FORCEINLINE UActionData* ACreatureCharacter::GetActionData()
-{
-	return _actionComponent->GetActionData();
-}
 
-
-UBlackboardComponent* ACreatureCharacter::GetActionBlackBoard()
+FORCEINLINE UActionBlackBoard* ACreatureCharacter::GetActionBlackBoard()
 {
-	return _actionComponent->GetBlackBoard();
+	return _actionComponent->GetActionBlackBoard();
 }
 
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)

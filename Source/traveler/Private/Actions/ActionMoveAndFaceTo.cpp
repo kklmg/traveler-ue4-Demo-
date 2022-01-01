@@ -5,6 +5,7 @@
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 
 UActionMoveAndFaceTo::UActionMoveAndFaceTo() 
 {
@@ -15,12 +16,13 @@ void UActionMoveAndFaceTo::VExecute()
 {
 	Super::VExecute();
 
-	//rotation
-	_actionOwner->SetActorRotation(_actionData->GetMovementInput().Rotation());
+	FVector outMovementInput;
 
-	//Movement
-
-	_actionOwner->AddMovementInput(_actionData->GetMovementInput());
+	if (_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_MovementInput, outMovementInput))
+	{
+		_actionOwner->SetActorRotation(outMovementInput.Rotation());
+		_actionOwner->AddMovementInput(outMovementInput);
+	}
 
 	//Get Attribute
 	//UAttributeComponent* pAttributeComponent = character->GetAttributeComponent();

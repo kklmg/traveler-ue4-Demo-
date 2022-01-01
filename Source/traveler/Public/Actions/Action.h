@@ -8,6 +8,8 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Action.generated.h"
 
+class UActionBlackBoard;
+
 UENUM(BlueprintType)
 enum class EActionState : uint8
 {
@@ -59,7 +61,7 @@ public:
 	virtual void VTick(float deltaTime);
 
 public:
-	void Initialize(UActionComponent* actionComponent, UActionData* actionData,UBlackboardComponent* actionblackBoard);
+	void Initialize(UActionComponent* actionComponent, UActionBlackBoard* actionBlackBoard);
 
 	UFUNCTION(BlueprintCallable)
 	void Pause();
@@ -97,10 +99,7 @@ protected:
 	ACharacter* _actionOwner;
 
 	UPROPERTY()
-	UActionData* _actionData;
-
-	UPROPERTY()
-	UBlackboardComponent* _actionBlackBoard;
+	UActionBlackBoard* _actionBlackBoard;
 
 	UPROPERTY()
 	UActionComponent* _actionComp;

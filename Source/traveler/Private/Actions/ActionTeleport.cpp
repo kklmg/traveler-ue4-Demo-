@@ -3,6 +3,7 @@
 
 #include "Actions/ActionTeleport.h"
 #include "GameFramework/Character.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 
 UActionTeleport::UActionTeleport()
 {
@@ -14,10 +15,10 @@ void UActionTeleport::VExecute()
 {
 	Super::VExecute();
 
-	FVector location;
-	if (_actionData->TryReadVectorData(ActionData::TeleportLocation, location)) 
+	FVector outLocation;
+	if (_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_TeleportLocation, outLocation)) 
 	{
-		_actionOwner->SetActorLocation(location);
+		_actionOwner->SetActorLocation(outLocation);
 	}
 }
 

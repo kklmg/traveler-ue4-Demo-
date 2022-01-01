@@ -26,6 +26,17 @@ enum class EActionType : uint8
 	EACT_Ascend UMETA(DisplayName = "Ascend"),
 };
 
+UENUM(BlueprintType)
+enum class EActionData : uint8
+{
+	EACTD_None UMETA(DisplayName = "None"),
+	EACTD_TeleportLocation UMETA(DisplayName = " TeleportLocation"),
+	EACTD_MovementInput UMETA(DisplayName = "MovementInput"),
+	EACTD_Peojectile_SpawnedLocation UMETA(DisplayName = "Peojectile_SpawnedLocation"),
+	EACTD_Peojectile_FlyingDirection UMETA(DisplayName = "Peojectile_FlyingDirection"),
+	EACTD_Peojectile_FlyingSpeed UMETA(DisplayName = "Peojectile_FlyingSpeed"),
+	EACTD_DestLocation UMETA(DisplayName = "DestLocation"),
+};
 
 
 class TRAVELER_API EnumActionType

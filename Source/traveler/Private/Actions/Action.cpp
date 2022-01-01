@@ -4,6 +4,7 @@
 #include "Actions/Action.h"
 #include "Components/ActionComponent.h"
 #include "GameFramework/Character.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 
 
 UAction::UAction()
@@ -14,11 +15,10 @@ UAction::UAction()
 	_actionType = EActionType::EACT_None;
 }
 
-void UAction::Initialize(UActionComponent* actionComponent, UActionData* actionData, UBlackboardComponent* actionblackBoard)
+void UAction::Initialize(UActionComponent* actionComponent, UActionBlackBoard* actionBlackBoard)
 {
-	_actionData = actionData;
+	_actionBlackBoard = actionBlackBoard;
 	_actionComp = actionComponent;
-	_actionBlackBoard = actionblackBoard;
 	_actionOwner = actionComponent->GetOwner<ACharacter>();
 
 	_state = EActionState::AS_ReadyToExecute;

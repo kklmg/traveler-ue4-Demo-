@@ -3,14 +3,13 @@
 
 #include "Components/ActionComponent.h"
 #include "Actions/Action.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actions/CharacterActionSet.h"
 #include "Character/HumanCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyBlueprintFunctionLibrary.h"
-#include "BehaviorTree/BlackboardComponent.h"
-
 
 // Sets default values for this component's properties
 UActionComponent::UActionComponent()
@@ -20,11 +19,6 @@ UActionComponent::UActionComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_blackBoardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackBoard"));
-	check(_blackBoardComponent != nullptr);
-	
-	
-	
 }
 
 
@@ -33,7 +27,7 @@ void UActionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_actionData = NewObject<UActionData>(this);
+	_actionBlackBoard = NewObject<UActionBlackBoard>(this);
 	
 	// ...
 
@@ -83,7 +77,7 @@ UAction* UActionComponent::ExecuteAction(EActionType actionType)
 	if (_pCurrentActionSet->TryGetActionInstance(actionType, &action))
 	{
 		action->Abort();
-		action->Initialize(this, _actionData,_blackBoardComponent);
+		action->Initialize(this, _actionBlackBoard);
 		action->VExecute();
 
 		if (action->IsInstantAction() == false)
@@ -99,7 +93,7 @@ void UActionComponent::ExecuteIdle()
 }
 void UActionComponent::ExecuteMove(FVector movement)
 {
-	_actionData->SetMovementInput(movement);
+	_actionBlackBoard->WriteData_FVector(EActionData::EACTD_MovementInput, movement);
 	ExecuteAction(EActionType::EACT_Moving);
 }
 void UActionComponent::ExecuteSprint()
@@ -161,14 +155,9 @@ void UActionComponent::_TickActionProcess(float deltaTime)
 	}
 }
 
-UActionData* UActionComponent::GetActionData()
+UActionBlackBoard* UActionComponent::GetActionBlackBoard()
 {
-	return _actionData;
-}
-
-UBlackboardComponent* UActionComponent::GetBlackBoard()
-{
-	return _blackBoardComponent;
+	return _actionBlackBoard;
 }
 
 void UActionComponent::OnJumpButtonDown()

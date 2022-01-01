@@ -4,6 +4,7 @@
 #include "Actions/ActionMove.h"
 #include "Components/AttributeComponent.h"
 #include "GameFramework/Character.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 
 
 UActionMove::UActionMove() 
@@ -16,7 +17,12 @@ void UActionMove::VExecute()
 {
 	Super::VExecute();
 
-	_actionOwner->AddMovementInput(_actionData->GetMovementInput());
+	FVector outMovementInput;
+
+	if(_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_MovementInput, outMovementInput))
+	{
+		_actionOwner->AddMovementInput(outMovementInput);
+	}
 }
 
 void UActionMove::VTick(float deltaTime)

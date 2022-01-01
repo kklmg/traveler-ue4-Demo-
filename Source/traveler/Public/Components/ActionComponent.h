@@ -7,9 +7,8 @@
 #include "ActionComponent.generated.h"
 
 class UAction;
-class UActionData;
 class UCharacterActionSet;
-class UBlackboardComponent;
+class UActionBlackBoard;
 
 
 
@@ -66,8 +65,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ExecuteDodge();
 
-	UActionData* GetActionData();
-	UBlackboardComponent* GetBlackBoard();
+	UActionBlackBoard* GetActionBlackBoard();
 	
 
 private:
@@ -76,14 +74,11 @@ private:
 private:
 	FVector _userMovementInput;
 
-	UPROPERTY(EditDefaultsOnly, Category = ActionData)
-	UBlackboardComponent* _blackBoardComponent;
-
 	UPROPERTY()
 	TMap<EActionType, UAction*> _mapActionProcessPool;
 
 	UPROPERTY()
-	UActionData* _actionData;
+	UActionBlackBoard* _actionBlackBoard;
 
 	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
 	TMap<ECharacterState, TSubclassOf<UCharacterActionSet>> _mapActionSet;

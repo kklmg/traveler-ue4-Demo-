@@ -18,7 +18,8 @@ class UAnimationEventComponent;
 class AWeapon;
 class UAction;
 class AProjectile;
-class UActionData;
+class UActionBlackBoard;
+
 
 
 
@@ -78,10 +79,7 @@ public:
 	UAction* ExecuteAction(EActionType actionType);
 
 	UFUNCTION(BlueprintCallable)
-	UActionData* GetActionData();
-
-	UFUNCTION(BlueprintCallable)
-	UBlackboardComponent* GetActionBlackBoard();
+	UActionBlackBoard* GetActionBlackBoard();
 
 	UFUNCTION(BlueprintCallable)
 	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);

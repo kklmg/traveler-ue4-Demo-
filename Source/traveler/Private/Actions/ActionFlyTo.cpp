@@ -6,6 +6,8 @@
 #include "Character/CreatureCharacter.h"
 #include "DrawDebugHelpers.h"
 #include "GameSystem/MyBlueprintFunctionLibrary.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
+#include "Actions/ActionData/ActionData_FVector.h"
 
 
 UActionFlyTo::UActionFlyTo()
@@ -33,11 +35,8 @@ void UActionFlyTo::VExecute()
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Execute Fly To"));
 
-	//_destination = _actionBlackBoard->GetValueAsVector(ActionData::FlyToLocation);
-
-	if (_actionData->TryReadVectorData(ActionData::FlyToLocation, _destination))
+	if (_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_DestLocation,_destination))
 	{
-		_actionOwner->GetCharacterMovement()->MaxFlySpeed;
 	}
 	else
 	{
