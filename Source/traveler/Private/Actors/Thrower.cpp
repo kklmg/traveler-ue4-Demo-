@@ -5,6 +5,7 @@
 #include "NiagaraComponent.h"
 #include "Curves/CurveFloat.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Components/ThrowerComponent.h"
 
 // Sets default values
 AThrower::AThrower()
@@ -16,7 +17,6 @@ AThrower::AThrower()
 	{
 		_rootComp = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComp"));
 		check(_rootComp != nullptr);
-
 		SetRootComponent(_rootComp);
 	}
 
@@ -24,13 +24,22 @@ AThrower::AThrower()
 	{
 		_throwingNiagaraEffectComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ThrowingEffect"));
 		check(_throwingNiagaraEffectComp != nullptr);
+		_throwingNiagaraEffectComp->AttachTo(_rootComp);
 	}
 
 	if (_impactNiagaraEffectComp == nullptr)
 	{
-		_impactNiagaraEffectComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("HittedEffect"));
+		_impactNiagaraEffectComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("impactEffect"));
 		check(_impactNiagaraEffectComp != nullptr);
+		_impactNiagaraEffectComp->AttachTo(_rootComp);
 	}
+	
+	if (_throwerComp == nullptr)
+	{
+		_throwerComp = CreateDefaultSubobject<UThrowerComponent>(TEXT("ThrowerComp"));
+		check(_throwerComp != nullptr);
+	}
+
 }
 
 // Called when the game starts or when spawned
@@ -58,7 +67,8 @@ void AThrower::Tick(float DeltaTime)
 	_elapsedTime += DeltaTime;
 	_traceDistance = FMath::Clamp(_traceDistance + _maxSpeed * DeltaTime, 0.0f, _MaxDistance);
 
-	_traceSphereRadius = _sizeCurve->GetFloatValue(_elapsedTime/_life);
+	
+	_traceSphereRadius = _sizeCurve ? _sizeCurve->GetFloatValue(_elapsedTime / _life) : 10.0f;
 
 	FVector traceStart = GetActorLocation();
 	FVector traceDir = GetActorQuat().Vector();
@@ -69,13 +79,14 @@ void AThrower::Tick(float DeltaTime)
 
 	TArray<FHitResult> hitResults;
 
-	UKismetSystemLibrary::SphereTraceMulti(GetWorld(), traceStart, traceEnd, _traceSphereRadius, ETraceTypeQuery::TraceTypeQuery1, false, ignoredActors, EDrawDebugTrace::ForOneFrame, hitResults, true);
+	UKismetSystemLibrary::SphereTraceMulti(GetWorld(), traceStart, traceEnd, _traceSphereRadius,
+		ETraceTypeQuery::TraceTypeQuery1, false, ignoredActors, EDrawDebugTrace::ForOneFrame, hitResults, true);
 
 	for (FHitResult hitRes : hitResults)
 	{
 		FDamageEvent damageEvent;
-		hitRes.Actor->TakeDamage(_damage, damageEvent, GetInstigator()->GetController(), GetInstigator());
+		APawn* instigator = GetInstigator();
+		hitRes.Actor->TakeDamage(_damage, damageEvent, instigator ? instigator->GetController() : nullptr, instigator);
 	}
-
 }
 

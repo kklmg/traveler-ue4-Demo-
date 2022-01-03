@@ -10,6 +10,7 @@
 class UCurveFloat;
 class USceneComponent;
 class UNiagaraComponent;
+class UThrowerComponent;
 
 namespace NiagaraParameter
 {
@@ -63,4 +64,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UNiagaraComponent* _impactNiagaraEffectComp;
 
+	UPROPERTY(VisibleAnywhere)
+	UThrowerComponent* _throwerComp;
+	
 };
