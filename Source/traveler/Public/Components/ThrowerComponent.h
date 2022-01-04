@@ -25,15 +25,30 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION()
+	void SetThrowingOptions(FVector direction,float speed, float life,float rate);
+
+	UFUNCTION()
 	void SpawnThrowingActor();
+
+	UFUNCTION()
+	bool isSpawnable();
+
+	UFUNCTION()
+	void OnSpawnedActorInactivated(int poolId);
+
+	UFUNCTION()
+	AThrowableActor* CreateOrGetInactivatedActor();
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AThrowableActor> _spawnActorClass;
+	TSubclassOf<AThrowableActor> _spawningActorClass;
 	UPROPERTY(EditDefaultsOnly)
 	FTimerHandle _timerHandle;
 	UPROPERTY(EditDefaultsOnly)
-	float _throwRate;
+	float _throwingRate;
+	UPROPERTY(EditDefaultsOnly)
+	float _speed;
 	UPROPERTY(EditDefaultsOnly)
 	FVector _direction;
 	UPROPERTY(EditDefaultsOnly)
@@ -41,5 +56,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	int _poolSize;
 
+	UPROPERTY()
 	TArray<AThrowableActor*> _spawnedActors;
+
+	UPROPERTY()
+	TArray<int> _inactivatedActorIndicies;
 };

@@ -4,6 +4,7 @@
 #include "Actors/ThrowableActor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
+
 // Sets default values
 AThrowableActor::AThrowableActor()
 {
@@ -40,6 +41,13 @@ void AThrowableActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	_elapsedTime += DeltaTime;
+
+	if(_life >_elapsedTime)
+	{
+		VSetIsActive(false);
+	}
+
 }
 
 void AThrowableActor::VSetDirection(FVector dir)
@@ -54,6 +62,37 @@ void AThrowableActor::VSetSpeed(float speed)
 
 void AThrowableActor::VSetLife(float life)
 {
-	SetLifeSpan(life);
+	_life = life;
+}
+
+bool AThrowableActor::VIsActive()
+{
+	return _isActive;
+}
+
+void AThrowableActor::VSetIsActive(bool isActive)
+{
+	if (_isActive == isActive) return;
+
+	_isActive = isActive;
+
+	SetActorTickEnabled(_isActive);
+	SetActorHiddenInGame(!_isActive);
+
+	if (!_isActive)
+	{
+		_elapsedTime = 0.0f;
+		OnActorInactivated.ExecuteIfBound(_poolId);
+	}
+}
+
+int AThrowableActor::VGetPoolId()
+{
+	return _poolId;
+}
+
+void AThrowableActor::VSetPoolId(int poolId)
+{
+	_poolId = poolId;
 }
 
