@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "Projectile.generated.h"
 
 class UCapsuleComponent;
+class UProjectileMovementComponent;
 
 class AWeapon;
 

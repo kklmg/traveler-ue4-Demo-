@@ -55,6 +55,7 @@ public:
 	bool TryGetData_UObject(EActionData key, UObject** outValue);
 
 private:
+	UPROPERTY()
 	TMap<EActionData, UActionDataBase*> _mapActionData;
 };
 
@@ -77,7 +78,7 @@ T* UActionBlackBoard::GetOrCreateData(EActionData key)
 
 	if (data == nullptr)
 	{
-		data = NewObject<T>();
+		data = NewObject<T>(this);
 		if(data)
 		{
 			this->_mapActionData.Add(key, data);

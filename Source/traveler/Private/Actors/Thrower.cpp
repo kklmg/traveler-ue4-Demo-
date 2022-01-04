@@ -52,6 +52,7 @@ void AThrower::BeginPlay()
 	_traceSphereRadius = 0.0f;
 	_MaxDistance = _maxSpeed * _life;
 
+	
 	if (_throwingNiagaraEffectComp)
 	{
 		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::MaxSpeed, _maxSpeed);
@@ -84,6 +85,10 @@ void AThrower::Tick(float DeltaTime)
 
 	for (FHitResult hitRes : hitResults)
 	{
+		if (hitRes.Actor == nullptr)
+		{
+			continue;
+		}
 		FDamageEvent damageEvent;
 		APawn* instigator = GetInstigator();
 		hitRes.Actor->TakeDamage(_damage, damageEvent, instigator ? instigator->GetController() : nullptr, instigator);

@@ -22,7 +22,7 @@ class TRAVELER_API IThrowableInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void VSetThrowingDirection(FVector dir);
+	virtual void VSetDirection(FVector dir);
 	virtual void VSetSpeed(float speed);
 	virtual void VSetLife(float life);
 };

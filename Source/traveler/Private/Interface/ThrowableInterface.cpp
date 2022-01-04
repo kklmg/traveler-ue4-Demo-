@@ -5,7 +5,7 @@
 
 // Add default functionality here for any IThrowableInterface functions that are not pure virtual.
 
-void IThrowableInterface::VSetThrowingDirection(FVector dir)
+void IThrowableInterface::VSetDirection(FVector dir)
 {
 
 }

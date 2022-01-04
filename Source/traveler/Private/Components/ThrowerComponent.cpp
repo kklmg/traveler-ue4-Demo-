@@ -5,6 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "TimerManager.h"
 #include "Interface/ThrowableInterface.h"
+#include "Actors/ThrowableActor.h"
 
 // Sets default values for this component's properties
 UThrowerComponent::UThrowerComponent()
@@ -58,7 +59,7 @@ void UThrowerComponent::SpawnThrowingActor()
 
 	if (_spawnActorClass && world && _spawnedActors.Num() < _poolSize)
 	{
-		AActor* actor = world->SpawnActor<AActor>(_spawnActorClass, spawnTransform, spawnParameters);
+		AThrowableActor* actor = world->SpawnActor<AThrowableActor>(_spawnActorClass, spawnTransform, spawnParameters);
 		if (actor)
 		{
 			_spawnedActors.Add(actor);

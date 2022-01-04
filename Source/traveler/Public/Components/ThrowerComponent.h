@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "ThrowerComponent.generated.h"
 
-class IThrowableInterface;
+class AThrowableActor;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UThrowerComponent : public UActorComponent
@@ -29,9 +29,7 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AActor> _spawnActorClass;
-	UPROPERTY(EditDefaultsOnly)
-	TScriptInterface<IThrowableInterface> _interface;
+	TSubclassOf<AThrowableActor> _spawnActorClass;
 	UPROPERTY(EditDefaultsOnly)
 	FTimerHandle _timerHandle;
 	UPROPERTY(EditDefaultsOnly)
@@ -43,5 +41,5 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	int _poolSize;
 
-	TArray<AActor*> _spawnedActors;
+	TArray<AThrowableActor*> _spawnedActors;
 };

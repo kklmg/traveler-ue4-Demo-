@@ -7,6 +7,8 @@
 #include "Interface/ThrowableInterface.h"
 #include "ThrowableActor.generated.h"
 
+class UProjectileMovementComponent;
+
 UCLASS()
 class TRAVELER_API AThrowableActor : public AActor, public IThrowableInterface
 {
@@ -24,8 +26,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void VSetThrowingDirection(FVector dir) override;
+	virtual void VSetDirection(FVector dir) override;
 	virtual void VSetSpeed(float speed) override;
 	virtual void VSetLife(float life) override;
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* _rootSceneComp;
+
+	UPROPERTY(VisibleAnywhere)
+	UProjectileMovementComponent* _projectileMovementComp;
 
 };

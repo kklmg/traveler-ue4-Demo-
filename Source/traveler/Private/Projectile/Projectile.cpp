@@ -8,6 +8,7 @@
 #include "Weapon/Weapon.h"
 #include "Actions/Action.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -80,7 +81,6 @@ void AProjectile::BeginPlay()
 	{
 		_damageType = NewObject<UDamageType>(this, _damageTypeClass);
 	}
-
 }
 
 // Called every frame
