@@ -16,7 +16,7 @@ UThrowerComponent::UThrowerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_direction = FVector::ForwardVector;
+	_velocity = FVector::ForwardVector * 1000;
 	_life = 1.0f;
 	_poolSize = 10;
 	_throwingRate = 5.0f;
@@ -49,10 +49,24 @@ void UThrowerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 }
 
-void UThrowerComponent::SetThrowingOptions(FVector direction, float speed, float life, float rate)
+void UThrowerComponent::SetSpawningTransform(FTransform transform)
 {
-	_direction = direction;
-	_speed = speed;
+	GetOwner()->SetActorTransform(transform);
+}
+
+void UThrowerComponent::VSetVelocity(FVector velocity)
+{
+	_velocity = velocity;
+}
+
+void UThrowerComponent::VSetLife(float life)
+{
+	_life = life;
+}
+
+void UThrowerComponent::SetThrowingOptions(FVector velocity, float life, float rate)
+{
+	_velocity = velocity;
 	_life = life;
 	_throwingRate = rate;
 
@@ -70,9 +84,8 @@ void UThrowerComponent::SpawnThrowingActor()
 		FTransform spawnTransform = owner ? owner->GetTransform() : FTransform::Identity;
 
 		actor->SetActorTransform(spawnTransform);
-		actor->VSetDirection(_direction);
 		actor->VSetLife(_life);
-		actor->VSetSpeed(_speed);
+		actor->VSetVelocity(_velocity);
 		actor->VSetIsActive(true);
 
 		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "thrower Spawned actor");

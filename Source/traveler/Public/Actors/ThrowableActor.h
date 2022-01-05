@@ -3,8 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "Interface/ThrowableInterface.h"
+#include "Actors/ThrowableActorBase.h"
 #include "Interface/PoolableInterface.h"
 #include "ThrowableActor.generated.h"
 
@@ -13,7 +12,7 @@ class UProjectileMovementComponent;
 DECLARE_DELEGATE_OneParam(FOnActorInactivated, int)
 
 UCLASS()
-class TRAVELER_API AThrowableActor : public AActor, public IThrowableInterface, public IPoolableInterface
+class TRAVELER_API AThrowableActor : public AThrowableActorBase , public IPoolableInterface
 {
 	GENERATED_BODY()
 	
@@ -29,8 +28,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void VSetDirection(FVector dir) override;
-	virtual void VSetSpeed(float speed) override;
+
+	virtual void SetSpawningTransform(FTransform transform) override;
+	virtual void VSetVelocity(FVector velocity) override;
 	virtual void VSetLife(float life) override;
 
 	virtual bool VIsActive() override;
@@ -47,6 +47,7 @@ private:
 	float _elapsedTime;
 	float _life;
 	int _poolId;
+	FTransform _spawnTransform;
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* _rootSceneComp;

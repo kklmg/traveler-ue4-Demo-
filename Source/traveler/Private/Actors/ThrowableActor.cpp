@@ -14,14 +14,15 @@ AThrowableActor::AThrowableActor()
 	if (!_rootSceneComp)
 	{
 		_rootSceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("RootSceneComp"));
+		SetRootComponent(_rootSceneComp);
 	}
 
 	if (!_projectileMovementComp)
 	{
 		// Use this component to drive this projectile's movement.
 		_projectileMovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
-		_projectileMovementComp->SetUpdatedComponent(RootComponent);
-		_projectileMovementComp->InitialSpeed = 0.0f;
+		_projectileMovementComp->SetUpdatedComponent(_rootSceneComp);
+		_projectileMovementComp->InitialSpeed = 3000.0f;
 		_projectileMovementComp->MaxSpeed = 3000.0f;
 		_projectileMovementComp->bRotationFollowsVelocity = true;
 		_projectileMovementComp->bShouldBounce = false;
@@ -34,6 +35,8 @@ AThrowableActor::AThrowableActor()
 void AThrowableActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//SetActorTransform(_spawnTransform);
 }
 
 // Called every frame
@@ -48,16 +51,6 @@ void AThrowableActor::Tick(float DeltaTime)
 		VSetIsActive(false);
 	}
 
-}
-
-void AThrowableActor::VSetDirection(FVector dir)
-{
-	_projectileMovementComp->Velocity = dir;
-}
-
-void AThrowableActor::VSetSpeed(float speed)
-{
-	_projectileMovementComp->InitialSpeed = speed;
 }
 
 void AThrowableActor::VSetLife(float life)
@@ -94,5 +87,15 @@ int AThrowableActor::VGetPoolId()
 void AThrowableActor::VSetPoolId(int poolId)
 {
 	_poolId = poolId;
+}
+
+void AThrowableActor::SetSpawningTransform(FTransform transform) 
+{
+	_spawnTransform = transform;
+}
+
+void AThrowableActor::VSetVelocity(FVector velocity)
+{
+	_projectileMovementComp->Velocity = velocity;
 }
 

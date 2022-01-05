@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Actors/ThrowableActorBase.h"
 #include "Components/SceneComponent.h"
 #include "Thrower.generated.h"
 
@@ -21,7 +21,7 @@ namespace NiagaraParameter
 }
 
 UCLASS()
-class TRAVELER_API AThrower : public AActor
+class TRAVELER_API AThrower : public AThrowableActorBase
 {
 	GENERATED_BODY()
 	
@@ -36,6 +36,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void SetSpawningTransform(FTransform transform) override;
+	virtual void VSetVelocity(FVector velocity) override;
+	virtual void VSetLife(float life) override;
 
 private:
 	UPROPERTY(EditDefaultsOnly)

@@ -6,6 +6,8 @@
 #include "Character/CreatureCharacter.h"
 #include "AnimNotify/AnimNotifyHandler.h"
 #include "Components/AnimationEventComponent.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
+#include "Actors/ThrowableActorBase.h"
 #include "DrawDebugHelpers.h"
 
 UActionSpreadAttack::UActionSpreadAttack()
@@ -13,7 +15,7 @@ UActionSpreadAttack::UActionSpreadAttack()
 	_actionName = ActionName::SPREADATTACK;
 	_actionType = EActionType::EACT_SpreadAttack;
 	_bInstantAction = false;
-	//_spreadDistance = 1000;
+	_throwSpeed = 100;
 }
 
 void UActionSpreadAttack::VExecute()
@@ -43,23 +45,41 @@ void UActionSpreadAttack::VTick(float deltaTime)
 void UActionSpreadAttack::OnAttackNotifyBegin(float durationTime)
 {
 	if (GetWorld() == nullptr)	return;
+	if (_throwableClass == nullptr) return;
 
+	AActor* actionOwner = GetActionOwner();
+	if (actionOwner == nullptr) return;
+
+	ACreatureCharacter* character = Cast<ACreatureCharacter>(actionOwner);
+	if (character == nullptr) return;
+
+	//set spawn options
 	FActorSpawnParameters spawnParameters;
-	spawnParameters.Instigator = GetActionOwner();
-	spawnParameters.Owner = GetActionOwner();
+	spawnParameters.Instigator = character;
+	spawnParameters.Owner = character;
 	
+	FTransform outTransform;
+	character->GetMeshSocketTransform(_meshSocektType, ERelativeTransformSpace::RTS_World, outTransform);
 
-	if (_effect == nullptr)
+	//spawn actor
+	_throwableIns = GetWorld()->SpawnActor<AThrowableActorBase>(_throwableClass, outTransform, spawnParameters);
+
+
+	//InitializeActor
+	if (_throwableIns)
 	{
-		_effect = GetWorld()->SpawnActor<AActor>(_effectClass, spawnParameters);
+		_throwableIns->SetSpawningTransform(outTransform);
+
+		FVector outDirection= GetActionOwner()->GetActorForwardVector();
+		_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_Peojectile_FlyingDirection, outDirection);
+
+		_actionBlackBoard->TryGetData_Float(EActionData::EACTD_Peojectile_FlyingSpeed, _throwSpeed);
+		_throwableIns->VSetVelocity(outDirection * _throwSpeed + GetActionOwner()->GetVelocity());
 	}
 	else
 	{
-
+		UE_LOG(LogTemp,Error,TEXT("make throwable actor instance failed"));
 	}
-
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("attack notify Begin"));
-
 }
 
 void UActionSpreadAttack::OnAttackNotifyTick(float frameDeltaTime)
@@ -79,24 +99,10 @@ void UActionSpreadAttack::OnAttackNotifyTick(float frameDeltaTime)
 		result.SetRotation(dir.ToOrientationQuat());
 		result.SetScale3D(outTransform.GetScale3D());
 
-		if(_effect)
+		if(_throwableIns)
 		{
-			_effect->SetActorTransform(result);
-		
+			_throwableIns->SetSpawningTransform(result);
 		}
-
-
-		////do line tracing
-		//FHitResult hitResult;
-		//FCollisionQueryParams CollisionParams;
-		//FVector hitLocation = launchLocation + launchDir * _spreadDistance;
-
-		//if (GetWorld()->LineTraceSingleByChannel(hitResult, launchLocation, launchLocation + launchDir * _spreadDistance, ECC_Visibility, CollisionParams))
-		//{
-		//	hitLocation = hitResult.ImpactPoint;
-		//
-		//}
-		//DrawDebugLine(GetWorld(), launchLocation, hitLocation, FColor::Red, false, -1.0f, 0U, 30.0f);
 	}
 }
 
@@ -104,10 +110,10 @@ void UActionSpreadAttack::OnAttackNotifyEnd()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("attack notify End"));
 
-	if(_effect)
+	if(_throwableIns)
 	{
-		_effect->Destroy();
-		_effect = nullptr;
+		_throwableIns->Destroy();
+		_throwableIns = nullptr;
 	}
 }
 

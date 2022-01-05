@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Interface/ThrowableInterface.h"
 #include "ThrowerComponent.generated.h"
 
 class AThrowableActor;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TRAVELER_API UThrowerComponent : public UActorComponent
+class TRAVELER_API UThrowerComponent : public UActorComponent, public IThrowableInterface
 {
 	GENERATED_BODY()
 
@@ -25,8 +26,12 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void SetSpawningTransform(FTransform transform) override;
+	virtual void VSetVelocity(FVector velocity);
+	virtual void VSetLife(float life) override;
+
 	UFUNCTION()
-	void SetThrowingOptions(FVector direction,float speed, float life,float rate);
+	void SetThrowingOptions(FVector velocity,float life,float rate);
 
 	UFUNCTION()
 	void SpawnThrowingActor();
@@ -48,9 +53,8 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float _throwingRate;
 	UPROPERTY(EditDefaultsOnly)
-	float _speed;
-	UPROPERTY(EditDefaultsOnly)
-	FVector _direction;
+	FVector _velocity;
+
 	UPROPERTY(EditDefaultsOnly)
 	float _life;
 	UPROPERTY(EditDefaultsOnly)

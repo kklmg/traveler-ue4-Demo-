@@ -7,6 +7,8 @@
 #include "Data/EnumMeshSocketType.h"
 #include "ActionSpreadAttack.generated.h"
 
+class AThrowableActorBase;
+
 /**
  * 
  */
@@ -26,12 +28,13 @@ private:
 	EMeshSocketType _meshSocektType;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AActor> _effectClass;
+	TSubclassOf<AThrowableActorBase> _throwableClass;
+
+	UPROPERTY()
+	AThrowableActorBase* _throwableIns;
 
 	UPROPERTY(EditDefaultsOnly)
-	AActor* _effect;
-
-	FVector _shootDirection;
+	float _throwSpeed;
 
 public:
 	UFUNCTION()

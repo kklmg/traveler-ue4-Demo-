@@ -95,3 +95,24 @@ void AThrower::Tick(float DeltaTime)
 	}
 }
 
+void AThrower::SetSpawningTransform(FTransform transform)
+{
+	SetActorTransform(transform);
+}
+
+void AThrower::VSetVelocity(FVector velocity)
+{
+	if (_throwerComp)
+	{
+		_throwerComp->VSetVelocity(velocity);
+	}
+}
+
+void AThrower::VSetLife(float life)
+{
+	if (_throwerComp)
+	{
+		_throwerComp->VSetLife(life);
+	}
+}
+
