@@ -66,6 +66,10 @@ void UThrowerComponent::SpawnThrowingActor()
 
 	if (actor)
 	{
+		AActor* owner = GetOwner();
+		FTransform spawnTransform = owner ? owner->GetTransform() : FTransform::Identity;
+
+		actor->SetActorTransform(spawnTransform);
 		actor->VSetDirection(_direction);
 		actor->VSetLife(_life);
 		actor->VSetSpeed(_speed);
@@ -79,7 +83,7 @@ void UThrowerComponent::SpawnThrowingActor()
 
 bool UThrowerComponent::isSpawnable()
 {
-	return _spawnedActors.Num() < _poolSize || _inactivatedActorIndicies.Num() == 0;
+	return _spawnedActors.Num() < _poolSize || _inactivatedActorIndicies.Num() != 0;
 }
 
 void UThrowerComponent::OnSpawnedActorInactivated(int poolId)
@@ -108,12 +112,11 @@ AThrowableActor* UThrowerComponent::CreateOrGetInactivatedActor()
 	UWorld* world = GetWorld();
 	if (world == nullptr) return nullptr;
 
-	AActor* owner = GetOwner();
-	FTransform spawnTransform = owner ? owner->GetTransform() : FTransform::Identity;
+
 	FActorSpawnParameters spawnParameters;
 	
 	//make instance
-	AThrowableActor* actor = world->SpawnActor<AThrowableActor>(_spawningActorClass, spawnTransform, spawnParameters);
+	AThrowableActor* actor = world->SpawnActor<AThrowableActor>(_spawningActorClass,spawnParameters);
 	
 	if (actor)
 	{

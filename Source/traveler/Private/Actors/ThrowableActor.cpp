@@ -43,7 +43,7 @@ void AThrowableActor::Tick(float DeltaTime)
 
 	_elapsedTime += DeltaTime;
 
-	if(_life >_elapsedTime)
+	if (_elapsedTime > _life)
 	{
 		VSetIsActive(false);
 	}
