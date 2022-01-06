@@ -16,7 +16,7 @@ UThrowerComponent::UThrowerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_velocity = FVector::ForwardVector * 1000;
+	_speed = 1000;
 	_life = 1.0f;
 	_poolSize = 10;
 	_throwingRate = 5.0f;
@@ -49,24 +49,19 @@ void UThrowerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 }
 
-void UThrowerComponent::SetSpawningTransform(FTransform transform)
+void UThrowerComponent::SetSpeed(float speed)
 {
-	GetOwner()->SetActorTransform(transform);
+	_speed = speed;
 }
 
-void UThrowerComponent::VSetVelocity(FVector velocity)
-{
-	_velocity = velocity;
-}
-
-void UThrowerComponent::VSetLife(float life)
+void UThrowerComponent::SetLife(float life)
 {
 	_life = life;
 }
 
-void UThrowerComponent::SetThrowingOptions(FVector velocity, float life, float rate)
+void UThrowerComponent::SetThrowingOptions(float speed, float life, float rate)
 {
-	_velocity = velocity;
+	_speed = speed;
 	_life = life;
 	_throwingRate = rate;
 
@@ -77,15 +72,16 @@ void UThrowerComponent::SpawnThrowingActor()
 	if (isSpawnable() == false) return;
 
 	AThrowableActor* actor = CreateOrGetInactivatedActor();
-
+	
 	if (actor)
 	{
 		AActor* owner = GetOwner();
-		FTransform spawnTransform = owner ? owner->GetTransform() : FTransform::Identity;
+		FTransform ownerTransform = owner ? owner->GetTransform() : FTransform::Identity;
+		FVector forward = owner ? owner->GetActorForwardVector() : FVector::ForwardVector;
 
-		actor->SetActorTransform(spawnTransform);
+		actor->SetActorTransform(ownerTransform);
 		actor->VSetLife(_life);
-		actor->VSetVelocity(_velocity);
+		actor->VSetVelocity(forward * _speed);
 		actor->VSetIsActive(true);
 
 		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "thrower Spawned actor");

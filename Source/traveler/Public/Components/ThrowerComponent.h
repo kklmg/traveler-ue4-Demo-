@@ -10,7 +10,7 @@
 class AThrowableActor;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TRAVELER_API UThrowerComponent : public UActorComponent, public IThrowableInterface
+class TRAVELER_API UThrowerComponent : public UActorComponent 
 {
 	GENERATED_BODY()
 
@@ -26,12 +26,11 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	virtual void SetSpawningTransform(FTransform transform) override;
-	virtual void VSetVelocity(FVector velocity);
-	virtual void VSetLife(float life) override;
+	void SetSpeed(float speed);
+	void SetLife(float life);
 
 	UFUNCTION()
-	void SetThrowingOptions(FVector velocity,float life,float rate);
+	void SetThrowingOptions(float speed,float life,float rate);
 
 	UFUNCTION()
 	void SpawnThrowingActor();
@@ -53,7 +52,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float _throwingRate;
 	UPROPERTY(EditDefaultsOnly)
-	FVector _velocity;
+	float _speed;
 
 	UPROPERTY(EditDefaultsOnly)
 	float _life;
