@@ -37,6 +37,7 @@ void UActionFlyTo::VExecute()
 
 	if (_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_DestLocation,_destination))
 	{
+		UE_LOG(LogAction,Warning,TEXT("Fly to: No Destination Setted"))
 	}
 	else
 	{

@@ -116,7 +116,7 @@ FORCEINLINE UActionComponent* ACreatureCharacter::GetActionComponent()
 	return _actionComponent;
 }
 
-UAction* ACreatureCharacter::ExecuteAction(EActionType actionType)
+UActionBase* ACreatureCharacter::VExecuteAction(EActionType actionType)
 {
 	if (_actionComponent) 
 	{
@@ -126,7 +126,7 @@ UAction* ACreatureCharacter::ExecuteAction(EActionType actionType)
 }
 
 
-FORCEINLINE UActionBlackBoard* ACreatureCharacter::GetActionBlackBoard()
+FORCEINLINE UActionBlackBoard* ACreatureCharacter::VGetActionBlackBoard()
 {
 	return _actionComponent->GetActionBlackBoard();
 }

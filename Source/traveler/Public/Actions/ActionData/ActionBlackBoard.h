@@ -12,7 +12,7 @@ class UActionDataBase;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class TRAVELER_API UActionBlackBoard : public UObject
 {
 	GENERATED_BODY()

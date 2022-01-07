@@ -2,9 +2,9 @@
 
 
 #include "Components/ActionComponent.h"
-#include "Actions/Action.h"
+#include "Actions/ActionBase.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
-#include "Actions/CharacterActionSet.h"
+#include "Actions/ActionPreset/CharacterActionPreset.h"
 #include "Character/HumanCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/AttributeComponent.h"
@@ -65,16 +65,16 @@ void UActionComponent::SetCharacterState()
 {
 }
 
-UAction* UActionComponent::ExecuteAction(EActionType actionType)
+UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 {
-	if (_pCurrentActionSet == nullptr || _mapActionProcessPool.Contains(actionType))
+	if (_pCurrentActionPreset == nullptr || _mapActionProcessPool.Contains(actionType))
 	{
 		return nullptr;
 	}
 
-	UAction* action = nullptr;
+	UActionBase* action = nullptr;
 
-	if (_pCurrentActionSet->TryGetActionInstance(actionType, &action))
+	if (_pCurrentActionPreset->TryGetActionInstance(actionType, &action))
 	{
 		action->Abort();
 		action->Initialize(this, _actionBlackBoard);
@@ -122,7 +122,7 @@ void UActionComponent::AddMovementInputY(float value)
 	_userMovementInput.Y = value;
 }
 
-void UActionComponent::AddToActionProcessPool(UAction* action)
+void UActionComponent::AddToActionProcessPool(UActionBase* action)
 {
 	if (action == nullptr) return;
 
@@ -205,28 +205,28 @@ void UActionComponent::OnCharacterStateChanged(ECharacterState characterState)
 	ACreatureCharacter* character = GetOwner<ACreatureCharacter>();
 	check(character != nullptr);
 
-	if (_mapActionSet.Contains(characterState))
+	if (_mapActionPreset.Contains(characterState))
 	{
 		//clear process pool
 		ClearActionProcessPool();
 
-		//Make instace of ActionSetClass
-		TSubclassOf<UCharacterActionSet> actionSetClass = _mapActionSet[characterState];
+		//Make instance of ActionSetClass
+		TSubclassOf<UCharacterActionPreset> actionSetClass = _mapActionPreset[characterState];
 
-		UCharacterActionSet* actionSetIns = actionSetClass ? 
-			NewObject<UCharacterActionSet>(this, actionSetClass) 
-			: NewObject<UCharacterActionSet>(this);
+		UCharacterActionPreset* actionSetIns = actionSetClass ? 
+			NewObject<UCharacterActionPreset>(this, actionSetClass) 
+			: NewObject<UCharacterActionPreset>(this);
 
 			actionSetIns->VEnter();
 		
 
 		//Set Current Action set
-		if (_pCurrentActionSet != nullptr)
+		if (_pCurrentActionPreset != nullptr)
 		{
-			_pCurrentActionSet->VLeave();
-			_pCurrentActionSet->MarkPendingKill();
+			_pCurrentActionPreset->VLeave();
+			_pCurrentActionPreset->MarkPendingKill();
 		}
-		_pCurrentActionSet = actionSetIns;
+		_pCurrentActionPreset = actionSetIns;
 	}
 }
 

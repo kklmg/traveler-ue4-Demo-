@@ -21,8 +21,7 @@ enum class EActionType : uint8
 	EACT_FlyTo UMETA(DisplayName = "FlyTo"),
 	EACT_TakeOff UMETA(DisplayName = "TakeOff"),
 	EACT_Teleport UMETA(DisplayName = "Teleport"),
-	EACT_LaunchProjectile UMETA(DisplayName = "LaunchProjectile"),
-	EACT_SpreadAttack UMETA(DisplayName = "SpreadAttack"),
+	EACT_Throw UMETA(DisplayName = "Throw"),
 	EACT_Ascend UMETA(DisplayName = "Ascend"),
 };
 

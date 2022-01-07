@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actions/Action.h"
+#include "Actions/ActionBase.h"
 #include "ActionJump.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UActionJump : public UAction
+class TRAVELER_API UActionJump : public UActionBase
 {
 	GENERATED_BODY()
 public:

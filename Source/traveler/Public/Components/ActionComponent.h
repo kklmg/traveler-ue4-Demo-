@@ -6,8 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "ActionComponent.generated.h"
 
-class UAction;
-class UCharacterActionSet;
+class UActionBase;
+class UCharacterActionPreset;
 class UActionBlackBoard;
 
 
@@ -43,7 +43,7 @@ public:
 	void AddMovementInputX(float value);
 	void AddMovementInputY(float value);
 
-	void AddToActionProcessPool(UAction* action);
+	void AddToActionProcessPool(UActionBase* action);
 	void ClearActionProcessPool();
 
 	UFUNCTION()
@@ -51,7 +51,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	UAction* ExecuteAction(EActionType actionType);
+	UActionBase* ExecuteAction(EActionType actionType);
 	UFUNCTION(BlueprintCallable)
 	void ExecuteIdle();
 	UFUNCTION(BlueprintCallable)
@@ -75,16 +75,16 @@ private:
 	FVector _userMovementInput;
 
 	UPROPERTY()
-	TMap<EActionType, UAction*> _mapActionProcessPool;
+	TMap<EActionType, UActionBase*> _mapActionProcessPool;
 
 	UPROPERTY()
 	UActionBlackBoard* _actionBlackBoard;
 
 	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
-	TMap<ECharacterState, TSubclassOf<UCharacterActionSet>> _mapActionSet;
+	TMap<ECharacterState, TSubclassOf<UCharacterActionPreset>> _mapActionPreset;
 
 	UPROPERTY()
-	UCharacterActionSet* _pCurrentActionSet;
+	UCharacterActionPreset* _pCurrentActionPreset;
 
 	bool _bSprintButtonPress;
 };

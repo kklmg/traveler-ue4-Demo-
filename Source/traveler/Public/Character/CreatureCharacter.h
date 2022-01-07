@@ -6,7 +6,9 @@
 #include "GameFramework/Character.h"
 #include "Data/EnumMeshSocketType.h"
 #include "Data/EnumAttributeType.h"
+#include "Interface/ActionInterface.h"
 #include "CreatureCharacter.generated.h"
+
 
 class UActionComponent;
 class UAttributeComponent;
@@ -16,7 +18,7 @@ class UBillBoardWidgetComponent;
 class UAnimationEventComponent;
 
 class AWeapon;
-class UAction;
+class UActionBase;
 class AProjectile;
 class UActionBlackBoard;
 
@@ -38,7 +40,7 @@ enum class ECharacterState : uint8
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStateChanged, ECharacterState, characterState);
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter
+class TRAVELER_API ACreatureCharacter : public ACharacter,public IActionInterface
 {
 	GENERATED_BODY()
 
@@ -76,10 +78,10 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	UAction* ExecuteAction(EActionType actionType);
+	UActionBase* VExecuteAction(EActionType actionType) override;
 
 	UFUNCTION(BlueprintCallable)
-	UActionBlackBoard* GetActionBlackBoard();
+	UActionBlackBoard* VGetActionBlackBoard() override;
 
 	UFUNCTION(BlueprintCallable)
 	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);

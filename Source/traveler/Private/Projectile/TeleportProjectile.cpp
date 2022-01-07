@@ -3,7 +3,6 @@
 
 #include "Projectile/TeleportProjectile.h"
 #include "Character/CreatureCharacter.h"
-#include "Actions/Action.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 
 
@@ -20,8 +19,8 @@ void ATeleportProjectile::VExecuteSpecialAction()
 	{
 		FVector TeleportLocation = GetActorLocation() + GetActorForwardVector() * _TeleportOffset.X + FVector(0, 0, _TeleportOffset.Z);
 
-		creatureCharacter->GetActionBlackBoard()->WriteData_FVector(EActionData::EACTD_TeleportLocation, TeleportLocation);
-		creatureCharacter->ExecuteAction(EActionType::EACT_Teleport);
+		creatureCharacter->VGetActionBlackBoard()->WriteData_FVector(EActionData::EACTD_TeleportLocation, TeleportLocation);
+		creatureCharacter->VExecuteAction(EActionType::EACT_Teleport);
 		//creatureCharacter->LaunchCharacter(GetVelocity(), true, true);
 		Destroy();
 	}
