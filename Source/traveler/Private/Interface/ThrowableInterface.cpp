@@ -2,6 +2,7 @@
 
 
 #include "Interface/ThrowableInterface.h"
+#include "Curves/CurveFloat.h"
 
 
 
@@ -20,4 +21,9 @@ void IThrowableInterface::VSetVelocity(FVector velocity)
 void IThrowableInterface::VSetLife(float life)
 {
 	UE_LOG(LogTemp, Warning, TEXT("IThrowableInterface::VSetLife is not implemented"));
+}
+
+void IThrowableInterface::VSetScaleCurve(UCurveFloat* curve)
+{
+	UE_LOG(LogTemp, Warning, TEXT("IThrowableInterface::VSetScaleCurve is not implemented"));
 }

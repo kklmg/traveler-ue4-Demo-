@@ -6,6 +6,8 @@
 #include "UObject/Interface.h"
 #include "ThrowableInterface.generated.h"
 
+class UCurveFloat;
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UThrowableInterface : public UInterface
@@ -25,4 +27,5 @@ public:
 	virtual void SetSpawningTransform(FTransform transform);
 	virtual void VSetVelocity(FVector velocity);
 	virtual void VSetLife(float life);
+	virtual void VSetScaleCurve(UCurveFloat* curve);
 };

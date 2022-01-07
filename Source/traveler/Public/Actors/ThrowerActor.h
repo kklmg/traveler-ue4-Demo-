@@ -50,7 +50,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float _damage;
 	UPROPERTY(EditDefaultsOnly)
-	UCurveFloat *_sizeCurve;
+	UCurveFloat *_scaleCurve;
 	
 
 	float _elapsedTime;

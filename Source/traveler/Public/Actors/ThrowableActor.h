@@ -8,6 +8,7 @@
 #include "ThrowableActor.generated.h"
 
 class UProjectileMovementComponent;
+class UCurveFloat;
 
 DECLARE_DELEGATE_OneParam(FOnActorInactivated, int)
 
@@ -29,9 +30,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
+
 	virtual void SetSpawningTransform(FTransform transform) override;
 	virtual void VSetVelocity(FVector velocity) override;
 	virtual void VSetLife(float life) override;
+	virtual void VSetScaleCurve(UCurveFloat* curve) override;
 
 	virtual bool VIsActive() override;
 	virtual void VSetIsActive(bool isActive) override;
@@ -48,6 +51,9 @@ private:
 	float _life;
 	int _poolId;
 	FTransform _spawnTransform;
+
+	UPROPERTY(EditDefaultsOnly)
+	UCurveFloat* _scaleCurve;
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* _rootSceneComp;

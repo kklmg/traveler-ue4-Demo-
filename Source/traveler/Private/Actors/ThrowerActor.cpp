@@ -69,7 +69,7 @@ void AThrowerActor::Tick(float DeltaTime)
 	_traceDistance = FMath::Clamp(_traceDistance + _maxSpeed * DeltaTime, 0.0f, _MaxDistance);
 
 	
-	_traceSphereRadius = _sizeCurve ? _sizeCurve->GetFloatValue(_elapsedTime / _life) : 10.0f;
+	_traceSphereRadius = _scaleCurve ? _scaleCurve->GetFloatValue(_elapsedTime / _life) : 10.0f;
 
 	FVector traceStart = GetActorLocation();
 	FVector traceDir = GetActorQuat().Vector();

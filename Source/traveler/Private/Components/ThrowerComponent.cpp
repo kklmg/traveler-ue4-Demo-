@@ -83,6 +83,7 @@ void UThrowerComponent::SpawnThrowingActor()
 		actor->VSetLife(_life);
 		actor->VSetVelocity(forward * _speed);
 		actor->VSetIsActive(true);
+		actor->VSetScaleCurve(_scaleCurve);
 
 		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "thrower Spawned actor");
 	}

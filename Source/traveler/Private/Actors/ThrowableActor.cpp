@@ -3,6 +3,7 @@
 
 #include "Actors/ThrowableActor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Curves/CurveFloat.h"
 
 
 // Sets default values
@@ -46,11 +47,18 @@ void AThrowableActor::Tick(float DeltaTime)
 
 	_elapsedTime += DeltaTime;
 
+	if (_scaleCurve && _life > 0.0f)
+	{
+		float normaledElapsedTime = FMath::Clamp(_elapsedTime / _life, 0.0f, 1.0f);
+		float scaleFactor = _scaleCurve->GetFloatValue(normaledElapsedTime);
+
+		SetActorScale3D(FVector(scaleFactor,scaleFactor,scaleFactor));
+	}
+
 	if (_elapsedTime > _life)
 	{
 		VSetIsActive(false);
 	}
-
 }
 
 void AThrowableActor::VSetLife(float life)
@@ -97,5 +105,10 @@ void AThrowableActor::SetSpawningTransform(FTransform transform)
 void AThrowableActor::VSetVelocity(FVector velocity)
 {
 	_projectileMovementComp->Velocity = velocity;
+}
+
+void AThrowableActor::VSetScaleCurve(UCurveFloat* curve)
+{
+	_scaleCurve = curve;
 }
 

@@ -53,6 +53,8 @@ private:
 	float _throwingRate;
 	UPROPERTY(EditDefaultsOnly)
 	float _speed;
+	UPROPERTY(EditDefaultsOnly)
+	UCurveFloat* _scaleCurve;
 
 	UPROPERTY(EditDefaultsOnly)
 	float _life;
