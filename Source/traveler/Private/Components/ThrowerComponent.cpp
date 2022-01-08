@@ -6,6 +6,7 @@
 #include "TimerManager.h"
 #include "Interface/ThrowableInterface.h"
 #include "Actors/ThrowableActor.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 // Sets default values for this component's properties
@@ -20,6 +21,9 @@ UThrowerComponent::UThrowerComponent()
 	_life = 1.0f;
 	_poolSize = 10;
 	_throwingRate = 5.0f;
+	_coneAngle = 5;
+
+	_elapsedTime = 0.0f;
 }
 
 
@@ -45,6 +49,7 @@ void UThrowerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+	_elapsedTime += DeltaTime;
 
 
 }
@@ -140,10 +145,34 @@ AThrowableActor* UThrowerComponent::CreateOrGetInactivatedActor()
 
 
 	
-	
-	
+void UThrowerComponent::SphereTracing()
+{
+	float traceDistance = FMath::Clamp(_speed * _elapsedTime, 0.0f, _speed * _life);
 
-	
+	float sphereRadius = _scaleCurve ? _scaleCurve->GetFloatValue(_elapsedTime / _life) : 10.0f;
 
+	FVector traceStart = GetOwner()->GetActorLocation();
+	FVector traceDir = GetOwner()->GetActorQuat().Vector();
+	FVector traceEnd = traceStart + traceDir * traceDistance;
+
+	TArray<AActor*> ignoredActors;
+	ignoredActors.Add(GetOwner());
+
+	TArray<FHitResult> hitResults;
+
+	UKismetSystemLibrary::SphereTraceMulti(GetWorld(), traceStart, traceEnd, sphereRadius,
+		ETraceTypeQuery::TraceTypeQuery1, false, ignoredActors, EDrawDebugTrace::ForOneFrame, hitResults, true);
+
+	for (FHitResult hitRes : hitResults)
+	{
+		if (hitRes.Actor == nullptr)
+		{
+			continue;
+		}
+		FDamageEvent damageEvent;
+		APawn* instigator = GetOwner()->GetInstigator();
+		hitRes.Actor->TakeDamage(_damage, damageEvent, instigator ? instigator->GetController() : nullptr, instigator);
+	}
+}
 
 

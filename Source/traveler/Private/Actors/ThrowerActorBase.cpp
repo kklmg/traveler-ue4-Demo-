@@ -25,3 +25,12 @@ void AThrowerActorBase::Tick(float DeltaTime)
 
 }
 
+void AThrowerActorBase::VSetSpawningLocation(FVector location)
+{
+	SetActorLocation(location);
+}
+
+void AThrowerActorBase::VSetThrowingDirection(FVector direction)
+{
+	SetActorRotation(direction.ToOrientationQuat());
+}

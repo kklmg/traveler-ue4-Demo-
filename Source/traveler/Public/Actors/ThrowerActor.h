@@ -9,7 +9,6 @@
 
 class UCurveFloat;
 class USceneComponent;
-class UNiagaraComponent;
 class UThrowerComponent;
 
 namespace NiagaraParameter
@@ -37,39 +36,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void VSetSpawningLocation(FVector location) override;
-	virtual void VSetThrowingDirection(FVector direction) override;
 	virtual void VSetSpeed(float speed) override;
 	virtual void VSetLife(float life) override;
-
-private:
-	UPROPERTY(EditDefaultsOnly)
-	float _maxSpeed;
-	UPROPERTY(EditDefaultsOnly)
-	float _life;
-	UPROPERTY(EditDefaultsOnly)
-	float _damage;
-	UPROPERTY(EditDefaultsOnly)
-	UCurveFloat *_scaleCurve;
-	
-
-	float _elapsedTime;
-	float _traceDistance;
-	float _MaxDistance;
-	float _traceSphereRadius;
-
 
 private:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* _rootComp;
 
 	UPROPERTY(VisibleAnywhere)
-	UNiagaraComponent* _throwingNiagaraEffectComp;
-
-	UPROPERTY(VisibleAnywhere)
-	UNiagaraComponent* _impactNiagaraEffectComp;
-
-	UPROPERTY(VisibleAnywhere)
 	UThrowerComponent* _throwerComp;
-	
 };

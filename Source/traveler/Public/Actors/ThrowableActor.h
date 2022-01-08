@@ -50,6 +50,8 @@ private:
 	float _elapsedTime;
 	float _life;
 	int _poolId;
+	float _coneAngle;
+	float _shift;
 	FTransform _spawnTransform;
 
 	UPROPERTY(EditDefaultsOnly)

@@ -24,4 +24,3 @@ void AThrowableActorBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-

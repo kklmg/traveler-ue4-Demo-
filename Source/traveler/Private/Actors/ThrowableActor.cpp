@@ -30,6 +30,9 @@ AThrowableActor::AThrowableActor()
 		_projectileMovementComp->Bounciness = 0.3f;
 		_projectileMovementComp->ProjectileGravityScale = 0.0f;
 	}
+
+	_coneAngle = 5.0f;
+	_shift = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -47,12 +50,17 @@ void AThrowableActor::Tick(float DeltaTime)
 
 	_elapsedTime += DeltaTime;
 
+	float speed = _projectileMovementComp->Velocity.Size();
+	_shift = speed * _elapsedTime;
+
 	if (_scaleCurve && _life > 0.0f)
 	{
-		float normaledElapsedTime = FMath::Clamp(_elapsedTime / _life, 0.0f, 1.0f);
-		float scaleFactor = _scaleCurve->GetFloatValue(normaledElapsedTime);
+		float normalizedElapsedTime = FMath::Clamp(_elapsedTime / _life, 0.0f, 1.0f);
+		float particleSpriteScale = _scaleCurve->GetFloatValue(normalizedElapsedTime)/2;
+		float coneRadius = _shift * FMath::Tan(FMath::DegreesToRadians(_coneAngle)); 
+		float scale =/* particleSpriteScale +*/ coneRadius;
 
-		SetActorScale3D(FVector(scaleFactor,scaleFactor,scaleFactor));
+		SetActorScale3D(FVector(scale, scale, scale));
 	}
 
 	if (_elapsedTime > _life)
@@ -83,6 +91,7 @@ void AThrowableActor::VSetIsActive(bool isActive)
 	if (!_isActive)
 	{
 		_elapsedTime = 0.0f;
+		_shift = 0.0f;
 		OnActorInactivated.ExecuteIfBound(_poolId);
 	}
 }

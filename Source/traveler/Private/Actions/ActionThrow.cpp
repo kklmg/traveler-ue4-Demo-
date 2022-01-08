@@ -22,6 +22,7 @@ void UActionThrow::VExecute()
 {
 	Super::VExecute();
 
+
 	if (GetActionOwner() == nullptr) return;
 
 	ACreatureCharacter* character = Cast<ACreatureCharacter>(GetActionOwner());

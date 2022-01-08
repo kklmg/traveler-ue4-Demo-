@@ -24,4 +24,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void VSetSpawningLocation(FVector location) override;
+	virtual void VSetThrowingDirection(FVector direction) override;
 };

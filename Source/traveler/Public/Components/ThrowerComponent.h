@@ -44,6 +44,8 @@ public:
 	UFUNCTION()
 	AThrowableActor* CreateOrGetInactivatedActor();
 
+	void SphereTracing();
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AThrowableActor> _spawningActorClass;
@@ -55,11 +57,18 @@ private:
 	float _speed;
 	UPROPERTY(EditDefaultsOnly)
 	UCurveFloat* _scaleCurve;
+	UPROPERTY(EditDefaultsOnly)
+	float _coneAngle;
 
 	UPROPERTY(EditDefaultsOnly)
 	float _life;
 	UPROPERTY(EditDefaultsOnly)
 	int _poolSize;
+
+	UPROPERTY(EditDefaultsOnly)
+	float _damage;
+
+	float _elapsedTime;
 
 	UPROPERTY()
 	TArray<AThrowableActor*> _spawnedActors;
