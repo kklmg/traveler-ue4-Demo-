@@ -27,7 +27,7 @@ public:
 
 	virtual void VSetSpeed(float speed) override;
 	virtual void VSetLife(float life) override;
-
+	virtual void VSetSpawningActorScale(float scale) override;
 
 private:
 	UPROPERTY(VisibleAnywhere)

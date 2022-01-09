@@ -53,3 +53,14 @@ void AThrowerWithNiagaraActor::VSetLife(float life)
 		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::Life, life);
 	}
 }
+
+void AThrowerWithNiagaraActor::VSetSpawningActorScale(float scale)
+{
+	Super::VSetSpawningActorScale(scale);
+
+	if (_throwingNiagaraEffectComp)
+	{
+		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpriteScaleMax, scale / 2.5);
+		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpriteScaleMax, scale);
+	}
+}

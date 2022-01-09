@@ -30,8 +30,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
-
-	virtual void SetSpawningTransform(FTransform transform) override;
+	virtual void VSetScale(float scale) override;
 	virtual void VSetVelocity(FVector velocity) override;
 	virtual void VSetLife(float life) override;
 	virtual void VSetScaleCurve(UCurveFloat* curve) override;
@@ -52,7 +51,6 @@ private:
 	int _poolId;
 	float _coneAngle;
 	float _shift;
-	FTransform _spawnTransform;
 
 	UPROPERTY(EditDefaultsOnly)
 	UCurveFloat* _scaleCurve;

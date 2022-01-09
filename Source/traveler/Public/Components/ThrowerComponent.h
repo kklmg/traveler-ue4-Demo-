@@ -28,6 +28,7 @@ public:
 
 	void SetSpeed(float speed);
 	void SetLife(float life);
+	void SetScale(float scale);
 
 	UFUNCTION()
 	void SetThrowingOptions(float speed,float life,float rate);
@@ -59,6 +60,8 @@ private:
 	UCurveFloat* _scaleCurve;
 	UPROPERTY(EditDefaultsOnly)
 	float _coneAngle;
+	UPROPERTY(EditDefaultsOnly)
+	float _scale;
 
 	UPROPERTY(EditDefaultsOnly)
 	float _life;

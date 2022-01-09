@@ -23,7 +23,7 @@ AThrowableActor::AThrowableActor()
 		// Use this component to drive this projectile's movement.
 		_projectileMovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
 		_projectileMovementComp->SetUpdatedComponent(_rootSceneComp);
-		_projectileMovementComp->InitialSpeed = 3000.0f;
+		_projectileMovementComp->InitialSpeed = 0.0f;
 		_projectileMovementComp->MaxSpeed = 3000.0f;
 		_projectileMovementComp->bRotationFollowsVelocity = true;
 		_projectileMovementComp->bShouldBounce = false;
@@ -48,20 +48,23 @@ void AThrowableActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (_isActive == false) return;
+
 	_elapsedTime += DeltaTime;
 
 	float speed = _projectileMovementComp->Velocity.Size();
-	_shift = speed * _elapsedTime;
+	_shift += speed * DeltaTime;
 
-	if (_scaleCurve && _life > 0.0f)
+	float scale = _shift * FMath::Tan(FMath::DegreesToRadians(_coneAngle));
+
+	if (_scaleCurve)
 	{
 		float normalizedElapsedTime = FMath::Clamp(_elapsedTime / _life, 0.0f, 1.0f);
-		float particleSpriteScale = _scaleCurve->GetFloatValue(normalizedElapsedTime)/2;
-		float coneRadius = _shift * FMath::Tan(FMath::DegreesToRadians(_coneAngle)); 
-		float scale =/* particleSpriteScale +*/ coneRadius;
-
-		SetActorScale3D(FVector(scale, scale, scale));
+		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime);
 	}
+
+	SetActorScale3D(FVector(scale, scale, scale));
+
 
 	if (_elapsedTime > _life)
 	{
@@ -106,10 +109,12 @@ void AThrowableActor::VSetPoolId(int poolId)
 	_poolId = poolId;
 }
 
-void AThrowableActor::SetSpawningTransform(FTransform transform) 
+void AThrowableActor::VSetScale(float scale)
 {
-	_spawnTransform = transform;
+	SetActorScale3D(FVector(scale,scale,scale));
 }
+
+
 
 void AThrowableActor::VSetVelocity(FVector velocity)
 {

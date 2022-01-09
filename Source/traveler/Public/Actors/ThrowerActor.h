@@ -16,7 +16,8 @@ namespace NiagaraParameter
 	const FName MaxSpeed(TEXT("MaxSpeed"));
 	const FName Life(TEXT("ParticleLife"));
 	const FName SizeCurve(TEXT("sizeCurve"));
-
+	const FName SpriteScaleMin(TEXT("SpriteScaleMin"));
+	const FName SpriteScaleMax(TEXT("SpriteScaleMax"));
 }
 
 UCLASS()
@@ -36,6 +37,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void VSetSpawningActorScale(float scale) override;
 	virtual void VSetSpeed(float speed) override;
 	virtual void VSetLife(float life) override;
 

@@ -39,6 +39,14 @@ void AThrowerActor::Tick(float DeltaTime)
 }
 
 
+void AThrowerActor::VSetSpawningActorScale(float scale)
+{
+	if (_throwerComp)
+	{
+		_throwerComp->SetScale(scale);
+	}
+}
+
 void AThrowerActor::VSetSpeed(float speed)
 {
 	if (_throwerComp)

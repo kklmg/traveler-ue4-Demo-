@@ -64,6 +64,11 @@ void UThrowerComponent::SetLife(float life)
 	_life = life;
 }
 
+void UThrowerComponent::SetScale(float scale)
+{
+	_scale = scale;
+}
+
 void UThrowerComponent::SetThrowingOptions(float speed, float life, float rate)
 {
 	_speed = speed;
@@ -86,6 +91,7 @@ void UThrowerComponent::SpawnThrowingActor()
 
 		actor->SetActorTransform(ownerTransform);
 		actor->VSetLife(_life);
+		actor->VSetScale(_scale);
 		actor->VSetVelocity(forward * _speed);
 		actor->VSetIsActive(true);
 		actor->VSetScaleCurve(_scaleCurve);

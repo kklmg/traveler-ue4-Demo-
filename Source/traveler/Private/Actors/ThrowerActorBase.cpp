@@ -34,3 +34,4 @@ void AThrowerActorBase::VSetThrowingDirection(FVector direction)
 {
 	SetActorRotation(direction.ToOrientationQuat());
 }
+
