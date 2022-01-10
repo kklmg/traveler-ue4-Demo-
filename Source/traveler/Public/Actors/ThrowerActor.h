@@ -5,20 +5,13 @@
 #include "CoreMinimal.h"
 #include "Actors/ThrowerActorBase.h"
 #include "Components/SceneComponent.h"
+#include "Data/ThrowerData.h"
 #include "ThrowerActor.generated.h"
 
 class UCurveFloat;
 class USceneComponent;
 class UThrowerComponent;
 
-namespace NiagaraParameter
-{
-	const FName MaxSpeed(TEXT("MaxSpeed"));
-	const FName Life(TEXT("ParticleLife"));
-	const FName SizeCurve(TEXT("sizeCurve"));
-	const FName SpriteScaleMin(TEXT("SpriteScaleMin"));
-	const FName SpriteScaleMax(TEXT("SpriteScaleMax"));
-}
 
 UCLASS()
 class TRAVELER_API AThrowerActor : public AThrowerActorBase
@@ -40,11 +33,16 @@ public:
 	virtual void VSetSpawningActorScale(float scale) override;
 	virtual void VSetSpeed(float speed) override;
 	virtual void VSetLife(float life) override;
+	virtual FThrowerData VGetThrowerData() override;
 
+
+protected: 
+	UPROPERTY(EditDefaultsOnly, Category = ThrowerSetting)
+	FThrowerData _throwerData;
 private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = components)
 	USceneComponent* _rootComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = components)
 	UThrowerComponent* _throwerComp;
 };

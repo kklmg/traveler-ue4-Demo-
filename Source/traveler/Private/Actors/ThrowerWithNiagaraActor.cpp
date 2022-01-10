@@ -13,11 +13,11 @@ AThrowerWithNiagaraActor::AThrowerWithNiagaraActor()
 		_throwingNiagaraEffectComp->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	}
 
-	if (_impactNiagaraEffectComp == nullptr)
+	if (_impactedNiagaraEffectComp == nullptr)
 	{
-		_impactNiagaraEffectComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("impactEffect"));
-		check(_impactNiagaraEffectComp != nullptr);
-		_impactNiagaraEffectComp->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		_impactedNiagaraEffectComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("impactEffect"));
+		check(_impactedNiagaraEffectComp != nullptr);
+		_impactedNiagaraEffectComp->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	}
 }
 
@@ -25,6 +25,17 @@ AThrowerWithNiagaraActor::AThrowerWithNiagaraActor()
 void AThrowerWithNiagaraActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//Initialize Particle
+	if (_throwingNiagaraEffectComp)
+	{
+		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpeedMax, _throwerData.Speed);
+		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::Life, _throwerData.Life);
+		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpriteScaleMin, _throwerData.Scale / 2.5);
+		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpriteScaleMax, _throwerData.Scale + 0.5f);
+		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::ConeAngle, _throwerData.ConeAngle);
+		_throwingNiagaraEffectComp->SetVectorParameter(NiagaraParameter::Gravity, _throwerData.Gravity);
+	}
 }
 
 // Called every frame
@@ -40,7 +51,7 @@ void AThrowerWithNiagaraActor::VSetSpeed(float speed)
 
 	if (_throwingNiagaraEffectComp)
 	{
-		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::MaxSpeed, speed);
+		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpeedMax, speed);
 	}
 }
 
@@ -60,7 +71,7 @@ void AThrowerWithNiagaraActor::VSetSpawningActorScale(float scale)
 
 	if (_throwingNiagaraEffectComp)
 	{
-		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpriteScaleMax, scale / 2.5);
+		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpriteScaleMin, scale / 2.5);
 		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpriteScaleMax, scale);
 	}
 }

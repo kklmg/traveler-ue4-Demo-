@@ -51,6 +51,7 @@ private:
 	int _poolId;
 	float _coneAngle;
 	float _shift;
+	float _basicScale;
 
 	UPROPERTY(EditDefaultsOnly)
 	UCurveFloat* _scaleCurve;

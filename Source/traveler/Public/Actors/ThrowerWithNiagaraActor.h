@@ -8,6 +8,18 @@
 
 class UNiagaraComponent;
 
+namespace NiagaraParameter
+{
+	const FName SpeedMax(TEXT("SpeedMax"));
+	const FName SpeedMin(TEXT("SpeedMin"));
+	const FName Gravity(TEXT("Gravity"));
+	const FName ConeAngle(TEXT("ConeAngle"));
+	const FName Life(TEXT("ParticleLife"));
+	const FName SizeCurve(TEXT("sizeCurve"));
+	const FName SpriteScaleMin(TEXT("SpriteScaleMin"));
+	const FName SpriteScaleMax(TEXT("SpriteScaleMax"));
+}
+
 /**
  * 
  */
@@ -34,5 +46,5 @@ private:
 	UNiagaraComponent* _throwingNiagaraEffectComp;
 
 	UPROPERTY(VisibleAnywhere)
-	UNiagaraComponent* _impactNiagaraEffectComp;
+	UNiagaraComponent* _impactedNiagaraEffectComp;
 };

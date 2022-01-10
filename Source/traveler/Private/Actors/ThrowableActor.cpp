@@ -31,6 +31,7 @@ AThrowableActor::AThrowableActor()
 		_projectileMovementComp->ProjectileGravityScale = 0.0f;
 	}
 
+	_basicScale = 1.0f; 
 	_coneAngle = 5.0f;
 	_shift = 0.0f;
 }
@@ -60,7 +61,7 @@ void AThrowableActor::Tick(float DeltaTime)
 	if (_scaleCurve)
 	{
 		float normalizedElapsedTime = FMath::Clamp(_elapsedTime / _life, 0.0f, 1.0f);
-		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime);
+		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime) * _basicScale;
 	}
 
 	SetActorScale3D(FVector(scale, scale, scale));
@@ -111,7 +112,8 @@ void AThrowableActor::VSetPoolId(int poolId)
 
 void AThrowableActor::VSetScale(float scale)
 {
-	SetActorScale3D(FVector(scale,scale,scale));
+	_basicScale = scale;
+	//SetActorScale3D(FVector(scale,scale,scale));
 }
 
 

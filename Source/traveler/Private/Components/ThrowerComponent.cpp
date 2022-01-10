@@ -5,6 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "TimerManager.h"
 #include "Interface/ThrowableInterface.h"
+#include "Interface/ThrowerDataProviderInterface.h"
 #include "Actors/ThrowableActor.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -17,12 +18,7 @@ UThrowerComponent::UThrowerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_speed = 1000;
-	_life = 1.0f;
 	_poolSize = 10;
-	_throwingRate = 5.0f;
-	_coneAngle = 5;
-
 	_elapsedTime = 0.0f;
 }
 
@@ -33,13 +29,13 @@ void UThrowerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	_throwerDataProvider = GetOwner<IThrowerDataProviderInterface>();
 
-	if (GetWorld())
+	if (GetWorld() && _throwerDataProvider)
 	{
-		GetWorld()->GetTimerManager().SetTimer(_timerHandle, this, &UThrowerComponent::SpawnThrowingActor, _throwingRate, true);
+		GetWorld()->GetTimerManager().SetTimer(_timerHandle, this, &UThrowerComponent::SpawnThrowingActor,
+			_throwerDataProvider->VGetThrowerData().ThrowingRate, true);
 	}
-
-
 }
 
 
@@ -50,55 +46,33 @@ void UThrowerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	// ...
 	_elapsedTime += DeltaTime;
-
-
 }
 
-void UThrowerComponent::SetSpeed(float speed)
-{
-	_speed = speed;
-}
-
-void UThrowerComponent::SetLife(float life)
-{
-	_life = life;
-}
-
-void UThrowerComponent::SetScale(float scale)
-{
-	_scale = scale;
-}
-
-void UThrowerComponent::SetThrowingOptions(float speed, float life, float rate)
-{
-	_speed = speed;
-	_life = life;
-	_throwingRate = rate;
-
-}
 
 void UThrowerComponent::SpawnThrowingActor()
 {
+	if (_throwerDataProvider == nullptr)return;
 	if (isSpawnable() == false) return;
 
 	AThrowableActor* actor = CreateOrGetInactivatedActor();
 	
 	if (actor)
 	{
+		FThrowerData data = _throwerDataProvider->VGetThrowerData();
+
 		AActor* owner = GetOwner();
 		FTransform ownerTransform = owner ? owner->GetTransform() : FTransform::Identity;
 		FVector forward = owner ? owner->GetActorForwardVector() : FVector::ForwardVector;
 
 		actor->SetActorTransform(ownerTransform);
-		actor->VSetLife(_life);
-		actor->VSetScale(_scale);
-		actor->VSetVelocity(forward * _speed);
+		actor->VSetLife(data.Life);
+		actor->VSetScale(data.Scale);
+		actor->VSetVelocity(forward * data.Speed);
 		actor->VSetIsActive(true);
-		actor->VSetScaleCurve(_scaleCurve);
+		actor->VSetScaleCurve(data.ScaleCurve);
 
 		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "thrower Spawned actor");
 	}
-	
 }
 
 
@@ -153,9 +127,13 @@ AThrowableActor* UThrowerComponent::CreateOrGetInactivatedActor()
 	
 void UThrowerComponent::SphereTracing()
 {
-	float traceDistance = FMath::Clamp(_speed * _elapsedTime, 0.0f, _speed * _life);
+	if (_throwerDataProvider == nullptr)return;
 
-	float sphereRadius = _scaleCurve ? _scaleCurve->GetFloatValue(_elapsedTime / _life) : 10.0f;
+	FThrowerData data = _throwerDataProvider->VGetThrowerData();
+
+	float traceDistance = FMath::Clamp(data.Speed * _elapsedTime, 0.0f, data.Speed * data.Life);
+
+	float sphereRadius = data.ScaleCurve ? data.ScaleCurve->GetFloatValue(_elapsedTime / data.Life) : 10.0f;
 
 	FVector traceStart = GetOwner()->GetActorLocation();
 	FVector traceDir = GetOwner()->GetActorQuat().Vector();
@@ -177,7 +155,7 @@ void UThrowerComponent::SphereTracing()
 		}
 		FDamageEvent damageEvent;
 		APawn* instigator = GetOwner()->GetInstigator();
-		hitRes.Actor->TakeDamage(_damage, damageEvent, instigator ? instigator->GetController() : nullptr, instigator);
+		hitRes.Actor->TakeDamage(data.Damage, damageEvent, instigator ? instigator->GetController() : nullptr, instigator);
 	}
 }
 

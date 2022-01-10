@@ -2,8 +2,6 @@
 
 
 #include "Actors/ThrowerActor.h"
-#include "Curves/CurveFloat.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "Components/ThrowerComponent.h"
 
 // Sets default values
@@ -11,7 +9,7 @@ AThrowerActor::AThrowerActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	if (_rootComp == nullptr)
 	{
 		_rootComp = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComp"));
@@ -41,25 +39,21 @@ void AThrowerActor::Tick(float DeltaTime)
 
 void AThrowerActor::VSetSpawningActorScale(float scale)
 {
-	if (_throwerComp)
-	{
-		_throwerComp->SetScale(scale);
-	}
+	_throwerData.Scale = scale;
 }
 
 void AThrowerActor::VSetSpeed(float speed)
 {
-	if (_throwerComp)
-	{
-		_throwerComp->SetSpeed(speed);
-	}
+	_throwerData.Speed = speed;
 }
 
 void AThrowerActor::VSetLife(float life)
 {
-	if (_throwerComp)
-	{
-		_throwerComp->SetLife(life);
-	}
+	_throwerData.Life = life;
+}
+
+FThrowerData AThrowerActor::VGetThrowerData()
+{
+	return _throwerData;
 }
 

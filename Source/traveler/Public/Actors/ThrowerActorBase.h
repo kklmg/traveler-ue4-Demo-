@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interface/ThrowerInterface.h"
+#include "Interface/ThrowerDataProviderInterface.h"
 #include "ThrowerActorBase.generated.h"
 
 UCLASS()
-class TRAVELER_API AThrowerActorBase : public AActor,public IThrowerInterface
+class TRAVELER_API AThrowerActorBase : public AActor,public IThrowerInterface,public IThrowerDataProviderInterface
 {
 	GENERATED_BODY()
 	
@@ -23,7 +24,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 	virtual void VSetSpawningLocation(FVector location) override;
 	virtual void VSetThrowingDirection(FVector direction) override;
 };

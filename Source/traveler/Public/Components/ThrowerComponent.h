@@ -7,6 +7,8 @@
 #include "Interface/ThrowableInterface.h"
 #include "ThrowerComponent.generated.h"
 
+class IThrowerDataProviderInterface;
+
 class AThrowableActor;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -26,13 +28,6 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetSpeed(float speed);
-	void SetLife(float life);
-	void SetScale(float scale);
-
-	UFUNCTION()
-	void SetThrowingOptions(float speed,float life,float rate);
-
 	UFUNCTION()
 	void SpawnThrowingActor();
 
@@ -50,32 +45,19 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AThrowableActor> _spawningActorClass;
+
 	UPROPERTY(EditDefaultsOnly)
 	FTimerHandle _timerHandle;
-	UPROPERTY(EditDefaultsOnly)
-	float _throwingRate;
-	UPROPERTY(EditDefaultsOnly)
-	float _speed;
-	UPROPERTY(EditDefaultsOnly)
-	UCurveFloat* _scaleCurve;
-	UPROPERTY(EditDefaultsOnly)
-	float _coneAngle;
-	UPROPERTY(EditDefaultsOnly)
-	float _scale;
 
-	UPROPERTY(EditDefaultsOnly)
-	float _life;
 	UPROPERTY(EditDefaultsOnly)
 	int _poolSize;
-
-	UPROPERTY(EditDefaultsOnly)
-	float _damage;
-
-	float _elapsedTime;
 
 	UPROPERTY()
 	TArray<AThrowableActor*> _spawnedActors;
 
 	UPROPERTY()
 	TArray<int> _inactivatedActorIndicies;
+
+	float _elapsedTime;
+	IThrowerDataProviderInterface* _throwerDataProvider;
 };
