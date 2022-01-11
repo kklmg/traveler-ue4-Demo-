@@ -67,6 +67,7 @@ void UThrowerComponent::SpawnThrowingActor()
 		actor->SetActorTransform(ownerTransform);
 		actor->VSetLife(data.Life);
 		actor->VSetScale(data.Scale);
+		actor->VSetDamage(data.Damage);
 		actor->VSetVelocity(forward * data.Speed);
 		actor->VSetIsActive(true);
 		actor->VSetScaleCurve(data.ScaleCurve);

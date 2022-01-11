@@ -2,8 +2,10 @@
 
 
 #include "Actors/ThrowableActor.h"
+
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Curves/CurveFloat.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -16,6 +18,12 @@ AThrowableActor::AThrowableActor()
 	{
 		_rootSceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("RootSceneComp"));
 		SetRootComponent(_rootSceneComp);
+	}
+
+	if(!_meshComp)
+	{
+		_meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
+		_meshComp->AttachToComponent(_rootSceneComp,FAttachmentTransformRules::KeepRelativeTransform);
 	}
 
 	if (!_projectileMovementComp)
@@ -34,12 +42,21 @@ AThrowableActor::AThrowableActor()
 	_basicScale = 1.0f; 
 	_coneAngle = 5.0f;
 	_shift = 0.0f;
+	_damage = 1.0f;
 }
 
 // Called when the game starts or when spawned
 void AThrowableActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	_initialMeshScale = _meshComp->GetComponentScale();
+	if(_meshComp)
+	{
+		//OnHit 
+		_meshComp->OnComponentHit.AddDynamic(this, &AThrowableActor::VOnHit);
+		//_meshComp->OnComponentBeginOverlap.AddDynamic(this, &AThrowableActor::VOnOverlapBegin);
+	}
 
 	//SetActorTransform(_spawnTransform);
 }
@@ -63,20 +80,62 @@ void AThrowableActor::Tick(float DeltaTime)
 		float normalizedElapsedTime = FMath::Clamp(_elapsedTime / _life, 0.0f, 1.0f);
 		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime) * _basicScale;
 	}
+	
+	//SetActorScale3D(FVector(scale, scale, scale));
+	_meshComp->SetWorldScale3D(FVector(scale, scale, scale)* _initialMeshScale);
 
-	SetActorScale3D(FVector(scale, scale, scale));
-
+	VApplyDamageToOverlapedActor();
 
 	if (_elapsedTime > _life)
 	{
 		VSetIsActive(false);
 	}
+
+
 }
 
 void AThrowableActor::VSetLife(float life)
 {
 	_life = life;
 }
+
+void AThrowableActor::VSetDamage(float damage)
+{
+	_damage = damage;
+}
+
+void AThrowableActor::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
+	{
+		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, Hit.ImpactPoint);
+	}
+
+	APawn* instigator = GetInstigator();
+
+	if (OtherActor != instigator)
+	{
+		UGameplayStatics::ApplyDamage(OtherActor, _damage, instigator? GetInstigator()->GetController():nullptr, this, _damageTypeClass);
+	}
+	VSetIsActive(false);
+}
+
+void AThrowableActor::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor != this && OverlappedComponent->IsSimulatingPhysics())
+	{
+		OverlappedComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, SweepResult.ImpactPoint);
+	}
+
+	APawn* instigator = GetInstigator();
+
+	if (OtherActor != instigator)
+	{
+		UGameplayStatics::ApplyDamage(OtherActor, _damage, instigator ? GetInstigator()->GetController() : nullptr, this, _damageTypeClass);
+	}
+	VSetIsActive(false);
+}
+
 
 bool AThrowableActor::VIsActive()
 {
@@ -108,6 +167,23 @@ int AThrowableActor::VGetPoolId()
 void AThrowableActor::VSetPoolId(int poolId)
 {
 	_poolId = poolId;
+}
+
+void AThrowableActor::VApplyDamageToOverlapedActor()
+{
+	if(_meshComp)
+	{
+		TArray<AActor*> _actors;
+
+		FDamageEvent damageEvent;
+
+		_meshComp->GetOverlappingActors(_actors);
+		
+		for (AActor* actor : _actors)
+		{
+			actor->TakeDamage(_damage, damageEvent, nullptr, nullptr);
+		}
+	}
 }
 
 void AThrowableActor::VSetScale(float scale)

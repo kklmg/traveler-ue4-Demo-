@@ -29,17 +29,24 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
 	virtual void VSetScale(float scale) override;
+	virtual void VSetScaleCurve(UCurveFloat* curve) override;
 	virtual void VSetVelocity(FVector velocity) override;
 	virtual void VSetLife(float life) override;
-	virtual void VSetScaleCurve(UCurveFloat* curve) override;
+	virtual void VSetDamage(float damage) override;
+
+	UFUNCTION()
+	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	UFUNCTION()
+	virtual void VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	virtual bool VIsActive() override;
 	virtual void VSetIsActive(bool isActive) override;
 
 	virtual int VGetPoolId();
 	virtual void VSetPoolId(int poolId);
+
+	virtual void VApplyDamageToOverlapedActor();
 
 public:
 	FOnActorInactivated OnActorInactivated;
@@ -52,12 +59,21 @@ private:
 	float _coneAngle;
 	float _shift;
 	float _basicScale;
+	float _damage;
+
+	FVector _initialMeshScale;
 
 	UPROPERTY(EditDefaultsOnly)
 	UCurveFloat* _scaleCurve;
 
+	UPROPERTY(EditDefaultsOnly, Category = Damage)
+	TSubclassOf<UDamageType> _damageTypeClass;
+
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* _rootSceneComp;
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* _meshComp;
 
 	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* _projectileMovementComp;

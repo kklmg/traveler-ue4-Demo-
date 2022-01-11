@@ -24,8 +24,9 @@ class TRAVELER_API IThrowableInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void VSetVelocity(FVector velocity);
-	virtual void VSetScale(float scale);
-	virtual void VSetLife(float life);
-	virtual void VSetScaleCurve(UCurveFloat* curve);
+	virtual void VSetDamage(float damage) PURE_VIRTUAL(UThrowableInterface::VSetDamage, );
+	virtual void VSetVelocity(FVector velocity) PURE_VIRTUAL(UThrowableInterface::VSetVelocity,);
+	virtual void VSetLife(float life) PURE_VIRTUAL(UThrowableInterface::VSetLife, );
+	virtual void VSetScale(float scale) PURE_VIRTUAL(UThrowableInterface::VSetScale, );
+	virtual void VSetScaleCurve(UCurveFloat* curve) PURE_VIRTUAL(UThrowableInterface::VSetScaleCurve, );
 };
