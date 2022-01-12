@@ -55,10 +55,8 @@ void AThrowableActor::BeginPlay()
 	{
 		//OnHit 
 		_meshComp->OnComponentHit.AddDynamic(this, &AThrowableActor::VOnHit);
-		//_meshComp->OnComponentBeginOverlap.AddDynamic(this, &AThrowableActor::VOnOverlapBegin);
+		_meshComp->OnComponentBeginOverlap.AddDynamic(this, &AThrowableActor::VOnOverlapBegin);
 	}
-
-	//SetActorTransform(_spawnTransform);
 }
 
 // Called every frame
@@ -133,7 +131,10 @@ void AThrowableActor::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	{
 		UGameplayStatics::ApplyDamage(OtherActor, _damage, instigator ? GetInstigator()->GetController() : nullptr, this, _damageTypeClass);
 	}
-	VSetIsActive(false);
+	if(OtherComp->GetCollisionObjectType()==ECollisionChannel::ECC_WorldStatic)
+	{
+		VSetIsActive(false);
+	}
 }
 
 
