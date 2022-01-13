@@ -96,17 +96,17 @@ FORCEINLINE UAnimationEventComponent* ACreatureCharacter::GetAanimationEventComp
 return _animationEventComponent;
 }
 
-FORCEINLINE UCharacterAttribute* ACreatureCharacter::GetAttribute(EAttributeType attributeType)
+FORCEINLINE UCharacterAttribute* ACreatureCharacter::VGetAttribute(EAttributeType attributeType)
 {
 	return _attributeComponent->GetAttribute(attributeType);
 }
 
-bool ACreatureCharacter::SetAttribute(EAttributeType attributeType, float newValue)
+bool ACreatureCharacter::VSetAttribute(EAttributeType attributeType, float newValue)
 {
 	return _attributeComponent->SetAttribute(attributeType, newValue);
 }
 
-bool ACreatureCharacter::SetAttributeChange(EAttributeType attributeType, float deltaValue)
+bool ACreatureCharacter::VSetAttributeChange(EAttributeType attributeType, float deltaValue)
 {
 	return _attributeComponent->SetAttributeChange(attributeType, deltaValue);
 }

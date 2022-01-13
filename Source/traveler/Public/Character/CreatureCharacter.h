@@ -7,6 +7,7 @@
 #include "Data/EnumMeshSocketType.h"
 #include "Data/EnumAttributeType.h"
 #include "Interface/ActionInterface.h"
+#include "Interface/AttributeInterface.h"
 #include "CreatureCharacter.generated.h"
 
 
@@ -40,7 +41,7 @@ enum class ECharacterState : uint8
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStateChanged, ECharacterState, characterState);
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter,public IActionInterface
+class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface
 {
 	GENERATED_BODY()
 
@@ -66,22 +67,26 @@ public:
 public:
 	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	//Interface Attribute ---------------------------------------------------
 
 	UFUNCTION(BlueprintCallable)
-	UCharacterAttribute* GetAttribute(EAttributeType attributeType);
+	virtual UCharacterAttribute* VGetAttribute(EAttributeType attributeType) override;
 
 	UFUNCTION(BlueprintCallable)
-	bool SetAttribute(EAttributeType attributeType, float newValue);
+	virtual bool VSetAttribute(EAttributeType attributeType, float newValue) override;
 
 	UFUNCTION(BlueprintCallable)
-	bool SetAttributeChange(EAttributeType attributeType, float deltaValue);
+	virtual bool VSetAttributeChange(EAttributeType attributeType, float deltaValue) override;
 
-
-	UFUNCTION(BlueprintCallable)
-	UActionBase* VExecuteAction(EActionType actionType) override;
+	//Interface Action ---------------------------------------------------
 
 	UFUNCTION(BlueprintCallable)
-	UActionBlackBoard* VGetActionBlackBoard() override;
+	virtual UActionBase* VExecuteAction(EActionType actionType) override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual UActionBlackBoard* VGetActionBlackBoard() override;
+
+
 
 	UFUNCTION(BlueprintCallable)
 	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
