@@ -23,6 +23,6 @@ class TRAVELER_API IActivatableInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	virtual bool VIsActive();
-	virtual void VSetIsActive(bool isActive);
+	virtual bool VIsActive() PURE_VIRTUAL(UActivatableInterface::VIsActive, return false;);
+	virtual void VSetIsActive(bool isActive) PURE_VIRTUAL(UActivatableInterface::VSetIsActive,);
 };

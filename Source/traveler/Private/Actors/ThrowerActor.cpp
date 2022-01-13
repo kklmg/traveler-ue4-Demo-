@@ -57,3 +57,14 @@ FThrowerData AThrowerActor::VGetThrowerData()
 	return _throwerData;
 }
 
+void AThrowerActor::VAutoDestroy()
+{
+	SetLifeSpan(_throwerData.Life);
+
+	if(_throwerComp)
+	{
+		_throwerComp->StopSpawning();
+		_throwerComp->Deactivate();
+	}
+}
+

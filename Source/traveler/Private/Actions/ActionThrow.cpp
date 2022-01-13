@@ -108,7 +108,7 @@ void UActionThrow::OnAttackNotifyEnd()
 
 	if(_throwerIns)
 	{
-		_throwerIns->Destroy();
+		_throwerIns->VAutoDestroy();
 		_throwerIns = nullptr;
 	}
 }

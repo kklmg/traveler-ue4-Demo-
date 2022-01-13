@@ -22,9 +22,10 @@ class TRAVELER_API IThrowerInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void VSetSpawningLocation(FVector location);
-	virtual void VSetSpawningActorScale(float scale);
-	virtual void VSetThrowingDirection(FVector direction);
-	virtual void VSetSpeed(float speed);
-	virtual void VSetLife(float life);
+	virtual void VSetSpawningLocation(FVector location) PURE_VIRTUAL(UThrowerInterface::VSetSpawningLocation, );
+	virtual void VSetSpawningActorScale(float scale) PURE_VIRTUAL(UThrowerInterface::VSetSpawningActorScale, );
+	virtual void VSetThrowingDirection(FVector direction) PURE_VIRTUAL(UThrowerInterface::VSetThrowingDirection, );
+	virtual void VSetSpeed(float speed) PURE_VIRTUAL(UThrowerInterface::VSetSpeed, );
+	virtual void VSetLife(float life) PURE_VIRTUAL(UThrowerInterface::VSetLife, );
+	virtual void VAutoDestroy() PURE_VIRTUAL(UThrowerInterface::VAutoDestroy, );
 };

@@ -41,6 +41,8 @@ public:
 	virtual void VSetLife(float life) override;
 	virtual void VSetSpawningActorScale(float scale) override;
 
+	virtual void VAutoDestroy() override;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	UNiagaraComponent* _throwingNiagaraEffectComp;

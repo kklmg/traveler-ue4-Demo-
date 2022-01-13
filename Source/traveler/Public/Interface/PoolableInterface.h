@@ -22,9 +22,9 @@ class TRAVELER_API IPoolableInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual bool VIsActive();
-	virtual void VSetIsActive(bool isActive);
+	virtual bool VIsActive() PURE_VIRTUAL(IPoolableInterface::VIsActive, return false; );
+	virtual void VSetIsActive(bool isActive) PURE_VIRTUAL(IPoolableInterface::VSetIsActive, );
 
-	virtual int VGetPoolId();
-	virtual void VSetPoolId(int poolId);
+	virtual int VGetPoolId() PURE_VIRTUAL(IPoolableInterface::VGetPoolId, return 0;);
+	virtual void VSetPoolId(int poolId) PURE_VIRTUAL(IPoolableInterface::VSetPoolId, );
 };

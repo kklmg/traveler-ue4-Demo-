@@ -82,6 +82,11 @@ bool UThrowerComponent::isSpawnable()
 	return _spawnedActors.Num() < _poolSize || _inactivatedActorIndicies.Num() != 0;
 }
 
+void UThrowerComponent::StopSpawning()
+{
+	GetWorld()->GetTimerManager().ClearTimer(_timerHandle);
+}
+
 void UThrowerComponent::OnSpawnedActorInactivated(int poolId)
 {
 	_inactivatedActorIndicies.Add(poolId);

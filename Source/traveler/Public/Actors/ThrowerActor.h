@@ -34,6 +34,7 @@ public:
 	virtual void VSetSpeed(float speed) override;
 	virtual void VSetLife(float life) override;
 	virtual FThrowerData VGetThrowerData() override;
+	virtual void VAutoDestroy() override;
 
 
 protected: 

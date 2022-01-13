@@ -35,6 +35,9 @@ public:
 	bool isSpawnable();
 
 	UFUNCTION()
+	void StopSpawning();
+
+	UFUNCTION()
 	void OnSpawnedActorInactivated(int poolId);
 
 	UFUNCTION()

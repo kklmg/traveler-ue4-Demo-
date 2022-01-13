@@ -71,7 +71,16 @@ void AThrowerWithNiagaraActor::VSetSpawningActorScale(float scale)
 
 	if (_throwingNiagaraEffectComp)
 	{
-		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpriteScaleMin, scale / 2.5);
+		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpriteScaleMin, scale / 2.5f);
 		_throwingNiagaraEffectComp->SetFloatParameter(NiagaraParameter::SpriteScaleMax, scale);
+	}
+}
+
+void AThrowerWithNiagaraActor::VAutoDestroy()
+{
+	Super::VAutoDestroy();
+	if(_throwingNiagaraEffectComp)
+	{
+		_throwingNiagaraEffectComp->Deactivate();
 	}
 }
