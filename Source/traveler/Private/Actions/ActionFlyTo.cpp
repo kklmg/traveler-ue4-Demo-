@@ -15,9 +15,12 @@ UActionFlyTo::UActionFlyTo()
 	_actionName = ActionName::FlyTo;
 	_actionType = EActionType::EACT_FlyTo;
 
+
 	_bInstantAction = false;
 	_flyingSpeed = 2000;
 	_turnningSpeed = 500;
+
+	_bUpdateDestination = true;
 
 	//Roll
 	_limitedRollDegree = 80.0f;
@@ -35,26 +38,40 @@ void UActionFlyTo::VExecute()
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Execute Fly To"));
 
-	if (_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_DestLocation,_destination))
+	if(_GetDestination(_destination))
 	{
-		UE_LOG(LogAction,Warning,TEXT("Fly to: No Destination Setted"))
+		UE_LOG(LogAction, Warning, TEXT("Fly to: No Destination Setted"))
 	}
 	else
 	{
 		_state = EActionState::AS_FAILED;
 	}
-	
 }
 
 void UActionFlyTo::VTick(float deltaTime)
 {
 	Super::VTick(deltaTime);
 
-	check(_actionOwner != nullptr);
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
-	check(character != nullptr);
+	//Update Destination
+	//-------------------------------------------------------------------------------------------------------------
+	if(_bUpdateDestination)
+	{
+		if (_GetDestination(_destination))
+		{
+			UE_LOG(LogAction, Warning, TEXT("Fly to: No Destination Setted"))
+		}
+		else
+		{
+			_state = EActionState::AS_FAILED;
+			return;
+		}
+	}
 
+	//Get Flying Speed
+	//-------------------------------------------------------------------------------------------------------------
+	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
 	_flyingSpeed = character->GetCharacterMovement()->MaxFlySpeed;
+
 
 	//Current Transform State
 	//-------------------------------------------------------------------------------------------------------------
@@ -173,6 +190,13 @@ void UActionFlyTo::VTick(float deltaTime)
 	//-------------------------------------------------------------------------------------------------------------
 	character->AddActorWorldRotation(turnQuat);
 	character->AddMovementInput(forwardVector);
+}
+
+bool UActionFlyTo::_GetDestination(FVector& outVector)
+{
+	if (_actionBlackBoard == false) return false;
+
+	return _actionBlackBoard->TryGetData_FVector(EActionData::EACTD_DestLocation, outVector);
 }
 
 

@@ -20,6 +20,11 @@ public:
 	virtual void VTick(float deltaTime) override;
 
 private:
+	bool _GetDestination(FVector& outVector);
+
+	UPROPERTY(EditDefaultsOnly, Category = speed)
+	bool _bUpdateDestination;
+
 	UPROPERTY(EditDefaultsOnly, Category = speed)
 	float _flyingSpeed;
 
