@@ -48,7 +48,7 @@ ACreatureCharacter::ACreatureCharacter()
 
 	bUseControllerRotationYaw = false;
 
-	_characterState = ECharacterState::CS_GroundNormal;
+	_characterState = ECharacterState::ECS_GroundNormal;
 }
 
 // Called when the game starts or when spawned
@@ -192,15 +192,15 @@ void ACreatureCharacter::OnCharacterMovementModeChanged(ACharacter* Character, E
 	{
 	case MOVE_None: 
 		break;
-	case MOVE_Walking: SetCharacterState(ECharacterState::CS_GroundNormal);
+	case MOVE_Walking: SetCharacterState(ECharacterState::ECS_GroundNormal);
 		break;
 	case MOVE_NavWalking:
 		break;
-	case MOVE_Falling: SetCharacterState(ECharacterState::CS_AirFalling);
+	case MOVE_Falling: SetCharacterState(ECharacterState::ECS_AirFalling);
 		break;
-	case MOVE_Swimming:SetCharacterState(ECharacterState::CS_Swimming);
+	case MOVE_Swimming:SetCharacterState(ECharacterState::ECS_Swimming);
 		break;
-	case MOVE_Flying: SetCharacterState(ECharacterState::CS_AirFlying);
+	case MOVE_Flying: SetCharacterState(ECharacterState::ECS_AirFlying);
 		break;
 	case MOVE_Custom:
 		break;

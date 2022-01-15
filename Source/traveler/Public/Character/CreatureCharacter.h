@@ -8,6 +8,7 @@
 #include "Data/EnumAttributeType.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/AttributeInterface.h"
+#include "Data/EnumCharacterState.h"
 #include "CreatureCharacter.generated.h"
 
 
@@ -25,18 +26,6 @@ class UActionBlackBoard;
 
 
 
-
-UENUM(BlueprintType)
-enum class ECharacterState : uint8
-{
-	CS_GroundNormal UMETA(DisplayName = "GroundNormal"),
-	CS_GroundDodging UMETA(DisplayName = "GroundDodging"),
-	CS_AirFalling UMETA(DisplayName = "AirFalling"),
-	CS_AirNormal UMETA(DisplayName = "AirNormal"),
-	CS_AirFlying UMETA(DisplayName = "AirFlying"),
-	CS_Swimming UMETA(DisplayName = "Swimming"),
-	CS_Stunning UMETA(DisplayName = "Stunning"),
-};
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStateChanged, ECharacterState, characterState);
 
