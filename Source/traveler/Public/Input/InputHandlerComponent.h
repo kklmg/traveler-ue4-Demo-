@@ -6,8 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "Input/InputHandlerInterface.h"
 #include "Data/EnumCharacterState.h"
+#include "Data/EnumInputType.h"
 #include "InputHandlerComponent.generated.h"
 
+DECLARE_DELEGATE_OneParam(FButtonSignarue,EInputType);
 
 class UCharacterInputHandler;
 
@@ -27,6 +29,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void BindInputs(UInputComponent* PlayerInputComponent);
+
+	void HandleButtonPress(EInputType inputType);
+	void HandleButtonRelease(EInputType inputType);
 
 	virtual void VGoForward() override;
 	virtual void VGoRight() override;

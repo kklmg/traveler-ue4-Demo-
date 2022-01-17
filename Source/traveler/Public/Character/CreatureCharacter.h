@@ -6,9 +6,9 @@
 #include "GameFramework/Character.h"
 #include "Data/EnumMeshSocketType.h"
 #include "Data/EnumAttributeType.h"
+#include "Data/EnumCharacterState.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/AttributeInterface.h"
-#include "Data/EnumCharacterState.h"
 #include "CreatureCharacter.generated.h"
 
 
@@ -18,6 +18,7 @@ class UWidgetComponent;
 class UBillboardComponent;
 class UBillBoardWidgetComponent;
 class UAnimationEventComponent;
+class UInputHandlerComponent;
 
 class AWeapon;
 class UActionBase;
@@ -113,6 +114,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UAnimationEventComponent* _animationEventComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UInputHandlerComponent* _inputHandlerComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	ECharacterState _characterState;

@@ -46,6 +46,11 @@ void UButtonInputBase::Release()
 	_isPressing = false;
 }
 
+EInputType UButtonInputBase::GetInputType()
+{
+	return _inputType;
+}
+
 float UButtonInputBase::GetHoldingTime()
 {
 	return _holdingTime;

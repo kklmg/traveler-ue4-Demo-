@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Data/EnumInputType.h"
 #include "ButtonInputBase.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogMyInput, Log, All);
@@ -30,14 +31,15 @@ public:
 	void Press();
 	void Release();
 
+	EInputType GetInputType();
 	float GetHoldingTime();
 	bool IsPressing();
 
 private:
 	UPROPERTY(EditDefaultsOnly)
 	FString _buttonName;
+	EInputType _inputType;
 
 	float _holdingTime;
 	bool _isPressing;
-	
 };

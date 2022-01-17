@@ -2,6 +2,7 @@
 
 
 #include "Input/InputHandlerComponent.h"
+#include "Input/CharacterInputHandler.h"
 
 // Sets default values for this component's properties
 UInputHandlerComponent::UInputHandlerComponent()
@@ -30,6 +31,28 @@ void UInputHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UInputHandlerComponent::BindInputs(UInputComponent* PlayerInputComponent)
+{
+	PlayerInputComponent->BindAction<FButtonSignarue>(FName(),IE_Pressed,this,&UInputHandlerComponent::HandleButtonPress,EInputType::EIT_Fire);
+	PlayerInputComponent->BindAction<FButtonSignarue>(FName(),IE_Released,this,&UInputHandlerComponent::HandleButtonRelease, EInputType::EIT_Fire);
+}
+
+void UInputHandlerComponent::HandleButtonPress(EInputType inputType)
+{
+	if(_inputHandler)
+	{
+		_inputHandler->HandleButtonPress(inputType);
+	}
+}
+
+void UInputHandlerComponent::HandleButtonRelease(EInputType inputType)
+{
+	if (_inputHandler)
+	{
+		_inputHandler->HandleButtonRelease(inputType);
+	}
 }
 
 void UInputHandlerComponent::VGoForward()
