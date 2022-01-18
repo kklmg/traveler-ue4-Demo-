@@ -28,17 +28,17 @@ public:
 public:
 	void Tick(float deltaTime);
 
-	void Press();
-	void Release();
+	virtual void VPress();
+	virtual void VRelease();
 
-	EInputType GetInputType();
+	FName GetActionName();
 	float GetHoldingTime();
 	bool IsPressing();
 
 private:
 	UPROPERTY(EditDefaultsOnly)
 	FString _buttonName;
-	EInputType _inputType;
+	FName _actionName;
 
 	float _holdingTime;
 	bool _isPressing;

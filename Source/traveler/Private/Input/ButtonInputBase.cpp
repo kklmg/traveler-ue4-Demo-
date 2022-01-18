@@ -20,7 +20,7 @@ void UButtonInputBase::Tick(float deltaTime)
 	}
 }
 
-void UButtonInputBase::Press()
+void UButtonInputBase::VPress()
 {
 	if (OnButtonPressed.IsBound()) 
 	{
@@ -33,7 +33,7 @@ void UButtonInputBase::Press()
 	_isPressing = true;
 }
 
-void UButtonInputBase::Release()
+void UButtonInputBase::VRelease()
 {
 	if (OnButtonPressed.IsBound())
 	{
@@ -46,9 +46,9 @@ void UButtonInputBase::Release()
 	_isPressing = false;
 }
 
-EInputType UButtonInputBase::GetInputType()
+FName UButtonInputBase::GetActionName()
 {
-	return _inputType;
+	return _actionName;
 }
 
 float UButtonInputBase::GetHoldingTime()

@@ -8,6 +8,7 @@
 #include "InputHandlerBase.generated.h"
 
 class UButtonInputBase;
+class UAxisInputBase;
 
 /**
  * 
@@ -21,13 +22,21 @@ public:
 	void Initialize();
 
 	UFUNCTION()
-	void HandleButtonPress(EInputType inputType);
+	void HandleAxisInput(EInputType inputType, float value);
 	UFUNCTION()
-	void HandleButtonRelease(EInputType inputType);
+	void HandleButtonPress(FName actionName);
+	UFUNCTION()
+	void HandleButtonRelease(FName actionName);
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<TSubclassOf<UAxisInputBase>> _axisClasses;
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<TSubclassOf<UButtonInputBase>> _buttonClasses;
 
 	UPROPERTY()
-	TMap<EInputType,UButtonInputBase*> _mapButtons;
+	TMap<EInputType, UAxisInputBase*> _mapAxis;
+
+	UPROPERTY()
+	TMap<FName,UButtonInputBase*> _mapButtons;
 };

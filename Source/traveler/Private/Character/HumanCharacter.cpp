@@ -86,9 +86,9 @@ void AHumanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction("Dodge", IE_Released, _actionComponent, &UActionComponent::OnDodgeButtonUp);
 
 	//camera
-	InputComponent->BindAxis("CameraPitch", _cameraSpringArmComponent, &UCameraSpringArmComponent::Pitch);
-	InputComponent->BindAxis("CameraYaw", _cameraSpringArmComponent, &UCameraSpringArmComponent::Yaw);
-	InputComponent->BindAxis("ZoomInOut", _cameraSpringArmComponent, &UCameraSpringArmComponent::ZoomInOut);
+	PlayerInputComponent->BindAxis("CameraPitch", _cameraSpringArmComponent, &UCameraSpringArmComponent::Pitch);
+	PlayerInputComponent->BindAxis("CameraYaw", _cameraSpringArmComponent, &UCameraSpringArmComponent::Yaw);
+	PlayerInputComponent->BindAxis("ZoomInOut", _cameraSpringArmComponent, &UCameraSpringArmComponent::ZoomInOut);
 
 	//weapon fire
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, _weaponComponent, &UWeaponComponent::OnFireButtonDown);

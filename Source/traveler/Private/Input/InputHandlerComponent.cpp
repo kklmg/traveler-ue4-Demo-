@@ -12,6 +12,19 @@ UInputHandlerComponent::UInputHandlerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	FName arrButtonNames[] =
+	{
+		InputActionName::FIRE,
+		InputActionName::AIM,
+		InputActionName::SPRINT,
+		InputActionName::JUMP,
+		InputActionName::DODGE,
+		InputActionName::Action1,
+		InputActionName::Action2,
+		InputActionName::Action3,
+		InputActionName::Action4,
+	};
+	_buttonInputActionNames.Append(arrButtonNames, UE_ARRAY_COUNT(arrButtonNames));
 }
 
 
@@ -21,7 +34,11 @@ void UInputHandlerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	if(_inputHandlerClass)
+	{
+		_inputHandler = NewObject<UCharacterInputHandler>(this, _inputHandlerClass);
+		_inputHandler->Initialize();
+	}
 }
 
 
@@ -35,119 +52,38 @@ void UInputHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UInputHandlerComponent::BindInputs(UInputComponent* PlayerInputComponent)
 {
-	PlayerInputComponent->BindAction<FButtonSignarue>(FName(),IE_Pressed,this,&UInputHandlerComponent::HandleButtonPress,EInputType::EIT_Fire);
-	PlayerInputComponent->BindAction<FButtonSignarue>(FName(),IE_Released,this,&UInputHandlerComponent::HandleButtonRelease, EInputType::EIT_Fire);
-}
+	PlayerInputComponent->BindAxis("MoveForward", this, &UInputHandlerComponent::HandleAxisInput<EInputType::EIT_Forward>);
+	PlayerInputComponent->BindAxis("MoveRight", this, &UInputHandlerComponent::HandleAxisInput<EInputType::EIT_Right>);
+	PlayerInputComponent->BindAxis("CameraYaw", this, &UInputHandlerComponent::HandleAxisInput<EInputType::EIT_CameraYaw>);
+	PlayerInputComponent->BindAxis("CameraPitch", this, &UInputHandlerComponent::HandleAxisInput<EInputType::EIT_CameraPitch>);
+	PlayerInputComponent->BindAxis("CameraZoomInOut", this, &UInputHandlerComponent::HandleAxisInput<EInputType::EIT_CameraZoomInOut>);
 
-void UInputHandlerComponent::HandleButtonPress(EInputType inputType)
-{
-	if(_inputHandler)
+
+	for(FName inputName : _buttonInputActionNames)
 	{
-		_inputHandler->HandleButtonPress(inputType);
+		PlayerInputComponent->BindAction<FButtonSignarue>(inputName,IE_Pressed, this, &UInputHandlerComponent::HandleButtonPress, inputName);
+		PlayerInputComponent->BindAction<FButtonSignarue>(inputName, IE_Released, this, &UInputHandlerComponent::HandleButtonRelease, inputName);
 	}
 }
 
-void UInputHandlerComponent::HandleButtonRelease(EInputType inputType)
+void UInputHandlerComponent::HandleButtonPress(FName actionName)
 {
 	if (_inputHandler)
 	{
-		_inputHandler->HandleButtonRelease(inputType);
+		_inputHandler->HandleButtonPress(actionName);
 	}
 }
 
-void UInputHandlerComponent::VGoForward()
+void UInputHandlerComponent::HandleButtonRelease(FName actionName)
 {
-}
-
-void UInputHandlerComponent::VGoRight()
-{
-}
-
-void UInputHandlerComponent::VCameraPitch()
-{
-}
-
-void UInputHandlerComponent::VCameraYaw()
-{
-}
-
-void UInputHandlerComponent::VCameraZoomInOut()
-{
-}
-
-void UInputHandlerComponent::VPressButtonJump()
-{
-}
-
-void UInputHandlerComponent::VReleaseButtonJump()
-{
-}
-
-void UInputHandlerComponent::VPressButtonSprint()
-{
-}
-
-void UInputHandlerComponent::VReleaseButtonSprint()
-{
-}
-
-void UInputHandlerComponent::VPressButtonDodge()
-{
-}
-
-void UInputHandlerComponent::VReleaseButtonDodge()
-{
-}
-
-void UInputHandlerComponent::VPressButtonFire()
-{
-}
-
-void UInputHandlerComponent::VReleaseButtonFire()
-{
-}
-
-void UInputHandlerComponent::VPressButtonAim()
-{
-}
-
-void UInputHandlerComponent::VReleaseButtonAim()
-{
-}
-
-void UInputHandlerComponent::VPressButtonAction1()
-{
-}
-
-void UInputHandlerComponent::VReleaseButtonAction1()
-{
-}
-
-void UInputHandlerComponent::VPressButtonAction2()
-{
-}
-
-void UInputHandlerComponent::VReleaseButtonAction2()
-{
-}
-
-void UInputHandlerComponent::VPressButtonAction3()
-{
-}
-
-void UInputHandlerComponent::VReleaseButtonAction3()
-{
-}
-
-void UInputHandlerComponent::VPressButtonAction4()
-{
-}
-
-void UInputHandlerComponent::VReleaseButtonAction4()
-{
+	if (_inputHandler)
+	{
+		_inputHandler->HandleButtonRelease(actionName);
+	}
 }
 
 void UInputHandlerComponent::OnCharacterStateChanged(ECharacterState characterState)
 {
+
 }
 
