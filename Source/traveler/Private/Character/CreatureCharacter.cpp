@@ -11,6 +11,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/BillBoardWidgetComponent.h"
 #include "Components/AnimationEventComponent.h"
+#include "Components/StateComponent.h"
 #include "Input/InputHandlerComponent.h"
 
 
@@ -52,6 +53,12 @@ ACreatureCharacter::ACreatureCharacter()
 	{
 		_inputHandlerComponent = CreateDefaultSubobject<UInputHandlerComponent>(TEXT("InputHandlerComponent"));
 		check(_inputHandlerComponent != nullptr);
+	}
+
+	if(_stateComponent == nullptr)
+	{
+		_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("StateComponent"));
+		check(_stateComponent != nullptr);
 	}
 
 	bUseControllerRotationYaw = false;
@@ -104,7 +111,7 @@ FORCEINLINE UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
 	return _attributeComponent;
 }
 
-FORCEINLINE UAnimationEventComponent* ACreatureCharacter::GetAanimationEventComponent()
+FORCEINLINE UAnimationEventComponent* ACreatureCharacter::GetAnimationEventComponent()
 {
 return _animationEventComponent;
 }
@@ -142,6 +149,51 @@ UActionBase* ACreatureCharacter::VExecuteAction(EActionType actionType)
 FORCEINLINE UActionBlackBoard* ACreatureCharacter::VGetActionBlackBoard()
 {
 	return _actionComponent->GetActionBlackBoard();
+}
+
+FStateData ACreatureCharacter::VGetStateData()
+{
+	return FStateData();
+}
+
+void ACreatureCharacter::VSetSituationState(ESituationState newState)
+{
+	_stateComponent->VSetSituationState(newState);
+}
+
+void ACreatureCharacter::VSetActionState(EActionState newState)
+{
+	_stateComponent->VSetActionState(newState);
+}
+
+void ACreatureCharacter::VSetHealthState(EHealthState newState)
+{
+	_stateComponent->VSetHealthState(newState);
+}
+
+void ACreatureCharacter::VSetPostureState(EPostureState newState)
+{
+	_stateComponent->VSetPostureState(newState);
+}
+
+FOnSituationStateChanged* ACreatureCharacter::VGetSituationStateChangedDelegate()
+{
+	return _stateComponent->VGetSituationStateChangedDelegate();
+}
+
+FOnActionStateChanged* ACreatureCharacter::VGetActionStateChangedDelegate()
+{
+	return _stateComponent->VGetActionStateChangedDelegate();
+}
+
+FOnHealthStateChanged* ACreatureCharacter::VGetHealthStateChangedDelegate()
+{
+	return _stateComponent->VGetHealthStateChangedDelegate();
+}
+
+FOnPostureStateChanged* ACreatureCharacter::VGetPostureStateChangedDelegate()
+{
+	return _stateComponent->VGetPostureStateChangedDelegate();
 }
 
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
@@ -200,6 +252,8 @@ FORCEINLINE ECharacterState ACreatureCharacter::GetCharacterState()
 void ACreatureCharacter::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
 	EMovementMode curMovementMode = GetCharacterMovement()->MovementMode;
+
+	//GetCharacterMovement()->SetMovementMode();
 
 	switch (curMovementMode)
 	{

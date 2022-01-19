@@ -29,7 +29,7 @@ void UActionThrow::VExecute()
 	if (character == nullptr) return;
 
 
-	UAnimationEventComponent* animEventComp = character->GetAanimationEventComponent();
+	UAnimationEventComponent* animEventComp = character->GetAnimationEventComponent();
 
 	UAnimNotifyHandler* handler = animEventComp->GetHNotifyHandler(EAnimNorifyKey::ANK_SpreadAttack);
 	handler->OnNotifyBegin.AddDynamic(this, &UActionThrow::OnAttackNotifyBegin);
@@ -123,7 +123,7 @@ void UActionThrow::VOnAnimMontageFinished(UAnimMontage* montage, bool interrupte
 	ACreatureCharacter* character = Cast<ACreatureCharacter>(GetActionOwner());
 	if (character == nullptr) return;
 
-	UAnimationEventComponent* animEventComp = character->GetAanimationEventComponent();
+	UAnimationEventComponent* animEventComp = character->GetAnimationEventComponent();
 
 	UAnimNotifyHandler* handler = animEventComp->GetHNotifyHandler(EAnimNorifyKey::ANK_SpreadAttack);
 

@@ -10,7 +10,7 @@ DEFINE_LOG_CATEGORY(LogAction);
 
 UActionBase::UActionBase()
 {
-	_state = EActionState::AS_UnInitialized;
+	_state = EActionProcessState::EAPS_UnInitialized;
 	_bInstantAction = true;
 	_actionName = TEXT("UnKnown");
 	_actionType = EActionType::EACT_None;
@@ -22,22 +22,22 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 	_actionComp = actionComponent;
 	_actionOwner = actionComponent->GetOwner<ACharacter>();
 
-	_state = EActionState::AS_ReadyToExecute;
+	_state = EActionProcessState::EAPS_ReadyToExecute;
 }
 
 
 void UActionBase::Pause()
 {
-	_state = EActionState::AS_Paused;
+	_state = EActionProcessState::EAPS_Paused;
 }
 
 void UActionBase::VExecute() 
 {
-	if (_state != EActionState::AS_ReadyToExecute)
+	if (CanStart() == false)
 	{
 		return;
 	}
-	_state = _bInstantAction ? EActionState::AS_SUCCEEDED : EActionState::AS_Running;
+	_state = _bInstantAction ? EActionProcessState::EAPS_SUCCEEDED : EActionProcessState::EAPS_Running;
 }
 
 void UActionBase::VTick(float deltaTime) 
@@ -46,12 +46,12 @@ void UActionBase::VTick(float deltaTime)
 
 void UActionBase::Abort() 
 {
-	_state = EActionState::AS_Aborted;
+	_state = EActionProcessState::EAPS_Aborted;
 }
 
 FORCEINLINE bool UActionBase::CanStart()
 {
-	return _state == EActionState::AS_ReadyToExecute;
+	return _state == EActionProcessState::EAPS_ReadyToExecute;
 }
 
 FORCEINLINE FName UActionBase::GetActionName()
@@ -67,10 +67,10 @@ EActionType UActionBase::GetActionType()
 
 FORCEINLINE bool UActionBase::IsCompleted()
 {
-	return (_state == EActionState::AS_SUCCEEDED || _state == EActionState::AS_FAILED || _state == EActionState::AS_Aborted);
+	return (_state == EActionProcessState::EAPS_SUCCEEDED || _state == EActionProcessState::EAPS_FAILED || _state == EActionProcessState::EAPS_Aborted);
 }
 
-FORCEINLINE EActionState UActionBase::GetActionState()
+FORCEINLINE EActionProcessState UActionBase::GetActionProcessState()
 {
 	return _state;
 }
@@ -81,7 +81,7 @@ FORCEINLINE ACharacter* UActionBase::GetActionOwner()
 }
 
 
-void UActionBase::SetActionState(EActionState state)
+void UActionBase::SetActionState(EActionProcessState state)
 {
 	_state = state;
 }

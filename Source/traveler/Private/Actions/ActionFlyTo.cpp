@@ -44,7 +44,7 @@ void UActionFlyTo::VExecute()
 	}
 	else
 	{
-		_state = EActionState::AS_FAILED;
+		_state = EActionProcessState::EAPS_FAILED;
 	}
 }
 
@@ -62,7 +62,7 @@ void UActionFlyTo::VTick(float deltaTime)
 		}
 		else
 		{
-			_state = EActionState::AS_FAILED;
+			_state = EActionProcessState::EAPS_FAILED;
 			return;
 		}
 	}
@@ -108,7 +108,7 @@ void UActionFlyTo::VTick(float deltaTime)
 	{
 		if(_resetFactor==1.0f)
 		{
-			_state = EActionState::AS_SUCCEEDED;
+			_state = EActionProcessState::EAPS_SUCCEEDED;
 			_resetFactor = 0;
 			return;
 		}

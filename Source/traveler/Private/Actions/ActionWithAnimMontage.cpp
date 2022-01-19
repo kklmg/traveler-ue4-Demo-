@@ -41,5 +41,5 @@ void UActionWithAnimMontage::VOnAnimMontageFinished(UAnimMontage* montage, bool 
 
 	animInstance->OnMontageEnded.RemoveDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
 
-	_state = interrupted ? EActionState::AS_FAILED : EActionState::AS_SUCCEEDED;
+	_state = interrupted ? EActionProcessState::EAPS_FAILED : EActionProcessState::EAPS_SUCCEEDED;
 }

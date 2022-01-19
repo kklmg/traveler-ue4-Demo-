@@ -11,18 +11,18 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogAction, Log, All);
 
 UENUM(BlueprintType)
-enum class EActionState : uint8
+enum class EActionProcessState : uint8
 {
-	AS_UnInitialized UMETA(DisplayName = "UnInitialized"),
-	AS_ReadyToExecute UMETA(DisplayName = "ReadyToExecute"),
+	EAPS_UnInitialized UMETA(DisplayName = "UnInitialized"),
+	EAPS_ReadyToExecute UMETA(DisplayName = "ReadyToExecute"),
 	// Living processes
-	AS_Running UMETA(DisplayName = "Running"),  // initialized and running
-	AS_Paused UMETA(DisplayName = "Paused"),  // initialized but paused
+	EAPS_Running UMETA(DisplayName = "Running"),  // initialized and running
+	EAPS_Paused UMETA(DisplayName = "Paused"),  // initialized but paused
 
 	// Dead processes
-	AS_SUCCEEDED UMETA(DisplayName = "SUCCEEDED"),  // execution succeed
-	AS_FAILED UMETA(DisplayName = "FAILED"),  // execution failed 
-	AS_Aborted UMETA(DisplayName = "Aborted"),
+	EAPS_SUCCEEDED UMETA(DisplayName = "SUCCEEDED"),  // execution succeed
+	EAPS_FAILED UMETA(DisplayName = "FAILED"),  // execution failed 
+	EAPS_Aborted UMETA(DisplayName = "Aborted"),
 };
 
 namespace ActionName
@@ -83,7 +83,7 @@ public:
 	bool IsCompleted();
 
 	UFUNCTION(BlueprintCallable)
-	EActionState GetActionState();
+	EActionProcessState GetActionProcessState();
 
 	UFUNCTION(BlueprintCallable)
 	ACharacter* GetActionOwner();
@@ -91,7 +91,7 @@ public:
 
 protected:
 	UFUNCTION(BlueprintCallable)
-	void SetActionState(EActionState state);
+	void SetActionState(EActionProcessState state);
 
 	UPROPERTY()
 	ACharacter* _actionOwner;
@@ -112,5 +112,5 @@ protected:
 	bool _bInstantAction;
 
 	UPROPERTY(VisibleAnywhere, Category = "Action")
-	EActionState _state;
+	EActionProcessState _state;
 };

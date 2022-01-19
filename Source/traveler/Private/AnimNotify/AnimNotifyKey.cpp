@@ -12,7 +12,7 @@ void UAnimNotifyKey::Notify(class USkeletalMeshComponent* MeshComp, class UAnimS
 	ACreatureCharacter* character = MeshComp->GetOwner<ACreatureCharacter>();
 	if (character == nullptr) return;
 
-	UAnimationEventComponent* animEventComp= character->GetAanimationEventComponent();
+	UAnimationEventComponent* animEventComp= character->GetAnimationEventComponent();
 	if(animEventComp == nullptr) return;
 
 	animEventComp->notifyBegin(NotifyKey,0);

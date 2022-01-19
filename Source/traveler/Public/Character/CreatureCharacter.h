@@ -9,6 +9,7 @@
 #include "Data/EnumCharacterState.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/AttributeInterface.h"
+#include "Interface/StateInterface.h"
 #include "CreatureCharacter.generated.h"
 
 
@@ -19,19 +20,17 @@ class UBillboardComponent;
 class UBillBoardWidgetComponent;
 class UAnimationEventComponent;
 class UInputHandlerComponent;
+class UStateComponent;
 
 class AWeapon;
 class UActionBase;
 class AProjectile;
 class UActionBlackBoard;
 
-
-
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStateChanged, ECharacterState, characterState);
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface
+class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface, public IStateInterface
 {
 	GENERATED_BODY()
 
@@ -57,7 +56,7 @@ public:
 public:
 	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	//Interface Attribute ---------------------------------------------------
+	//Attribute Interface implementation---------------------------------------------------
 
 	UFUNCTION(BlueprintCallable)
 	virtual UCharacterAttribute* VGetAttribute(EAttributeType attributeType) override;
@@ -68,7 +67,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool VSetAttributeChange(EAttributeType attributeType, float deltaValue) override;
 
-	//Interface Action ---------------------------------------------------
+	//Action Interface implementation ---------------------------------------------------
 
 	UFUNCTION(BlueprintCallable)
 	virtual UActionBase* VExecuteAction(EActionType actionType) override;
@@ -76,7 +75,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual UActionBlackBoard* VGetActionBlackBoard() override;
 
+	//State Interface implementation---------------------------------------------------
+	FStateData VGetStateData() override;
 
+	void VSetSituationState(ESituationState newState) override;
+	void VSetActionState(EActionState newState) override;
+	void VSetHealthState(EHealthState newState) override;
+	void VSetPostureState(EPostureState newState) override;
+
+	FOnSituationStateChanged* VGetSituationStateChangedDelegate() override;
+	FOnActionStateChanged* VGetActionStateChangedDelegate() override;
+	FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
+	FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
+	
 
 	UFUNCTION(BlueprintCallable)
 	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
@@ -100,11 +111,14 @@ public:
 	UAttributeComponent* GetAttributeComponent();
 
 	UFUNCTION(BlueprintCallable)
-	UAnimationEventComponent* GetAanimationEventComponent();
+	UAnimationEventComponent* GetAnimationEventComponent();
 
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UActionComponent* _actionComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UStateComponent* _stateComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* _attributeComponent;

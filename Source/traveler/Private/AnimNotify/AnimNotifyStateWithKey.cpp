@@ -13,7 +13,7 @@ void UAnimNotifyStateWithKey::NotifyBegin(class USkeletalMeshComponent* MeshComp
 	ACreatureCharacter* character = MeshComp->GetOwner<ACreatureCharacter>();
 	if (character == nullptr) return;
 
-	UAnimationEventComponent* animEventComp = character->GetAanimationEventComponent();
+	UAnimationEventComponent* animEventComp = character->GetAnimationEventComponent();
 	if (animEventComp == nullptr) return;
 
 	animEventComp->notifyBegin(NotifyKey, TotalDuration);
@@ -26,7 +26,7 @@ void UAnimNotifyStateWithKey::NotifyTick(USkeletalMeshComponent* MeshComp, UAnim
 	ACreatureCharacter* character = MeshComp->GetOwner<ACreatureCharacter>();
 	if (character == nullptr) return;
 
-	UAnimationEventComponent* animEventComp = character->GetAanimationEventComponent();
+	UAnimationEventComponent* animEventComp = character->GetAnimationEventComponent();
 	if (animEventComp == nullptr) return;
 
 	animEventComp->notifyTick(NotifyKey, FrameDeltaTime);
@@ -40,7 +40,7 @@ void UAnimNotifyStateWithKey::NotifyEnd(class USkeletalMeshComponent* MeshComp, 
 	ACreatureCharacter* character = MeshComp->GetOwner<ACreatureCharacter>();
 	if (character == nullptr) return;
 
-	UAnimationEventComponent* animEventComp = character->GetAanimationEventComponent();
+	UAnimationEventComponent* animEventComp = character->GetAnimationEventComponent();
 	if (animEventComp == nullptr) return;
 
 	animEventComp->notifyEnd(NotifyKey);
