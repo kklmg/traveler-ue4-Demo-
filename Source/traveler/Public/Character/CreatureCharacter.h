@@ -19,7 +19,6 @@ class UWidgetComponent;
 class UBillboardComponent;
 class UBillBoardWidgetComponent;
 class UAnimationEventComponent;
-class UInputHandlerComponent;
 class UStateComponent;
 
 class AWeapon;
@@ -128,9 +127,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UAnimationEventComponent* _animationEventComponent;
-
-	UPROPERTY(VisibleAnywhere)
-	UInputHandlerComponent* _inputHandlerComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	ECharacterState _characterState;

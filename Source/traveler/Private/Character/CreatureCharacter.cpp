@@ -12,7 +12,6 @@
 #include "Components/BillBoardWidgetComponent.h"
 #include "Components/AnimationEventComponent.h"
 #include "Components/StateComponent.h"
-#include "Input/InputHandlerComponent.h"
 
 
 // Sets default values
@@ -48,13 +47,6 @@ ACreatureCharacter::ACreatureCharacter()
 		check(_billboardWidgetComponent != nullptr);
 	}
 
-
-	if (_inputHandlerComponent == nullptr)
-	{
-		_inputHandlerComponent = CreateDefaultSubobject<UInputHandlerComponent>(TEXT("InputHandlerComponent"));
-		check(_inputHandlerComponent != nullptr);
-	}
-
 	if(_stateComponent == nullptr)
 	{
 		_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("StateComponent"));
@@ -84,11 +76,6 @@ void ACreatureCharacter::Tick(float DeltaTime)
 void ACreatureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	if(_inputHandlerComponent)
-	{
-		_inputHandlerComponent->BindInputs(PlayerInputComponent);
-	}
 }
 
 float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
