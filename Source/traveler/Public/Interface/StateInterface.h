@@ -35,4 +35,6 @@ public:
 	virtual FOnActionStateChanged* VGetActionStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetActionStateChangedDelegate, return nullptr;);
 	virtual FOnHealthStateChanged* VGetHealthStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetHealthStateChangedDelegate, return nullptr;);
 	virtual FOnPostureStateChanged* VGetPostureStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetPostureStateChangedDelegate, return nullptr;);
+	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetAnyStateChangedDelegate, return nullptr;);
+
 };

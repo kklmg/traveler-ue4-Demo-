@@ -86,6 +86,7 @@ public:
 	FOnActionStateChanged* VGetActionStateChangedDelegate() override;
 	FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
 	FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
+	FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;
 	
 
 	UFUNCTION(BlueprintCallable)
@@ -93,15 +94,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform);
-
-	UFUNCTION()
-	void OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
-
-	UFUNCTION(BlueprintCallable)
-	void SetCharacterState(ECharacterState characterState);
-
-	UFUNCTION(BlueprintCallable)
-	ECharacterState GetCharacterState();
 
 	UFUNCTION(BlueprintCallable)
 	UActionComponent* GetActionComponent();
@@ -127,9 +119,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UAnimationEventComponent* _animationEventComponent;
-
-	UPROPERTY(VisibleAnywhere)
-	ECharacterState _characterState;
 
 	UPROPERTY(EditDefaultsOnly, Category = Sockets)
 	TMap<EMeshSocketType, FName> _socketsMap;

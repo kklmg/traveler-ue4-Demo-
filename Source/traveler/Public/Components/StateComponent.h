@@ -36,6 +36,10 @@ public:
 	FOnActionStateChanged* VGetActionStateChangedDelegate() override;
 	FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
 	FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
+	FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;
+
+	UFUNCTION()
+	void OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -45,4 +49,5 @@ private:
 	FOnActionStateChanged _actionStateChangedDelegate;
 	FOnHealthStateChanged _healthStateChangedDelegate;
 	FOnPostureStateChanged _postureStateChangedDelegate;
+	FOnAnyStateChanged _anyStateChangedDelegate;
 };

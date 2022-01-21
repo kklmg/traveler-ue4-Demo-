@@ -5,12 +5,13 @@
 #include "Components/ActionComponent.h"
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
+#include "Interface/StateInterface.h"
 
 DEFINE_LOG_CATEGORY(LogAction);
 
 UActionBase::UActionBase()
 {
-	_state = EActionProcessState::EAPS_UnInitialized;
+	_processState = EActionProcessState::EAPS_UnInitialized;
 	_bInstantAction = true;
 	_actionName = TEXT("UnKnown");
 	_actionType = EActionType::EACT_None;
@@ -22,22 +23,28 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 	_actionComp = actionComponent;
 	_actionOwner = actionComponent->GetOwner<ACharacter>();
 
-	_state = EActionProcessState::EAPS_ReadyToExecute;
+	_processState = EActionProcessState::EAPS_ReadyToExecute;
 }
 
 
 void UActionBase::Pause()
 {
-	_state = EActionProcessState::EAPS_Paused;
+	_processState = EActionProcessState::EAPS_Paused;
+}
+
+FORCEINLINE bool UActionBase::VCanStart()
+{
+	return _processState == EActionProcessState::EAPS_ReadyToExecute;
 }
 
 void UActionBase::VExecute() 
 {
-	if (CanStart() == false)
+	if (VCanStart() == false)
 	{
+		UE_LOG(LogAction,Warning,TEXT("Can't execute Action"));
 		return;
 	}
-	_state = _bInstantAction ? EActionProcessState::EAPS_SUCCEEDED : EActionProcessState::EAPS_Running;
+	_processState = _bInstantAction ? EActionProcessState::EAPS_SUCCEEDED : EActionProcessState::EAPS_Running;
 }
 
 void UActionBase::VTick(float deltaTime) 
@@ -46,13 +53,9 @@ void UActionBase::VTick(float deltaTime)
 
 void UActionBase::Abort() 
 {
-	_state = EActionProcessState::EAPS_Aborted;
+	_processState = EActionProcessState::EAPS_Aborted;
 }
 
-FORCEINLINE bool UActionBase::CanStart()
-{
-	return _state == EActionProcessState::EAPS_ReadyToExecute;
-}
 
 FORCEINLINE FName UActionBase::GetActionName()
 {
@@ -67,12 +70,12 @@ EActionType UActionBase::GetActionType()
 
 FORCEINLINE bool UActionBase::IsCompleted()
 {
-	return (_state == EActionProcessState::EAPS_SUCCEEDED || _state == EActionProcessState::EAPS_FAILED || _state == EActionProcessState::EAPS_Aborted);
+	return (_processState == EActionProcessState::EAPS_SUCCEEDED || _processState == EActionProcessState::EAPS_FAILED || _processState == EActionProcessState::EAPS_Aborted);
 }
 
 FORCEINLINE EActionProcessState UActionBase::GetActionProcessState()
 {
-	return _state;
+	return _processState;
 }
 
 FORCEINLINE ACharacter* UActionBase::GetActionOwner()
@@ -80,10 +83,25 @@ FORCEINLINE ACharacter* UActionBase::GetActionOwner()
 	return _actionOwner;
 }
 
-
-void UActionBase::SetActionState(EActionProcessState state)
+FORCEINLINE UActionBlackBoard* UActionBase::GetActionBlackBoard()
 {
-	_state = state;
+	return _actionBlackBoard;
+}
+
+void UActionBase::SetActionSucceed()
+{
+	_processState = EActionProcessState::EAPS_SUCCEEDED;
+	_VOnActionCompleted();
+}
+
+void UActionBase::SetActionFailed()
+{
+	_processState = EActionProcessState::EAPS_FAILED;
+	_VOnActionCompleted();
+}
+
+void UActionBase::_VOnActionCompleted()
+{
 }
 
 FORCEINLINE bool UActionBase::IsInstantAction()

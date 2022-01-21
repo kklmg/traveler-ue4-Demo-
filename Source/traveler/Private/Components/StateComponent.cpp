@@ -2,6 +2,8 @@
 
 
 #include "Components/StateComponent.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
 UStateComponent::UStateComponent()
@@ -20,6 +22,12 @@ void UStateComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	ACharacter* character = GetOwner<ACharacter>();
+	if(character)
+	{
+		character->MovementModeChangedDelegate.AddDynamic(this, &UStateComponent::OnCharacterMovementModeChanged);
+	}
+
 	
 }
 
@@ -91,5 +99,37 @@ FOnHealthStateChanged* UStateComponent::VGetHealthStateChangedDelegate()
 FOnPostureStateChanged* UStateComponent::VGetPostureStateChangedDelegate()
 {
 	return &_postureStateChangedDelegate;
+}
+
+FOnAnyStateChanged* UStateComponent::VGetAnyStateChangedDelegate()
+{
+	return &_anyStateChangedDelegate;
+}
+
+void UStateComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+{
+	EMovementMode curMovementMode = Character->GetCharacterMovement()->MovementMode;
+
+	switch (curMovementMode)
+	{
+	case MOVE_None:
+		break;
+	case MOVE_Walking: VSetSituationState(ESituationState::ESS_OnGround);
+		break;
+	case MOVE_NavWalking:
+		break;
+	case MOVE_Falling: VSetSituationState(ESituationState::ESS_InAir);
+		break;
+	case MOVE_Swimming:VSetSituationState(ESituationState::ESS_InWater);
+		break;
+	case MOVE_Flying: VSetSituationState(ESituationState::ESS_InAir);
+		break;
+	case MOVE_Custom:
+		break;
+	case MOVE_MAX:
+		break;
+	default:
+		break;
+	}
 }
 

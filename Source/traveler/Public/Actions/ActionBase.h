@@ -10,6 +10,8 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogAction, Log, All);
 
+class IStateInterface;
+
 UENUM(BlueprintType)
 enum class EActionProcessState : uint8
 {
@@ -55,9 +57,13 @@ public:
 	UActionBase();
 
 public:
-	virtual void VExecute();
-	virtual void VTick(float deltaTime);
+	UFUNCTION(BlueprintCallable)
+	virtual bool VCanStart();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void VExecute();
+
+	virtual void VTick(float deltaTime);
 public:
 	void Initialize(UActionComponent* actionComponent, UActionBlackBoard* actionBlackBoard);
 
@@ -66,9 +72,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Abort();
-
-	UFUNCTION(BlueprintCallable)
-	bool CanStart();
 
 	UFUNCTION(BlueprintCallable)
 	bool IsInstantAction();
@@ -88,10 +91,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ACharacter* GetActionOwner();
 
+	UFUNCTION(BlueprintCallable)
+	UActionBlackBoard* GetActionBlackBoard();
 
 protected:
-	UFUNCTION(BlueprintCallable)
-	void SetActionState(EActionProcessState state);
+	void SetActionSucceed();
+	void SetActionFailed();
+
+protected:
+	virtual void _VOnActionCompleted();
 
 	UPROPERTY()
 	ACharacter* _actionOwner;
@@ -101,6 +109,8 @@ protected:
 
 	UPROPERTY()
 	UActionComponent* _actionComp;
+
+	IStateInterface* _stateInterface;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName _actionName;
@@ -112,5 +122,5 @@ protected:
 	bool _bInstantAction;
 
 	UPROPERTY(VisibleAnywhere, Category = "Action")
-	EActionProcessState _state;
+	EActionProcessState _processState;
 };

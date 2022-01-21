@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Data/StateData.h"
 #include "ActionComponent.generated.h"
 
 class UActionBase;
@@ -47,7 +48,7 @@ public:
 	void ClearActionProcessPool();
 
 	UFUNCTION()
-	void OnCharacterStateChanged(ECharacterState characterState);
+	void OnCharacterStateChanged(FStateData stateData);
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -74,6 +75,8 @@ private:
 private:
 	FVector _userMovementInput;
 
+	FStateData _cachedStateData;
+
 	UPROPERTY()
 	TMap<EActionType, UActionBase*> _mapActionProcessPool;
 
@@ -81,7 +84,7 @@ private:
 	UActionBlackBoard* _actionBlackBoard;
 
 	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
-	TMap<ECharacterState, TSubclassOf<UCharacterActionPreset>> _mapActionPreset;
+	TMap<ESituationState, TSubclassOf<UCharacterActionPreset>> _mapActionPreset;
 
 	UPROPERTY()
 	UCharacterActionPreset* _pCurrentActionPreset;

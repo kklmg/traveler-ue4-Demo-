@@ -44,7 +44,7 @@ void UActionFlyTo::VExecute()
 	}
 	else
 	{
-		_state = EActionProcessState::EAPS_FAILED;
+		_processState = EActionProcessState::EAPS_FAILED;
 	}
 }
 
@@ -62,7 +62,7 @@ void UActionFlyTo::VTick(float deltaTime)
 		}
 		else
 		{
-			_state = EActionProcessState::EAPS_FAILED;
+			_processState = EActionProcessState::EAPS_FAILED;
 			return;
 		}
 	}
@@ -108,7 +108,7 @@ void UActionFlyTo::VTick(float deltaTime)
 	{
 		if(_resetFactor==1.0f)
 		{
-			_state = EActionProcessState::EAPS_SUCCEEDED;
+			_processState = EActionProcessState::EAPS_SUCCEEDED;
 			_resetFactor = 0;
 			return;
 		}
@@ -194,9 +194,7 @@ void UActionFlyTo::VTick(float deltaTime)
 
 bool UActionFlyTo::_GetDestination(FVector& outVector)
 {
-	if (_actionBlackBoard == false) return false;
-
-	return _actionBlackBoard->TryGetData_FVector(EActionData::EACTD_DestLocation, outVector);
+	return GetActionBlackBoard()->TryGetData_FVector(EActionData::EACTD_DestLocation, outVector);
 }
 
 
@@ -231,19 +229,19 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	//Compute Turning Radius, CircleCenter 
 	//-------------------------------------------------------------------------------------------------------------
 	float turningRadius = _flyingSpeed / FMath::DegreesToRadians(_yawDegreePerSecond);
-	FVector dirRight = _actionOwner->GetActorRightVector();
+	FVector dirRight = GetActionOwner()->GetActorRightVector();
 	dirRight.Z = 0;
 	dirRight.Normalize();
 	FVector circleCenter = angle_Forward_ToDest < 0
-		? _actionOwner->GetActorLocation() - dirRight * turningRadius
-		: _actionOwner->GetActorLocation() + dirRight * turningRadius;
+		? GetActionOwner()->GetActorLocation() - dirRight * turningRadius
+		: GetActionOwner()->GetActorLocation() + dirRight * turningRadius;
 
 	//float distanceFronCurLocToDest = UMyBlueprintFunctionLibrary::ComputeDistance(_actionOwner->GetActorLocation(), _destination, EPlane::Plane_XY);
 	float distanceFronDestLocToCircleCenter = UMyBlueprintFunctionLibrary::ComputeDistance(_destination, circleCenter, EPlane::Plane_XY);
 
 	
 	//debug message
-	DrawDebugLine(GetWorld(), _actionOwner->GetActorLocation(), circleCenter, FColor::Emerald, false, -1.0f, 0U, 30.0f);
+	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), circleCenter, FColor::Emerald, false, -1.0f, 0U, 30.0f);
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Circle Center: " + (circleCenter).ToString());
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("Turnning Radius: ") + FString::SanitizeFloat(turningRadius));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("DistanceToCircleCenter ") + FString::SanitizeFloat(distanceFronDestLocToCircleCenter));

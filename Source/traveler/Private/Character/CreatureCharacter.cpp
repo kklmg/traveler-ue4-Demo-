@@ -54,16 +54,12 @@ ACreatureCharacter::ACreatureCharacter()
 	}
 
 	bUseControllerRotationYaw = false;
-
-	_characterState = ECharacterState::ECS_GroundNormal;
 }
 
 // Called when the game starts or when spawned
 void ACreatureCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	MovementModeChangedDelegate.AddDynamic(this, &ACreatureCharacter::OnCharacterMovementModeChanged);
 }
 
 // Called every frame
@@ -183,6 +179,11 @@ FOnPostureStateChanged* ACreatureCharacter::VGetPostureStateChangedDelegate()
 	return _stateComponent->VGetPostureStateChangedDelegate();
 }
 
+FOnAnyStateChanged* ACreatureCharacter::VGetAnyStateChangedDelegate()
+{
+	return _stateComponent->VGetAnyStateChangedDelegate();
+}
+
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
 {
 	if (_socketsMap.Contains(meshSocketType))
@@ -217,50 +218,5 @@ bool ACreatureCharacter::GetMeshSocketTransform(EMeshSocketType meshSocketType, 
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
 		}
 		return false;
-	}
-}
-
-
-void ACreatureCharacter::SetCharacterState(ECharacterState characterState) 
-{
-	if (_characterState != characterState) 
-	{
-		_characterState = characterState;
-		OnCharacterStateChangedDelegate.Broadcast(_characterState);
-	}
-}
-
-FORCEINLINE ECharacterState ACreatureCharacter::GetCharacterState()
-{
-	return _characterState;
-}
-
-
-void ACreatureCharacter::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
-{
-	EMovementMode curMovementMode = GetCharacterMovement()->MovementMode;
-
-	//GetCharacterMovement()->SetMovementMode();
-
-	switch (curMovementMode)
-	{
-	case MOVE_None: 
-		break;
-	case MOVE_Walking: SetCharacterState(ECharacterState::ECS_GroundNormal);
-		break;
-	case MOVE_NavWalking:
-		break;
-	case MOVE_Falling: SetCharacterState(ECharacterState::ECS_AirFalling);
-		break;
-	case MOVE_Swimming:SetCharacterState(ECharacterState::ECS_Swimming);
-		break;
-	case MOVE_Flying: SetCharacterState(ECharacterState::ECS_AirFlying);
-		break;
-	case MOVE_Custom:
-		break;
-	case MOVE_MAX:
-		break;
-	default:
-		break;
 	}
 }

@@ -10,6 +10,7 @@
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyBlueprintFunctionLibrary.h"
+#include "Interface/StateInterface.h"
 
 // Sets default values for this component's properties
 UActionComponent::UActionComponent()
@@ -32,13 +33,13 @@ void UActionComponent::BeginPlay()
 	// ...
 
 	//Get Character
-	ACreatureCharacter* character = GetOwner<ACreatureCharacter>();
-	check(character != nullptr);
+	IStateInterface* stateIntercate = GetOwner<IStateInterface>();
+	if (stateIntercate == nullptr) return;
 	
-	OnCharacterStateChanged(character->GetCharacterState());
+	OnCharacterStateChanged(stateIntercate->VGetStateData());
 
-	//bind Character changed event
-	character->OnCharacterStateChangedDelegate.AddDynamic(this, &UActionComponent::OnCharacterStateChanged);
+	//bind state changed event
+	stateIntercate->VGetAnyStateChangedDelegate()->AddDynamic(this, &UActionComponent::OnCharacterStateChanged);
 }
 
 
@@ -200,34 +201,34 @@ void UActionComponent::OnDodgeButtonUp()
 {
 }
 
-void UActionComponent::OnCharacterStateChanged(ECharacterState characterState)
+void UActionComponent::OnCharacterStateChanged(FStateData stateData)
 {
-	ACreatureCharacter* character = GetOwner<ACreatureCharacter>();
-	check(character != nullptr);
-
-	if (_mapActionPreset.Contains(characterState))
+	if (_cachedStateData.SituationState != stateData.SituationState)
 	{
-		//clear process pool
-		ClearActionProcessPool();
+		if (_mapActionPreset.Contains(stateData.SituationState))
+		{
+			//clear process pool
+			ClearActionProcessPool();
 
-		//Make instance of ActionSetClass
-		TSubclassOf<UCharacterActionPreset> actionSetClass = _mapActionPreset[characterState];
+			//Make instance of ActionSetClass
+			TSubclassOf<UCharacterActionPreset> actionSetClass = _mapActionPreset[stateData.SituationState];
 
-		UCharacterActionPreset* actionSetIns = actionSetClass ? 
-			NewObject<UCharacterActionPreset>(this, actionSetClass) 
-			: NewObject<UCharacterActionPreset>(this);
+			UCharacterActionPreset* actionSetIns = actionSetClass ?
+				NewObject<UCharacterActionPreset>(this, actionSetClass)
+				: NewObject<UCharacterActionPreset>(this);
 
 			actionSetIns->VEnter();
-		
 
-		//Set Current Action set
-		if (_pCurrentActionPreset != nullptr)
-		{
-			_pCurrentActionPreset->VLeave();
-			_pCurrentActionPreset->MarkPendingKill();
+			//Set Current Action set
+			if (_pCurrentActionPreset != nullptr)
+			{
+				_pCurrentActionPreset->VLeave();
+				_pCurrentActionPreset->MarkPendingKill();
+			}
+			_pCurrentActionPreset = actionSetIns;
 		}
-		_pCurrentActionPreset = actionSetIns;
 	}
+	_cachedStateData = stateData;
 }
 
 void UActionComponent::ClearActionProcessPool()

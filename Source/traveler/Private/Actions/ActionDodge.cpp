@@ -31,8 +31,6 @@ void UActionDodge::VExecute()
 
 		//play montage
 		character->PlayAnimMontage(_aniMontage);
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("play Dodge animation"));
-		character->SetCharacterState(ECharacterState::ECS_GroundDodging);
 	}
 }
 
@@ -59,6 +57,5 @@ void UActionDodge::OnAnimMontageFinished(UAnimMontage* montage,bool interrupted)
 	
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("End Dodge animation"));
 
-	character->SetCharacterState(ECharacterState::ECS_GroundNormal);
-	_state = EActionProcessState::EAPS_SUCCEEDED;
+	_processState = EActionProcessState::EAPS_SUCCEEDED;
 }

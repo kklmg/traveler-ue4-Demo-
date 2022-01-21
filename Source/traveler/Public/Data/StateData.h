@@ -51,12 +51,6 @@ enum class EPostureState : uint8
 };
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSituationStateChanged, ESituationState, SituationState);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionStateChanged, EActionState, ActionState);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthStateChanged, EHealthState, HealthState);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPostureStateChanged, EPostureState, PostureState);
-
-
 USTRUCT(BlueprintType)
 struct FStateData
 {
@@ -65,15 +59,24 @@ struct FStateData
 public:
 	FStateData();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 	ESituationState SituationState;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 	EActionState ActionState;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 	EHealthState HealthState;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 	EPostureState PostureState;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector Velocity;
 };
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSituationStateChanged, ESituationState, SituationState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionStateChanged, EActionState, ActionState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthStateChanged, EHealthState, HealthState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPostureStateChanged, EPostureState, PostureState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAnyStateChanged, FStateData, State);
