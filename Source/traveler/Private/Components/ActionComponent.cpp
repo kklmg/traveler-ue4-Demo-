@@ -48,17 +48,6 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	AHumanCharacter* character = GetOwner<AHumanCharacter>();
-
-	if (character && character->IsPlayerControlled() && _userMovementInput.IsZero() == false)
-	{
-		//Get Camera
-		UCameraComponent* cameraComp = character->GetCameraComponent();
-		check(cameraComp != nullptr);
-
-		ExecuteMove(UMyBlueprintFunctionLibrary::InptAxisToCameraDirection(_userMovementInput, cameraComp));
-	}
-
 	_TickActionProcess(DeltaTime);
 }
 
@@ -92,11 +81,13 @@ void UActionComponent::ExecuteIdle()
 {
 	ExecuteAction(EActionType::EACT_Idle);
 }
+
 void UActionComponent::ExecuteMove(FVector movement)
 {
 	_actionBlackBoard->WriteData_FVector(EActionData::EACTD_MovementInput, movement);
 	ExecuteAction(EActionType::EACT_Moving);
 }
+
 void UActionComponent::ExecuteSprint()
 {
 	ExecuteAction(EActionType::EACT_Sprint);

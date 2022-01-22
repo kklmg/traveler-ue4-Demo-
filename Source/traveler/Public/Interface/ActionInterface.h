@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "Data/EnumActionType.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 #include "ActionInterface.generated.h"
 
 // This class does not need to be modified.

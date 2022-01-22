@@ -65,14 +65,14 @@ public:
 
 private:
 	// FPS camera.
-	UPROPERTY(VisibleAnywhere)
-	UPawnCameraComponent* _cameraComponent;
+	//UPROPERTY(VisibleAnywhere)
+	//UPawnCameraComponent* _cameraComponent;
 
-	UPROPERTY(VisibleAnywhere)
-	UCameraSpringArmComponent* _cameraSpringArmComponent;
+	//UPROPERTY(VisibleAnywhere)
+	//UCameraSpringArmComponent* _cameraSpringArmComponent;
 
-	UPROPERTY(VisibleAnywhere)
-	UWeaponComponent* _weaponComponent;
+	//UPROPERTY(VisibleAnywhere)
+	//UWeaponComponent* _weaponComponent;
 
 	//delegates
 public:

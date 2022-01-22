@@ -19,21 +19,19 @@ AHumanCharacter::AHumanCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	////Create Camera Spring Arm Component
+	//_cameraSpringArmComponent = CreateDefaultSubobject<UCameraSpringArmComponent>(TEXT("CameraSpringArmComponent"));
+	//check(_cameraSpringArmComponent != nullptr);
+	//_cameraSpringArmComponent->SetupAttachment(GetCapsuleComponent());
 
-	//Create Camera Spring Arm Component
-	_cameraSpringArmComponent = CreateDefaultSubobject<UCameraSpringArmComponent>(TEXT("CameraSpringArmComponent"));
-	check(_cameraSpringArmComponent != nullptr);
-	_cameraSpringArmComponent->SetupAttachment(GetCapsuleComponent());
+	//// Create a first person camera component.
+	//_cameraComponent = CreateDefaultSubobject<UPawnCameraComponent>(TEXT("FirstPersonCamera"));
+	//check(_cameraComponent != nullptr);
+	//_cameraComponent->SetupAttachment(_cameraSpringArmComponent, USpringArmComponent::SocketName);
 
-	// Create a first person camera component.
-	_cameraComponent = CreateDefaultSubobject<UPawnCameraComponent>(TEXT("FirstPersonCamera"));
-	check(_cameraComponent != nullptr);
-	_cameraComponent->SetupAttachment(_cameraSpringArmComponent, USpringArmComponent::SocketName);
-
-	//Create weapon component
-	_weaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
-	check(_weaponComponent != nullptr);
+	////Create weapon component
+	//_weaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
+	//check(_weaponComponent != nullptr);
 
 	//Enable the pawn to control camera rotation.
 	bUseControllerRotationYaw = false;
@@ -56,12 +54,6 @@ void AHumanCharacter::BeginDestroy()
 void AHumanCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//FRotator rotator = GetActorRotation();
-
-	//GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Orange, "yaw: " + FString::SanitizeFloat(rotator.Yaw));
-	//GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Orange, "pitch: " + FString::SanitizeFloat(rotator.Pitch));
-	//GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Orange, "roll: " + FString::SanitizeFloat(rotator.Roll));
 }
 
 // Called to bind functionality to input

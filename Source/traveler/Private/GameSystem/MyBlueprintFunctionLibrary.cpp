@@ -9,6 +9,7 @@ FVector UMyBlueprintFunctionLibrary::InptAxisToCameraDirection(FVector inputAxis
 	//Get Camera Rotation Matrix
 	FRotator cameraRotator = cameraComp->GetComponentRotation();
 
+
 	FVector moveDirection = cameraRotator.RotateVector(inputAxis);
 	moveDirection.Z = 0;
 	moveDirection.Normalize();

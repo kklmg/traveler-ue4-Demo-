@@ -10,6 +10,7 @@
 #include "Interface/ActionInterface.h"
 #include "Interface/AttributeInterface.h"
 #include "Interface/StateInterface.h"
+#include "Interface/CharacterCameraInterface.h"
 #include "CreatureCharacter.generated.h"
 
 
@@ -19,17 +20,21 @@ class UWidgetComponent;
 class UBillboardComponent;
 class UBillBoardWidgetComponent;
 class UAnimationEventComponent;
+class UInputHandlerComponent;
 class UStateComponent;
+class UPawnCameraComponent;
+class UCameraSpringArmComponent;
+class UWeaponComponent;
+
 
 class AWeapon;
 class UActionBase;
 class AProjectile;
 class UActionBlackBoard;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStateChanged, ECharacterState, characterState);
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface, public IStateInterface
+class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface, public IStateInterface, public ICharacterCameraInterface
 {
 	GENERATED_BODY()
 
@@ -48,15 +53,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//delegates
-public:
-	FOnCharacterStateChanged OnCharacterStateChangedDelegate;
-
 public:
 	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	//Attribute Interface implementation---------------------------------------------------
-
 	UFUNCTION(BlueprintCallable)
 	virtual UCharacterAttribute* VGetAttribute(EAttributeType attributeType) override;
 
@@ -87,7 +87,15 @@ public:
 	FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
 	FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
 	FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;
-	
+
+	//Character Camera Interface implementation---------------------------------------------------
+	virtual void VCameraArmPitch(float angle)  override;
+	virtual void VCameraArmYaw(float angle)   override;
+	virtual void VCameraZoomInOut(float offset)  override;
+	virtual FRotator VGetCameraRotation() override;
+	virtual FVector VGetCameraLocation() override;
+
+
 
 	UFUNCTION(BlueprintCallable)
 	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
@@ -119,6 +127,19 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UAnimationEventComponent* _animationEventComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UInputHandlerComponent* _inputHandlerComponent;
+
+	// FPS camera.
+	UPROPERTY(VisibleAnywhere)
+	UPawnCameraComponent* _cameraComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UCameraSpringArmComponent* _cameraSpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UWeaponComponent* _weaponComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = Sockets)
 	TMap<EMeshSocketType, FName> _socketsMap;

@@ -12,6 +12,10 @@
 #include "Components/BillBoardWidgetComponent.h"
 #include "Components/AnimationEventComponent.h"
 #include "Components/StateComponent.h"
+#include "Components/PawnCameraComponent.h"
+#include "Components/CameraSpringArmComponent.h"
+#include "Components/WeaponComponent.h"
+#include "Input/InputHandlerComponent.h"
 
 
 // Sets default values
@@ -26,27 +30,51 @@ ACreatureCharacter::ACreatureCharacter()
 		_actionComponent = CreateDefaultSubobject<UActionComponent>(TEXT("ActionComponent"));
 		check(_actionComponent != nullptr);
 	}
-
+	//Create Camera Spring Arm Component
+	if(_cameraSpringArmComponent==nullptr)
+	{
+		_cameraSpringArmComponent = CreateDefaultSubobject<UCameraSpringArmComponent>(TEXT("CameraSpringArmComponent"));
+		check(_cameraSpringArmComponent != nullptr);
+		_cameraSpringArmComponent->SetupAttachment(GetCapsuleComponent());
+	}
+	// Create a first person camera component.
+	if(_cameraComponent==nullptr)
+	{
+		_cameraComponent = CreateDefaultSubobject<UPawnCameraComponent>(TEXT("FirstPersonCamera"));
+		check(_cameraComponent != nullptr);
+		_cameraComponent->SetupAttachment(_cameraSpringArmComponent, USpringArmComponent::SocketName);
+	}
+	//Create weapon component
+	if (_weaponComponent == nullptr)
+	{
+		_weaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
+		check(_weaponComponent != nullptr);
+	}
 	//Create Attribute component
 	if (_attributeComponent == nullptr)
 	{
 		_attributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
 		check(_attributeComponent != nullptr);
 	}
-
 	//Create billboard component
 	if (_billboardWidgetComponent == nullptr)
 	{
 		_billboardWidgetComponent = CreateDefaultSubobject<UBillBoardWidgetComponent>(TEXT("BillBoardWidgetComponent"));
 		check(_billboardWidgetComponent != nullptr);
 	}
-
+	//Create Animation Event component
 	if (_animationEventComponent == nullptr)
 	{
 		_animationEventComponent = CreateDefaultSubobject<UAnimationEventComponent>(TEXT("AnimationEventComponent"));
 		check(_billboardWidgetComponent != nullptr);
 	}
-
+	//Create InputHandler component
+	if (_inputHandlerComponent == nullptr)
+	{
+		_inputHandlerComponent = CreateDefaultSubobject<UInputHandlerComponent>(TEXT("InputHandlerComponent"));
+		check(_inputHandlerComponent != nullptr);
+	}
+	//Create State component
 	if(_stateComponent == nullptr)
 	{
 		_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("StateComponent"));
@@ -72,6 +100,11 @@ void ACreatureCharacter::Tick(float DeltaTime)
 void ACreatureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if(_inputHandlerComponent)
+	{
+		_inputHandlerComponent->BindInputs(PlayerInputComponent);
+	}
 }
 
 float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
@@ -182,6 +215,31 @@ FOnPostureStateChanged* ACreatureCharacter::VGetPostureStateChangedDelegate()
 FOnAnyStateChanged* ACreatureCharacter::VGetAnyStateChangedDelegate()
 {
 	return _stateComponent->VGetAnyStateChangedDelegate();
+}
+
+void ACreatureCharacter::VCameraArmPitch(float angle)
+{
+	_cameraSpringArmComponent->Pitch(angle);
+}
+
+void ACreatureCharacter::VCameraArmYaw(float angle)
+{
+	_cameraSpringArmComponent->Yaw(angle);
+}
+
+void ACreatureCharacter::VCameraZoomInOut(float offset)
+{
+	_cameraSpringArmComponent->ZoomInOut(offset);
+}
+
+FRotator ACreatureCharacter::VGetCameraRotation()
+{
+	return _cameraComponent->GetComponentRotation();
+}
+
+FVector ACreatureCharacter::VGetCameraLocation()
+{
+	return _cameraComponent->GetComponentLocation();
 }
 
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
