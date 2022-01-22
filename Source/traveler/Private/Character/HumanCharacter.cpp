@@ -61,9 +61,9 @@ void AHumanCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	//walk
-	PlayerInputComponent->BindAxis("MoveForward", _actionComponent, &UActionComponent::AddMovementInputX);
-	PlayerInputComponent->BindAxis("MoveRight", _actionComponent, &UActionComponent::AddMovementInputY);
+	////walk
+	//PlayerInputComponent->BindAxis("MoveForward", _actionComponent, &UActionComponent::AddMovementInputX);
+	//PlayerInputComponent->BindAxis("MoveRight", _actionComponent, &UActionComponent::AddMovementInputY);
 
 	//jump
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, _actionComponent, &UActionComponent::OnJumpButtonDown);

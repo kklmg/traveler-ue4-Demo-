@@ -105,15 +105,6 @@ void UActionComponent::ExecuteDodge()
 	ExecuteAction(EActionType::EACT_Dodge);
 }
 
-void UActionComponent::AddMovementInputX(float value) 
-{
-	_userMovementInput.X = value;
-}
-void UActionComponent::AddMovementInputY(float value) 
-{
-	_userMovementInput.Y = value;
-}
-
 void UActionComponent::AddToActionProcessPool(UActionBase* action)
 {
 	if (action == nullptr) return;

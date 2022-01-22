@@ -12,7 +12,8 @@
 
 DECLARE_DELEGATE_OneParam(FButtonSignarue, FName);
 
-class UCharacterInputHandler;
+class UButtonInputActionBase;
+
 
 class IActionInterface;
 class ICharacterCameraInterface;
@@ -36,9 +37,8 @@ public:
 
 	void BindInputs(UInputComponent* PlayerInputComponent);
 
-	template<EInputType type> void HandleAxisInput(float value);
-	void HandleButtonPress(FName actionName);
-	void HandleButtonRelease(FName actionName);
+	void HandleButtonPress(FName inputName);
+	void HandleButtonRelease(FName inputName);
 
 	UFUNCTION()
 	void ReceiveInputMoveX(float value);
@@ -53,36 +53,19 @@ public:
 	UFUNCTION()
 	void ReceiveInputCameraZoomInOut(float value);
 
-
 	void ConsumeMovementInput();
+
+	void InitializeButtons();
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FName> _axisInputActionNames;
+	TArray<TSubclassOf<UButtonInputActionBase>> _presetButtons;
 
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FName> _buttonInputActionNames;
-
-	UPROPERTY(EditDefaultsOnly)
-	TMap<ECharacterState,TSubclassOf<UCharacterInputHandler>> _mapInputHandlerClasses;
-
-	UPROPERTY()
-	TSubclassOf<UCharacterInputHandler> _inputHandlerClass;
-
-	UPROPERTY()
-	UCharacterInputHandler* _inputHandler;
-
-	FVector _movementInput;
+	TMap<FName,UButtonInputActionBase*> _mapButtons;
 
 	IActionInterface* _actionInterface;
 	ICharacterCameraInterface* _cameraInterface;
+
+	FVector _movementInput;
 };
-
-
-template<EInputType type> void UInputHandlerComponent::HandleAxisInput(float value)
-{
-	if (_inputHandler)
-	{
-		_inputHandler->HandleAxisInput(type, value);
-	}
-}

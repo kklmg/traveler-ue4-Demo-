@@ -12,14 +12,6 @@ UButtonInputBase::UButtonInputBase()
 	_buttonName = TEXT("unKnown");
 }
 
-void UButtonInputBase::Tick(float deltaTime)
-{
-	if(_isPressing)
-	{
-		_holdingTime += deltaTime;
-	}
-}
-
 void UButtonInputBase::VPress()
 {
 	if (OnButtonPressed.IsBound()) 
@@ -31,6 +23,14 @@ void UButtonInputBase::VPress()
 		UE_LOG(LogMyInput,Warning, TEXT("pressed Button_ %s: delegate is not bound"), *_buttonName);
 	}
 	_isPressing = true;
+}
+
+void UButtonInputBase::VPressing(float deltaTime)
+{
+	if (_isPressing)
+	{
+		_holdingTime += deltaTime;
+	}
 }
 
 void UButtonInputBase::VRelease()
@@ -46,9 +46,9 @@ void UButtonInputBase::VRelease()
 	_isPressing = false;
 }
 
-FName UButtonInputBase::GetActionName()
+FName UButtonInputBase::GetInputMappingName()
 {
-	return _actionName;
+	return _inputMappingName;
 }
 
 float UButtonInputBase::GetHoldingTime()

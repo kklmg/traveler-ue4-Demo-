@@ -41,9 +41,6 @@ public:
 	void OnDodgeButtonDown();
 	void OnDodgeButtonUp();
 
-	void AddMovementInputX(float value);
-	void AddMovementInputY(float value);
-
 	void AddToActionProcessPool(UActionBase* action);
 	void ClearActionProcessPool();
 

@@ -2,7 +2,7 @@
 
 
 #include "Input/InputHandlerComponent.h"
-#include "Input/CharacterInputHandler.h"
+#include "Input/ButtonInputActionBase.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/CharacterCameraInterface.h"
 
@@ -14,19 +14,6 @@ UInputHandlerComponent::UInputHandlerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	FName arrButtonNames[] =
-	{
-		InputActionName::FIRE,
-		InputActionName::AIM,
-		InputActionName::SPRINT,
-		InputActionName::JUMP,
-		InputActionName::DODGE,
-		InputActionName::Action1,
-		InputActionName::Action2,
-		InputActionName::Action3,
-		InputActionName::Action4,
-	};
-	_buttonInputActionNames.Append(arrButtonNames, UE_ARRAY_COUNT(arrButtonNames));
 }
 
 
@@ -47,12 +34,7 @@ void UInputHandlerComponent::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("get CharacterCameraInterface failed!"));
 	}
 
-	// ...
-	if(_inputHandlerClass)
-	{
-		_inputHandler = NewObject<UCharacterInputHandler>(this, _inputHandlerClass);
-		_inputHandler->Initialize();
-	}
+	InitializeButtons();
 }
 
 
@@ -75,26 +57,28 @@ void UInputHandlerComponent::BindInputs(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("CameraPitch", this, &UInputHandlerComponent::ReceiveInputCameraArmPitch);
 	PlayerInputComponent->BindAxis("CameraZoomInOut", this, &UInputHandlerComponent::ReceiveInputCameraZoomInOut);
 
-	for(FName inputName : _buttonInputActionNames)
+	for (TSubclassOf<UButtonInputActionBase> buttonClass : _presetButtons)
 	{
-		PlayerInputComponent->BindAction<FButtonSignarue>(inputName,IE_Pressed, this, &UInputHandlerComponent::HandleButtonPress, inputName);
+		if (buttonClass == nullptr)continue;
+		FName inputName = buttonClass.GetDefaultObject()->GetInputMappingName();
+		PlayerInputComponent->BindAction<FButtonSignarue>(inputName, IE_Pressed, this, &UInputHandlerComponent::HandleButtonPress, inputName);
 		PlayerInputComponent->BindAction<FButtonSignarue>(inputName, IE_Released, this, &UInputHandlerComponent::HandleButtonRelease, inputName);
 	}
 }
 
-void UInputHandlerComponent::HandleButtonPress(FName actionName)
+void UInputHandlerComponent::HandleButtonPress(FName inputName)
 {
-	if (_inputHandler)
+	if (_mapButtons.Contains(inputName))
 	{
-		_inputHandler->HandleButtonPress(actionName);
+		_mapButtons[inputName]->VPress();
 	}
 }
 
-void UInputHandlerComponent::HandleButtonRelease(FName actionName)
+void UInputHandlerComponent::HandleButtonRelease(FName inputName)
 {
-	if (_inputHandler)
+	if (_mapButtons.Contains(inputName))
 	{
-		_inputHandler->HandleButtonRelease(actionName);
+		_mapButtons[inputName]->VRelease();
 	}
 }
 
@@ -151,6 +135,24 @@ void UInputHandlerComponent::ConsumeMovementInput()
 		_actionInterface->VExecuteAction(EActionType::EACT_Moving);
 
 		_movementInput = FVector::ZeroVector;
+	}
+}
+
+void UInputHandlerComponent::InitializeButtons()
+{
+	for (TSubclassOf<UButtonInputActionBase> buttonClass : _presetButtons)
+	{
+		if (buttonClass == nullptr)continue;
+		if(_mapButtons.Contains(buttonClass.GetDefaultObject()->GetInputMappingName()))
+		{
+			UE_LOG(LogTemp,Warning,TEXT("Existing duplicate button input class"))
+		}
+		else
+		{
+			UButtonInputActionBase* buttonIns = NewObject<UButtonInputActionBase>(this, buttonClass);
+			buttonIns->Initialize(_actionInterface);
+			_mapButtons.Add(buttonIns->GetInputMappingName(),buttonIns);
+		}
 	}
 }
 
