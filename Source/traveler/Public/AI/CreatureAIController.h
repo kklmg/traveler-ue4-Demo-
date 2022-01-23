@@ -23,6 +23,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = AI)
 	UBehaviorTree* _behaviorTree;
-
-
 };

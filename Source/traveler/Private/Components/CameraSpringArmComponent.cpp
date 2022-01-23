@@ -46,13 +46,13 @@ void UCameraSpringArmComponent::ZoomInOut(float AxisValue)
 	TargetArmLength = FMath::Clamp(TargetArmLength + AxisValue * _zoomFactor, 200.0f, 400.0f);
 }
 
-void UCameraSpringArmComponent::SetPitchRange(float pitchMin, float pitchMax)
+void UCameraSpringArmComponent::SetPitchLimit(float pitchMin, float pitchMax)
 {
 	_pitchMin = FMath::Max(pitchMin, _pitchMinDefault);
 	_pitchMax = FMath::Min(pitchMax, _pitchMaxDefault);
 }
 
-void UCameraSpringArmComponent::Reset()
+void UCameraSpringArmComponent::ResetPitchLimit()
 {
 	_pitchMin = _pitchMinDefault;
 	_pitchMax = _pitchMaxDefault;

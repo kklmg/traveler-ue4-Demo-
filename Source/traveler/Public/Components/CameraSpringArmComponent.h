@@ -22,9 +22,9 @@ public:
 	void Yaw(float AxisValue);
 	void ZoomInOut(float AxisValue);
 
-	void Reset();
+	void ResetPitchLimit();
 
-	void SetPitchRange(float pitchMin,float pitchMax);
+	void SetPitchLimit(float pitchMin,float pitchMax);
 
 	UFUNCTION(BlueprintCallable, Category = getter)
 	float GetPitch01();

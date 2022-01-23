@@ -23,7 +23,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	void BeginDragCamera(FVector offset);
+	void DragCamera(FVector offset);
 
 	void CancelDrag();
 

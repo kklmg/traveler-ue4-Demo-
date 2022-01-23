@@ -28,7 +28,7 @@ void UPawnCameraComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	}
 }
 
-void UPawnCameraComponent::BeginDragCamera(FVector offset) 
+void UPawnCameraComponent::DragCamera(FVector offset) 
 {
 	if (_isDragging == false)
 	{

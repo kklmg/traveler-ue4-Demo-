@@ -61,8 +61,8 @@ void UInputHandlerComponent::BindInputs(UInputComponent* PlayerInputComponent)
 	{
 		if (buttonClass == nullptr)continue;
 		FName inputName = buttonClass.GetDefaultObject()->GetInputMappingName();
-		PlayerInputComponent->BindAction<FButtonSignarue>(inputName, IE_Pressed, this, &UInputHandlerComponent::HandleButtonPress, inputName);
-		PlayerInputComponent->BindAction<FButtonSignarue>(inputName, IE_Released, this, &UInputHandlerComponent::HandleButtonRelease, inputName);
+		PlayerInputComponent->BindAction<FButtonNameSignarue>(inputName, IE_Pressed, this, &UInputHandlerComponent::HandleButtonPress, inputName);
+		PlayerInputComponent->BindAction<FButtonNameSignarue>(inputName, IE_Released, this, &UInputHandlerComponent::HandleButtonRelease, inputName);
 	}
 }
 

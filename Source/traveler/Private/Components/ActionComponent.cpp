@@ -5,7 +5,6 @@
 #include "Actions/ActionBase.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actions/ActionPreset/CharacterActionPreset.h"
-#include "Character/HumanCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -158,8 +157,8 @@ void UActionComponent::OnSprintButtonDown()
 	_bSprintButtonPress = true;
 
 	//Get My Character
-	AHumanCharacter* humanCharacter = Cast<AHumanCharacter>(GetOwner());
-	check(humanCharacter != nullptr);
+	//AHumanCharacter* humanCharacter = Cast<AHumanCharacter>(GetOwner());
+	//check(humanCharacter != nullptr);
 
 	//humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->RunSpeed->GetValue();
 }
@@ -169,8 +168,8 @@ void UActionComponent::OnSprintButtonUp()
 	_bSprintButtonPress = false;
 
 	//Get My Character
-	AHumanCharacter* humanCharacter = Cast<AHumanCharacter>(GetOwner());
-	check(humanCharacter != nullptr);
+	//AHumanCharacter* humanCharacter = Cast<AHumanCharacter>(GetOwner());
+	//check(humanCharacter != nullptr);
 
 	//humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->WalkSpeed->GetValue();
 }

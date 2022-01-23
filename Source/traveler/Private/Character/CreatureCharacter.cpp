@@ -242,6 +242,46 @@ FVector ACreatureCharacter::VGetCameraLocation()
 	return _cameraComponent->GetComponentLocation();
 }
 
+void ACreatureCharacter::VDragCamera(FVector offset)
+{
+	_cameraComponent->DragCamera(offset);
+}
+
+void ACreatureCharacter::VCancelDragCamera()
+{
+	_cameraComponent->CancelDrag();
+}
+
+void ACreatureCharacter::VSetCameraArmPitchLimit(float pitchMin, float pitchMax)
+{
+	_cameraSpringArmComponent->SetPitchLimit(pitchMin,pitchMax);
+}
+
+void ACreatureCharacter::VResetCameraArmPitchLimit()
+{
+	_cameraSpringArmComponent->ResetPitchLimit();
+}
+
+float ACreatureCharacter::VGetCameraArmLength()
+{
+	return _cameraSpringArmComponent->TargetArmLength;
+}
+
+UCameraComponent* ACreatureCharacter::VGetCameraComponent()
+{
+	return _cameraComponent;
+}
+
+void ACreatureCharacter::VEquipWeapon(AWeapon* weapon)
+{
+	_weaponComponent->EquipWeapon(weapon);
+}
+
+AWeapon* ACreatureCharacter::VGetEquipedWeapon()
+{
+	return _weaponComponent->GetEquipedWeapon();
+}
+
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
 {
 	if (_socketsMap.Contains(meshSocketType))

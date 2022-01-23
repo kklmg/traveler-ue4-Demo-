@@ -11,6 +11,7 @@
 #include "Interface/AttributeInterface.h"
 #include "Interface/StateInterface.h"
 #include "Interface/CharacterCameraInterface.h"
+#include "Interface/WeaponInterface.h"
 #include "CreatureCharacter.generated.h"
 
 
@@ -34,7 +35,7 @@ class UActionBlackBoard;
 
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface, public IStateInterface, public ICharacterCameraInterface
+class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface, public IStateInterface, public ICharacterCameraInterface,public IWeaponInterface
 {
 	GENERATED_BODY()
 
@@ -94,7 +95,17 @@ public:
 	virtual void VCameraZoomInOut(float offset)  override;
 	virtual FRotator VGetCameraRotation() override;
 	virtual FVector VGetCameraLocation() override;
+	virtual	void VDragCamera(FVector offset) override;
+	virtual	void VCancelDragCamera() override;
+	virtual	void VSetCameraArmPitchLimit(float pitchMin, float pitchMax) override;
+	virtual	void VResetCameraArmPitchLimit() override;
+	virtual float VGetCameraArmLength() override;
+	virtual UCameraComponent* VGetCameraComponent() override;
 
+
+	//Weapon Interface implementation---------------------------------------------------
+	 void VEquipWeapon(AWeapon* weapon) override;
+	 AWeapon* VGetEquipedWeapon() override;
 
 
 	UFUNCTION(BlueprintCallable)

@@ -3,7 +3,7 @@
 #include "Components/WeaponComponent.h"
 #include "Weapon/Weapon.h"
 #include "Weapon/Bow.h"
-#include "Character/HumanCharacter.h"
+#include "Character/CreatureCharacter.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -27,8 +27,8 @@ void UWeaponComponent::BeginPlay()
 	{
 		//FActorSpawnParameters params;
 		AWeapon* bow = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
-		bow->VInitialize(GetOwner<AHumanCharacter>());
-		SetWeapon(bow);
+		bow->VInitialize(GetOwner<ACreatureCharacter>());
+		EquipWeapon(bow);
 	}
 	// ...
 }
@@ -52,7 +52,7 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	}
 }
 
-void UWeaponComponent::SetWeapon(AWeapon* weapon)
+void UWeaponComponent::EquipWeapon(AWeapon* weapon)
 {
 	if (_aWeapon != weapon && _isFiring == false && _isAiming == false)
 	{
@@ -61,7 +61,7 @@ void UWeaponComponent::SetWeapon(AWeapon* weapon)
 		OnWeaponChanged.Broadcast(_aWeapon);
 
 		//Get Character
-		AHumanCharacter* character = Cast<AHumanCharacter>(GetOwner());
+		ACreatureCharacter* character = GetOwner<ACreatureCharacter>();
 		check(character != nullptr);
 
 		//Attach Weapon 
@@ -73,11 +73,11 @@ void UWeaponComponent::SetWeapon(AWeapon* weapon)
 	}
 }
 
-void UWeaponComponent::SetWhetherEquipWeapon(bool isEquiped)
+void UWeaponComponent::TakeOutWeapon(bool isTakeOut)
 {
 	if (_aWeapon)
 	{
-		_aWeapon->SetActorHiddenInGame(isEquiped);
+		_aWeapon->SetActorHiddenInGame(!isTakeOut);
 	}
 }
 

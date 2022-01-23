@@ -8,6 +8,7 @@
 
 class UCapsuleComponent;
 class UProjectileMovementComponent;
+class ACreatureCharacter;
 
 class AWeapon;
 

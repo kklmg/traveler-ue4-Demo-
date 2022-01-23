@@ -3,16 +3,14 @@
 
 #include "Weapon/Bow.h"
 #include "Projectile/Projectile.h"
-
 #include "Character/CreatureCharacter.h"
-#include "Character/HumanCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/PoseableMeshComponent.h"
-#include "Components/CameraSpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Command/CommandActor.h"
+#include "Interface/CharacterCameraInterface.h"
 
 ABow::ABow() 
 {
@@ -31,9 +29,12 @@ ABow::ABow()
 }
 
 
-void ABow::VInitialize(AHumanCharacter* weaponOwner) 
+void ABow::VInitialize(ACreatureCharacter* weaponOwner)
 {
 	Super::VInitialize(weaponOwner);
+
+	_characterCamera = Cast<ICharacterCameraInterface>(weaponOwner);
+
 	if (_aimButtonCommandClass)
 	{
 		_aimButtonCommand = NewObject<UCommandActor>(this, _aimButtonCommandClass);
@@ -59,11 +60,9 @@ void ABow::Tick(float DeltaTime)
 
 void ABow::OnFireButtonDown()
 {
-	if (_isAiming == false)
+	if (_isAiming == false && _characterCamera)
 	{
-		UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
-
-		FRotator rotator = cameraComponent->GetComponentRotation();
+		FRotator rotator = _characterCamera->VGetCameraRotation();
 		rotator.Pitch = 0;
 		rotator.Roll = 0;
 
@@ -93,11 +92,8 @@ void ABow::OnAimButtonDown()
 {
 	_isAiming = true;
 
-	UCameraSpringArmComponent* CameraSpringArmComponent = GetWeaponOwner()->GetSpringArmComponent();
-	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
-
-	CameraSpringArmComponent->SetPitchRange(-60, 60);
-	cameraComponent->BeginDragCamera(_aimingCameraOffset);
+	GetWeaponOwner()->VSetCameraArmPitchLimit(-60, 60);
+	GetWeaponOwner()->VDragCamera(_aimingCameraOffset);
 
 	if (_aimButtonCommand) 
 	{
@@ -107,30 +103,25 @@ void ABow::OnAimButtonDown()
 
 void ABow::OnAimButtonPress(float deltaTime)
 {
-	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
-
-	FRotator rotator = cameraComponent->GetComponentRotation();
+	FRotator rotator = GetWeaponOwner()->VGetCameraRotation();
 	rotator.Pitch = 0;
 	rotator.Roll = 0;
 
 	GetWeaponOwner()->SetActorRotation(rotator);
 
-
 	_UpdateProjectileTransform(_ProjectilesInterval);
 }
 void ABow::OnAimButtonUp()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Fire Finished,strength: %f"), _strength));
-
-	UPawnCameraComponent* cameraComponent = GetWeaponOwner()->GetCameraComponent();
-	UCameraSpringArmComponent* CameraSpringArmComponent = GetWeaponOwner()->GetSpringArmComponent();
-
 	_isAiming = false;
 	_isDrawing = false;
 	_strength = 0.0f;
-	CameraSpringArmComponent->Reset();
-	cameraComponent->CancelDrag();
 
+	if(_characterCamera)
+	{
+		_characterCamera->VResetCameraArmPitchLimit();
+		_characterCamera->VCancelDragCamera();
+	}
 
 	for (auto projectile : _arraySpawnedProjectiles) 
 	{
@@ -157,24 +148,18 @@ void ABow::OnAimButtonUp()
 
 void ABow::_UpdateProjectileTransform(float deltaDegree) 
 {
+	if (!_characterCamera) return;
 
-	//get camera
-	UPawnCameraComponent* cameraComp = GetWeaponOwner()->GetCameraComponent();
-	check(cameraComp != nullptr);
-
-	UCameraSpringArmComponent* cameraSpringArmComp = GetWeaponOwner()->GetSpringArmComponent();
-	check(cameraSpringArmComp != nullptr);
-
-	
+	UCameraComponent* cameraComp = _characterCamera->VGetCameraComponent();
+	if (!cameraComp) return;
 
 	//Get Camera Rotator
-	FRotator cameraRotator = cameraComp->GetComponentRotation();
+	FRotator cameraRotator = _characterCamera->VGetCameraRotation();
 	
-
 	//do line tracing
 	FHitResult hitResult;
 	FCollisionQueryParams CollisionParams;
-	FVector LineTraceStart = cameraComp->GetComponentLocation() + cameraComp->GetForwardVector() * cameraSpringArmComp->TargetArmLength;
+	FVector LineTraceStart = cameraComp->GetComponentLocation() + cameraComp->GetForwardVector() * _characterCamera->VGetCameraArmLength();
 	FVector farPlaneCenter = cameraComp->GetComponentLocation() + cameraComp->GetForwardVector() * cameraComp->OrthoFarClipPlane;
 	FVector hitLocation = farPlaneCenter;
 

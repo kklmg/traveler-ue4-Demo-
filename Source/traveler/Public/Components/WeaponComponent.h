@@ -7,6 +7,7 @@
 #include "WeaponComponent.generated.h"
 
 class AWeapon;
+class ACreatureCharacter;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeapon*,weapon);
 
@@ -27,9 +28,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetWeapon(AWeapon* weapon);
+	void EquipWeapon(AWeapon* weapon);
 
-	void SetWhetherEquipWeapon(bool isEquiped);
+	void TakeOutWeapon(bool isTakeOut);
 
 	void OnFireButtonDown();
 	void OnFireButtonUp();

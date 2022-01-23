@@ -2,12 +2,12 @@
 
 
 #include "Projectile/Projectile.h"
-#include "Character/HumanCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/PawnCameraComponent.h"
 #include "Weapon/Weapon.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Character/CreatureCharacter.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -115,10 +115,10 @@ void AProjectile::Launch(float speed)
 
 
 	//Bind Special Action
-	AHumanCharacter* character = GetInstigator<AHumanCharacter>();
+	ACreatureCharacter* character = GetInstigator<ACreatureCharacter>();
 	if (character) 
 	{
-		character->Action3ButtonDownDelegate.BindUFunction(this, FName("VExecuteSpecialAction"));
+		//character->Action3ButtonDownDelegate.BindUFunction(this, FName("VExecuteSpecialAction"));
 	}
 	//DrawDebugLine(GetWorld(), MuzzleLocation, hitLocation, FColor::Blue, false, 2.0f);
 }

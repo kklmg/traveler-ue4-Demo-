@@ -11,6 +11,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
 class AProjectile;
 class UCommandActor;
 
+class ICharacterCameraInterface;
+
 /**
  * 
  */
@@ -21,7 +23,7 @@ class TRAVELER_API ABow : public AWeapon
 public:
 	ABow();
 public:
-	void VInitialize(AHumanCharacter* weaponOwner) override;
+	void VInitialize(ACreatureCharacter* weaponOwner) override;
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 
@@ -111,4 +113,6 @@ private:
 
 	UPROPERTY()
 	UCommandActor* _aimButtonCommand;
+
+	ICharacterCameraInterface* _characterCamera;
 };
