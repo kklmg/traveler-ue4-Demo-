@@ -94,6 +94,10 @@ void ACreatureCharacter::BeginPlay()
 void ACreatureCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	_animationModel.MovingVelocity = GetVelocity();
+	
+
 }
 
 // Called to bind functionality to input
@@ -272,14 +276,19 @@ UCameraComponent* ACreatureCharacter::VGetCameraComponent()
 	return _cameraComponent;
 }
 
-void ACreatureCharacter::VEquipWeapon(AWeapon* weapon)
+void ACreatureCharacter::VEquipWeapon(AWeaponBase* weapon)
 {
 	_weaponComponent->EquipWeapon(weapon);
 }
 
-AWeapon* ACreatureCharacter::VGetEquipedWeapon()
+AWeaponBase* ACreatureCharacter::VGetEquipedWeapon()
 {
 	return _weaponComponent->GetEquipedWeapon();
+}
+
+FAnimationModel& ACreatureCharacter::VGetAnimationModel()
+{
+	return _animationModel;
 }
 
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)

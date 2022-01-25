@@ -7,6 +7,7 @@
 #include "Data/EnumMeshSocketType.h"
 #include "Data/EnumAttributeType.h"
 #include "Data/EnumCharacterState.h"
+#include "Interface/AnimationModelProvider.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/AttributeInterface.h"
 #include "Interface/StateInterface.h"
@@ -28,14 +29,14 @@ class UCameraSpringArmComponent;
 class UWeaponComponent;
 
 
-class AWeapon;
+class AWeaponBase;
 class UActionBase;
 class AProjectile;
 class UActionBlackBoard;
 
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface, public IStateInterface, public ICharacterCameraInterface,public IWeaponInterface
+class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface, public IStateInterface, public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider
 {
 	GENERATED_BODY()
 
@@ -104,9 +105,12 @@ public:
 
 
 	//Weapon Interface implementation---------------------------------------------------
-	 void VEquipWeapon(AWeapon* weapon) override;
-	 AWeapon* VGetEquipedWeapon() override;
+	void VEquipWeapon(AWeaponBase* weapon) override;
+	AWeaponBase* VGetEquipedWeapon() override;
 
+
+	//AnimationModel Provider Interface implementation --------------------------------------------------
+	virtual FAnimationModel& VGetAnimationModel() override;
 
 	UFUNCTION(BlueprintCallable)
 	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
@@ -154,4 +158,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = Sockets)
 	TMap<EMeshSocketType, FName> _socketsMap;
+
+	UPROPERTY()
+	FAnimationModel _animationModel;
 };

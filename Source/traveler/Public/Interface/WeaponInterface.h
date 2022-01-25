@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Weapon/Weapon.h"
+#include "Weapon/WeaponBase.h"
 #include "WeaponInterface.generated.h"
 
 // This class does not need to be modified.
@@ -23,6 +23,6 @@ class TRAVELER_API IWeaponInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void VEquipWeapon(AWeapon* weapon)PURE_VIRTUAL (UWeaponInterface::VSetDamage, );
-	virtual AWeapon* VGetEquipedWeapon()PURE_VIRTUAL (UWeaponInterface::VGetEquipedWeapon,return nullptr; );
+	virtual void VEquipWeapon(AWeaponBase* weapon)PURE_VIRTUAL (UWeaponInterface::VSetDamage, );
+	virtual AWeaponBase* VGetEquipedWeapon()PURE_VIRTUAL (UWeaponInterface::VGetEquipedWeapon,return nullptr; );
 };

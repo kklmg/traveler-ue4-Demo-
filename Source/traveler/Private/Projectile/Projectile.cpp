@@ -4,7 +4,7 @@
 #include "Projectile/Projectile.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/PawnCameraComponent.h"
-#include "Weapon/Weapon.h"
+#include "Weapon/WeaponBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Character/CreatureCharacter.h"

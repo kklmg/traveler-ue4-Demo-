@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/WeaponComponent.h"
-#include "Weapon/Weapon.h"
-#include "Weapon/Bow.h"
+#include "Weapon/WeaponBase.h"
+#include "Weapon/BowBase.h"
 #include "Character/CreatureCharacter.h"
 
 // Sets default values for this component's properties
@@ -26,7 +26,7 @@ void UWeaponComponent::BeginPlay()
 	if (DefaultWeaponClass)
 	{
 		//FActorSpawnParameters params;
-		AWeapon* bow = GetWorld()->SpawnActor<AWeapon>(DefaultWeaponClass);
+		AWeaponBase* bow = GetWorld()->SpawnActor<AWeaponBase>(DefaultWeaponClass);
 		bow->VInitialize(GetOwner<ACreatureCharacter>());
 		EquipWeapon(bow);
 	}
@@ -40,25 +40,21 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-
-	if (_aWeapon != nullptr && _isFiring)
+	if (_weaponIns)
 	{
-		_aWeapon->OnFireButtonPress(DeltaTime);
-	}
-
-	if (_aWeapon != nullptr && _isAiming)
-	{
-		_aWeapon->OnAimButtonPress(DeltaTime);
+		_weaponIns->FiringInProgress(DeltaTime);
+		_weaponIns->AimingInProgress(DeltaTime);
 	}
 }
 
-void UWeaponComponent::EquipWeapon(AWeapon* weapon)
+void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 {
-	if (_aWeapon != weapon && _isFiring == false && _isAiming == false)
+	if (_weaponIns != newWeapon)
 	{
-		_aWeapon = weapon;
+		_weaponIns->StopAllActions();
+		_weaponIns = newWeapon;
 
-		OnWeaponChanged.Broadcast(_aWeapon);
+		OnWeaponChanged.Broadcast(_weaponIns);
 
 		//Get Character
 		ACreatureCharacter* character = GetOwner<ACreatureCharacter>();
@@ -67,7 +63,7 @@ void UWeaponComponent::EquipWeapon(AWeapon* weapon)
 		//Attach Weapon 
 		FName leftHandSocketName = character->GetMeshSocketNameByType(EMeshSocketType::MST_LeftHand);		
 
-		_aWeapon->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
+		_weaponIns->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
 		//_aWeapon->AttachToActor(character, FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
 		
 	}
@@ -75,86 +71,67 @@ void UWeaponComponent::EquipWeapon(AWeapon* weapon)
 
 void UWeaponComponent::TakeOutWeapon(bool isTakeOut)
 {
-	if (_aWeapon)
+	if (_weaponIns)
 	{
-		_aWeapon->SetActorHiddenInGame(!isTakeOut);
+		_weaponIns->SetActorHiddenInGame(!isTakeOut);
 	}
 }
 
 
-void UWeaponComponent::OnFireButtonDown() 
+void UWeaponComponent::StartFiring() 
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "left mouse dowm");
-	if (_aWeapon && _aWeapon->IsReadyToFire())
+	if (_weaponIns)
 	{
-		_isFiring = true;
-		_aWeapon->SetIsReadyToFire(false);
-		_aWeapon->OnFireButtonDown();
-		OnWeaponFireStart.Broadcast(_aWeapon);
+		_weaponIns->StartFiring();
 	}
 }
 
-void UWeaponComponent::OnFireButtonUp()
+void UWeaponComponent::StopFiring()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "left mouse up");
-	if (_aWeapon && _isFiring == true)
+	if (_weaponIns)
 	{
-		_aWeapon->OnFireButtonUp();
-		OnWeaponFireEnd.Broadcast(_aWeapon);
-		_isFiring = false;
-		//_aWeapon->IsReadyToFire();
+		_weaponIns->StopFiring();
+		OnWeaponFireEnd.Broadcast(_weaponIns);
 	}
 }
 
-void UWeaponComponent::OnAimButtonDown()
+void UWeaponComponent::StartAiming()
 {
-	if (_aWeapon)
+	if (_weaponIns)
 	{
-		_aWeapon->OnAimButtonDown();
-		OnWeaponAimStart.Broadcast(_aWeapon);
-		_isFiring = false;
+		_weaponIns->StarAiming();
+		OnWeaponAimStart.Broadcast(_weaponIns);
 	}
-
-	_isAiming = true;
 }
-void UWeaponComponent::OnAimButtonUp()
+void UWeaponComponent::StopAiming()
 {
-	if (_aWeapon)
+	if (_weaponIns)
 	{
-		_aWeapon->OnAimButtonUp();
-		OnWeaponAimEnd.Broadcast(_aWeapon);
-		_isAiming = false;
+		_weaponIns->StopAiming();
+		OnWeaponAimEnd.Broadcast(_weaponIns);
 	}
 }
 
-void UWeaponComponent::OnAnimFrameStart_Fire()
+AWeaponBase* UWeaponComponent::GetEquipedWeapon()
 {
-	if (_aWeapon) 
-	{
-		_aWeapon->OnEnterAnimFrame_Launch();
-	}
-}
-
-void UWeaponComponent::OnAnimFrameStart_FireReady() 
-{
-	if (_aWeapon)
-	{
-		_aWeapon->SetIsReadyToFire(true);
-	}
-}
-
-AWeapon* UWeaponComponent::GetEquipedWeapon()
-{
-	return _aWeapon;
+	return _weaponIns;
 }
 
 bool UWeaponComponent::IsFiring()
 {
-	return _isFiring;
+	if(_weaponIns)
+	{
+		return _weaponIns->IsFiring();
+	}
+	return false;
 }
 bool UWeaponComponent::IsAiming()
 {
-	return _isAiming;
+	if (_weaponIns)
+	{
+		return _weaponIns->IsAiming();
+	}
+	return false;
 }
 
 

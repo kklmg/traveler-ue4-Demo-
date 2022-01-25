@@ -6,10 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "WeaponComponent.generated.h"
 
-class AWeapon;
+class AWeaponBase;
 class ACreatureCharacter;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeapon*,weapon);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeaponBase*,weapon);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UWeaponComponent : public UActorComponent
@@ -28,21 +28,15 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void EquipWeapon(AWeapon* weapon);
+	void EquipWeapon(AWeaponBase* weapon);
 
 	void TakeOutWeapon(bool isTakeOut);
 
-	void OnFireButtonDown();
-	void OnFireButtonUp();
+	void StartFiring();
+	void StopFiring();
 
-	void OnAimButtonDown();
-	void OnAimButtonUp();
-
-	UFUNCTION(BlueprintCallable, Category = "OnAnimationFrameStart")
-	void OnAnimFrameStart_Fire();
-
-	UFUNCTION(BlueprintCallable, Category = "OnAnimationFrameStart")
-	void OnAnimFrameStart_FireReady();
+	void StartAiming();
+	void StopAiming();
 
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
@@ -63,12 +57,12 @@ public:
 public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "DefaultWeapon")
-	TSubclassOf<AWeapon> DefaultWeaponClass;
+	TSubclassOf<AWeaponBase> DefaultWeaponClass;
 
 public:
 	
 	UFUNCTION(BlueprintCallable)
-	AWeapon* GetEquipedWeapon();
+	AWeaponBase* GetEquipedWeapon();
 
 	UFUNCTION(BluePrintCallable)
 	bool IsFiring();
@@ -77,8 +71,6 @@ public:
 	bool IsAiming();
 
 private:
-	AWeapon* _aWeapon;
-
-	bool _isFiring;
-	bool _isAiming;
+	UPROPERTY()
+	AWeaponBase* _weaponIns;
 };

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Weapon.h"
-#include "Bow.generated.h"
+#include "WeaponBase.h"
+#include "BowBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
 
@@ -17,31 +17,28 @@ class ICharacterCameraInterface;
  * 
  */
 UCLASS()
-class TRAVELER_API ABow : public AWeapon
+class TRAVELER_API ABowBase : public AWeaponBase
 {
 	GENERATED_BODY()
 public:
-	ABow();
+	ABowBase();
 public:
 	void VInitialize(ACreatureCharacter* weaponOwner) override;
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 
-	virtual void OnFireButtonDown() override;
-	virtual void OnFireButtonPress(float deltaTime) override;
-	virtual void OnFireButtonUp() override;
+	virtual bool VTMCanFire() override;
+	virtual bool VTMCanAim() override;
 
-	virtual void OnAimButtonDown() override;
-	virtual void OnAimButtonPress(float deltaTime) override;
-	virtual void OnAimButtonUp() override;
+	virtual void VTMStartFiring() override;
+	virtual void VTMFiringInProgress(float deltaTime) override;
+	virtual void VTMStopFiring() override;
 
-	//void OnCharacterStateChanged(ECharacterState characterState);
+	virtual void VTMStarAiming() override;
+	virtual void VTMAimingInProgress(float deltaTime) override;
+	virtual void VTMStopAiming() override;
 
-	virtual void OnEnterAnimFrame_ReloadStart() override;
-	virtual void OnTickAnimFrame_Reloading() override;
-	virtual void OnEnterAnimFrame_ReloadCompleted() override;
-
-	virtual FTransform GetMuzzleTransform() override;
+	virtual FTransform GetMuzzleTransform();
 
 	UFUNCTION(BlueprintCallable)
 	void OnEnterAnimFrame_StartDrawingBow();
@@ -50,7 +47,7 @@ public:
 	void OnEnterAnimFrame_GrabArrow();
 
 	UFUNCTION(BlueprintCallable)
-	virtual void OnEnterAnimFrame_Launch() override;
+	virtual void OnEnterAnimFrame_Launch();
 	
 	void AddProjectile(AProjectile* projectile);
 
@@ -62,7 +59,7 @@ private:
 	float _CalculateDamage();
 	float _CalculateProjectileSpeed();
 
-	void _SpawnProjectile(int count);
+	void _SpawnProjectiles(int count);
 
 	void _UpdateProjectileTransform(float deltaDegree);
 
@@ -101,7 +98,7 @@ private:
 	FName _meshSocketMuzzle;
 
 
-	bool _isAiming;
+
 	bool _isDrawing;
 
 	float _strength;

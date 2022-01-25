@@ -10,7 +10,7 @@ class UCapsuleComponent;
 class UProjectileMovementComponent;
 class ACreatureCharacter;
 
-class AWeapon;
+class AWeaponBase;
 
 UCLASS()
 class TRAVELER_API AProjectile : public AActor
