@@ -14,6 +14,11 @@ UMeshSocketComponent::UMeshSocketComponent()
 }
 
 
+void UMeshSocketComponent::Initialize(USkeletalMeshComponent* meshComp)
+{
+	_meshComp = meshComp;
+}
+
 // Called when the game starts
 void UMeshSocketComponent::BeginPlay()
 {
@@ -32,43 +37,36 @@ void UMeshSocketComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-//FName UMeshSocketComponent::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
-//{
-//	if (_socketsMap.Contains(meshSocketType))
-//	{
-//		return _socketsMap[meshSocketType];
-//	}
-//	else
-//	{
-//		const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
-//		if (EnumPtr)
-//		{
-//			FString enumName = EnumPtr->GetNameStringByIndex((int32)meshSocketType);
-//			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
-//		}
-//		return "";
-//	}
-//}
-//
-//bool UMeshSocketComponent::GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
-//{
-//
-//		if (GetOwner() == nullptr)return;
-//
-//		if (_socketsMap.Contains(meshSocketType))
-//		{
-//			outTransform = GetMesh()->GetSocketTransform(_socketsMap[meshSocketType]);
-//			return true;
-//		}
-//		else
-//		{
-//			const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
-//			if (EnumPtr)
-//			{
-//				FString enumName = EnumPtr->GetNameStringByIndex((int32)meshSocketType);
-//				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
-//			}
-//			return false;
-//		}
-//}
-//
+FName UMeshSocketComponent::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
+{
+	if (_socketsMap.Contains(meshSocketType))
+	{
+		return _socketsMap[meshSocketType];
+	}
+	else
+	{
+		return "";
+	}
+}
+
+bool UMeshSocketComponent::TryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
+{
+	if (!_meshComp) return false;
+
+	if (_socketsMap.Contains(meshSocketType))
+	{
+		outTransform = _meshComp->GetSocketTransform(_socketsMap[meshSocketType]);
+		return true;
+	}
+	else
+	{
+		const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
+		if (EnumPtr)
+		{
+			FString enumName = EnumPtr->GetNameStringByIndex((int32)meshSocketType);
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
+		}
+		return false;
+	}
+}
+

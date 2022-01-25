@@ -15,6 +15,7 @@
 #include "Components/PawnCameraComponent.h"
 #include "Components/CameraSpringArmComponent.h"
 #include "Components/WeaponComponent.h"
+#include "Components/MeshSocketComponent.h"
 #include "Input/InputHandlerComponent.h"
 
 
@@ -23,6 +24,8 @@ ACreatureCharacter::ACreatureCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	bUseControllerRotationYaw = false;
 
 	//Create action component
 	if (_actionComponent == nullptr)
@@ -80,8 +83,12 @@ ACreatureCharacter::ACreatureCharacter()
 		_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("StateComponent"));
 		check(_stateComponent != nullptr);
 	}
-
-	bUseControllerRotationYaw = false;
+	//Create Mesh Socket component
+	if (_meshSocketComponent == nullptr)
+	{
+		_meshSocketComponent = CreateDefaultSubobject<UMeshSocketComponent>(TEXT("MeshSocketComponent"));
+		check(_meshSocketComponent != nullptr);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -173,7 +180,7 @@ FORCEINLINE UActionBlackBoard* ACreatureCharacter::VGetActionBlackBoard()
 
 FStateData ACreatureCharacter::VGetStateData()
 {
-	return FStateData();
+	return _stateComponent->VGetStateData();
 }
 
 void ACreatureCharacter::VSetSituationState(ESituationState newState)
@@ -293,37 +300,10 @@ FAnimationModel& ACreatureCharacter::VGetAnimationModel()
 
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
 {
-	if (_socketsMap.Contains(meshSocketType))
-	{
-		return _socketsMap[meshSocketType];
-	}
-	else
-	{
-		const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
-		if (EnumPtr)
-		{
-			FString enumName = EnumPtr->GetNameStringByIndex((int32)meshSocketType);
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
-		}
-		return "";
-	}
+	return _meshSocketComponent->GetMeshSocketNameByType(meshSocketType);
 }
 
-bool ACreatureCharacter::GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
+bool ACreatureCharacter::VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
 {
-	if (_socketsMap.Contains(meshSocketType))
-	{
-		outTransform = GetMesh()->GetSocketTransform(_socketsMap[meshSocketType]);
-		return true;
-	}
-	else
-	{
-		const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMeshSocketType"), true);
-		if (EnumPtr)
-		{
-			FString enumName = EnumPtr->GetNameStringByIndex((int32)meshSocketType);
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Not registered MeshSocket: " + enumName));
-		}
-		return false;
-	}
+	return _meshSocketComponent->TryGetMeshSocketTransform(meshSocketType,transformSpace,outTransform);
 }

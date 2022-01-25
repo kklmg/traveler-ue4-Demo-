@@ -11,10 +11,12 @@
 #include "Kismet/GameplayStatics.h"
 #include "Command/CommandActor.h"
 #include "Interface/CharacterCameraInterface.h"
+#include "Interface/MeshSocketTransformProvider.h"
 
 ABowBase::ABowBase()
 {
 	WeaponType = EWeaponType::EWT_Bow;
+	_bowState = EBowState::EBS_Normal;
 
 	_strength = 0.0f;
 	_maxDamage = 0.0f;
@@ -52,7 +54,7 @@ void ABowBase::Tick(float DeltaTime)
 
 bool ABowBase::VTMCanFire()
 {
-	return true;
+	return _bowState == EBowState::EBS_FullyDrawed || _bowState == EBowState::EBS_OverDrawing;
 }
 
 bool ABowBase::VTMCanAim()
@@ -98,14 +100,14 @@ void ABowBase::VTMAimingInProgress(float deltaTime)
 	rotator.Roll = 0;
 
 	GetWeaponOwner()->SetActorRotation(rotator);
-	_UpdateProjectileTransform(_ProjectilesInterval);
+	_UpdateProjectilesTransform(_ProjectilesInterval);
 
 	_strength = FMath::Clamp(_strength + deltaTime * _drawingVelocity, 0.0f, 1.0f);
 }
 
 void ABowBase::VTMStopAiming()
 {
-	_isDrawing = false;
+	_bowState = EBowState::EBS_Normal;
 	_strength = 0.0f;
 
 	if (_characterCamera)
@@ -128,7 +130,7 @@ void ABowBase::VTMStopAiming()
 }
 
 
-void ABowBase::_UpdateProjectileTransform(float deltaDegree)
+void ABowBase::_UpdateProjectilesTransform(float deltaDegree)
 {
 	if (!_characterCamera) return;
 
@@ -161,7 +163,13 @@ void ABowBase::_UpdateProjectileTransform(float deltaDegree)
 
 	//get weapon,hand transform
 	FTransform rightHandTransform, muzzleTransform;
-	GetWeaponOwner()->GetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
+
+	IMeshSocketTransformProvider* transformProvider = Cast<IMeshSocketTransformProvider>(GetWeaponOwner());
+	if(transformProvider)
+	{
+		transformProvider->VTryGetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
+	}
+
 	muzzleTransform = GetMuzzleTransform();
 
 	//compute Projectile Transform
@@ -197,30 +205,25 @@ void ABowBase::_UpdateProjectileTransform(float deltaDegree)
 	}
 }
 
-void ABowBase::OnEnterAnimFrame_Launch()
+void ABowBase::OnEnterAnimFrame_ReleaseBowString()
 {
-	for (auto projectile : _arraySpawnedProjectiles) 
-	{
-		if (projectile) 
-		{
-			projectile->Launch(5000);
-
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("launched projectile"));
-		}
-	}
-	_arraySpawnedProjectiles.Empty();
+	_LaunchProjectiles();
 	
-	_isDrawing = false;
+	_bowState = EBowState::EBS_Released;
 }
 
-void ABowBase::OnEnterAnimFrame_StartDrawingBow()
+void ABowBase::OnEnterAnimFrame_ReloadCompleted()
 {
-	_isDrawing = true;
+	_bowState = EBowState::EBS_FullyDrawed;
 }
 
-void ABowBase::OnEnterAnimFrame_GrabArrow()
+void ABowBase::OnEnterAnimFrame_StartDrawingBowString()
 {
-	//_SpawnProjectile(5);
+	_bowState = EBowState::EBS_Drawing;
+}
+
+void ABowBase::OnEnterAnimFrame_TakeOutArrows()
+{
 	_SpawnProjectiles(_spawnProjectileCount);
 }
 
@@ -254,6 +257,18 @@ void ABowBase::_SpawnProjectiles(int count)
 	}
 }
 
+void ABowBase::_LaunchProjectiles()
+{
+	for (auto projectile : _arraySpawnedProjectiles)
+	{
+		if (projectile)
+		{
+			projectile->Launch(5000);
+		}
+	}
+	_arraySpawnedProjectiles.Empty();
+}
+
 
 float ABowBase::_CalculateDamage()
 {
@@ -265,9 +280,9 @@ float ABowBase::_CalculateProjectileSpeed()
 	return FMath::Clamp(_strength * _maxProjectileVelocity, _baseProjectileVelocity, _maxProjectileVelocity);
 }
 
-bool ABowBase::isDrawing()
+EBowState ABowBase::GetBowState()
 {
-	return _isDrawing;
+	return _bowState;
 }
 
 FTransform ABowBase::GetMuzzleTransform()

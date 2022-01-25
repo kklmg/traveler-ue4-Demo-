@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Weapon/WeaponBase.h"
 #include "AnimationModel.generated.h"
 
 
@@ -13,11 +14,26 @@ struct FAnimationModel
 
 public:
 	UPROPERTY(BlueprintReadWrite)
+	float WalkingSpeed;
+	UPROPERTY(BlueprintReadWrite)
+	float SprintSpeed;
+
+	UPROPERTY(BlueprintReadWrite)
 	FVector MovingVelocity;
 	UPROPERTY(BlueprintReadWrite)
 	TEnumAsByte<enum EMovementMode> MovementMode;
+
+	UPROPERTY(BlueprintReadWrite)
+	float CameraPitch;
 	UPROPERTY(BlueprintReadWrite)
 	float CameraPitchMax;
 	UPROPERTY(BlueprintReadWrite)
 	float CameraPitchMin;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bTakeOutWeapon;
+	UPROPERTY(BlueprintReadWrite)
+	AWeaponBase* weapon;
+	
+
 };

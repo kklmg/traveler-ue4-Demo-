@@ -9,6 +9,7 @@
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actors/ThrowerActorBase.h"
 #include "DrawDebugHelpers.h"
+#include "Interface/MeshSocketTransformProvider.h"
 
 UActionThrow::UActionThrow()
 {
@@ -51,16 +52,19 @@ void UActionThrow::OnAttackNotifyBegin(float durationTime)
 	AActor* actionOwner = GetActionOwner();
 	if (actionOwner == nullptr) return;
 
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(actionOwner);
-	if (character == nullptr) return;
+	APawn* pawn = Cast<APawn>(actionOwner);
+	if (pawn == nullptr) return;
+
+	IMeshSocketTransformProvider* meshSocketTransformProvider = Cast<IMeshSocketTransformProvider>(actionOwner);
+	if (meshSocketTransformProvider == nullptr) return;
 
 	//set spawn options
 	FActorSpawnParameters spawnParameters;
-	spawnParameters.Instigator = character;
-	spawnParameters.Owner = character;
+	spawnParameters.Instigator = pawn;
+	spawnParameters.Owner = pawn;
 	
 	FTransform outTransform;
-	character->GetMeshSocketTransform(_meshSocektType, ERelativeTransformSpace::RTS_World, outTransform);
+	meshSocketTransformProvider->VTryGetMeshSocketTransform(_meshSocektType, ERelativeTransformSpace::RTS_World, outTransform);
 
 	//spawn actor
 	_throwerIns = GetWorld()->SpawnActor<AThrowerActorBase>(_throwerClass, outTransform, spawnParameters);
@@ -88,11 +92,11 @@ void UActionThrow::OnAttackNotifyTick(float frameDeltaTime)
 {
 	if (GetActionOwner() == nullptr) return;
 
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(GetActionOwner());
-	if (character == nullptr) return;
+	IMeshSocketTransformProvider* meshSocketTransformProvider = Cast<IMeshSocketTransformProvider>(GetActionOwner());
+	if (meshSocketTransformProvider == nullptr) return;
 
 	FTransform outTransform;
-	if (character->GetMeshSocketTransform(_meshSocektType, ERelativeTransformSpace::RTS_World, outTransform))
+	if (meshSocketTransformProvider->VTryGetMeshSocketTransform(_meshSocektType, ERelativeTransformSpace::RTS_World, outTransform))
 	{
 		if(_throwerIns)
 		{

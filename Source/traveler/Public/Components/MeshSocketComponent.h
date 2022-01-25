@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Data/EnumMeshSocketType.h"
 #include "MeshSocketComponent.generated.h"
 
 
@@ -16,6 +17,8 @@ public:
 	// Sets default values for this component's properties
 	UMeshSocketComponent();
 
+	void Initialize(USkeletalMeshComponent* meshComp);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -24,13 +27,15 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-//	UFUNCTION(BlueprintCallable)
-//	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
-//
-//	UFUNCTION(BlueprintCallable)
-//		bool GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform);
-//private:
-//	UPROPERTY(EditDefaultsOnly, Category = Sockets)
-//	TMap<EMeshSocketType, FName> _socketsMap;
-//};
+	UFUNCTION(BlueprintCallable)
+	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
+
+	UFUNCTION(BlueprintCallable)
+	bool TryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform);
+private:
+	UPROPERTY(EditDefaultsOnly, Category = Sockets)
+	TMap<EMeshSocketType, FName> _socketsMap;
+
+	UPROPERTY()
+	USkeletalMeshComponent* _meshComp;
 };

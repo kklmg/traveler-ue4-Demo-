@@ -41,27 +41,28 @@ public:
 	virtual FTransform GetMuzzleTransform();
 
 	UFUNCTION(BlueprintCallable)
-	void OnEnterAnimFrame_StartDrawingBow();
-
+	void OnEnterAnimFrame_StartDrawingBowString();
 	UFUNCTION(BlueprintCallable)
-	void OnEnterAnimFrame_GrabArrow();
-
+	void OnEnterAnimFrame_TakeOutArrows();
 	UFUNCTION(BlueprintCallable)
-	virtual void OnEnterAnimFrame_Launch();
+	virtual void OnEnterAnimFrame_ReleaseBowString();
+	UFUNCTION(BlueprintCallable)
+	void OnEnterAnimFrame_ReloadCompleted();
 	
+
+
 	void AddProjectile(AProjectile* projectile);
 
-	UFUNCTION(BlueprintCallable)
-	bool isDrawing();
-	//FOnBoolChanged DrawingStateChanged;
+	UFUNCTION(BlueprintPure)
+	EBowState GetBowState();
 
 private:
 	float _CalculateDamage();
 	float _CalculateProjectileSpeed();
 
 	void _SpawnProjectiles(int count);
-
-	void _UpdateProjectileTransform(float deltaDegree);
+	void _LaunchProjectiles();
+	void _UpdateProjectilesTransform(float deltaDegree);
 
 private:
 
@@ -96,13 +97,14 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = MeshSocket)
 	FName _meshSocketMuzzle;
+	
+	UPROPERTY(EditDefaultsOnly, Category = bowState)
+	EBowState _bowState;
 
-
-
-	bool _isDrawing;
 
 	float _strength;
 
+	UPROPERTY()
 	TArray<AProjectile*> _projectiles;
 
 	UPROPERTY(EditDefaultsOnly, Category = Button)

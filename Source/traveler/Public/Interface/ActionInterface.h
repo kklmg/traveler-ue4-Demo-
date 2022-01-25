@@ -25,8 +25,8 @@ class TRAVELER_API IActionInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintCallable)
-	virtual	UActionBase* VExecuteAction(EActionType actionType) PURE_VIRTUAL(VExecuteAction::VExecuteAction, return nullptr;);
+	virtual	UActionBase* VExecuteAction(EActionType actionType) PURE_VIRTUAL(UActionInterface::VExecuteAction, return nullptr;);
 
 	UFUNCTION(BlueprintCallable)
-	virtual UActionBlackBoard* VGetActionBlackBoard() PURE_VIRTUAL(VGetActionBlackBoard::VGetActionBlackBoard, return nullptr;);
+	virtual UActionBlackBoard* VGetActionBlackBoard() PURE_VIRTUAL(UActionInterface::VGetActionBlackBoard, return nullptr;);
 };

@@ -13,6 +13,7 @@
 #include "Interface/StateInterface.h"
 #include "Interface/CharacterCameraInterface.h"
 #include "Interface/WeaponInterface.h"
+#include "Interface/MeshSocketTransformProvider.h"
 #include "CreatureCharacter.generated.h"
 
 
@@ -27,6 +28,7 @@ class UStateComponent;
 class UPawnCameraComponent;
 class UCameraSpringArmComponent;
 class UWeaponComponent;
+class UMeshSocketComponent;
 
 
 class AWeaponBase;
@@ -36,7 +38,8 @@ class UActionBlackBoard;
 
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface, public IStateInterface, public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider
+class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface,public IStateInterface, 
+										public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider,public IMeshSocketTransformProvider
 {
 	GENERATED_BODY()
 
@@ -112,11 +115,14 @@ public:
 	//AnimationModel Provider Interface implementation --------------------------------------------------
 	virtual FAnimationModel& VGetAnimationModel() override;
 
+
+	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
 	UFUNCTION(BlueprintCallable)
-	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
+	virtual bool VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
+
 
 	UFUNCTION(BlueprintCallable)
-	bool GetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform);
+	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
 
 	UFUNCTION(BlueprintCallable)
 	UActionComponent* GetActionComponent();
@@ -156,8 +162,8 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UWeaponComponent* _weaponComponent;
 
-	UPROPERTY(EditDefaultsOnly, Category = Sockets)
-	TMap<EMeshSocketType, FName> _socketsMap;
+	UPROPERTY(VisibleAnywhere)
+	UMeshSocketComponent* _meshSocketComponent;
 
 	UPROPERTY()
 	FAnimationModel _animationModel;
