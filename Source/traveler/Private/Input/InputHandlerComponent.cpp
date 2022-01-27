@@ -70,7 +70,7 @@ void UInputHandlerComponent::HandleButtonPress(FName inputName)
 {
 	if (_mapButtons.Contains(inputName))
 	{
-		_mapButtons[inputName]->VPress();
+		_mapButtons[inputName]->Press();
 	}
 }
 
@@ -78,7 +78,7 @@ void UInputHandlerComponent::HandleButtonRelease(FName inputName)
 {
 	if (_mapButtons.Contains(inputName))
 	{
-		_mapButtons[inputName]->VRelease();
+		_mapButtons[inputName]->Release();
 	}
 }
 

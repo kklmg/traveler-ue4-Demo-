@@ -3,22 +3,10 @@
 
 #include "Input/ButtonInputActionSimple.h"
 
-void UButtonInputActionSimple::VPress()
+void UButtonInputActionSimple::VTMPress()
 {
-	Super::VPress();
-
 	if (_actionInterface)
 	{
 		_actionInterface->VExecuteAction(_actionType);
 	}
 }
-
-//void UButtonInputActionSimple::VPressing(float deltaTime)
-//{
-//	Super::VPressing(deltaTime);
-//}
-//
-//void UButtonInputActionSimple::VRelease()
-//{
-//	Super::VRelease();
-//}

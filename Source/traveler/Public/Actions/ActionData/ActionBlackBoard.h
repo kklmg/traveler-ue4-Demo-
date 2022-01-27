@@ -22,6 +22,9 @@ class TRAVELER_API UActionBlackBoard : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable)
+	void WriteData_Bool(EActionData key, bool value);
+
+	UFUNCTION(BlueprintCallable)
 	void WriteData_Int(EActionData key, int value);
 
 	UFUNCTION(BlueprintCallable)
@@ -42,17 +45,22 @@ public:
 	template<typename T>
 	T* GetOrCreateData(EActionData key);
 
-	UFUNCTION(BlueprintCallable)
-	bool TryGetData_Int(EActionData key, int& outValue);
+	void DeleteData(EActionData key);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_Float(EActionData key, float& outValue);
+	bool TryGetData_Bool(EActionData key, bool& outValue,bool bConsumeData = false);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_FVector(EActionData key, FVector& outValue);
+	bool TryGetData_Int(EActionData key, int& outValue, bool bConsumeData = false);
+
+	UFUNCTION(BlueprintCallable)
+	bool TryGetData_Float(EActionData key, float& outValue, bool bConsumeData = false);
+
+	UFUNCTION(BlueprintCallable)
+	bool TryGetData_FVector(EActionData key, FVector& outValue, bool bConsumeData = false);
 
 	//UFUNCTION()
-	bool TryGetData_UObject(EActionData key, UObject** outValue);
+	bool TryGetData_UObject(EActionData key, UObject** outValue, bool bConsumeData = false);
 
 private:
 	UPROPERTY()

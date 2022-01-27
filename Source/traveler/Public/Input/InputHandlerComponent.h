@@ -88,7 +88,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<TSubclassOf<UButtonInputActionBase>> _presetButtons;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY()
 	TMap<FName,UButtonInputActionBase*> _mapButtons;
 
 	IActionInterface* _actionInterface;

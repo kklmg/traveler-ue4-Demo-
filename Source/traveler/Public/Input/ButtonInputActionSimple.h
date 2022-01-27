@@ -14,7 +14,5 @@ class TRAVELER_API UButtonInputActionSimple : public UButtonInputActionBase
 {
 	GENERATED_BODY()
 public:
-	virtual void VPress() override;
-	//virtual void VPressing(float deltaTime) override;
-	//virtual void VRelease() override;
+	virtual void VTMPress() override;
 };

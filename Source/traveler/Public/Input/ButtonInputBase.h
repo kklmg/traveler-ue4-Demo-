@@ -26,17 +26,22 @@ public:
 	FButtonInputSignature OnButtonReleased;
 
 public:
-	virtual void VPress();
-	virtual void VPressing(float deltaTime);
-	virtual void VRelease();
+	void Press();
+	void Pressing(float deltaTime);
+	void Release();
 
 	FName GetInputMappingName();
 	float GetHoldingTime();
 	bool IsPressing();
 
-private:
+protected:
+	virtual void VTMPress();
+	virtual void VTMPressing(float deltaTime);
+	virtual void VTMRelease();
+
 	UPROPERTY(EditDefaultsOnly)
 	FString _buttonName;
+	UPROPERTY(EditDefaultsOnly)
 	FName _inputMappingName;
 
 	float _holdingTime;
