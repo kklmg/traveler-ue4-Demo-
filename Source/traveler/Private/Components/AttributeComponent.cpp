@@ -6,6 +6,7 @@
 #include "Data/AttributeData.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/DataTable.h"
+#include "Interface/AnimationModelProvider.h"
 
 
 // Sets default values for this component's properties
@@ -112,6 +113,22 @@ void UAttributeComponent::InitializeAttributes()
 			}
 		}
 
+	}
+
+	//Animation view model setting
+	IAnimationModelProvider* animationModelProvider = GetOwner<IAnimationModelProvider>();
+	if(animationModelProvider)
+	{
+		UCharacterAttribute* walkingSpeed = GetAttribute(EAttributeType::EATT_WalkingSpeed);
+		if(walkingSpeed)
+		{
+			animationModelProvider->VGetAnimationModel().WalkingSpeed = walkingSpeed->GetValue();
+		}
+		UCharacterAttribute* sprintSpeed = GetAttribute(EAttributeType::EATT_SprintSpeed);
+		if (sprintSpeed)
+		{
+			animationModelProvider->VGetAnimationModel().SprintSpeed = sprintSpeed->GetValue();
+		}
 	}
 
 	//for(TSubclasrAttribute> atsOf<UCharactetributeClass: _ArrayAttributeClasses)

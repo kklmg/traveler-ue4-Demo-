@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Interface/StateInterface.h"
+#include "Interface/AttributeInterface.h"
 
 DEFINE_LOG_CATEGORY(LogAction);
 
@@ -22,8 +23,21 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 	_actionBlackBoard = actionBlackBoard;
 	_actionComp = actionComponent;
 	_actionOwner = actionComponent->GetOwner<ACharacter>();
-
+	if(_actionOwner==false)
+	{
+		UE_LOG(LogTemp, Error, TEXT("no ation owner!"));
+		return;
+	}
+	_stateInterface = Cast<IStateInterface>(_actionOwner);	
+	_attributeInterface = Cast<IAttributeInterface>(_actionOwner);
+	
 	_processState = EActionProcessState::EAPS_ReadyToExecute;
+
+	VTMInitialize();
+}
+
+void UActionBase::VTMInitialize()
+{
 }
 
 

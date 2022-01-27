@@ -25,6 +25,7 @@ void UStateComponent::BeginPlay()
 	ACharacter* character = GetOwner<ACharacter>();
 	if(character)
 	{
+		_stateData.MovementMode = character->GetCharacterMovement()->MovementMode;
 		character->MovementModeChangedDelegate.AddDynamic(this, &UStateComponent::OnCharacterMovementModeChanged);
 	}
 
@@ -51,6 +52,7 @@ void UStateComponent::VSetSituationState(ESituationState newState)
 	{
 		_stateData.SituationState = newState;
 		_situationStateChangedDelegate.Broadcast(newState);
+		_anyStateChangedDelegate.Broadcast(_stateData);
 	}
 }
 
@@ -60,6 +62,7 @@ void UStateComponent::VSetActionState(EActionState newState)
 	{
 		_stateData.ActionState = newState;
 		_actionStateChangedDelegate.Broadcast(newState);
+		_anyStateChangedDelegate.Broadcast(_stateData);
 	}
 }
 
@@ -69,6 +72,7 @@ void UStateComponent::VSetHealthState(EHealthState newState)
 	{
 		_stateData.HealthState = newState;
 		_healthStateChangedDelegate.Broadcast(newState);
+		_anyStateChangedDelegate.Broadcast(_stateData);
 	}
 }
 
@@ -78,6 +82,7 @@ void UStateComponent::VSetPostureState(EPostureState newState)
 	{
 		_stateData.PostureState = newState;
 		_postureStateChangedDelegate.Broadcast(newState);
+		_anyStateChangedDelegate.Broadcast(_stateData);
 	}
 }
 
@@ -108,28 +113,28 @@ FOnAnyStateChanged* UStateComponent::VGetAnyStateChangedDelegate()
 
 void UStateComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
-	EMovementMode curMovementMode = Character->GetCharacterMovement()->MovementMode;
+	_stateData.MovementMode = Character->GetCharacterMovement()->MovementMode;
 
-	switch (curMovementMode)
+	switch (_stateData.MovementMode)
 	{
-	case MOVE_None:
-		break;
-	case MOVE_Walking: VSetSituationState(ESituationState::ESS_OnGround);
-		break;
-	case MOVE_NavWalking:
-		break;
-	case MOVE_Falling: VSetSituationState(ESituationState::ESS_InAir);
-		break;
-	case MOVE_Swimming:VSetSituationState(ESituationState::ESS_InWater);
-		break;
-	case MOVE_Flying: VSetSituationState(ESituationState::ESS_InAir);
-		break;
-	case MOVE_Custom:
-		break;
-	case MOVE_MAX:
-		break;
-	default:
-		break;
+		case MOVE_None:
+			break;
+		case MOVE_Walking: VSetSituationState(ESituationState::ESS_OnGround);
+			break;
+		case MOVE_NavWalking:
+			break;
+		case MOVE_Falling: VSetSituationState(ESituationState::ESS_InAir);
+			break;
+		case MOVE_Swimming:VSetSituationState(ESituationState::ESS_InWater);
+			break;
+		case MOVE_Flying: VSetSituationState(ESituationState::ESS_InAir);
+			break;
+		case MOVE_Custom:
+			break;
+		case MOVE_MAX:
+			break;
+		default:
+			break;
 	}
 }
 

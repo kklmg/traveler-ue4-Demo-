@@ -152,7 +152,6 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UInputHandlerComponent* _inputHandlerComponent;
 
-	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
 	UPawnCameraComponent* _cameraComponent;
 

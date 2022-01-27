@@ -11,6 +11,7 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogAction, Log, All);
 
 class IStateInterface;
+class IAttributeInterface;
 
 UENUM(BlueprintType)
 enum class EActionProcessState : uint8
@@ -64,8 +65,10 @@ public:
 	virtual void VExecute();
 
 	virtual void VTick(float deltaTime);
+
 public:
 	void Initialize(UActionComponent* actionComponent, UActionBlackBoard* actionBlackBoard);
+	virtual void VTMInitialize();
 
 	UFUNCTION(BlueprintCallable)
 	void Pause();
@@ -110,8 +113,6 @@ protected:
 	UPROPERTY()
 	UActionComponent* _actionComp;
 
-	IStateInterface* _stateInterface;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName _actionName;
 
@@ -123,4 +124,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Action")
 	EActionProcessState _processState;
+
+	IStateInterface* _stateInterface;
+	IAttributeInterface* _attributeInterface;
 };

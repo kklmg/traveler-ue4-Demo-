@@ -6,6 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
+#include "Interface/AttributeInterface.h"
 
 UActionMoveAndFaceTo::UActionMoveAndFaceTo()
 {
@@ -17,6 +18,22 @@ void UActionMoveAndFaceTo::VExecute()
 	Super::VExecute();
 
 	FVector outMovementInput;
+
+
+	if(_attributeInterface)
+	{
+		UCharacterAttribute* walkingSpeed = _attributeInterface->VGetAttribute(EAttributeType::EATT_WalkingSpeed);
+		if(walkingSpeed)
+		{
+			GetActionOwner()->GetCharacterMovement()->MaxWalkSpeed = walkingSpeed->GetValue();
+		}
+
+		UCharacterAttribute* sprintSpeed = _attributeInterface->VGetAttribute(EAttributeType::EATT_SprintSpeed);
+		if (sprintSpeed)
+		{
+			GetActionOwner()->GetCharacterMovement()->MaxWalkSpeed = sprintSpeed->GetValue();
+		}
+	}
 
 	if (GetActionBlackBoard()->TryGetData_FVector(EActionData::EACTD_MovementInput, outMovementInput))
 	{

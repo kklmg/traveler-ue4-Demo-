@@ -30,42 +30,19 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetCharacterState();
-
-	void OnJumpButtonDown();
-	void OnJumpButtonUp();
-
-	void OnSprintButtonDown();
-	void OnSprintButtonUp();
-
-	void OnDodgeButtonDown();
-	void OnDodgeButtonUp();
-
 	void AddToActionProcessPool(UActionBase* action);
 	void ClearActionProcessPool();
 
 	UFUNCTION()
-	void OnCharacterStateChanged(FStateData stateData);
+	void OnCharacterStateChanged(FStateData newStateData);
 
 public:
 	UFUNCTION(BlueprintCallable)
 	UActionBase* ExecuteAction(EActionType actionType);
-	UFUNCTION(BlueprintCallable)
-	void ExecuteIdle();
-	UFUNCTION(BlueprintCallable)
-	void ExecuteMove(FVector movement);
-	UFUNCTION(BlueprintCallable)
-	void ExecuteSprint();
-	UFUNCTION(BlueprintCallable)
-	void ExecuteJump();
-	UFUNCTION(BlueprintCallable)
-	void ExecuteAim();
-	UFUNCTION(BlueprintCallable)
-	void ExecuteDodge();
 
+	UFUNCTION(BlueprintCallable)
 	UActionBlackBoard* GetActionBlackBoard();
 	
-
 private:
 	void _TickActionProcess(float deltaTime);
 
@@ -81,7 +58,7 @@ private:
 	UActionBlackBoard* _actionBlackBoard;
 
 	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
-	TMap<ESituationState, TSubclassOf<UCharacterActionPreset>> _mapActionPreset;
+	TMap<TEnumAsByte<enum EMovementMode>, TSubclassOf<UCharacterActionPreset>> _mapActionPreset;
 
 	UPROPERTY()
 	UCharacterActionPreset* _pCurrentActionPreset;

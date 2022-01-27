@@ -50,10 +50,6 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	_TickActionProcess(DeltaTime);
 }
 
-void UActionComponent::SetCharacterState()
-{
-}
-
 UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 {
 	if (_pCurrentActionPreset == nullptr || _mapActionProcessPool.Contains(actionType))
@@ -76,33 +72,7 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 	}
 	return action;
 }
-void UActionComponent::ExecuteIdle()
-{
-	ExecuteAction(EActionType::EACT_Idle);
-}
 
-void UActionComponent::ExecuteMove(FVector movement)
-{
-	_actionBlackBoard->WriteData_FVector(EActionData::EACTD_MovementInput, movement);
-	ExecuteAction(EActionType::EACT_Moving);
-}
-
-void UActionComponent::ExecuteSprint()
-{
-	ExecuteAction(EActionType::EACT_Sprint);
-}
-void UActionComponent::ExecuteJump()
-{
-	ExecuteAction(EActionType::EACT_Jumping);
-}
-void UActionComponent::ExecuteAim()
-{
-	ExecuteAction(EActionType::EACT_Aiming);
-}
-void UActionComponent::ExecuteDodge()
-{
-	ExecuteAction(EActionType::EACT_Dodge);
-}
 
 void UActionComponent::AddToActionProcessPool(UActionBase* action)
 {
@@ -142,63 +112,25 @@ UActionBlackBoard* UActionComponent::GetActionBlackBoard()
 	return _actionBlackBoard;
 }
 
-void UActionComponent::OnJumpButtonDown()
+
+void UActionComponent::OnCharacterStateChanged(FStateData newStateData)
 {
-	ExecuteJump();
-}
-
-void UActionComponent::OnJumpButtonUp()
-{
-
-}
-
-void UActionComponent::OnSprintButtonDown()
-{
-	_bSprintButtonPress = true;
-
-	//Get My Character
-	//AHumanCharacter* humanCharacter = Cast<AHumanCharacter>(GetOwner());
-	//check(humanCharacter != nullptr);
-
-	//humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->RunSpeed->GetValue();
-}
-
-void UActionComponent::OnSprintButtonUp()
-{
-	_bSprintButtonPress = false;
-
-	//Get My Character
-	//AHumanCharacter* humanCharacter = Cast<AHumanCharacter>(GetOwner());
-	//check(humanCharacter != nullptr);
-
-	//humanCharacter->GetCharacterMovement()->MaxWalkSpeed = humanCharacter->GetAttributeComponent()->WalkSpeed->GetValue();
-}
-
-void UActionComponent::OnDodgeButtonDown() 
-{
-	ExecuteDodge();
-}
-void UActionComponent::OnDodgeButtonUp() 
-{
-}
-
-void UActionComponent::OnCharacterStateChanged(FStateData stateData)
-{
-	if (_cachedStateData.SituationState != stateData.SituationState)
+	if (_cachedStateData.MovementMode != newStateData.MovementMode)
 	{
-		if (_mapActionPreset.Contains(stateData.SituationState))
+		//preset 
+		if (_mapActionPreset.Contains(newStateData.MovementMode))
 		{
 			//clear process pool
 			ClearActionProcessPool();
 
-			//Make instance of ActionSetClass
-			TSubclassOf<UCharacterActionPreset> actionSetClass = _mapActionPreset[stateData.SituationState];
+			//Make instance of ActionPresetClass
+			TSubclassOf<UCharacterActionPreset> actionpresetClass = _mapActionPreset[newStateData.MovementMode];
 
-			UCharacterActionPreset* actionSetIns = actionSetClass ?
-				NewObject<UCharacterActionPreset>(this, actionSetClass)
+			UCharacterActionPreset* actionPresetIns = actionpresetClass ?
+				NewObject<UCharacterActionPreset>(this, actionpresetClass)
 				: NewObject<UCharacterActionPreset>(this);
 
-			actionSetIns->VEnter();
+			actionPresetIns->VEnter();
 
 			//Set Current Action set
 			if (_pCurrentActionPreset != nullptr)
@@ -206,10 +138,10 @@ void UActionComponent::OnCharacterStateChanged(FStateData stateData)
 				_pCurrentActionPreset->VLeave();
 				_pCurrentActionPreset->MarkPendingKill();
 			}
-			_pCurrentActionPreset = actionSetIns;
+			_pCurrentActionPreset = actionPresetIns;
 		}
 	}
-	_cachedStateData = stateData;
+	_cachedStateData = newStateData;
 }
 
 void UActionComponent::ClearActionProcessPool()

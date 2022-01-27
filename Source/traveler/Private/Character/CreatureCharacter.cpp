@@ -27,6 +27,24 @@ ACreatureCharacter::ACreatureCharacter()
 
 	bUseControllerRotationYaw = false;
 
+	//Create State component
+	if (_stateComponent == nullptr)
+	{
+		_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("StateComponent"));
+		check(_stateComponent != nullptr);
+	}
+	//Create Attribute component
+	if (_attributeComponent == nullptr)
+	{
+		_attributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
+		check(_attributeComponent != nullptr);
+	}
+	//Create Mesh Socket component
+	if (_meshSocketComponent == nullptr)
+	{
+		_meshSocketComponent = CreateDefaultSubobject<UMeshSocketComponent>(TEXT("MeshSocketComponent"));
+		check(_meshSocketComponent != nullptr);
+	}
 	//Create action component
 	if (_actionComponent == nullptr)
 	{
@@ -53,12 +71,6 @@ ACreatureCharacter::ACreatureCharacter()
 		_weaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
 		check(_weaponComponent != nullptr);
 	}
-	//Create Attribute component
-	if (_attributeComponent == nullptr)
-	{
-		_attributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
-		check(_attributeComponent != nullptr);
-	}
 	//Create billboard component
 	if (_billboardWidgetComponent == nullptr)
 	{
@@ -77,18 +89,6 @@ ACreatureCharacter::ACreatureCharacter()
 		_inputHandlerComponent = CreateDefaultSubobject<UInputHandlerComponent>(TEXT("InputHandlerComponent"));
 		check(_inputHandlerComponent != nullptr);
 	}
-	//Create State component
-	if(_stateComponent == nullptr)
-	{
-		_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("StateComponent"));
-		check(_stateComponent != nullptr);
-	}
-	//Create Mesh Socket component
-	if (_meshSocketComponent == nullptr)
-	{
-		_meshSocketComponent = CreateDefaultSubobject<UMeshSocketComponent>(TEXT("MeshSocketComponent"));
-		check(_meshSocketComponent != nullptr);
-	}
 }
 
 // Called when the game starts or when spawned
@@ -103,8 +103,6 @@ void ACreatureCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	_animationModel.MovingVelocity = GetVelocity();
-	
-
 }
 
 // Called to bind functionality to input

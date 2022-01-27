@@ -73,7 +73,12 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector Velocity;
+
+	UPROPERTY(BlueprintReadWrite)
+	TEnumAsByte<enum EMovementMode> MovementMode;
 };
+
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSituationStateChanged, ESituationState, SituationState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionStateChanged, EActionState, ActionState);
