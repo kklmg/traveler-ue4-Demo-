@@ -6,8 +6,6 @@
 #include "Character/CreatureCharacter.h"
 #include "DrawDebugHelpers.h"
 #include "GameSystem/MyBlueprintFunctionLibrary.h"
-#include "Actions/ActionData/ActionBlackBoard.h"
-#include "Actions/ActionData/ActionData_FVector.h"
 
 
 UActionFlyTo::UActionFlyTo()

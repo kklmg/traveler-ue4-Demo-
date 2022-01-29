@@ -9,6 +9,72 @@
 
 class UActionDataBase;
 
+
+template<typename T>
+class TActionDataBlackBoard
+{
+public:
+	bool TryGetData(EActionData key, T& outValue)
+	{
+		if (_mapActionData.Contains(key))
+		{
+			outValue = _mapActionData[key];
+			return true;
+		}
+		return false;
+	}
+	void WriteData(EActionData key, T value)
+	{
+		if(_mapActionData.Contains(key))
+		{
+			if(_mapActionData[key] == value)
+			{
+				return;
+			}
+			else
+			{
+				_mapActionData[key] = value;
+				BroardCast(key);
+			}
+		}
+		else
+		{
+			_mapActionData.Add(key, value);
+			BroardCast(key);
+		}
+	}
+	void DeleteData(EActionData key)
+	{
+		_mapActionData.Remove(key);
+	}
+
+	TMulticastDelegate<void(T)>& GetDelegate(EActionData key)
+	{
+		if(_mapActionDataChangedDelegates.Contains(key))
+		{
+			return _mapActionDataChangedDelegates[key];
+		}
+		else
+		{
+			_mapActionDataChangedDelegates.Add(key, TMulticastDelegate<void(T)>());
+			return _mapActionDataChangedDelegates[key];
+		}
+	}
+	void BroardCast(EActionData key)
+	{
+		if (_mapActionDataChangedDelegates.Contains(key) && _mapActionData.Contains(key))
+		{
+			_mapActionDataChangedDelegates[key].Broadcast(_mapActionData[key]);
+		}
+	}
+
+
+private:
+	TMap<EActionData, T> _mapActionData;
+	TMap<EActionData, TMulticastDelegate<void(T)>> _mapActionDataChangedDelegates;
+};
+
+
 /**
  * 
  */
@@ -16,9 +82,6 @@ UCLASS(Blueprintable)
 class TRAVELER_API UActionBlackBoard : public UObject
 {
 	GENERATED_BODY()
-//public:
-//	template<typename T>
-//	static T* MakeActionData();
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -36,17 +99,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void WriteData_UObject(EActionData key, UObject* value);
 
-public:
-	UActionDataBase* GetData(EActionData key);
-
-	template<typename T>
-	T* GetData(EActionData key);
-
-	template<typename T>
-	T* GetOrCreateData(EActionData key);
-
-	void DeleteData(EActionData key);
-
 	UFUNCTION(BlueprintCallable)
 	bool TryGetData_Bool(EActionData key, bool& outValue,bool bConsumeData = false);
 
@@ -62,43 +114,13 @@ public:
 	//UFUNCTION()
 	bool TryGetData_UObject(EActionData key, UObject** outValue, bool bConsumeData = false);
 
+	void DeleteData(EActionData key);
+
 private:
-	UPROPERTY()
-	TMap<EActionData, UActionDataBase*> _mapActionData;
+	TActionDataBlackBoard<bool> _boolData;
+	TActionDataBlackBoard<int> _intData;
+	TActionDataBlackBoard<float> _floatData;
+	TActionDataBlackBoard<FVector> _vectorData;
+	TActionDataBlackBoard<FQuat> _quatData;
+	TActionDataBlackBoard<UObject*> _objectData;
 };
-
-template<typename T>
-T* UActionBlackBoard::GetData(EActionData key)
-{
-	UActionDataBase* data = GetData(key);
-	T* result = nullptr;
-	if(data)
-	{
-		result = Cast<T>(data);
-	}
-	return result;
-}
-
-template<typename T>
-T* UActionBlackBoard::GetOrCreateData(EActionData key)
-{
-	T* data = GetData<T>(key);
-
-	if (data == nullptr)
-	{
-		data = NewObject<T>(this);
-		if(data)
-		{
-			this->_mapActionData.Add(key, data);
-		}
-	}
-	return data;
-}
-
-//template<typename T>
-//static T* UActionBlackBoard::MakeActionData()
-//{
-//	T* dataIns = NewObject<T>();
-//	return T;
-//}
-//
