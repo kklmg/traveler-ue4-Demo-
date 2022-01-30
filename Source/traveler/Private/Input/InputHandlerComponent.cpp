@@ -131,7 +131,7 @@ void UInputHandlerComponent::ConsumeMovementInput()
 		FVector movement = cameraRotator.RotateVector(_movementInput);
 		movement.Z = 0;
 
-		_actionInterface->VGetActionBlackBoard()->WriteData_FVector(EActionData::EACTD_MovementInput, movement);
+		_actionInterface->VGetActionBlackBoard()->WriteData_FVector(EActionDataKey::EACTD_MovementInput, movement);
 		_actionInterface->VExecuteAction(EActionType::EACT_Moving);
 
 		_movementInput = FVector::ZeroVector;

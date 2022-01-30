@@ -76,9 +76,9 @@ void UActionThrow::OnAttackNotifyBegin(float durationTime)
 		_throwerIns->VSetSpawningLocation(outTransform.GetLocation());
 
 		FVector outDirection= GetActionOwner()->GetActorForwardVector();
-		_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_Peojectile_FlyingDirection, outDirection);
+		_actionBlackBoard->TryGetData_FVector(EActionDataKey::EACTD_Peojectile_FlyingDirection, outDirection);
 
-		_actionBlackBoard->TryGetData_Float(EActionData::EACTD_Peojectile_FlyingSpeed, _throwingSpeed);
+		_actionBlackBoard->TryGetData_Float(EActionDataKey::EACTD_Peojectile_FlyingSpeed, _throwingSpeed);
 		_throwerIns->VSetSpeed(_throwingSpeed + GetActionOwner()->GetVelocity().Size());
 		_throwerIns->VSetThrowingDirection(outTransform.GetRotation().Vector());
 	}

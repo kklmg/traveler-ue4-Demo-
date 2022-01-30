@@ -19,7 +19,7 @@ void ATeleportProjectile::VExecuteSpecialAction()
 	{
 		FVector TeleportLocation = GetActorLocation() + GetActorForwardVector() * _TeleportOffset.X + FVector(0, 0, _TeleportOffset.Z);
 
-		creatureCharacter->VGetActionBlackBoard()->WriteData_FVector(EActionData::EACTD_TeleportLocation, TeleportLocation);
+		creatureCharacter->VGetActionBlackBoard()->WriteData_FVector(EActionDataKey::EACTD_TeleportLocation, TeleportLocation);
 		creatureCharacter->VExecuteAction(EActionType::EACT_Teleport);
 		//creatureCharacter->LaunchCharacter(GetVelocity(), true, true);
 		Destroy();

@@ -14,7 +14,7 @@ template<typename T>
 class TActionDataBlackBoard
 {
 public:
-	bool TryGetData(EActionData key, T& outValue)
+	bool TryGetData(EActionDataKey key, T& outValue)
 	{
 		if (_mapActionData.Contains(key))
 		{
@@ -23,7 +23,7 @@ public:
 		}
 		return false;
 	}
-	void WriteData(EActionData key, T value)
+	void WriteData(EActionDataKey key, T value)
 	{
 		if(_mapActionData.Contains(key))
 		{
@@ -43,12 +43,12 @@ public:
 			BroardCast(key);
 		}
 	}
-	void DeleteData(EActionData key)
+	void DeleteData(EActionDataKey key)
 	{
 		_mapActionData.Remove(key);
 	}
 
-	TMulticastDelegate<void(T)>& GetDelegate(EActionData key)
+	TMulticastDelegate<void(T)>& GetDelegate(EActionDataKey key)
 	{
 		if(_mapActionDataChangedDelegates.Contains(key))
 		{
@@ -60,7 +60,7 @@ public:
 			return _mapActionDataChangedDelegates[key];
 		}
 	}
-	void BroardCast(EActionData key)
+	void BroardCast(EActionDataKey key)
 	{
 		if (_mapActionDataChangedDelegates.Contains(key) && _mapActionData.Contains(key))
 		{
@@ -70,8 +70,8 @@ public:
 
 
 private:
-	TMap<EActionData, T> _mapActionData;
-	TMap<EActionData, TMulticastDelegate<void(T)>> _mapActionDataChangedDelegates;
+	TMap<EActionDataKey, T> _mapActionData;
+	TMap<EActionDataKey, TMulticastDelegate<void(T)>> _mapActionDataChangedDelegates;
 };
 
 
@@ -85,36 +85,43 @@ class TRAVELER_API UActionBlackBoard : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void WriteData_Bool(EActionData key, bool value);
+	void WriteData_Bool(EActionDataKey key, bool value);
 
 	UFUNCTION(BlueprintCallable)
-	void WriteData_Int(EActionData key, int value);
+	void WriteData_Int(EActionDataKey key, int value);
 
 	UFUNCTION(BlueprintCallable)
-	void WriteData_Float(EActionData key, float value);
+	void WriteData_Float(EActionDataKey key, float value);
 
 	UFUNCTION(BlueprintCallable)
-	void WriteData_FVector(EActionData key, FVector value);
+	void WriteData_FVector(EActionDataKey key, FVector value);
 
 	UFUNCTION(BlueprintCallable)
-	void WriteData_UObject(EActionData key, UObject* value);
+	void WriteData_UObject(EActionDataKey key, UObject* value);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_Bool(EActionData key, bool& outValue,bool bConsumeData = false);
+	bool TryGetData_Bool(EActionDataKey key, bool& outValue,bool bConsumeData = false);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_Int(EActionData key, int& outValue, bool bConsumeData = false);
+	bool TryGetData_Int(EActionDataKey key, int& outValue, bool bConsumeData = false);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_Float(EActionData key, float& outValue, bool bConsumeData = false);
+	bool TryGetData_Float(EActionDataKey key, float& outValue, bool bConsumeData = false);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_FVector(EActionData key, FVector& outValue, bool bConsumeData = false);
+	bool TryGetData_FVector(EActionDataKey key, FVector& outValue, bool bConsumeData = false);
 
 	//UFUNCTION()
-	bool TryGetData_UObject(EActionData key, UObject** outValue, bool bConsumeData = false);
+	bool TryGetData_UObject(EActionDataKey key, UObject** outValue, bool bConsumeData = false);
 
-	void DeleteData(EActionData key);
+	TMulticastDelegate<void(bool)>& GetValueChangedDelegate_Bool(EActionDataKey key);
+	TMulticastDelegate<void(int)>& GetValueChangedDelegate_Int(EActionDataKey key);
+	TMulticastDelegate<void(float)>& GetValueChangedDelegate_Float(EActionDataKey key);
+	TMulticastDelegate<void(FVector)>& GetValueChangedDelegate_FVector(EActionDataKey key);
+	TMulticastDelegate<void(FQuat)>& GetValueChangedDelegate_Fquat(EActionDataKey key);
+
+
+	void DeleteData(EActionDataKey key);
 
 private:
 	TActionDataBlackBoard<bool> _boolData;

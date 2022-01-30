@@ -192,7 +192,7 @@ void UActionFlyTo::VTick(float deltaTime)
 
 bool UActionFlyTo::_GetDestination(FVector& outVector)
 {
-	return GetActionBlackBoard()->TryGetData_FVector(EActionData::EACTD_DestLocation, outVector);
+	return GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_DestLocation, outVector);
 }
 
 

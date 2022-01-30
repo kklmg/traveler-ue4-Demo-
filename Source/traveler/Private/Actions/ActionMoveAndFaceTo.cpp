@@ -18,7 +18,7 @@ void UActionMoveAndFaceTo::VExecute()
 	Super::VExecute();
 
 	bool bWantToSprint = false;
-	if (GetActionBlackBoard()->TryGetData_Bool(EActionData::EACTD_WantToSprint, bWantToSprint) && bWantToSprint == true)
+	if (GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_WantToSprint, bWantToSprint) && bWantToSprint == true)
 	{
 		UCharacterAttribute* sprintSpeed = _attributeInterface->VGetAttribute(EAttributeType::EATT_SprintSpeed);
 		if (sprintSpeed)
@@ -36,7 +36,7 @@ void UActionMoveAndFaceTo::VExecute()
 	}
 
 	FVector outMovementInput;
-	if (GetActionBlackBoard()->TryGetData_FVector(EActionData::EACTD_MovementInput, outMovementInput))
+	if (GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, outMovementInput))
 	{
 		GetActionOwner()->SetActorRotation(outMovementInput.Rotation());
 		GetActionOwner()->AddMovementInput(outMovementInput);

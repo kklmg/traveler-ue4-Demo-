@@ -26,7 +26,7 @@ enum class EActionType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EActionData : uint8
+enum class EActionDataKey : uint8
 {
 	EACTD_None UMETA(DisplayName = "None"),
 	EACTD_TeleportLocation UMETA(DisplayName = " TeleportLocation"),

@@ -19,7 +19,7 @@ void UActionMove::VExecute()
 
 	FVector outMovementInput;
 
-	if(_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_MovementInput, outMovementInput))
+	if(_actionBlackBoard->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, outMovementInput))
 	{
 		_actionOwner->AddMovementInput(outMovementInput);
 	}

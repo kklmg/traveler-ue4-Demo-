@@ -16,13 +16,14 @@
 #include "Components/CameraSpringArmComponent.h"
 #include "Components/WeaponComponent.h"
 #include "Components/MeshSocketComponent.h"
+#include "Components/MyCharacterMovementComponent.h"
 #include "Input/InputHandlerComponent.h"
 
 
-// Sets default values
-ACreatureCharacter::ACreatureCharacter()
+ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializer) 
+: Super(ObjectInitializer.SetDefaultSubobjectClass<UMyCharacterMovementComponent>(CharacterMovementComponentName))
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	bUseControllerRotationYaw = false;
@@ -52,14 +53,14 @@ ACreatureCharacter::ACreatureCharacter()
 		check(_actionComponent != nullptr);
 	}
 	//Create Camera Spring Arm Component
-	if(_cameraSpringArmComponent==nullptr)
+	if (_cameraSpringArmComponent == nullptr)
 	{
 		_cameraSpringArmComponent = CreateDefaultSubobject<UCameraSpringArmComponent>(TEXT("CameraSpringArmComponent"));
 		check(_cameraSpringArmComponent != nullptr);
 		_cameraSpringArmComponent->SetupAttachment(GetCapsuleComponent());
 	}
 	// Create a first person camera component.
-	if(_cameraComponent==nullptr)
+	if (_cameraComponent == nullptr)
 	{
 		_cameraComponent = CreateDefaultSubobject<UPawnCameraComponent>(TEXT("FirstPersonCamera"));
 		check(_cameraComponent != nullptr);
@@ -95,6 +96,8 @@ ACreatureCharacter::ACreatureCharacter()
 void ACreatureCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
 }
 
 // Called every frame

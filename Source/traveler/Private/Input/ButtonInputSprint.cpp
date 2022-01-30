@@ -13,7 +13,7 @@ void UButtonInputSprint::VTMPress()
 {
 	if (_actionInterface)
 	{
-		_actionInterface->VGetActionBlackBoard()->WriteData_Bool(EActionData::EACTD_WantToSprint, true);
+		_actionInterface->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, true);
 	}
 }
 
@@ -25,6 +25,6 @@ void UButtonInputSprint::VTMRelease()
 {
 	if (_actionInterface)
 	{
-		_actionInterface->VGetActionBlackBoard()->WriteData_Bool(EActionData::EACTD_WantToSprint, false);
+		_actionInterface->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, false);
 	}
 }

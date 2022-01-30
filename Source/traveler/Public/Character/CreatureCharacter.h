@@ -44,9 +44,7 @@ class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterfa
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
-	ACreatureCharacter();
-
+	ACreatureCharacter(const FObjectInitializer& ObjectInitializer);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

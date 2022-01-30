@@ -16,7 +16,7 @@ void UActionTeleport::VExecute()
 	Super::VExecute();
 
 	FVector outLocation;
-	if (_actionBlackBoard->TryGetData_FVector(EActionData::EACTD_TeleportLocation, outLocation)) 
+	if (_actionBlackBoard->TryGetData_FVector(EActionDataKey::EACTD_TeleportLocation, outLocation)) 
 	{
 		_actionOwner->SetActorLocation(outLocation);
 	}
