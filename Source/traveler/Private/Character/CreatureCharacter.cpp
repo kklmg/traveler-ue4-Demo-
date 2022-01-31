@@ -104,8 +104,6 @@ void ACreatureCharacter::BeginPlay()
 void ACreatureCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	_animationModel.MovingVelocity = GetVelocity();
 }
 
 // Called to bind functionality to input

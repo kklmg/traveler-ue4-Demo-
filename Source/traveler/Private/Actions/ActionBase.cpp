@@ -7,6 +7,7 @@
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Interface/StateInterface.h"
 #include "Interface/AttributeInterface.h"
+#include "Interface/AnimationModelProvider.h"
 
 DEFINE_LOG_CATEGORY(LogAction);
 
@@ -30,6 +31,7 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 	}
 	_stateInterface = Cast<IStateInterface>(_actionOwner);	
 	_attributeInterface = Cast<IAttributeInterface>(_actionOwner);
+	_animationModelProviderInterface = Cast<IAnimationModelProvider>(_actionOwner);
 	
 	_processState = EActionProcessState::EAPS_ReadyToExecute;
 

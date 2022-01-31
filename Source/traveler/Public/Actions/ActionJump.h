@@ -19,13 +19,7 @@ public:
 	virtual void VExecute() override;
 	virtual void VTick(float deltaTime) override;
 
-
-	UFUNCTION()
-	void OnMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 private:
-
-
-
-	UPROPERTY(EditAnyWhere, Category = animation)
-	UAnimMontage* _aniMontage;
+	UPROPERTY(EditDefaultsOnly)
+	float _delayTime;
 };

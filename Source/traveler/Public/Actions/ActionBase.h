@@ -12,6 +12,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogAction, Log, All);
 
 class IStateInterface;
 class IAttributeInterface;
+class IAnimationModelProvider;
 
 UENUM(BlueprintType)
 enum class EActionProcessState : uint8
@@ -127,4 +128,5 @@ protected:
 
 	IStateInterface* _stateInterface;
 	IAttributeInterface* _attributeInterface;
+	IAnimationModelProvider* _animationModelProviderInterface;
 };

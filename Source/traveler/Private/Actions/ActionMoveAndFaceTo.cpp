@@ -17,24 +17,6 @@ void UActionMoveAndFaceTo::VExecute()
 {
 	Super::VExecute();
 
-	bool bWantToSprint = false;
-	if (GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_WantToSprint, bWantToSprint) && bWantToSprint == true)
-	{
-		UCharacterAttribute* sprintSpeed = _attributeInterface->VGetAttribute(EAttributeType::EATT_SprintSpeed);
-		if (sprintSpeed)
-		{
-			GetActionOwner()->GetCharacterMovement()->MaxWalkSpeed = sprintSpeed->GetValue();
-		}
-	}
-	else
-	{
-		UCharacterAttribute* walkingSpeed = _attributeInterface->VGetAttribute(EAttributeType::EATT_WalkingSpeed);
-		if (walkingSpeed)
-		{
-			GetActionOwner()->GetCharacterMovement()->MaxWalkSpeed = walkingSpeed->GetValue();
-		}
-	}
-
 	FVector outMovementInput;
 	if (GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, outMovementInput))
 	{

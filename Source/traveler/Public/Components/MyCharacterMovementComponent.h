@@ -8,6 +8,7 @@
 
 class IActionInterface;
 class IAttributeInterface;
+class IAnimationModelProvider;
 
 /**
  * 
@@ -21,10 +22,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UFUNCTION()
 	void OnCharacterWantToSprint(bool wantToSprint);
 
 private:
 
 	IActionInterface* _actionInterface;
 	IAttributeInterface* _attributeInterface;
+	IAnimationModelProvider* _animationModelProviderInterface;
 };

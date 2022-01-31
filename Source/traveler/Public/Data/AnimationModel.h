@@ -17,11 +17,13 @@ public:
 	float WalkingSpeed;
 	UPROPERTY(BlueprintReadWrite)
 	float SprintSpeed;
-
 	UPROPERTY(BlueprintReadWrite)
 	FVector MovingVelocity;
 	UPROPERTY(BlueprintReadWrite)
 	TEnumAsByte<enum EMovementMode> MovementMode;
+	UPROPERTY(BlueprintReadWrite)
+	bool bWantToJump;
+
 
 	UPROPERTY(BlueprintReadWrite)
 	float CameraPitch;
