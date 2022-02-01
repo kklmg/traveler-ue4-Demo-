@@ -3,12 +3,11 @@
 
 #include "Actions/ActionRotate.h"
 
-void UActionRotate::VExecute()
+void UActionRotate::VTMExecute()
 {
-	Super::VExecute();
 }
 
-void UActionRotate::VTick(float deltaTime) 
+void UActionRotate::VTMTick(float deltaTime) 
 {
-	Super::VTick(deltaTime);
+	Super::VTMTick(deltaTime);
 }

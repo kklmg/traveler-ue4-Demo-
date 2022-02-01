@@ -30,25 +30,24 @@ UActionFlyTo::UActionFlyTo()
 	_resetFactorSpeed = 0.5f;
 }
 
-void UActionFlyTo::VExecute()
+void UActionFlyTo::VTMExecute()
 {
-	Super::VExecute();
-
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Execute Fly To"));
 
 	if(_GetDestination(_destination))
 	{
-		UE_LOG(LogAction, Warning, TEXT("Fly to: No Destination Setted"))
+		
 	}
 	else
 	{
-		_processState = EActionProcessState::EAPS_FAILED;
+		UE_LOG(LogAction, Warning, TEXT("Fly to: No Destination Setted"))
+		SetActionProcessFailed();
 	}
 }
 
-void UActionFlyTo::VTick(float deltaTime)
+void UActionFlyTo::VTMTick(float deltaTime)
 {
-	Super::VTick(deltaTime);
+	Super::VTMTick(deltaTime);
 
 	//Update Destination
 	//-------------------------------------------------------------------------------------------------------------
@@ -60,20 +59,21 @@ void UActionFlyTo::VTick(float deltaTime)
 		}
 		else
 		{
-			_processState = EActionProcessState::EAPS_FAILED;
+			SetActionProcessFailed();
+			SetActionProcessFailed();
 			return;
 		}
 	}
 
 	//Get Flying Speed
 	//-------------------------------------------------------------------------------------------------------------
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
+	ACreatureCharacter* character = Cast<ACreatureCharacter>(GetActionOwner());
 	_flyingSpeed = character->GetCharacterMovement()->MaxFlySpeed;
 
 
 	//Current Transform State
 	//-------------------------------------------------------------------------------------------------------------
-	FTransform curTransform = _actionOwner->GetActorTransform();
+	FTransform curTransform = GetActionOwner()->GetActorTransform();
 	FVector curLocation = curTransform.GetLocation();
 	FQuat curQuat = curTransform.GetRotation();
 	FRotator curRotator = curQuat.Rotator();
@@ -94,7 +94,7 @@ void UActionFlyTo::VTick(float deltaTime)
 	//debug message
 	DrawDebugLine(GetWorld(), curLocation, _destination, FColor::Red, false, -1.0f, 0U, 30.0f);
 	DrawDebugLine(GetWorld(), curLocation, destLocXY, FColor::Green, false, -1.0f, 0U, 30.0f);
-	DrawDebugLine(GetWorld(), _actionOwner->GetActorLocation(), _actionOwner->GetActorLocation() + forwardVector * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
+	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), GetActionOwner()->GetActorLocation() + forwardVector * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat(distance));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Velocity: " + FString::SanitizeFloat((character->GetVelocity()).Size()));
 
@@ -106,7 +106,7 @@ void UActionFlyTo::VTick(float deltaTime)
 	{
 		if(_resetFactor==1.0f)
 		{
-			_processState = EActionProcessState::EAPS_SUCCEEDED;
+			SetActionProcessSucceed();
 			_resetFactor = 0;
 			return;
 		}

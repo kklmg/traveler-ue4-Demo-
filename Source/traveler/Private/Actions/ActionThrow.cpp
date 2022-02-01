@@ -19,10 +19,9 @@ UActionThrow::UActionThrow()
 	_throwingSpeed = 100;
 }
 
-void UActionThrow::VExecute()
+void UActionThrow::VTMExecute()
 {
-	Super::VExecute();
-
+	Super::VTMExecute();
 
 	if (GetActionOwner() == nullptr) return;
 
@@ -38,9 +37,9 @@ void UActionThrow::VExecute()
 	handler->OnNotifyEnd.AddDynamic(this, &UActionThrow::OnAttackNotifyEnd);
 }
 
-void UActionThrow::VTick(float deltaTime)
+void UActionThrow::VTMTick(float deltaTime)
 {
-	Super::VTick(deltaTime);
+	Super::VTMTick(deltaTime);
 
 }
 
@@ -76,9 +75,9 @@ void UActionThrow::OnAttackNotifyBegin(float durationTime)
 		_throwerIns->VSetSpawningLocation(outTransform.GetLocation());
 
 		FVector outDirection= GetActionOwner()->GetActorForwardVector();
-		_actionBlackBoard->TryGetData_FVector(EActionDataKey::EACTD_Peojectile_FlyingDirection, outDirection);
+		GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_Peojectile_FlyingDirection, outDirection);
 
-		_actionBlackBoard->TryGetData_Float(EActionDataKey::EACTD_Peojectile_FlyingSpeed, _throwingSpeed);
+		GetActionBlackBoard()->TryGetData_Float(EActionDataKey::EACTD_Peojectile_FlyingSpeed, _throwingSpeed);
 		_throwerIns->VSetSpeed(_throwingSpeed + GetActionOwner()->GetVelocity().Size());
 		_throwerIns->VSetThrowingDirection(outTransform.GetRotation().Vector());
 	}

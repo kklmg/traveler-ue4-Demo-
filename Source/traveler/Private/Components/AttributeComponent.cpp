@@ -122,12 +122,12 @@ void UAttributeComponent::InitializeAttributes()
 		UCharacterAttribute* walkingSpeed = GetAttribute(EAttributeType::EATT_WalkingSpeed);
 		if(walkingSpeed)
 		{
-			animationModelProvider->VGetAnimationModel().WalkingSpeed = walkingSpeed->GetValue();
+			animationModelProvider->VGetAnimationModelRef().WalkingSpeed = walkingSpeed->GetValue();
 		}
 		UCharacterAttribute* sprintSpeed = GetAttribute(EAttributeType::EATT_SprintSpeed);
 		if (sprintSpeed)
 		{
-			animationModelProvider->VGetAnimationModel().SprintSpeed = sprintSpeed->GetValue();
+			animationModelProvider->VGetAnimationModelRef().SprintSpeed = sprintSpeed->GetValue();
 		}
 	}
 

@@ -13,10 +13,8 @@ UActionMoveAndFaceTo::UActionMoveAndFaceTo()
 	_actionName = ActionName::MOVE;
 	_actionType = EActionType::EACT_Moving;
 }
-void UActionMoveAndFaceTo::VExecute()
+void UActionMoveAndFaceTo::VTMExecute()
 {
-	Super::VExecute();
-
 	FVector outMovementInput;
 	if (GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, outMovementInput))
 	{
@@ -25,7 +23,7 @@ void UActionMoveAndFaceTo::VExecute()
 	}
 }
 
-void UActionMoveAndFaceTo::VTick(float deltaTime)
+void UActionMoveAndFaceTo::VTMTick(float deltaTime)
 {
-	Super::VTick(deltaTime);
+	Super::VTMTick(deltaTime);
 }

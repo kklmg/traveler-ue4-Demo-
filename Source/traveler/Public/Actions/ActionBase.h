@@ -43,6 +43,8 @@ namespace ActionName
 	const FName TAKEOFF = FName(TEXT("takeoff"));
 	const FName TELEPORT = FName(TEXT("teleport"));
 	const FName FlyTo = FName(TEXT("FlyTo"));
+	const FName WeaponFire = FName(TEXT("WeaponFire"));
+	const FName WeaponAim = FName(TEXT("WeaponAim"));
 }
 
 class UActionComponent;
@@ -58,18 +60,14 @@ class TRAVELER_API UActionBase : public UObject
 public:
 	UActionBase();
 
-public:
-	UFUNCTION(BlueprintCallable)
-	virtual bool VCanStart();
-
-	UFUNCTION(BlueprintCallable)
-	virtual void VExecute();
-
-	virtual void VTick(float deltaTime);
-
-public:
 	void Initialize(UActionComponent* actionComponent, UActionBlackBoard* actionBlackBoard);
-	virtual void VTMInitialize();
+
+	UFUNCTION(BlueprintCallable)
+	void Execute();
+	UFUNCTION(BlueprintCallable)
+	bool CanStart();
+	UFUNCTION()
+	void Tick(float deltaTime);
 
 	UFUNCTION(BlueprintCallable)
 	void Pause();
@@ -99,21 +97,17 @@ public:
 	UActionBlackBoard* GetActionBlackBoard();
 
 protected:
-	void SetActionSucceed();
-	void SetActionFailed();
+	virtual void VTMInitialize();
+	virtual bool VTMCanStart();
+	virtual void VTMExecute();
+	virtual void VTMTick(float deltaTime);
+	virtual void VOnActionCompleted();
 
 protected:
-	virtual void _VOnActionCompleted();
+	void SetActionProcessSucceed();
+	void SetActionProcessFailed();
 
-	UPROPERTY()
-	ACharacter* _actionOwner;
-
-	UPROPERTY()
-	UActionBlackBoard* _actionBlackBoard;
-
-	UPROPERTY()
-	UActionComponent* _actionComp;
-
+protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName _actionName;
 
@@ -123,10 +117,20 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool _bInstantAction;
 
-	UPROPERTY(VisibleAnywhere, Category = "Action")
-	EActionProcessState _processState;
-
 	IStateInterface* _stateInterface;
 	IAttributeInterface* _attributeInterface;
 	IAnimationModelProvider* _animationModelProviderInterface;
+
+private:
+	UPROPERTY()
+	ACharacter* _actionOwner;
+
+	UPROPERTY()
+	UActionBlackBoard* _actionBlackBoard;
+
+	UPROPERTY()
+	UActionComponent* _actionComp;
+
+	UPROPERTY(VisibleAnywhere, Category = "Action")
+	EActionProcessState _processState;
 };

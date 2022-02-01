@@ -11,18 +11,16 @@ UActionTeleport::UActionTeleport()
 	_actionType = EActionType::EACT_Teleport;
 }
 
-void UActionTeleport::VExecute()
+void UActionTeleport::VTMExecute()
 {
-	Super::VExecute();
-
 	FVector outLocation;
-	if (_actionBlackBoard->TryGetData_FVector(EActionDataKey::EACTD_TeleportLocation, outLocation)) 
+	if (GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_TeleportLocation, outLocation)) 
 	{
-		_actionOwner->SetActorLocation(outLocation);
+		GetActionOwner()->SetActorLocation(outLocation);
 	}
 }
 
-void UActionTeleport::VTick(float deltaTime)
+void UActionTeleport::VTMTick(float deltaTime)
 {
-	Super::VTick(deltaTime);
+	Super::VTMTick(deltaTime);
 }

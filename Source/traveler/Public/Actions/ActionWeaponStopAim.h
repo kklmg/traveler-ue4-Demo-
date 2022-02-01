@@ -4,22 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Actions/ActionBase.h"
-#include "ActionJump.generated.h"
+#include "ActionWeaponStopAim.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UActionJump : public UActionBase
+class TRAVELER_API UActionWeaponStopAim : public UActionBase
 {
 	GENERATED_BODY()
 public:
-	UActionJump();
-
+	UActionWeaponStopAim();
+protected:
 	virtual void VTMExecute() override;
-	virtual void VTMTick(float deltaTime) override;
-
-private:
-	UPROPERTY(EditDefaultsOnly)
-	float _delayTime;
 };

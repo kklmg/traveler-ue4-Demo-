@@ -13,21 +13,19 @@ UActionMove::UActionMove()
 	_actionType = EActionType::EACT_Moving;
 }
 
-void UActionMove::VExecute()
+void UActionMove::VTMExecute()
 {
-	Super::VExecute();
-
 	FVector outMovementInput;
 
-	if(_actionBlackBoard->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, outMovementInput))
+	if(GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, outMovementInput))
 	{
-		_actionOwner->AddMovementInput(outMovementInput);
+		GetActionOwner()->AddMovementInput(outMovementInput);
 	}
 }
 
-void UActionMove::VTick(float deltaTime)
+void UActionMove::VTMTick(float deltaTime)
 {
-	Super::VTick(deltaTime);
+	Super::VTMTick(deltaTime);
 
 	//Get Attribute
 	//UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();

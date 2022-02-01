@@ -69,7 +69,7 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 	{
 		action->Abort();
 		action->Initialize(this, _actionBlackBoard);
-		action->VExecute();
+		action->Execute();
 
 		if (action->IsInstantAction() == false)
 		{
@@ -109,7 +109,7 @@ void UActionComponent::_TickActionProcess(float deltaTime)
 	//tick actions
 	for (auto pair : _mapActionProcessPool)
 	{
-		pair.Value->VTick(deltaTime);
+		pair.Value->Tick(deltaTime);
 	}
 }
 

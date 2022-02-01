@@ -17,7 +17,7 @@ class TRAVELER_API UActionWithAnimMontage : public UActionBase
 public:
 	UActionWithAnimMontage();
 
-	virtual void VExecute() override;
+	virtual void VTMExecute() override;
 
 	UFUNCTION()
 	virtual void VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted);
@@ -25,5 +25,4 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = animation)
 	UAnimMontage* _aniMontage;
-	
 };

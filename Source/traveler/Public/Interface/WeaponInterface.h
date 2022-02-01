@@ -25,4 +25,10 @@ class TRAVELER_API IWeaponInterface
 public:
 	virtual void VEquipWeapon(AWeaponBase* weapon)PURE_VIRTUAL (UWeaponInterface::VSetDamage, );
 	virtual AWeaponBase* VGetEquipedWeapon()PURE_VIRTUAL (UWeaponInterface::VGetEquipedWeapon,return nullptr; );
+
+	virtual void VStartFiring() PURE_VIRTUAL(UWeaponInterface::VStartFiring,);
+	virtual void VStopFiring() PURE_VIRTUAL(UWeaponInterface::VStopFiring,);
+
+	virtual void VStartAiming() PURE_VIRTUAL(UWeaponInterface::VStartAiming,);
+	virtual void VStopAiming() PURE_VIRTUAL(UWeaponInterface::VStopAiming,);
 };

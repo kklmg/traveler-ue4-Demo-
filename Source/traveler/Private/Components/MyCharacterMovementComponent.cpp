@@ -32,7 +32,7 @@ void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTi
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (_animationModelProviderInterface)
 	{
-		FAnimationModel& model = _animationModelProviderInterface->VGetAnimationModel();
+		FAnimationModel& model = _animationModelProviderInterface->VGetAnimationModelRef();
 		model.MovingVelocity = Velocity;
 		model.MovementMode = MovementMode;
 	}

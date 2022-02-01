@@ -16,8 +16,8 @@ class TRAVELER_API UActionDodge : public UActionBase
 public:
 	UActionDodge();
 
-	virtual void VExecute() override;
-	virtual void VTick(float deltaTime) override;
+	virtual void VTMExecute() override;
+	virtual void VTMTick(float deltaTime) override;
 
 	UFUNCTION()
 	void OnAnimMontageFinished(UAnimMontage* montage, bool interrupted);

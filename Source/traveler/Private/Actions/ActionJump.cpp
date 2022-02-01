@@ -10,15 +10,15 @@ UActionJump::UActionJump()
 {
 	_actionName = ActionName::JUMP;
 	_actionType = EActionType::EACT_Jumping;
-	_delayTime = 0.5f;
+	_delayTime = 0.3f;
 }
 
-void UActionJump::VExecute()
+void UActionJump::VTMExecute()
 {
-	Super::VExecute();
+	Super::VTMExecute();
 	if (_animationModelProviderInterface)
 	{
-		_animationModelProviderInterface->VGetAnimationModel().bWantToJump = true;
+		_animationModelProviderInterface->VGetAnimationModelRef().bWantToJump = true;
 	}
 
 	FTimerHandle jumpTimerHandle;
@@ -29,31 +29,14 @@ void UActionJump::VExecute()
 
 		if (_animationModelProviderInterface)
 		{
-			_animationModelProviderInterface->VGetAnimationModel().bWantToJump = false;
+			_animationModelProviderInterface->VGetAnimationModelRef().bWantToJump = false;
 		}
 
 		GetWorld()->GetTimerManager().ClearTimer(jumpTimerHandle);
 	}), _delayTime, false);
 }
 
-void UActionJump::VTick(float deltaTime)
+void UActionJump::VTMTick(float deltaTime)
 {
-	Super::VTick(deltaTime);
+	Super::VTMTick(deltaTime);
 }
-
-
-//void UActionJump::OnMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
-//{
-//	if (/*PrevMovementMode ==  && */Character->GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Walking)
-//	{
-//		//Get My Character
-//		Character->StopJumping();
-//
-//		if (_aniMontage != nullptr)
-//		{
-//			Character->StopAnimMontage(_aniMontage);
-//		}
-//		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("landed"));
-//		Character->MovementModeChangedDelegate.RemoveDynamic(this, &UActionJump::OnMovementModeChanged);
-//	}
-//}

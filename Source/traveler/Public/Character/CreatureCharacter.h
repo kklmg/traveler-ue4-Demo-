@@ -80,16 +80,16 @@ public:
 	//State Interface implementation---------------------------------------------------
 	FStateData VGetStateData() override;
 
-	void VSetSituationState(ESituationState newState) override;
-	void VSetActionState(EActionState newState) override;
-	void VSetHealthState(EHealthState newState) override;
-	void VSetPostureState(EPostureState newState) override;
+	virtual void VSetSituationState(ESituationState newState) override;
+	virtual void VSetActionState(EActionState newState) override;
+	virtual void VSetHealthState(EHealthState newState) override;
+	virtual void VSetPostureState(EPostureState newState) override;
 
-	FOnSituationStateChanged* VGetSituationStateChangedDelegate() override;
-	FOnActionStateChanged* VGetActionStateChangedDelegate() override;
-	FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
-	FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
-	FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;
+	virtual FOnSituationStateChanged* VGetSituationStateChangedDelegate() override;
+	virtual FOnActionStateChanged* VGetActionStateChangedDelegate() override;
+	virtual FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
+	virtual FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
+	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;
 
 	//Character Camera Interface implementation---------------------------------------------------
 	virtual void VCameraArmPitch(float angle)  override;
@@ -106,12 +106,17 @@ public:
 
 
 	//Weapon Interface implementation---------------------------------------------------
-	void VEquipWeapon(AWeaponBase* weapon) override;
-	AWeaponBase* VGetEquipedWeapon() override;
+	virtual void VEquipWeapon(AWeaponBase* weapon) override;
+	virtual AWeaponBase* VGetEquipedWeapon() override;
+	virtual void VStartFiring() override;
+	virtual void VStopFiring() override;
+	virtual void VStartAiming() override;
+	virtual void VStopAiming() override;
 
 
 	//AnimationModel Provider Interface implementation --------------------------------------------------
-	virtual FAnimationModel& VGetAnimationModel() override;
+	virtual FAnimationModel VGetAnimationModel() override;
+	virtual FAnimationModel& VGetAnimationModelRef() override;
 
 
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------

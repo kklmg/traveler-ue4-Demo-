@@ -4,18 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Input/ButtonInputActionBase.h"
-#include "ButtonInputJump.generated.h"
+#include "ButtonInputFire.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UButtonInputJump : public UButtonInputActionBase
+class TRAVELER_API UButtonInputFire : public UButtonInputActionBase
 {
 	GENERATED_BODY()
 	
-public:
-	UButtonInputJump();
 protected:
 	void VTMPress() override;
 	void VTMPressing(float deltaTime) override;

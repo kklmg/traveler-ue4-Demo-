@@ -16,8 +16,8 @@ class TRAVELER_API UActionMoveAndFaceTo : public UActionBase
 public:
 	UActionMoveAndFaceTo();
 public:
-	virtual void VExecute() override;
-	virtual void VTick(float deltaTime) override;
+	virtual void VTMExecute() override;
+	virtual void VTMTick(float deltaTime) override;
 
 private:
 	UPROPERTY(EditAnyWhere, Category = animation)

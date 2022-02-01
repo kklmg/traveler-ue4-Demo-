@@ -292,7 +292,32 @@ AWeaponBase* ACreatureCharacter::VGetEquipedWeapon()
 	return _weaponComponent->GetEquipedWeapon();
 }
 
-FAnimationModel& ACreatureCharacter::VGetAnimationModel()
+void ACreatureCharacter::VStartFiring()
+{
+	_weaponComponent->StartFiring();
+}
+
+void ACreatureCharacter::VStopFiring()
+{
+	_weaponComponent->StopFiring();
+}
+
+void ACreatureCharacter::VStartAiming()
+{
+	_weaponComponent->StartAiming();
+}
+
+void ACreatureCharacter::VStopAiming()
+{
+	_weaponComponent->StopAiming();
+}
+
+FAnimationModel ACreatureCharacter::VGetAnimationModel()
+{
+	return _animationModel;
+}
+
+FAnimationModel& ACreatureCharacter::VGetAnimationModelRef()
 {
 	return _animationModel;
 }

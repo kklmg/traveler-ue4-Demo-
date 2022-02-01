@@ -48,22 +48,41 @@ void UActionBase::Pause()
 	_processState = EActionProcessState::EAPS_Paused;
 }
 
-FORCEINLINE bool UActionBase::VCanStart()
+FORCEINLINE void UActionBase::Execute()
 {
-	return _processState == EActionProcessState::EAPS_ReadyToExecute;
-}
-
-void UActionBase::VExecute() 
-{
-	if (VCanStart() == false)
+	if (CanStart() == false)
 	{
-		UE_LOG(LogAction,Warning,TEXT("Can't execute Action"));
+		UE_LOG(LogAction, Warning, TEXT("Can't execute Action"));
+
+		_processState = EActionProcessState::EAPS_FAILED;
 		return;
 	}
+
+	VTMExecute();
+
 	_processState = _bInstantAction ? EActionProcessState::EAPS_SUCCEEDED : EActionProcessState::EAPS_Running;
 }
 
-void UActionBase::VTick(float deltaTime) 
+FORCEINLINE bool UActionBase::CanStart()
+{
+	return (_processState == EActionProcessState::EAPS_ReadyToExecute && VTMCanStart());
+}
+
+void UActionBase::Tick(float deltaTime)
+{
+	VTMTick(deltaTime);
+}
+
+bool UActionBase::VTMCanStart()
+{
+	return true;
+}
+
+void UActionBase::VTMExecute() 
+{
+}
+
+void UActionBase::VTMTick(float deltaTime) 
 {
 }
 
@@ -104,19 +123,19 @@ FORCEINLINE UActionBlackBoard* UActionBase::GetActionBlackBoard()
 	return _actionBlackBoard;
 }
 
-void UActionBase::SetActionSucceed()
+void UActionBase::SetActionProcessSucceed()
 {
 	_processState = EActionProcessState::EAPS_SUCCEEDED;
-	_VOnActionCompleted();
+	VOnActionCompleted();
 }
 
-void UActionBase::SetActionFailed()
+void UActionBase::SetActionProcessFailed()
 {
 	_processState = EActionProcessState::EAPS_FAILED;
-	_VOnActionCompleted();
+	VOnActionCompleted();
 }
 
-void UActionBase::_VOnActionCompleted()
+void UActionBase::VOnActionCompleted()
 {
 }
 

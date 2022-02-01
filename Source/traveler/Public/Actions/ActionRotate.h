@@ -15,6 +15,6 @@ class TRAVELER_API UActionRotate : public UActionBase
 	GENERATED_BODY()
 	
 public:
-	virtual void VExecute() override;
-	virtual void VTick(float deltaTime) override;
+	virtual void VTMExecute() override;
+	virtual void VTMTick(float deltaTime) override;
 };

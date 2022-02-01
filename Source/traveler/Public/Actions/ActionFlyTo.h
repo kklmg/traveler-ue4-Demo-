@@ -16,8 +16,8 @@ class TRAVELER_API UActionFlyTo : public UActionBase
 public:
 	UActionFlyTo();
 
-	virtual void VExecute() override;
-	virtual void VTick(float deltaTime) override;
+	virtual void VTMExecute() override;
+	virtual void VTMTick(float deltaTime) override;
 
 private:
 	bool _GetDestination(FVector& outVector);

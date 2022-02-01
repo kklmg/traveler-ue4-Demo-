@@ -9,37 +9,36 @@ UActionWithAnimMontage::UActionWithAnimMontage()
 	_bInstantAction = false;
 }
 
-void UActionWithAnimMontage::VExecute()
+void UActionWithAnimMontage::VTMExecute()
 {
-	Super::VExecute();
+	if (GetActionOwner() == nullptr || _aniMontage == nullptr) return;
 
-	if (_actionOwner == nullptr || _aniMontage == nullptr) return;
-
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
-	if (character == nullptr) return;
-
-	UAnimInstance* animInstance = _actionOwner->GetMesh()->GetAnimInstance();
+	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
 	if(animInstance == nullptr) return;
 
 	//subscribe montageEnded event
 	animInstance->OnMontageEnded.AddDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
 
 	//play montage
-	character->PlayAnimMontage(_aniMontage);
+	GetActionOwner()->PlayAnimMontage(_aniMontage);
 }
 
 void UActionWithAnimMontage::VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted)
 {
 	if (montage != _aniMontage)return;
-	if (_actionOwner == nullptr) return;
+	if (GetActionOwner() == nullptr) return;
 
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
-	if (character == nullptr) return;
-
-	UAnimInstance* animInstance = _actionOwner->GetMesh()->GetAnimInstance();
+	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
 	if (animInstance == nullptr) return;
 
 	animInstance->OnMontageEnded.RemoveDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
 
-	_processState = interrupted ? EActionProcessState::EAPS_FAILED : EActionProcessState::EAPS_SUCCEEDED;
+	if(interrupted)
+	{
+		SetActionProcessFailed();
+	}
+	else
+	{
+		SetActionProcessSucceed();
+	}
 }

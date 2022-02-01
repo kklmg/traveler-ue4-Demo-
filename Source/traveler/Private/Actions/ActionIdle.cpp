@@ -11,17 +11,15 @@ UActionIdle::UActionIdle()
 }
 
 
-void UActionIdle::VExecute()
+void UActionIdle::VTMExecute()
 {
-	Super::VExecute();
-
 	//Get Attribute
 	//UAttributeComponent* pAttributeComponent = _actionOwner->GetAttributeComponent();
 	//check(pAttributeComponent != nullptr);
 
 }
 
-void UActionIdle::VTick(float deltaTime)
+void UActionIdle::VTMTick(float deltaTime)
 {
-	Super::VTick(deltaTime);
+	Super::VTMTick(deltaTime);
 }

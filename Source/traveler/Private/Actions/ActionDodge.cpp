@@ -14,15 +14,12 @@ UActionDodge::UActionDodge()
 	_dodgeSpeed = 250;
 }
 
-void UActionDodge::VExecute()
+void UActionDodge::VTMExecute()
 {
-	Super::VExecute();
+	ACharacter* actionOwner = GetActionOwner();
+	check(actionOwner != nullptr);
 
-	check(_actionOwner != nullptr);
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
-	check(character != nullptr);
-
-	UAnimInstance* animInstance = _actionOwner->GetMesh()->GetAnimInstance();
+	UAnimInstance* animInstance = actionOwner->GetMesh()->GetAnimInstance();
 
 	if (_aniMontage && animInstance)
 	{
@@ -30,32 +27,32 @@ void UActionDodge::VExecute()
 		animInstance->OnMontageEnded.AddDynamic(this, &UActionDodge::OnAnimMontageFinished);
 
 		//play montage
-		character->PlayAnimMontage(_aniMontage);
+		actionOwner->PlayAnimMontage(_aniMontage);
 	}
 }
 
-void UActionDodge::VTick(float deltaTime)
+void UActionDodge::VTMTick(float deltaTime)
 {
-	Super::VTick(deltaTime);
+	Super::VTMTick(deltaTime);
 
-	_actionOwner->AddMovementInput(_actionOwner->GetActorForwardVector(), _dodgeSpeed * deltaTime);
+	GetActionOwner()->AddMovementInput(GetActionOwner()->GetActorForwardVector(), _dodgeSpeed * deltaTime);
 }
 
 
 void UActionDodge::OnAnimMontageFinished(UAnimMontage* montage,bool interrupted)
 {
 	if(montage != _aniMontage)return;
-	if(_actionOwner == nullptr) return;
+	if(GetActionOwner() == nullptr) return;
 
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(_actionOwner);
+	ACreatureCharacter* character = Cast<ACreatureCharacter>(GetActionOwner());
 	if (character == nullptr) return;
 
-	UAnimInstance* animInstance = _actionOwner->GetMesh()->GetAnimInstance();
+	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
 	if (animInstance == nullptr) return;
 
 	animInstance->OnMontageEnded.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
 	
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("End Dodge animation"));
 
-	_processState = EActionProcessState::EAPS_SUCCEEDED;
+	SetActionProcessSucceed();
 }
