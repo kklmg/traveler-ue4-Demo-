@@ -4,6 +4,7 @@
 #include "Weapon/WeaponBase.h"
 #include "Character/CreatureCharacter.h"
 #include "Components/PoseableMeshComponent.h"
+#include "Data/WeaponAnimationModelBase.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -46,6 +47,11 @@ USkeletalMeshComponent* AWeaponBase::GetMeshComponent()
 ACreatureCharacter* AWeaponBase::GetWeaponOwner()
 {
 	return _weaponOwner;
+}
+
+UWeaponAnimationModelBase* AWeaponBase::GetAnimationModel()
+{
+	return _animationModel;
 }
 
 

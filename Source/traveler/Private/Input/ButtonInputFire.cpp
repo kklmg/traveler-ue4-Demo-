@@ -3,6 +3,13 @@
 
 #include "Input/ButtonInputFire.h"
 
+UButtonInputFire::UButtonInputFire()
+{
+	_buttonName = TEXT("Fire");
+	_inputMappingName = InputActionName::FIRE;
+}
+
+
 void UButtonInputFire::VTMPress()
 {
 	if (_actionInterface)

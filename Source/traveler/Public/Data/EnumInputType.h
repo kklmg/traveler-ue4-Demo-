@@ -33,7 +33,7 @@ namespace InputActionName
 	const FName SPRINT = FName(TEXT("Sprint"));
 	const FName DODGE = FName(TEXT("Dodge"));
 	const FName FIRE = FName(TEXT("Fire"));
-	const FName AIM = FName(TEXT("aim"));
+	const FName AIM = FName(TEXT("Aim"));
 	const FName ASCEND = FName(TEXT("ascend"));
 	const FName DESCEND = FName(TEXT("descend"));
 	const FName Action1 = FName(TEXT("Action1"));

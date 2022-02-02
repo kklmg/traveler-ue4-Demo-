@@ -13,7 +13,8 @@ UCLASS()
 class TRAVELER_API UButtonInputAim : public UButtonInputActionBase
 {
 	GENERATED_BODY()
-	
+public:
+	UButtonInputAim();
 protected:
 	void VTMPress() override;
 	void VTMPressing(float deltaTime) override;

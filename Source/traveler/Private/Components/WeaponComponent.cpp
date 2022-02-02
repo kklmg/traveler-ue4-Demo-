@@ -4,6 +4,7 @@
 #include "Weapon/WeaponBase.h"
 #include "Weapon/BowBase.h"
 #include "Character/CreatureCharacter.h"
+#include "Interface/AnimationModelProvider.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -22,6 +23,7 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	_animationModelProvider = GetOwner<IAnimationModelProvider>();
 
 	if (DefaultWeaponClass)
 	{
@@ -65,7 +67,6 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 
 		_weaponIns->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
 		//_aWeapon->AttachToActor(character, FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
-		
 	}
 }
 
@@ -84,6 +85,10 @@ void UWeaponComponent::StartFiring()
 	{
 		_weaponIns->StartFiring();
 	}
+	if (_animationModelProvider)
+	{
+		_animationModelProvider->VGetAnimationModelRef().bIsWeaponFiring = true;
+	}
 }
 
 void UWeaponComponent::StopFiring()
@@ -92,6 +97,10 @@ void UWeaponComponent::StopFiring()
 	{
 		_weaponIns->StopFiring();
 		OnWeaponFireEnd.Broadcast(_weaponIns);
+	}
+	if (_animationModelProvider)
+	{
+		_animationModelProvider->VGetAnimationModelRef().bIsWeaponFiring = false;
 	}
 }
 
@@ -102,6 +111,10 @@ void UWeaponComponent::StartAiming()
 		_weaponIns->StarAiming();
 		OnWeaponAimStart.Broadcast(_weaponIns);
 	}
+	if (_animationModelProvider)
+	{
+		_animationModelProvider->VGetAnimationModelRef().bIsWeaponAiming = true;
+	}
 }
 void UWeaponComponent::StopAiming()
 {
@@ -109,6 +122,10 @@ void UWeaponComponent::StopAiming()
 	{
 		_weaponIns->StopAiming();
 		OnWeaponAimEnd.Broadcast(_weaponIns);
+	}
+	if (_animationModelProvider)
+	{
+		_animationModelProvider->VGetAnimationModelRef().bIsWeaponAiming = false;
 	}
 }
 

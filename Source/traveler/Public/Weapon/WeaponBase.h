@@ -9,6 +9,8 @@
 
 class ACreatureCharacter;
 class UPoseableMeshComponent;
+class UWeaponAnimationModelBase;
+
 
 UCLASS()
 class TRAVELER_API AWeaponBase : public AActor
@@ -42,7 +44,6 @@ public:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
 	EWeaponType WeaponType;
 
-
 public:
 	void StartFiring();
 	void FiringInProgress(float deltaTime);
@@ -62,6 +63,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ACreatureCharacter* GetWeaponOwner();
 
+	UFUNCTION(BlueprintCallable)
+	UWeaponAnimationModelBase* GetAnimationModel();
+
 protected:
 	virtual bool VTMCanFire() PURE_VIRTUAL(AWeaponBase::VTMCanFire, return false;);
 	virtual bool VTMCanAim() PURE_VIRTUAL(AWeaponBase::VTMCanAim, return false;);
@@ -74,7 +78,11 @@ protected:
 	virtual void VTMAimingInProgress(float deltaTime)PURE_VIRTUAL(AWeaponBase::VTMAimingInProgress, );
 	virtual void VTMStopAiming()PURE_VIRTUAL(AWeaponBase::VTMStopAiming, );
 
+	UPROPERTY()
+	UWeaponAnimationModelBase* _animationModel;
 private:
 	bool _isFiring;
 	bool _isAiming;
+
+	
 };

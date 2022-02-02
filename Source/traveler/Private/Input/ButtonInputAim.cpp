@@ -3,6 +3,12 @@
 
 #include "Input/ButtonInputAim.h"
 
+UButtonInputAim::UButtonInputAim()
+{
+	_buttonName = TEXT("Aim");
+	_inputMappingName = InputActionName::AIM;
+}
+
 void UButtonInputAim::VTMPress()
 {
 	if (_actionInterface)

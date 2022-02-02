@@ -60,7 +60,6 @@ void UActionFlyTo::VTMTick(float deltaTime)
 		else
 		{
 			SetActionProcessFailed();
-			SetActionProcessFailed();
 			return;
 		}
 	}

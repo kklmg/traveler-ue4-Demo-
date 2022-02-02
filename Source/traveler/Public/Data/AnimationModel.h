@@ -33,6 +33,10 @@ public:
 	float CameraPitchMin;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool bIsWeaponFiring;
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsWeaponAiming;
+	UPROPERTY(BlueprintReadWrite)
 	bool bTakeOutWeapon;
 	UPROPERTY(BlueprintReadWrite)
 	AWeaponBase* weapon;
