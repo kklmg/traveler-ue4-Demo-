@@ -8,6 +8,8 @@
 
 void UMyCharacterMovementComponent::BeginPlay()
 {
+	Super::BeginPlay();
+
 	_actionInterface = GetOwner<IActionInterface>();
 	_attributeInterface = GetOwner<IAttributeInterface>();
 	_animationModelProviderInterface = GetOwner<IAnimationModelProvider>();

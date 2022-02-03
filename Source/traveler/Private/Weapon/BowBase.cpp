@@ -23,7 +23,7 @@ ABowBase::ABowBase()
 	_drawingVelocity = 0.5f;
 	_baseProjectileVelocity = 1000.0f;
 	_maxProjectileVelocity = 3000.0f;
-	_aimingCameraOffset = FVector(100, 0, 100);
+	_aimingCameraOffset = FVector(50, 50, 50);
 
 	_spawnProjectileCount = 5;
 	_ProjectilesInterval = 2;
@@ -50,6 +50,8 @@ void ABowBase::BeginPlay()
 void ABowBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	_animationModel.BowState = _bowState;
 }
 
 bool ABowBase::VTMCanFire()
@@ -215,6 +217,11 @@ void ABowBase::OnEnterAnimFrame_ReleaseBowString()
 void ABowBase::OnEnterAnimFrame_ReloadCompleted()
 {
 	_bowState = EBowState::EBS_FullyDrawed;
+}
+
+FBowAnimationModelBase ABowBase::GetAnimationModel()
+{
+	return _animationModel;
 }
 
 void ABowBase::OnEnterAnimFrame_StartDrawingBowString()

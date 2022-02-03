@@ -63,8 +63,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ACreatureCharacter* GetWeaponOwner();
 
-	UFUNCTION(BlueprintCallable)
-	UWeaponAnimationModelBase* GetAnimationModel();
+	//UFUNCTION(BlueprintCallable)
+	//UWeaponAnimationModelBase* GetAnimationModel();
 
 protected:
 	virtual bool VTMCanFire() PURE_VIRTUAL(AWeaponBase::VTMCanFire, return false;);
@@ -78,8 +78,8 @@ protected:
 	virtual void VTMAimingInProgress(float deltaTime)PURE_VIRTUAL(AWeaponBase::VTMAimingInProgress, );
 	virtual void VTMStopAiming()PURE_VIRTUAL(AWeaponBase::VTMStopAiming, );
 
-	UPROPERTY()
-	UWeaponAnimationModelBase* _animationModel;
+	//UPROPERTY()
+	//UWeaponAnimationModelBase* _animationModel;
 private:
 	bool _isFiring;
 	bool _isAiming;

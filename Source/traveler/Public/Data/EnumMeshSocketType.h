@@ -11,6 +11,7 @@
 UENUM(BlueprintType)
 enum class EMeshSocketType : uint8
 {
+	MST_None UMETA(DisplayName = "None"),
 	MST_LeftHand UMETA(DisplayName = "LeftHand"),
 	MST_RightHand UMETA(DisplayName = "RightHand"),
 	MST_LeftHandDraw UMETA(DisplayName = "LeftHandDraw"),

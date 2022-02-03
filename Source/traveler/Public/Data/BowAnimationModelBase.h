@@ -9,9 +9,17 @@
 /**
  * 
  */
-UCLASS()
-class TRAVELER_API UBowAnimationModelBase : public UWeaponAnimationModelBase
+USTRUCT(BlueprintType)
+struct FBowAnimationModelBase
 {
-	GENERATED_BODY()
-	
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite)
+	EBowState BowState;
 };
+
+//UCLASS()
+//class TRAVELER_API UBowAnimationModelBase : public UWeaponAnimationModelBase
+//{
+//	GENERATED_BODY()
+//};

@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "CameraSpringArmComponent.generated.h"
 
+class IAnimationModelProvider;
 /**
  * 
  */
@@ -17,6 +18,10 @@ class TRAVELER_API UCameraSpringArmComponent : public USpringArmComponent
 public:
 	UCameraSpringArmComponent();
 
+	void BeginPlay() override;
+
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 public:
 	void Pitch(float AxisValue);
 	void Yaw(float AxisValue);
@@ -45,4 +50,6 @@ private:
 	float _zoomMin;
 	UPROPERTY(EditAnywhere, Category = zoom)
 	float _zoomFactor;
+
+	IAnimationModelProvider* _animationModelProvider;
 };

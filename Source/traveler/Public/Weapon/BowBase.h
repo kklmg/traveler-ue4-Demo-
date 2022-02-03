@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WeaponBase.h"
+#include "Data/BowAnimationModelBase.h"
 #include "BowBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
@@ -27,6 +28,26 @@ public:
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 
+	virtual FTransform GetMuzzleTransform();
+
+	UFUNCTION(BlueprintCallable)
+	FBowAnimationModelBase GetAnimationModel();
+
+	UFUNCTION(BlueprintCallable)
+	void OnEnterAnimFrame_StartDrawingBowString();
+	UFUNCTION(BlueprintCallable)
+	void OnEnterAnimFrame_TakeOutArrows();
+	UFUNCTION(BlueprintCallable)
+	virtual void OnEnterAnimFrame_ReleaseBowString();
+	UFUNCTION(BlueprintCallable)
+	void OnEnterAnimFrame_ReloadCompleted();
+
+	void AddProjectile(AProjectile* projectile);
+
+	UFUNCTION(BlueprintPure)
+	EBowState GetBowState();
+
+protected:
 	virtual bool VTMCanFire() override;
 	virtual bool VTMCanAim() override;
 
@@ -37,24 +58,6 @@ public:
 	virtual void VTMStarAiming() override;
 	virtual void VTMAimingInProgress(float deltaTime) override;
 	virtual void VTMStopAiming() override;
-
-	virtual FTransform GetMuzzleTransform();
-
-	UFUNCTION(BlueprintCallable)
-	void OnEnterAnimFrame_StartDrawingBowString();
-	UFUNCTION(BlueprintCallable)
-	void OnEnterAnimFrame_TakeOutArrows();
-	UFUNCTION(BlueprintCallable)
-	virtual void OnEnterAnimFrame_ReleaseBowString();
-	UFUNCTION(BlueprintCallable)
-	void OnEnterAnimFrame_ReloadCompleted();
-	
-
-
-	void AddProjectile(AProjectile* projectile);
-
-	UFUNCTION(BlueprintPure)
-	EBowState GetBowState();
 
 private:
 	float _CalculateDamage();
@@ -101,7 +104,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = bowState)
 	EBowState _bowState;
 
-
 	float _strength;
 
 	UPROPERTY()
@@ -112,6 +114,9 @@ private:
 
 	UPROPERTY()
 	UCommandActor* _aimButtonCommand;
+
+	UPROPERTY(VisibleAnywhere, Category = AnimationModel)
+	FBowAnimationModelBase _animationModel;
 
 	ICharacterCameraInterface* _characterCamera;
 };

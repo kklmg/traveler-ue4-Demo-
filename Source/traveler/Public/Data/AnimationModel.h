@@ -31,6 +31,8 @@ public:
 	float CameraPitchMax;
 	UPROPERTY(BlueprintReadWrite)
 	float CameraPitchMin;
+	UPROPERTY(BlueprintReadWrite)
+	float CameraPitchNormal;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsWeaponFiring;
@@ -40,6 +42,4 @@ public:
 	bool bTakeOutWeapon;
 	UPROPERTY(BlueprintReadWrite)
 	AWeaponBase* weapon;
-	
-
 };

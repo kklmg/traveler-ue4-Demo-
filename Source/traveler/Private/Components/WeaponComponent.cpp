@@ -51,9 +51,13 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 {
-	if (_weaponIns != newWeapon)
+	if (_weaponIns != newWeapon && newWeapon)
 	{
-		_weaponIns->StopAllActions();
+		if (_weaponIns)
+		{
+			_weaponIns->StopAllActions();
+		}
+
 		_weaponIns = newWeapon;
 
 		OnWeaponChanged.Broadcast(_weaponIns);

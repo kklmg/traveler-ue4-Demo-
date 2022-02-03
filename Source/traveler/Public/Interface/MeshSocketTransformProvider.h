@@ -8,7 +8,7 @@
 #include "MeshSocketTransformProvider.generated.h"
 
 // This class does not need to be modified.
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI, BlueprintType, meta = (CannotImplementInterfaceInBlueprint))
 class UMeshSocketTransformProvider : public UInterface
 {
 	GENERATED_BODY()
@@ -23,5 +23,6 @@ class TRAVELER_API IMeshSocketTransformProvider
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	UFUNCTION(BlueprintCallable)
 	virtual bool VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) PURE_VIRTUAL(UMeshSocketTransformProvider::VTryGetMeshSocketTransform, return false;);
 };

@@ -42,17 +42,15 @@ USkeletalMeshComponent* AWeaponBase::GetMeshComponent()
 	return _skeletalMeshComponent;
 }
 
-
-
 ACreatureCharacter* AWeaponBase::GetWeaponOwner()
 {
 	return _weaponOwner;
 }
 
-UWeaponAnimationModelBase* AWeaponBase::GetAnimationModel()
-{
-	return _animationModel;
-}
+//UWeaponAnimationModelBase* AWeaponBase::GetAnimationModel()
+//{
+//	return _animationModel;
+//}
 
 
 void AWeaponBase::StartFiring()

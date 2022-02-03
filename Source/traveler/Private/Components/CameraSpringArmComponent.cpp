@@ -2,6 +2,7 @@
 
 
 #include "Components/CameraSpringArmComponent.h"
+#include "Interface/AnimationModelProvider.h"
 
 UCameraSpringArmComponent::UCameraSpringArmComponent()
 {
@@ -24,11 +25,33 @@ UCameraSpringArmComponent::UCameraSpringArmComponent()
 	_zoomMax = 400;
 	_zoomMin = 100;
 	_zoomFactor = 20;
+
+	TargetArmLength = _zoomMin;
+}
+
+void UCameraSpringArmComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	_animationModelProvider = GetOwner<IAnimationModelProvider>();
+}
+
+void UCameraSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	if (_animationModelProvider)
+	{
+		FAnimationModel& animationModel = _animationModelProvider->VGetAnimationModelRef();
+
+		animationModel.CameraPitchMax = _pitchMax;
+		animationModel.CameraPitchMin = _pitchMin;
+		animationModel.CameraPitch = GetComponentRotation().Pitch;
+		animationModel.CameraPitchNormal = (animationModel.CameraPitch - _pitchMin) / (_pitchMax - _pitchMin);
+	}
 }
 
 void UCameraSpringArmComponent::Pitch(float AxisValue)
 {
-	FRotator rotation = GetRelativeRotation();
+	FRotator rotation = GetComponentRotation();
 	float pitch = rotation.Pitch + AxisValue;
 	rotation.Pitch = pitch > 0 ? FMath::Clamp(rotation.Pitch + AxisValue, 0.0f, _pitchMax) : FMath::Clamp(rotation.Pitch + AxisValue, _pitchMin, 0.0f);
 
@@ -43,7 +66,8 @@ void UCameraSpringArmComponent::Yaw(float AxisValue)
 }
 void UCameraSpringArmComponent::ZoomInOut(float AxisValue)
 {
-	TargetArmLength = FMath::Clamp(TargetArmLength + AxisValue * _zoomFactor, 200.0f, 400.0f);
+	TargetArmLength = FMath::Clamp(TargetArmLength + AxisValue * _zoomFactor, _zoomMin, _zoomMax);
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("ArmLength: %f"), TargetArmLength));
 }
 
 void UCameraSpringArmComponent::SetPitchLimit(float pitchMin, float pitchMax)
