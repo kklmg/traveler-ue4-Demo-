@@ -40,11 +40,13 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 		_attributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
 		check(_attributeComponent != nullptr);
 	}
+	
 	//Create Mesh Socket component
 	if (_meshSocketComponent == nullptr)
 	{
 		_meshSocketComponent = CreateDefaultSubobject<UMeshSocketComponent>(TEXT("MeshSocketComponent"));
 		check(_meshSocketComponent != nullptr);
+		_meshSocketComponent->Initialize(GetMesh());
 	}
 	//Create action component
 	if (_actionComponent == nullptr)
@@ -104,8 +106,6 @@ void ACreatureCharacter::BeginPlay()
 void ACreatureCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("ArmLength: %f"), _cameraSpringArmComponent->TargetArmLength));
 }
 
 // Called to bind functionality to input

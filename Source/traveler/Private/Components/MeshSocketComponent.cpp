@@ -55,7 +55,7 @@ bool UMeshSocketComponent::TryGetMeshSocketTransform(EMeshSocketType meshSocketT
 
 	if (_socketsMap.Contains(meshSocketType))
 	{
-		outTransform = _meshComp->GetSocketTransform(_socketsMap[meshSocketType]);
+		outTransform = _meshComp->GetSocketTransform(_socketsMap[meshSocketType], transformSpace);
 		return true;
 	}
 	else

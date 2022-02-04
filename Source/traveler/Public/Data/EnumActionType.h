@@ -40,6 +40,7 @@ enum class EActionDataKey : uint8
 	EACTD_Peojectile_FlyingSpeed UMETA(DisplayName = "Peojectile_FlyingSpeed"),
 	EACTD_DestLocation UMETA(DisplayName = "DestLocation"),
 	EACTD_WantToSprint UMETA(DisplayName = "WantToSprint"),
+	EACTD_TurnToMovingDirection UMETA(DisplayName = "TurnToMovingDirection "),
 };
 
 

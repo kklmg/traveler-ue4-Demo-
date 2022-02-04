@@ -66,14 +66,17 @@ bool ABowBase::VTMCanAim()
 
 void ABowBase::VTMStartFiring()
 {
-	if (_characterCamera)
+	/*if (_characterCamera)
 	{
 		FRotator rotator = _characterCamera->VGetCameraRotation();
 		rotator.Pitch = 0;
 		rotator.Roll = 0;
 
 		GetWeaponOwner()->SetActorRotation(rotator);
-	}
+	}*/
+
+	_LaunchProjectiles();
+	_bowState = EBowState::EBS_Released;
 }
 
 void ABowBase::VTMFiringInProgress(float deltaTime)
@@ -88,6 +91,8 @@ void ABowBase::VTMStarAiming()
 {
 	GetWeaponOwner()->VSetCameraArmPitchLimit(-60, 60);
 	GetWeaponOwner()->VDragCamera(_aimingCameraOffset);
+
+	GetWeaponOwner()->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection,false);
 
 	if (_aimButtonCommand)
 	{
@@ -128,7 +133,11 @@ void ABowBase::VTMStopAiming()
 		_aimButtonCommand->VUndo();
 	}
 
+	_bowState = EBowState::EBS_Normal;
+
 	_arraySpawnedProjectiles.Empty();
+
+	GetWeaponOwner()->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, true);
 }
 
 

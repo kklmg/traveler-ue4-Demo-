@@ -49,7 +49,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = zoom)
 	float _zoomMin;
 	UPROPERTY(EditAnywhere, Category = zoom)
-	float _zoomFactor;
+	float _zoomStep;
 
 	IAnimationModelProvider* _animationModelProvider;
 };

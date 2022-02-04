@@ -15,19 +15,26 @@ UActionMove::UActionMove()
 
 void UActionMove::VTMExecute()
 {
-	FVector outMovementInput;
+	FVector out_MovementInput;
+	bool out_bTurnToMovingDirection = true;
 
-	if(GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, outMovementInput))
+
+	if (GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, out_MovementInput))
 	{
-		GetActionOwner()->AddMovementInput(outMovementInput);
+		GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, out_bTurnToMovingDirection);
+
+		//rotation
+		if(out_bTurnToMovingDirection)
+		{
+			GetActionOwner()->SetActorRotation(out_MovementInput.Rotation());
+		}
+		
+		//translation
+		GetActionOwner()->AddMovementInput(out_MovementInput);
 	}
 }
 
 void UActionMove::VTMTick(float deltaTime)
 {
 	Super::VTMTick(deltaTime);
-
-	//Get Attribute
-	//UAttributeComponent* pAttributeComponent = pCharacter->GetAttributeComponent();
-	//check(pAttributeComponent != nullptr);
 }

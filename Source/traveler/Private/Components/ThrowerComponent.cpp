@@ -6,7 +6,7 @@
 #include "TimerManager.h"
 #include "Interface/ThrowableInterface.h"
 #include "Interface/ThrowerDataProviderInterface.h"
-#include "Actors/ThrowableActor.h"
+#include "Actors/ProjectileActor.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -54,7 +54,7 @@ void UThrowerComponent::SpawnThrowingActor()
 	if (_throwerDataProvider == nullptr)return;
 	if (isSpawnable() == false) return;
 
-	AThrowableActor* actor = CreateOrGetInactivatedActor();
+	AProjectileActor* actor = CreateOrGetInactivatedActor();
 	
 	if (actor)
 	{
@@ -92,7 +92,7 @@ void UThrowerComponent::OnSpawnedActorInactivated(int poolId)
 	_inactivatedActorIndicies.Add(poolId);
 }
 
-AThrowableActor* UThrowerComponent::CreateOrGetInactivatedActor()
+AProjectileActor* UThrowerComponent::CreateOrGetInactivatedActor()
 {
 	//try get reusable actor 
 	if (_inactivatedActorIndicies.Num() != 0)
@@ -117,7 +117,7 @@ AThrowableActor* UThrowerComponent::CreateOrGetInactivatedActor()
 	FActorSpawnParameters spawnParameters;
 	
 	//make instance
-	AThrowableActor* actor = world->SpawnActor<AThrowableActor>(_spawningActorClass,spawnParameters);
+	AProjectileActor* actor = world->SpawnActor<AProjectileActor>(_spawningActorClass,spawnParameters);
 	
 	if (actor)
 	{

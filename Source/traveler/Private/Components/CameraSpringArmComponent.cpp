@@ -8,7 +8,6 @@ UCameraSpringArmComponent::UCameraSpringArmComponent()
 {
 	SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f));
 	SetRelativeRotation(FRotator(-30.0f, 0.0f, 0.0f));
-	TargetArmLength = 250.0f;
 	bEnableCameraLag = false;
 	//CameraLagSpeed = 3.0f;
 
@@ -24,9 +23,9 @@ UCameraSpringArmComponent::UCameraSpringArmComponent()
 	//zoom 
 	_zoomMax = 400;
 	_zoomMin = 100;
-	_zoomFactor = 20;
+	_zoomStep = 20;
 
-	TargetArmLength = _zoomMin;
+	TargetArmLength = _zoomMax;
 }
 
 void UCameraSpringArmComponent::BeginPlay()
@@ -38,6 +37,8 @@ void UCameraSpringArmComponent::BeginPlay()
 
 void UCameraSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	Super:: TickComponent(DeltaTime,TickType,ThisTickFunction);
+
 	if (_animationModelProvider)
 	{
 		FAnimationModel& animationModel = _animationModelProvider->VGetAnimationModelRef();
@@ -66,8 +67,7 @@ void UCameraSpringArmComponent::Yaw(float AxisValue)
 }
 void UCameraSpringArmComponent::ZoomInOut(float AxisValue)
 {
-	TargetArmLength = FMath::Clamp(TargetArmLength + AxisValue * _zoomFactor, _zoomMin, _zoomMax);
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("ArmLength: %f"), TargetArmLength));
+	TargetArmLength = FMath::Clamp(TargetArmLength + AxisValue * _zoomStep, _zoomMin, _zoomMax);
 }
 
 void UCameraSpringArmComponent::SetPitchLimit(float pitchMin, float pitchMax)

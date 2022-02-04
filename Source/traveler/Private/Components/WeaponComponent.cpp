@@ -47,6 +47,11 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		_weaponIns->FiringInProgress(DeltaTime);
 		_weaponIns->AimingInProgress(DeltaTime);
 	}
+	if(_animationModelProvider)
+	{
+		_animationModelProvider->VGetAnimationModelRef().weapon = _weaponIns;
+	}
+
 }
 
 void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
