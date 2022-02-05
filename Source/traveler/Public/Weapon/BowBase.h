@@ -9,8 +9,10 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
 
-class AProjectile;
 class UCommandActor;
+class AArrowActorBase;
+
+class UQuiverComponent;
 
 class ICharacterCameraInterface;
 
@@ -42,10 +44,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnEnterAnimFrame_ReloadCompleted();
 
-	void AddProjectile(AProjectile* projectile);
-
 	UFUNCTION(BlueprintPure)
 	EBowState GetBowState();
+
+	void HoldArrows(int count);
+	void ClearHoldingArrows();
+	void LaunchArrows();
 
 protected:
 	virtual bool VTMCanFire() override;
@@ -63,25 +67,21 @@ private:
 	float _CalculateDamage();
 	float _CalculateProjectileSpeed();
 
-	void _SpawnProjectiles(int count);
-	void _LaunchProjectiles();
+	
+
 	void _UpdateProjectilesTransform(float deltaDegree);
 
 private:
 
 	// Projectile class to spawn.
-	UPROPERTY(EditDefaultsOnly, Category = ProjectileClass)
-	TSubclassOf<class AProjectile> ProjectileClass;
-
-	// Projectile class to spawn.
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TArray<AProjectile*> _arraySpawnedProjectiles;
+	UPROPERTY(VisibleAnywhere, Category = Projectile)
+	TArray<AArrowActorBase*> _holdingArrows;
 
 	UPROPERTY(EditAnyWhere, Category = Attribute, meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float _drawingVelocity;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _spawnProjectileCount;
+	float _holdCount;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _ProjectilesInterval;
@@ -106,17 +106,11 @@ private:
 
 	float _strength;
 
-	UPROPERTY()
-	TArray<AProjectile*> _projectiles;
-
-	UPROPERTY(EditDefaultsOnly, Category = Button)
-	TSubclassOf<UCommandActor> _aimButtonCommandClass;
-
-	UPROPERTY()
-	UCommandActor* _aimButtonCommand;
-
 	UPROPERTY(VisibleAnywhere, Category = AnimationModel)
 	FBowAnimationModelBase _animationModel;
 
 	ICharacterCameraInterface* _characterCamera;
+
+	UPROPERTY(VisibleAnywhere, Category = Projectile)
+	UQuiverComponent* _quiverComponent;
 };

@@ -2,7 +2,7 @@
 
 
 #include "Components/QuiverComponent.h"
-#include "Actors/ProjectileActorBase.h"
+#include "Actors/ArrowActorBase.h"
 
 // Sets default values for this component's properties
 UQuiverComponent::UQuiverComponent()
@@ -12,7 +12,6 @@ UQuiverComponent::UQuiverComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_projectileLife = 30.f;
 }
 
 
@@ -32,56 +31,45 @@ void UQuiverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-
-
 }
 
-void UQuiverComponent::SpawnProjectiles(int count, APawn* instigator)
+void UQuiverComponent::SpawnArrows(int count, APawn* instigator,TArray<AArrowActorBase*>& outArray)
 {
 	for (int i = 0; i < count; ++i)
 	{
-		AProjectileActorBase* projectileIns = CreateOrGetInactivatedFromPool();
-		if (projectileIns == nullptr) 
+		AArrowActorBase* arrowIns = CreateOrGetInactivatedFromPool();
+		if (arrowIns == nullptr)
 		{
 			UE_LOG(LogTemp,Warning,TEXT("cant spawn projectile"))
 			return;
 		}
-		projectileIns->SetInstigator(instigator);
-		//projectileIns->VSetLife(30.f);
-		//projectileIns->VSetDamage(Damage);
-		projectileIns->VSetVelocity(FVector::ZeroVector);
-		projectileIns->VSetIsActive(true);
-	}
-}
+		arrowIns->SetInstigator(instigator);
+		//arrowIns->VSetLife(30.f);
+		//arrowIns->VSetDamage(Damage);
+		arrowIns->VSetVelocity(FVector::ZeroVector);
+		arrowIns->VSetIsActive(true);
 
-void UQuiverComponent::LaunchProjectiles(FVector Velocity)
-{
-	for (AProjectileActorBase* projectile : _projectilePool)
-	{
-		if (projectile)
-		{
-			projectile->VSetVelocity(Velocity);
-		}
+		outArray.Add(arrowIns);
 	}
 }
 
 
-AProjectileActorBase* UQuiverComponent::CreateOrGetInactivatedFromPool()
+AArrowActorBase* UQuiverComponent::CreateOrGetInactivatedFromPool()
 {
 	//try get reusable actor 
 	if (_inactivatedIndicies.Num() != 0)
 	{
 		int lastIndex = _inactivatedIndicies.Pop();
 
-		if (lastIndex > _projectilePool.Num() - 1)
+		if (lastIndex > _arrowPool.Num() - 1)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Something Went wrong at pooling logic"));
 			return nullptr;
 		}
-		return _projectilePool[lastIndex];
+		return _arrowPool[lastIndex];
 	}
 
-	if (_ProjectileClass == nullptr)
+	if (_arrowClass == nullptr)
 	{
 		return nullptr;
 	}
@@ -95,16 +83,16 @@ AProjectileActorBase* UQuiverComponent::CreateOrGetInactivatedFromPool()
 	//make projectile instance
 	FActorSpawnParameters spawnParameters;
 	spawnParameters.Owner = GetOwner();
-	AProjectileActorBase* projectileIns = world->SpawnActor<AProjectileActorBase>(_ProjectileClass, spawnParameters);
+	AArrowActorBase* arrowIns = world->SpawnActor<AArrowActorBase>(_arrowClass, spawnParameters);
 
-	if (projectileIns)
+	if (arrowIns)
 	{
-		projectileIns->VSetPoolId(_projectilePool.Num());
-		projectileIns->OnActorInactivated.BindUFunction(this, FName(TEXT("OnSpawnedActorInactivated")));
-		_projectilePool.Add(projectileIns);
+		arrowIns->VSetPoolId(_arrowPool.Num());
+		arrowIns->OnActorInactivated.BindUFunction(this, FName(TEXT("OnSpawnedActorInactivated")));
+		_arrowPool.Add(arrowIns);
 	}
 
-	return projectileIns;
+	return arrowIns;
 }
 
 void UQuiverComponent::OnSpawnedActorInactivated(int poolId)

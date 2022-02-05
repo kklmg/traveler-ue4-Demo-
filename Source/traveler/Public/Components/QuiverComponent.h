@@ -6,8 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "QuiverComponent.generated.h"
 
-class AProjectileActorBase;
-
+class AArrowActorBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UQuiverComponent : public UActorComponent
@@ -26,28 +25,21 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SpawnProjectiles(int count, APawn* instigator);
-
-	void LaunchProjectiles(FVector Velocity);
-
+	void SpawnArrows(int count, APawn* instigator,TArray<AArrowActorBase*>& outArray);
 private:
-	AProjectileActorBase* CreateOrGetInactivatedFromPool();
+	AArrowActorBase* CreateOrGetInactivatedFromPool();
 
-	UFUNCTION()
+	//UFUNCTION()
 	void OnSpawnedActorInactivated(int poolId);
 private:
-	UPROPERTY()
-	TArray<AProjectileActorBase*> _projectilePool;
-
-	UPROPERTY()
+	//UPROPERTY()
+	TArray<AArrowActorBase*> _arrowPool;
+	//UPROPERTY()
 	TArray<int> _inactivatedIndicies;
 
-	UPROPERTY(EditDefaultsOnly, Category = ProjectileClass)
-	TSubclassOf<class AProjectileActorBase> _ProjectileClass;
+	UPROPERTY(EditDefaultsOnly, Category = ArrowClass)
+	TSubclassOf<class AArrowActorBase> _arrowClass;
 
-	UPROPERTY()
+	//UPROPERTY()
 	int _poolSize;
-
-	UPROPERTY()
-	int _projectileLife;
 };
