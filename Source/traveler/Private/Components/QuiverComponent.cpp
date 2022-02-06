@@ -37,15 +37,12 @@ void UQuiverComponent::SpawnArrows(int count, APawn* instigator,TArray<AArrowAct
 {
 	for (int i = 0; i < count; ++i)
 	{
-		AArrowActorBase* arrowIns = CreateOrGetInactivatedFromPool();
+		AArrowActorBase* arrowIns = CreateOrGetInactivatedFromPool(instigator);
 		if (arrowIns == nullptr)
 		{
 			UE_LOG(LogTemp,Warning,TEXT("cant spawn projectile"))
 			return;
 		}
-		arrowIns->SetInstigator(instigator);
-		//arrowIns->VSetLife(30.f);
-		//arrowIns->VSetDamage(Damage);
 		arrowIns->VSetVelocity(FVector::ZeroVector);
 		arrowIns->VSetIsActive(true);
 
@@ -54,7 +51,7 @@ void UQuiverComponent::SpawnArrows(int count, APawn* instigator,TArray<AArrowAct
 }
 
 
-AArrowActorBase* UQuiverComponent::CreateOrGetInactivatedFromPool()
+AArrowActorBase* UQuiverComponent::CreateOrGetInactivatedFromPool(APawn* instigator)
 {
 	//try get reusable actor 
 	if (_inactivatedIndicies.Num() != 0)
@@ -83,6 +80,7 @@ AArrowActorBase* UQuiverComponent::CreateOrGetInactivatedFromPool()
 	//make projectile instance
 	FActorSpawnParameters spawnParameters;
 	spawnParameters.Owner = GetOwner();
+	spawnParameters.Instigator = instigator;
 	AArrowActorBase* arrowIns = world->SpawnActor<AArrowActorBase>(_arrowClass, spawnParameters);
 
 	if (arrowIns)

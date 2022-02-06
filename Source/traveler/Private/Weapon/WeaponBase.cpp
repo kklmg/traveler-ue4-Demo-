@@ -5,6 +5,7 @@
 #include "Character/CreatureCharacter.h"
 #include "Components/PoseableMeshComponent.h"
 #include "Data/WeaponAnimationModelBase.h"
+#include "Components/MeshSocketComponent.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -12,11 +13,24 @@ AWeaponBase::AWeaponBase()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Create Mesh Socket component
+	if (_skeletalMeshComponent == nullptr)
+	{
+		_skeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
+		check(_skeletalMeshComponent != nullptr);
+		SetRootComponent(_skeletalMeshComponent);
+	}
+
+	//Create mesh component
+	if (_meshSocketComponent == nullptr)
+	{
+		_meshSocketComponent = CreateDefaultSubobject<UMeshSocketComponent>(TEXT("MeshSocketComponent"));
+		check(_meshSocketComponent != nullptr);
+		_meshSocketComponent->Initialize(_skeletalMeshComponent);
+	}
+
 	_isReadyToFire = false;
 	WeaponType = EWeaponType::EWT_None;
-
-	_skeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
-	SetRootComponent(_skeletalMeshComponent);
 }
 
 // Called when the game starts or when spawned
@@ -114,4 +128,14 @@ bool AWeaponBase::IsFiring()
 bool AWeaponBase::IsAiming()
 {
 	return _isAiming;
+}
+
+FName AWeaponBase::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
+{
+	return _meshSocketComponent->GetMeshSocketNameByType(meshSocketType);
+}
+
+bool AWeaponBase::VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
+{
+	return _meshSocketComponent->TryGetMeshSocketTransform(meshSocketType, transformSpace, outTransform);
 }

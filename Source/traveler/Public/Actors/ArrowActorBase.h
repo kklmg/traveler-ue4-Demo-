@@ -36,8 +36,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void Launch();
+	void Launch(float strength = 1.0f);
 	void SetLaunchDirection(FVector direction);
+	void VReset();
+
+	UFUNCTION()
+	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	UFUNCTION()
+	virtual void VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -46,15 +52,30 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	float _elapsedTimeFromLaunch;
 
+	UPROPERTY(VisibleAnywhere)
+	float _elapsedTimeFromHit;
+
 	UPROPERTY(EditDefaultsOnly)
 	float _gravity;
 
 	UPROPERTY(EditDefaultsOnly)
+	float _basicSpeed;
+
+	UPROPERTY(EditDefaultsOnly)
 	float _lifeAfterLaunch;
+
+	UPROPERTY(EditDefaultsOnly)
+	float _lifeAfterHit;
 
 	UPROPERTY(EditDefaultsOnly)
 	float _timeToDrop;
 
 	UPROPERTY(VisibleAnywhere)
 	EArrowState _arrowState;
+
+	UPROPERTY()
+	UDamageType* _damageType;
+
+	UPROPERTY(EditDefaultsOnly, Category = Damage)
+	TSubclassOf<UDamageType> _damageTypeClass;
 };

@@ -20,4 +20,5 @@ enum class EMeshSocketType : uint8
 	MST_Head UMETA(DisplayName = "Head"),
 	MST_LeftFoot UMETA(DisplayName = "LeftFoot"),
 	MST_RightFoot UMETA(DisplayName = "RightFoot"),
+	MST_Muzzle UMETA(DisplayName = "Muzzle"),
 };

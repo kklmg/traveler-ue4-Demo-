@@ -30,8 +30,6 @@ public:
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 
-	virtual FTransform GetMuzzleTransform();
-
 	UFUNCTION(BlueprintCallable)
 	FBowAnimationModelBase GetAnimationModel();
 
@@ -47,7 +45,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	EBowState GetBowState();
 
-	void HoldArrows(int count);
+	void HoldArrows();
 	void ClearHoldingArrows();
 	void LaunchArrows();
 
@@ -81,7 +79,7 @@ private:
 	float _drawingVelocity;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _holdCount;
+	float _holdCountOnce;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _ProjectilesInterval;
@@ -97,9 +95,6 @@ private:
 
 	UPROPERTY(EditAnyWhere, Category = Camera)
 	FVector _aimingCameraOffset;
-
-	UPROPERTY(EditDefaultsOnly, Category = MeshSocket)
-	FName _meshSocketMuzzle;
 	
 	UPROPERTY(EditDefaultsOnly, Category = bowState)
 	EBowState _bowState;

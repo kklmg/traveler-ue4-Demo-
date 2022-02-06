@@ -123,7 +123,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
 
-
 	UFUNCTION(BlueprintCallable)
 	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
 

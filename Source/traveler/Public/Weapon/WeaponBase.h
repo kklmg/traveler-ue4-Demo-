@@ -5,15 +5,19 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Data/EnumWeaponType.h"
+#include "Interface/MeshSocketTransformProvider.h"
 #include "WeaponBase.generated.h"
 
 class ACreatureCharacter;
+
 class UPoseableMeshComponent;
+class UMeshSocketComponent;
+
 class UWeaponAnimationModelBase;
 
 
 UCLASS()
-class TRAVELER_API AWeaponBase : public AActor
+class TRAVELER_API AWeaponBase : public AActor, public IMeshSocketTransformProvider
 {
 	GENERATED_BODY()
 	
@@ -31,9 +35,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
+	UFUNCTION(BlueprintCallable)
+	virtual bool VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
+
+	UFUNCTION(BlueprintCallable)
+	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* _skeletalMeshComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UMeshSocketComponent* _meshSocketComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	ACreatureCharacter* _weaponOwner;

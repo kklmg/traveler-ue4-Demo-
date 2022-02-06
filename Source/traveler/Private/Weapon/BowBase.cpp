@@ -32,7 +32,7 @@ ABowBase::ABowBase()
 	_maxProjectileVelocity = 3000.0f;
 	_aimingCameraOffset = FVector(50, 50, 50);
 
-	_holdCount = 5;
+	_holdCountOnce = 5;
 	_ProjectilesInterval = 2;
 }
 
@@ -149,15 +149,16 @@ void ABowBase::_UpdateProjectilesTransform(float deltaDegree)
 		hitLocation = hitResult.ImpactPoint;
 	}
 
-	//get transform of muzzle and hand
+	//get hand transform
 	FTransform rightHandTransform;
-	FTransform muzzleTransform;
 	IMeshSocketTransformProvider* transformProvider = Cast<IMeshSocketTransformProvider>(GetWeaponOwner());
 	if(transformProvider)
 	{
 		transformProvider->VTryGetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
 	}
-	muzzleTransform = GetMuzzleTransform();
+	//get muzzle transform
+	FTransform muzzleTransform;
+	 VTryGetMeshSocketTransform(EMeshSocketType::MST_Muzzle,RTS_World, muzzleTransform);
 
 
 	//compute Projectile Transform
@@ -215,7 +216,7 @@ void ABowBase::OnEnterAnimFrame_StartDrawingBowString()
 
 void ABowBase::OnEnterAnimFrame_TakeOutArrows()
 {
-	HoldArrows(_holdCount);
+	HoldArrows();
 }
 
 
@@ -253,13 +254,8 @@ EBowState ABowBase::GetBowState()
 	return _bowState;
 }
 
-void ABowBase::HoldArrows(int count)
+void ABowBase::HoldArrows()
 {
 	ClearHoldingArrows();
-	_quiverComponent->SpawnArrows(count, GetWeaponOwner(), _holdingArrows);
-}
-
-FTransform ABowBase::GetMuzzleTransform()
-{
-	return  GetMeshComponent()->GetSocketTransform(_meshSocketMuzzle, ERelativeTransformSpace::RTS_World);
+	_quiverComponent->SpawnArrows(_holdCountOnce, GetWeaponOwner(), _holdingArrows);
 }

@@ -35,13 +35,22 @@ AProjectileActorBase::AProjectileActorBase()
 		_projectileMovementComp->Bounciness = 0.3f;
 		_projectileMovementComp->ProjectileGravityScale = 0.0f;
 	}
+
+	_lifeTime = 60.0f;
+	_bHasLife = false; 
+	_bIgnoreInstigator = true;
 }
 
 // Called when the game starts or when spawned
 void AProjectileActorBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (_bIgnoreInstigator && GetInstigator())
+	{
+		_meshComp->IgnoreActorWhenMoving(GetInstigator(), true);
+		GetInstigator()->MoveIgnoreActorAdd(this);
+	}
 }
 
 // Called every frame
@@ -51,8 +60,8 @@ void AProjectileActorBase::Tick(float DeltaTime)
 
 	if (_isActive == false) return;
 
-	_elapsedTime += DeltaTime;
-	if (_elapsedTime > _life)
+	_elapsedLifeTime += DeltaTime;
+	if (_bHasLife && _elapsedLifeTime > _lifeTime)
 	{
 		VSetIsActive(false);
 	}
@@ -60,7 +69,7 @@ void AProjectileActorBase::Tick(float DeltaTime)
 
 void AProjectileActorBase::VSetLife(float life)
 {
-	_life = life;
+	_lifeTime = life;
 }
 
 bool AProjectileActorBase::VIsActive()
@@ -76,6 +85,7 @@ void AProjectileActorBase::VSetIsActive(bool isActive)
 
 	SetActorTickEnabled(_isActive);
 	SetActorHiddenInGame(!_isActive);
+	SetActorEnableCollision(_isActive);
 
 	if(_isActive)
 	{
@@ -84,6 +94,7 @@ void AProjectileActorBase::VSetIsActive(bool isActive)
 	else
 	{
 		VOnInActive();
+		VReset();
 	}
 }
 
@@ -93,10 +104,14 @@ void AProjectileActorBase::VOnActive()
 
 void AProjectileActorBase::VOnInActive()
 {
-	_elapsedTime = 0.0f;
 	OnActorInactivated.ExecuteIfBound(_poolId);
 }
 
+void AProjectileActorBase::VReset()
+{
+	_elapsedLifeTime = 0.0f;
+	_projectileMovementComp->Velocity = FVector::ZeroVector;
+}
 
 int AProjectileActorBase::VGetPoolId()
 {

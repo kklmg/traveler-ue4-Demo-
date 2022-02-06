@@ -44,6 +44,7 @@ public:
 protected:
 	virtual void VOnActive();
 	virtual void VOnInActive();
+	virtual void VReset();
 
 public:
 	FOnActorInactivated OnActorInactivated;
@@ -62,10 +63,16 @@ protected:
 	bool _isActive;
 
 	UPROPERTY(VisibleAnywhere)
-	float _elapsedTime;
+	float _elapsedLifeTime;
 
 	UPROPERTY(VisibleAnywhere)
-	float _life;
+	bool _bIgnoreInstigator;
+
+	UPROPERTY(EditDefaultsOnly)
+	bool _bHasLife;
+
+	UPROPERTY(EditDefaultsOnly)
+	float _lifeTime;
 
 	UPROPERTY(VisibleAnywhere)
 	int _poolId;

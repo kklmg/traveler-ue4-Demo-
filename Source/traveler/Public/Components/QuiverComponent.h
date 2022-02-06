@@ -27,19 +27,19 @@ public:
 
 	void SpawnArrows(int count, APawn* instigator,TArray<AArrowActorBase*>& outArray);
 private:
-	AArrowActorBase* CreateOrGetInactivatedFromPool();
+	AArrowActorBase* CreateOrGetInactivatedFromPool(APawn* instigator);
 
-	//UFUNCTION()
+	UFUNCTION()
 	void OnSpawnedActorInactivated(int poolId);
 private:
-	//UPROPERTY()
+	UPROPERTY()
 	TArray<AArrowActorBase*> _arrowPool;
-	//UPROPERTY()
+	UPROPERTY()
 	TArray<int> _inactivatedIndicies;
 
 	UPROPERTY(EditDefaultsOnly, Category = ArrowClass)
 	TSubclassOf<class AArrowActorBase> _arrowClass;
 
-	//UPROPERTY()
+	UPROPERTY()
 	int _poolSize;
 };

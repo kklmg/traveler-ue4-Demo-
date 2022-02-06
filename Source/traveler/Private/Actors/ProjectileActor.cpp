@@ -47,7 +47,7 @@ void AProjectileActor::Tick(float DeltaTime)
 
 	if (_scaleCurve)
 	{
-		float normalizedElapsedTime = FMath::Clamp(_elapsedTime / _life, 0.0f, 1.0f);
+		float normalizedElapsedTime = FMath::Clamp(_elapsedLifeTime / _lifeTime, 0.0f, 1.0f);
 		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime) * _basicScale;
 	}
 	
