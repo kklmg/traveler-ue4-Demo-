@@ -30,7 +30,7 @@ void AArrowActorBase::BeginPlay()
 	if (_meshComp)
 	{
 		//OnHit 
-		_meshComp->OnComponentHit.AddDynamic(this, &AArrowActorBase::VOnHit);
+		//_meshComp->OnComponentHit.AddDynamic(this, &AArrowActorBase::VOnHit);
 		_meshComp->OnComponentBeginOverlap.AddDynamic(this, &AArrowActorBase::VOnOverlapBegin);
 	}
 }
@@ -64,6 +64,7 @@ void AArrowActorBase::Tick(float DeltaTime)
 		if (_elapsedTimeFromHit > _lifeAfterHit)
 		{
 			VSetIsActive(false);
+			DetachRootComponentFromParent(true);
 		}
 	}
 }
@@ -87,6 +88,10 @@ void AArrowActorBase::VReset()
 	_arrowState = EArrowState::EAS_None;
 	_elapsedTimeFromLaunch = 0.0f;
 	_elapsedTimeFromHit = 0.0f;
+	_projectileMovementComp->ProjectileGravityScale = 0.0f;
+
+	FDetachmentTransformRules detachRule(EDetachmentRule::KeepWorld,true);
+	DetachRootComponentFromParent(true);
 }
 
 void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
@@ -120,7 +125,7 @@ void AArrowActorBase::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 
 	if (OtherActor != this && OverlappedComponent->IsSimulatingPhysics())
 	{
-		//OverlappedComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, SweepResult.ImpactPoint);
+		OverlappedComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, SweepResult.ImpactPoint);
 	}
 
 	APawn* instigator = GetInstigator();

@@ -89,12 +89,13 @@ void AProjectileActorBase::VSetIsActive(bool isActive)
 
 	if(_isActive)
 	{
+		VReset();
 		VOnActive();
 	}
 	else
 	{
 		VOnInActive();
-		VReset();
+		
 	}
 }
 
