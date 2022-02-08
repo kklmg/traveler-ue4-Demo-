@@ -91,10 +91,13 @@ void ABowBase::VTMStopFiring()
 
 void ABowBase::VTMStarAiming()
 {
-	GetWeaponOwner()->VSetCameraArmPitchLimit(-60, 60);
-	GetWeaponOwner()->VDragCamera(_aimingCameraOffset);
-
-	GetWeaponOwner()->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection,false);
+	ACreatureCharacter* weaponOwner = GetWeaponOwner();
+	if(weaponOwner && weaponOwner->VGetAnimationModel().bIsSprinting == false)
+	{
+		weaponOwner->VSetCameraArmPitchLimit(-60, 60);
+		weaponOwner->VDragCamera(_aimingCameraOffset);
+		weaponOwner->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, false);
+	}
 }
 
 void ABowBase::VTMAimingInProgress(float deltaTime)

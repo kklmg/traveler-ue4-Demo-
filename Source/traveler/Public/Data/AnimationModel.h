@@ -20,6 +20,10 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	FVector MovingVelocity;
 	UPROPERTY(BlueprintReadWrite)
+	bool bIsSprinting;
+
+
+	UPROPERTY(BlueprintReadWrite)
 	TEnumAsByte<enum EMovementMode> MovementMode;
 	UPROPERTY(BlueprintReadWrite)
 	bool bWantToJump;
@@ -33,6 +37,8 @@ public:
 	float CameraPitchMin;
 	UPROPERTY(BlueprintReadWrite)
 	float CameraPitchNormal;
+	
+
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsWeaponFiring;

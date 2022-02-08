@@ -37,6 +37,7 @@ void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTi
 		FAnimationModel& model = _animationModelProviderInterface->VGetAnimationModelRef();
 		model.MovingVelocity = Velocity;
 		model.MovementMode = MovementMode;
+		model.bIsSprinting = Velocity.Size() > model.WalkingSpeed;
 	}
 }
 
