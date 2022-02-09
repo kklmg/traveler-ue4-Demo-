@@ -29,9 +29,11 @@ void AArrowActorBase::BeginPlay()
 
 	if (_meshComp)
 	{
+		_meshComp->SetCollisionProfileName(FName("Projectile"));
+		_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 		//OnHit 
-		//_meshComp->OnComponentHit.AddDynamic(this, &AArrowActorBase::VOnHit);
-		_meshComp->OnComponentBeginOverlap.AddDynamic(this, &AArrowActorBase::VOnOverlapBegin);
+		_meshComp->OnComponentHit.AddDynamic(this, &AArrowActorBase::VOnHit);
 	}
 }
 
@@ -64,7 +66,6 @@ void AArrowActorBase::Tick(float DeltaTime)
 		if (_elapsedTimeFromHit > _lifeAfterHit)
 		{
 			VSetIsActive(false);
-			DetachRootComponentFromParent(true);
 		}
 	}
 }
@@ -72,6 +73,7 @@ void AArrowActorBase::Tick(float DeltaTime)
 void AArrowActorBase::Launch(float strength)
 {
 	_arrowState = EArrowState::EAS_Launched;
+	_meshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	VSetVelocity(_launchDirection * _basicSpeed * strength);
 }
@@ -89,79 +91,30 @@ void AArrowActorBase::VReset()
 	_elapsedTimeFromLaunch = 0.0f;
 	_elapsedTimeFromHit = 0.0f;
 	_projectileMovementComp->ProjectileGravityScale = 0.0f;
+	_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	FDetachmentTransformRules detachRule(EDetachmentRule::KeepWorld,true);
-	DetachRootComponentFromParent(true);
+	DetachFromActor(detachRule);
 }
 
 void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
+	_projectileMovementComp->Velocity = FVector::ZeroVector;
+	_arrowState = EArrowState::EAS_Hitted;
+	_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
-		//OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, Hit.ImpactPoint);
+		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, Hit.ImpactPoint);
 	}
-	AttachToComponent(OtherComponent, FAttachmentTransformRules::KeepWorldTransform);
 
-	FTimerHandle WaitHandle;
-	float WaitTime = 5;
-	GetWorld()->GetTimerManager().SetTimer(WaitHandle, FTimerDelegate::CreateLambda([&]()
-	{
-		Destroy();
-
-	}), WaitTime, false);
+	AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform);
 
 	if (OtherActor != GetInstigator())
 	{
 		UGameplayStatics::ApplyDamage(OtherActor, _damage, GetInstigator()->GetController(), this, _damageTypeClass);
 	}
-}
-
-void AArrowActorBase::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	_projectileMovementComp->Velocity = FVector::ZeroVector;
-	_arrowState = EArrowState::EAS_Hitted;
-	
-	AttachToComponent(OverlappedComponent, FAttachmentTransformRules::KeepWorldTransform);
-
-	if (OtherActor != this && OverlappedComponent->IsSimulatingPhysics())
-	{
-		OverlappedComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, SweepResult.ImpactPoint);
-	}
-
-	APawn* instigator = GetInstigator();
-
-	if (OtherActor != instigator)
-	{
-		UGameplayStatics::ApplyDamage(OtherActor, _damage, instigator ? GetInstigator()->GetController() : nullptr, this, _damageTypeClass);
-	}
-	if (OtherComp->GetCollisionObjectType() == ECollisionChannel::ECC_WorldStatic)
-	{
-		
-	}
-	
 
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("arrow hitted"));
 }
-
-
-
-//void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
-//{
-//	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
-//	{
-//		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, Hit.ImpactPoint);
-//	}
-//
-//	APawn* instigator = GetInstigator();
-//
-//	if (OtherActor != instigator)
-//	{
-//		UGameplayStatics::ApplyDamage(OtherActor, _damage, instigator ? GetInstigator()->GetController() : nullptr, this, _damageTypeClass);
-//	}
-//	VSetIsActive(false);
-//}
-//
-//void AArrowActorBase::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-//{
-//
-//}

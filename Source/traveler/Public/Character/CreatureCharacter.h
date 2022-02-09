@@ -84,12 +84,17 @@ public:
 	virtual void VSetActionState(EActionState newState) override;
 	virtual void VSetHealthState(EHealthState newState) override;
 	virtual void VSetPostureState(EPostureState newState) override;
+	UFUNCTION(BlueprintCallable)
+	virtual void VSetAnimationState(EAnimationState newState);
+	UFUNCTION(BlueprintCallable)
+	virtual EAnimationState VGetAnimationState();
 
 	virtual FOnSituationStateChanged* VGetSituationStateChangedDelegate() override;
 	virtual FOnActionStateChanged* VGetActionStateChangedDelegate() override;
 	virtual FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
 	virtual FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
 	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;
+	virtual FOnAnimationStateChanged* VGetAnimationStateChangedDelegate() override;
 
 	//Character Camera Interface implementation---------------------------------------------------
 	virtual void VCameraArmPitch(float angle)  override;

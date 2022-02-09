@@ -28,8 +28,6 @@ void UStateComponent::BeginPlay()
 		_stateData.MovementMode = character->GetCharacterMovement()->MovementMode;
 		character->MovementModeChangedDelegate.AddDynamic(this, &UStateComponent::OnCharacterMovementModeChanged);
 	}
-
-	
 }
 
 
@@ -86,6 +84,22 @@ void UStateComponent::VSetPostureState(EPostureState newState)
 	}
 }
 
+void UStateComponent::VSetAnimationState(EAnimationState newState)
+{
+	if (_stateData.AnimationState != newState)
+	{
+		EAnimationState prevState = _stateData.AnimationState;
+		_stateData.AnimationState = newState;
+		_AnimationStateChangedDelegate.Broadcast(prevState,newState);
+		_anyStateChangedDelegate.Broadcast(_stateData);
+	}
+}	
+
+EAnimationState UStateComponent::VGetAnimationState()
+{
+	return EAnimationState();
+}
+
 FOnSituationStateChanged* UStateComponent::VGetSituationStateChangedDelegate()
 {
 	return &_situationStateChangedDelegate;
@@ -109,6 +123,11 @@ FOnPostureStateChanged* UStateComponent::VGetPostureStateChangedDelegate()
 FOnAnyStateChanged* UStateComponent::VGetAnyStateChangedDelegate()
 {
 	return &_anyStateChangedDelegate;
+}
+
+FOnAnimationStateChanged* UStateComponent::VGetAnimationStateChangedDelegate()
+{
+	return &_AnimationStateChangedDelegate;
 }
 
 void UStateComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Data/EnumWeaponType.h"
+#include "Data/StateData.h"
 #include "Interface/MeshSocketTransformProvider.h"
 #include "WeaponBase.generated.h"
 
@@ -42,6 +43,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
 
+	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState);
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* _skeletalMeshComponent;
@@ -70,6 +73,7 @@ public:
 	bool IsAiming();
 
 	void StopAllActions();
+	virtual void VReset();
 
 	UFUNCTION(BlueprintCallable)
 	USkeletalMeshComponent* GetMeshComponent();
@@ -94,9 +98,8 @@ protected:
 
 	//UPROPERTY()
 	//UWeaponAnimationModelBase* _animationModel;
-private:
+protected:
 	bool _isFiring;
 	bool _isAiming;
-
-	
+	EAnimationState _characterAnimationState;
 };

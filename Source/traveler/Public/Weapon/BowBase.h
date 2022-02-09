@@ -49,6 +49,8 @@ public:
 	void ClearHoldingArrows();
 	void LaunchArrows();
 
+	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState) override;
+
 protected:
 	virtual bool VTMCanFire() override;
 	virtual bool VTMCanAim() override;
@@ -60,6 +62,8 @@ protected:
 	virtual void VTMStarAiming() override;
 	virtual void VTMAimingInProgress(float deltaTime) override;
 	virtual void VTMStopAiming() override;
+
+	virtual void VReset() override;
 
 private:
 	float _CalculateDamage();

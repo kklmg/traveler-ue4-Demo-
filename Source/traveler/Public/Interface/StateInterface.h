@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "Data/StateData.h"
+#include "Data/EnumAnimationState.h"
 #include "StateInterface.generated.h"
 
 // This class does not need to be modified.
-UINTERFACE(MinimalAPI, meta = (CannotImplementInterfaceInBlueprint))
+UINTERFACE(MinimalAPI, BlueprintType, meta = (CannotImplementInterfaceInBlueprint))
 class UStateInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -25,7 +26,13 @@ class TRAVELER_API IStateInterface
 public:
 	UFUNCTION(BlueprintCallable)
 	virtual FStateData VGetStateData() PURE_VIRTUAL(IStateInterface::VGetStateData, return FStateData(););
+
+	UFUNCTION(BlueprintCallable)
+	virtual void VSetAnimationState(EAnimationState newState) PURE_VIRTUAL(IStateInterface::VSetAnimationState, );
+	UFUNCTION(BlueprintCallable)
+	virtual EAnimationState VGetAnimationState() PURE_VIRTUAL(IStateInterface::VGetAnimationState, return EAnimationState::E_AnimState_None;);
 	
+
 	virtual void VSetSituationState(ESituationState newState) PURE_VIRTUAL (IStateInterface::VSetSituationState,);
 	virtual void VSetActionState(EActionState newState) PURE_VIRTUAL (IStateInterface::VSetActionState,);
 	virtual void VSetHealthState(EHealthState newState) PURE_VIRTUAL (IStateInterface::VSetHealthState,);
@@ -36,5 +43,5 @@ public:
 	virtual FOnHealthStateChanged* VGetHealthStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetHealthStateChangedDelegate, return nullptr;);
 	virtual FOnPostureStateChanged* VGetPostureStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetPostureStateChangedDelegate, return nullptr;);
 	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetAnyStateChangedDelegate, return nullptr;);
-
+	virtual FOnAnimationStateChanged* VGetAnimationStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetAnimationStateChangedDelegate, return nullptr;);
 };

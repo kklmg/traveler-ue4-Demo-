@@ -32,11 +32,18 @@ public:
 	void VSetHealthState(EHealthState newState) override;
 	void VSetPostureState(EPostureState newState) override;
 
+	UFUNCTION(BlueprintCallable)
+	virtual void VSetAnimationState(EAnimationState newState) override;
+	UFUNCTION(BlueprintCallable)
+	virtual EAnimationState VGetAnimationState() override;
+
+
 	FOnSituationStateChanged* VGetSituationStateChangedDelegate() override;
 	FOnActionStateChanged* VGetActionStateChangedDelegate() override;
 	FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
 	FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
 	FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;
+	FOnAnimationStateChanged* VGetAnimationStateChangedDelegate() override;
 
 	UFUNCTION()
 	void OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
@@ -45,6 +52,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	FStateData _stateData;
 
+	FOnAnimationStateChanged _AnimationStateChangedDelegate;
 	FOnSituationStateChanged _situationStateChangedDelegate;
 	FOnActionStateChanged _actionStateChangedDelegate;
 	FOnHealthStateChanged _healthStateChangedDelegate;

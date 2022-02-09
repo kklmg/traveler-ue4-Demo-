@@ -50,6 +50,17 @@ enum class EPostureState : uint8
 	EPS_Crawl UMETA(DisplayName = "Crawl"),
 };
 
+UENUM(BlueprintType)
+enum class EAnimationState : uint8
+{
+	E_AnimState_None UMETA(DisplayName = "None"),
+	E_AnimState_Ground UMETA(DisplayName = "Ground"),
+	E_AnimState_Jump UMETA(DisplayName = "Jump"),
+	E_AnimState_Fall UMETA(DisplayName = "Fall"),
+	E_AnimState_Land UMETA(DisplayName = " Land"),
+};
+
+
 
 USTRUCT(BlueprintType)
 struct FStateData
@@ -64,6 +75,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	EActionState ActionState;
+	
+	UPROPERTY(BlueprintReadWrite)
+	EAnimationState AnimationState;
 
 	UPROPERTY(BlueprintReadWrite)
 	EHealthState HealthState;
@@ -80,6 +94,7 @@ public:
 
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnimationStateChanged, EAnimationState, prevState, EAnimationState, newState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSituationStateChanged, ESituationState, SituationState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionStateChanged, EActionState, ActionState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthStateChanged, EHealthState, HealthState);

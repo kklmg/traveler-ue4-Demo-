@@ -52,12 +52,14 @@ void ABowBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 	_animationModel.BowState = _bowState;
 }
 
 bool ABowBase::VTMCanFire()
 {
-	return _bowState == EBowState::EBS_FullyDrawed || _bowState == EBowState::EBS_OverDrawing;
+	return (_characterAnimationState == EAnimationState::E_AnimState_Ground || _characterAnimationState == EAnimationState::E_AnimState_Fall )
+			&& ( _bowState == EBowState::EBS_FullyDrawed || _bowState == EBowState::EBS_OverDrawing);
 }
 
 bool ABowBase::VTMCanAim()
@@ -67,18 +69,7 @@ bool ABowBase::VTMCanAim()
 
 void ABowBase::VTMStartFiring()
 {
-	/*if (_characterCamera)
-	{
-		FRotator rotator = _characterCamera->VGetCameraRotation();
-		rotator.Pitch = 0;
-		rotator.Roll = 0;
-
-		GetWeaponOwner()->SetActorRotation(rotator);
-	}*/
-	if (_bowState == EBowState::EBS_FullyDrawed || _bowState == EBowState::EBS_OverDrawing)
-	{
-		_bowState = EBowState::EBS_Released;
-	}
+	_bowState = EBowState::EBS_Released;
 }
 
 void ABowBase::VTMFiringInProgress(float deltaTime)
@@ -125,6 +116,11 @@ void ABowBase::VTMStopAiming()
 
 	ClearHoldingArrows();
 	GetWeaponOwner()->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, true);
+}
+
+void ABowBase::VReset()
+{
+	Super::VReset();
 }
 
 
@@ -239,6 +235,19 @@ void ABowBase::LaunchArrows()
 		arrow->Launch();
 	}
 	_holdingArrows.Empty();
+}
+
+void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
+{
+	Super::VOnCharacterAnimationStateChanged(prevState, newState);
+
+	if(prevState == EAnimationState::E_AnimState_Fall || prevState == EAnimationState::E_AnimState_Ground)
+	{
+		if(newState!= EAnimationState::E_AnimState_Fall && newState != EAnimationState::E_AnimState_Ground)
+		{
+			StopAllActions();
+		}
+	}
 }
 
 

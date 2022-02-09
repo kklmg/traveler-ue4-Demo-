@@ -5,6 +5,7 @@
 #include "Weapon/BowBase.h"
 #include "Character/CreatureCharacter.h"
 #include "Interface/AnimationModelProvider.h"
+#include "Interface/StateInterface.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -24,6 +25,12 @@ void UWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 	_animationModelProvider = GetOwner<IAnimationModelProvider>();
+	_stateInterface = GetOwner<IStateInterface>();
+
+	if(_stateInterface)
+	{
+		_stateInterface->VGetAnimationStateChangedDelegate()->AddDynamic(this,&UWeaponComponent::OnAnimationStateChanged);
+	}
 
 	if (DefaultWeaponClass)
 	{
@@ -49,7 +56,9 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	}
 	if(_animationModelProvider)
 	{
-		_animationModelProvider->VGetAnimationModelRef().weapon = _weaponIns;
+		_animationModelProvider->VGetAnimationModelRef().weapon = _weaponIns;	
+		_animationModelProvider->VGetAnimationModelRef().bIsWeaponFiring = _weaponIns ? _weaponIns->IsFiring() : false;
+		_animationModelProvider->VGetAnimationModelRef().bIsWeaponAiming = _weaponIns ? _weaponIns->IsAiming() : false;
 	}
 
 }
@@ -73,9 +82,7 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 
 		//Attach Weapon 
 		FName leftHandSocketName = character->GetMeshSocketNameByType(EMeshSocketType::MST_LeftHand);		
-
 		_weaponIns->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
-		//_aWeapon->AttachToActor(character, FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
 	}
 }
 
@@ -158,6 +165,14 @@ bool UWeaponComponent::IsAiming()
 		return _weaponIns->IsAiming();
 	}
 	return false;
+}
+
+void UWeaponComponent::OnAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
+{
+	if(_weaponIns)
+	{
+		_weaponIns->VOnCharacterAnimationStateChanged(prevState, newState);
+	}
 }
 
 

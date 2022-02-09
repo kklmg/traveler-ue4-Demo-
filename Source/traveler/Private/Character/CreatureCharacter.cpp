@@ -204,6 +204,16 @@ void ACreatureCharacter::VSetPostureState(EPostureState newState)
 	_stateComponent->VSetPostureState(newState);
 }
 
+void ACreatureCharacter::VSetAnimationState(EAnimationState newState)
+{
+	_stateComponent->VSetAnimationState(newState);
+}
+
+EAnimationState ACreatureCharacter::VGetAnimationState()
+{
+	return _stateComponent->VGetAnimationState();
+}
+
 FOnSituationStateChanged* ACreatureCharacter::VGetSituationStateChangedDelegate()
 {
 	return _stateComponent->VGetSituationStateChangedDelegate();
@@ -227,6 +237,11 @@ FOnPostureStateChanged* ACreatureCharacter::VGetPostureStateChangedDelegate()
 FOnAnyStateChanged* ACreatureCharacter::VGetAnyStateChangedDelegate()
 {
 	return _stateComponent->VGetAnyStateChangedDelegate();
+}
+
+FOnAnimationStateChanged* ACreatureCharacter::VGetAnimationStateChangedDelegate()
+{
+	return _stateComponent->VGetAnimationStateChangedDelegate();
 }
 
 void ACreatureCharacter::VCameraArmPitch(float angle)

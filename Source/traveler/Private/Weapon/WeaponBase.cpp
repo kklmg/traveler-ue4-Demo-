@@ -121,6 +121,10 @@ void AWeaponBase::StopAllActions()
 	StopAiming();
 }
 
+void AWeaponBase::VReset()
+{
+}
+
 bool AWeaponBase::IsFiring()
 {
 	return _isFiring;
@@ -133,6 +137,11 @@ bool AWeaponBase::IsAiming()
 FName AWeaponBase::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
 {
 	return _meshSocketComponent->GetMeshSocketNameByType(meshSocketType);
+}
+
+void AWeaponBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
+{
+	_characterAnimationState = newState;
 }
 
 bool AWeaponBase::VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)

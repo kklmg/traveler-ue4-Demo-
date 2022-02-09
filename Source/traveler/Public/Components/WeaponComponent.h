@@ -10,6 +10,7 @@ class AWeaponBase;
 class ACreatureCharacter;
 
 class IAnimationModelProvider;
+class IStateInterface;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeaponBase*,weapon);
 
@@ -72,9 +73,13 @@ public:
 	UFUNCTION(BluePrintCallable)
 	bool IsAiming();
 
+	UFUNCTION()
+	void OnAnimationStateChanged(EAnimationState prevState, EAnimationState newState);
+	
 private:
 	UPROPERTY()
 	AWeaponBase* _weaponIns;
 
 	IAnimationModelProvider* _animationModelProvider;
+	IStateInterface* _stateInterface;
 };
