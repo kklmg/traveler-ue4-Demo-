@@ -18,6 +18,16 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	float SprintSpeed;
 	UPROPERTY(BlueprintReadWrite)
+	float NormalizedSpeed;
+	UPROPERTY(BlueprintReadWrite)
+	float NormalizedSpeed_IdleWalk;
+	UPROPERTY(BlueprintReadWrite)
+	float NormalizedSpeed_WalkSprint;
+	UPROPERTY(BlueprintReadWrite)
+	FVector PendingInput;
+
+
+	UPROPERTY(BlueprintReadWrite)
 	FVector MovingVelocity;
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsSprinting;

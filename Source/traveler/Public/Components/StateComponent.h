@@ -28,7 +28,6 @@ public:
 	FStateData VGetStateData() override;
 
 	void VSetSituationState(ESituationState newState) override;
-	void VSetActionState(EActionState newState) override;
 	void VSetHealthState(EHealthState newState) override;
 	void VSetPostureState(EPostureState newState) override;
 
@@ -39,7 +38,6 @@ public:
 
 
 	FOnSituationStateChanged* VGetSituationStateChangedDelegate() override;
-	FOnActionStateChanged* VGetActionStateChangedDelegate() override;
 	FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
 	FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
 	FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;
@@ -54,7 +52,6 @@ private:
 
 	FOnAnimationStateChanged _AnimationStateChangedDelegate;
 	FOnSituationStateChanged _situationStateChangedDelegate;
-	FOnActionStateChanged _actionStateChangedDelegate;
 	FOnHealthStateChanged _healthStateChangedDelegate;
 	FOnPostureStateChanged _postureStateChangedDelegate;
 	FOnAnyStateChanged _anyStateChangedDelegate;

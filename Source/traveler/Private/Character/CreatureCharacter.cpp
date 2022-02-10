@@ -189,10 +189,6 @@ void ACreatureCharacter::VSetSituationState(ESituationState newState)
 	_stateComponent->VSetSituationState(newState);
 }
 
-void ACreatureCharacter::VSetActionState(EActionState newState)
-{
-	_stateComponent->VSetActionState(newState);
-}
 
 void ACreatureCharacter::VSetHealthState(EHealthState newState)
 {
@@ -217,11 +213,6 @@ EAnimationState ACreatureCharacter::VGetAnimationState()
 FOnSituationStateChanged* ACreatureCharacter::VGetSituationStateChangedDelegate()
 {
 	return _stateComponent->VGetSituationStateChangedDelegate();
-}
-
-FOnActionStateChanged* ACreatureCharacter::VGetActionStateChangedDelegate()
-{
-	return _stateComponent->VGetActionStateChangedDelegate();
 }
 
 FOnHealthStateChanged* ACreatureCharacter::VGetHealthStateChangedDelegate()

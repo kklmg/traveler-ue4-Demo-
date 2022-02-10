@@ -7,7 +7,6 @@
 FStateData::FStateData()
 {
 	SituationState = ESituationState::ESS_None;
-	ActionState = EActionState::EAS_Idle;
 	HealthState = EHealthState::EHS_Healthy;
 	PostureState = EPostureState::EPS_UpRight;
 }

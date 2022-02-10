@@ -37,7 +37,16 @@ void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTi
 		FAnimationModel& model = _animationModelProviderInterface->VGetAnimationModelRef();
 		model.MovingVelocity = Velocity;
 		model.MovementMode = MovementMode;
-		model.bIsSprinting = Velocity.Size() > model.WalkingSpeed;
+
+		FVector horizonVelocity = Velocity;
+		horizonVelocity.Z = 0;
+
+		float speed = horizonVelocity.Size();
+		model.bIsSprinting = speed > model.WalkingSpeed+0.1f;
+		model.NormalizedSpeed = speed / model.SprintSpeed;
+		model.NormalizedSpeed_IdleWalk = speed / model.WalkingSpeed;
+		model.NormalizedSpeed_WalkSprint = (speed - model.WalkingSpeed) / (model.SprintSpeed - model.WalkingSpeed);
+		model.PendingInput = GetPendingInputVector();
 	}
 }
 

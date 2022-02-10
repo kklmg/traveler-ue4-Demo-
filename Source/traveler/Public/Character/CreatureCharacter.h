@@ -81,7 +81,6 @@ public:
 	FStateData VGetStateData() override;
 
 	virtual void VSetSituationState(ESituationState newState) override;
-	virtual void VSetActionState(EActionState newState) override;
 	virtual void VSetHealthState(EHealthState newState) override;
 	virtual void VSetPostureState(EPostureState newState) override;
 	UFUNCTION(BlueprintCallable)
@@ -90,7 +89,6 @@ public:
 	virtual EAnimationState VGetAnimationState();
 
 	virtual FOnSituationStateChanged* VGetSituationStateChangedDelegate() override;
-	virtual FOnActionStateChanged* VGetActionStateChangedDelegate() override;
 	virtual FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
 	virtual FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
 	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;

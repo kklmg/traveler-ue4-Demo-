@@ -54,15 +54,6 @@ void UStateComponent::VSetSituationState(ESituationState newState)
 	}
 }
 
-void UStateComponent::VSetActionState(EActionState newState)
-{
-	if (_stateData.ActionState != newState)
-	{
-		_stateData.ActionState = newState;
-		_actionStateChangedDelegate.Broadcast(newState);
-		_anyStateChangedDelegate.Broadcast(_stateData);
-	}
-}
 
 void UStateComponent::VSetHealthState(EHealthState newState)
 {
@@ -103,11 +94,6 @@ EAnimationState UStateComponent::VGetAnimationState()
 FOnSituationStateChanged* UStateComponent::VGetSituationStateChangedDelegate()
 {
 	return &_situationStateChangedDelegate;
-}
-
-FOnActionStateChanged* UStateComponent::VGetActionStateChangedDelegate()
-{
-	return &_actionStateChangedDelegate;
 }
 
 FOnHealthStateChanged* UStateComponent::VGetHealthStateChangedDelegate()

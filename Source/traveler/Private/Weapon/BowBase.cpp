@@ -58,7 +58,7 @@ void ABowBase::Tick(float DeltaTime)
 
 bool ABowBase::VTMCanFire()
 {
-	return (_characterAnimationState == EAnimationState::E_AnimState_Ground || _characterAnimationState == EAnimationState::E_AnimState_Fall )
+	return (_characterAnimationState == EAnimationState::EAnimState_Walk || _characterAnimationState == EAnimationState::EAnimState_Fall )
 			&& ( _bowState == EBowState::EBS_FullyDrawed || _bowState == EBowState::EBS_OverDrawing);
 }
 
@@ -241,9 +241,9 @@ void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAni
 {
 	Super::VOnCharacterAnimationStateChanged(prevState, newState);
 
-	if(prevState == EAnimationState::E_AnimState_Fall || prevState == EAnimationState::E_AnimState_Ground)
+	if(prevState == EAnimationState::EAnimState_Fall || prevState == EAnimationState::EAnimState_Walk)
 	{
-		if(newState!= EAnimationState::E_AnimState_Fall && newState != EAnimationState::E_AnimState_Ground)
+		if(newState!= EAnimationState::EAnimState_Fall && newState != EAnimationState::EAnimState_Walk)
 		{
 			StopAllActions();
 		}

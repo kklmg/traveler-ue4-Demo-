@@ -30,16 +30,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void VSetAnimationState(EAnimationState newState) PURE_VIRTUAL(IStateInterface::VSetAnimationState, );
 	UFUNCTION(BlueprintCallable)
-	virtual EAnimationState VGetAnimationState() PURE_VIRTUAL(IStateInterface::VGetAnimationState, return EAnimationState::E_AnimState_None;);
+	virtual EAnimationState VGetAnimationState() PURE_VIRTUAL(IStateInterface::VGetAnimationState, return EAnimationState::EAnimState_None;);
 	
 
 	virtual void VSetSituationState(ESituationState newState) PURE_VIRTUAL (IStateInterface::VSetSituationState,);
-	virtual void VSetActionState(EActionState newState) PURE_VIRTUAL (IStateInterface::VSetActionState,);
 	virtual void VSetHealthState(EHealthState newState) PURE_VIRTUAL (IStateInterface::VSetHealthState,);
 	virtual void VSetPostureState(EPostureState newState) PURE_VIRTUAL (IStateInterface::VSetPostureState,);
 
 	virtual FOnSituationStateChanged* VGetSituationStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetSituationStateChangedDelegate, return nullptr;);
-	virtual FOnActionStateChanged* VGetActionStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetActionStateChangedDelegate, return nullptr;);
 	virtual FOnHealthStateChanged* VGetHealthStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetHealthStateChangedDelegate, return nullptr;);
 	virtual FOnPostureStateChanged* VGetPostureStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetPostureStateChangedDelegate, return nullptr;);
 	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetAnyStateChangedDelegate, return nullptr;);

@@ -18,19 +18,7 @@ enum class ESituationState : uint8
 	ESS_Riding UMETA(DisplayName = "Riding"),
 };
 
-UENUM(BlueprintType)
-enum class EActionState : uint8
-{
-	EAS_None UMETA(DisplayName = "None"),
-	EAS_Idle UMETA(DisplayName = "Idle"),
-	EAS_Moving UMETA(DisplayName = "Moving"),
-	EAS_Sprinting UMETA(DisplayName = "Sprinting"),
-	EAS_Dodging UMETA(DisplayName = "Dodging"),
-	EAS_Falling UMETA(DisplayName = "Falling"),
-	EAS_Attacking UMETA(DisplayName = "Attacking"),
-	EAS_Aiming UMETA(DisplayName = "Aiming"),
-	EAS_BeHitted UMETA(DisplayName = "beHitted"),
-};
+
 
 UENUM(BlueprintType)
 enum class EHealthState : uint8
@@ -53,11 +41,12 @@ enum class EPostureState : uint8
 UENUM(BlueprintType)
 enum class EAnimationState : uint8
 {
-	E_AnimState_None UMETA(DisplayName = "None"),
-	E_AnimState_Ground UMETA(DisplayName = "Ground"),
-	E_AnimState_Jump UMETA(DisplayName = "Jump"),
-	E_AnimState_Fall UMETA(DisplayName = "Fall"),
-	E_AnimState_Land UMETA(DisplayName = " Land"),
+	EAnimState_None UMETA(DisplayName = "None"),
+	EAnimState_Walk UMETA(DisplayName = "Walk"),
+	EAnimState_Sprint UMETA(DisplayName = "Sprint"),
+	EAnimState_Jump UMETA(DisplayName = "Jump"),
+	EAnimState_Fall UMETA(DisplayName = "Fall"),
+	EAnimState_Land UMETA(DisplayName = " Land"),
 };
 
 
@@ -72,9 +61,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	ESituationState SituationState;
-
-	UPROPERTY(BlueprintReadWrite)
-	EActionState ActionState;
 	
 	UPROPERTY(BlueprintReadWrite)
 	EAnimationState AnimationState;
@@ -96,7 +82,6 @@ public:
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnimationStateChanged, EAnimationState, prevState, EAnimationState, newState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSituationStateChanged, ESituationState, SituationState);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionStateChanged, EActionState, ActionState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthStateChanged, EHealthState, HealthState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPostureStateChanged, EPostureState, PostureState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAnyStateChanged, FStateData, State);
