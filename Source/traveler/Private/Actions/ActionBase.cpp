@@ -8,6 +8,7 @@
 #include "Interface/StateInterface.h"
 #include "Interface/AttributeInterface.h"
 #include "Interface/AnimationModelProvider.h"
+#include "Data/CostData.h"
 
 DEFINE_LOG_CATEGORY(LogAction);
 
@@ -17,6 +18,7 @@ UActionBase::UActionBase()
 	_bInstantAction = true;
 	_actionName = TEXT("UnKnown");
 	_actionType = EActionType::EACT_None;
+	_costData = CreateDefaultSubobject<UCostData>(TEXT("CostData"));
 }
 
 void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoard* actionBlackBoard)
@@ -50,7 +52,7 @@ void UActionBase::Pause()
 
 FORCEINLINE void UActionBase::Execute()
 {
-	if (CanStart() == false)
+	if (CanExecute() == false)
 	{
 		UE_LOG(LogAction, Warning, TEXT("Can't execute Action"));
 
@@ -58,14 +60,21 @@ FORCEINLINE void UActionBase::Execute()
 		return;
 	}
 
+	if(_attributeInterface)
+	{
+		_attributeInterface->VTryConsume(_costData);
+	}
+
 	VTMExecute();
 
 	_processState = _bInstantAction ? EActionProcessState::EAPS_SUCCEEDED : EActionProcessState::EAPS_Running;
 }
 
-FORCEINLINE bool UActionBase::CanStart()
+FORCEINLINE bool UActionBase::CanExecute()
 {
-	return (_processState == EActionProcessState::EAPS_ReadyToExecute && VTMCanStart());
+	bool bEnoughResources = _attributeInterface && _attributeInterface->VCanConsume(_costData);
+
+	return (_processState == EActionProcessState::EAPS_ReadyToExecute && bEnoughResources && VTMCanExecute());
 }
 
 void UActionBase::Tick(float deltaTime)
@@ -73,7 +82,7 @@ void UActionBase::Tick(float deltaTime)
 	VTMTick(deltaTime);
 }
 
-bool UActionBase::VTMCanStart()
+bool UActionBase::VTMCanExecute()
 {
 	return true;
 }
@@ -133,6 +142,11 @@ void UActionBase::SetActionProcessFailed()
 {
 	_processState = EActionProcessState::EAPS_FAILED;
 	VOnActionCompleted();
+}
+
+UCostData* UActionBase::GetCostData()
+{
+	return _costData;
 }
 
 void UActionBase::VOnActionCompleted()

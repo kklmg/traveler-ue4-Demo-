@@ -159,6 +159,16 @@ bool ACreatureCharacter::VSetAttributeChange(EAttributeType attributeType, float
 	return _attributeComponent->SetAttributeChange(attributeType, deltaValue);
 }
 
+bool ACreatureCharacter::VCanConsume(UCostData* cost)
+{
+	return _attributeComponent->CanConsume(cost);
+}
+
+bool ACreatureCharacter::VTryConsume(UCostData* cost)
+{
+	return _attributeComponent->TryConsume(cost);
+}
+
 FORCEINLINE UActionComponent* ACreatureCharacter::GetActionComponent()
 {
 	return _actionComponent;

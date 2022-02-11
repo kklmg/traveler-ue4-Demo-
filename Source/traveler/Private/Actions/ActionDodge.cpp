@@ -12,6 +12,9 @@ UActionDodge::UActionDodge()
 	_actionType = EActionType::EACT_Dodge;
 	_bInstantAction = false;
 	_dodgeSpeed = 250;
+
+	GetCostData()->SetCost(EAttributeType::EATT_Stamina,20);
+	
 }
 
 void UActionDodge::VTMExecute()

@@ -4,6 +4,7 @@
 #include "Components/AttributeComponent.h"
 #include "Data/CharacterAttribute.h"
 #include "Data/AttributeData.h"
+#include "Data/CostData.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/DataTable.h"
 #include "Interface/AnimationModelProvider.h"
@@ -76,6 +77,71 @@ bool UAttributeComponent::SetAttributeChange(EAttributeType attributeType, float
 		return true;
 	}
 	return false;
+}
+
+bool UAttributeComponent::CanConsumeStatus(EAttributeType attributeType, float CostValue)
+{
+	UCharacterAttribute* attribute = GetAttribute(attributeType);
+	if(attribute)
+	{
+		switch (attributeType)
+		{
+			case EAttributeType::EATT_Health:
+			{
+				return attribute->GetValue() > CostValue;
+			}break;
+
+			case EAttributeType::EATT_Level:
+			case EAttributeType::EATT_Mana:
+			case EAttributeType::EATT_Energy:
+			case EAttributeType::EATT_Strength:
+			case EAttributeType::EATT_Defence:
+			case EAttributeType::EATT_WalkingSpeed:
+			case EAttributeType::EATT_SprintSpeed:
+			case EAttributeType::EATT_FlyingSpeed:
+			default:
+			{
+				return attribute->GetValue() >= CostValue;
+			}break;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool UAttributeComponent::CanConsume(UCostData* costData)
+{
+	if (!costData) return true;
+	TArray<TPair<EAttributeType, float>> costArray = costData->GetCostArray();
+
+	for (TPair<EAttributeType, float> cost : costArray)
+	{
+		if(CanConsumeStatus(cost.Key,cost.Value)==false)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool UAttributeComponent::TryConsume(UCostData* costData)
+{
+	if (!costData) return true;
+	if (CanConsume(costData) == false) return false;
+
+	TArray<TPair<EAttributeType, float>> costArray = costData->GetCostArray();
+
+	for (TPair<EAttributeType, float> cost : costArray)
+	{
+		UCharacterAttribute* attribute = GetAttribute(cost.Key);
+		if (attribute)
+		{
+			attribute->ApplyValueChange(-cost.Value);
+		}
+	}
+	return true;
 }
 
 void UAttributeComponent::InitializeAttributes()

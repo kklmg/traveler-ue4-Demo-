@@ -9,6 +9,7 @@
 
 class UCharacterAttribute;
 class UDataTable;
+class UCostData;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UAttributeComponent : public UActorComponent
@@ -36,6 +37,17 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool SetAttributeChange(EAttributeType attributeType, float deltaValue);
+
+	UFUNCTION(BlueprintCallable)
+	bool CanConsumeStatus(EAttributeType attributeType, float costValue);
+
+	UFUNCTION(BlueprintCallable)
+	bool CanConsume(UCostData* costData);
+
+
+
+	UFUNCTION(BlueprintCallable)
+	bool TryConsume(UCostData * costData);
 
 
 private:

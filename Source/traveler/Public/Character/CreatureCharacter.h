@@ -69,6 +69,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool VSetAttributeChange(EAttributeType attributeType, float deltaValue) override;
 
+	UFUNCTION(BlueprintCallable)
+	virtual bool VCanConsume(UCostData* cost) override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual bool VTryConsume(UCostData * cost) override;
+
 	//Action Interface implementation ---------------------------------------------------
 
 	UFUNCTION(BlueprintCallable)

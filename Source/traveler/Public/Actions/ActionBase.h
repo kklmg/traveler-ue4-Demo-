@@ -14,6 +14,8 @@ class IStateInterface;
 class IAttributeInterface;
 class IAnimationModelProvider;
 
+class UCostData;
+
 UENUM(BlueprintType)
 enum class EActionProcessState : uint8
 {
@@ -65,7 +67,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Execute();
 	UFUNCTION(BlueprintCallable)
-	bool CanStart();
+	bool CanExecute();
 	UFUNCTION()
 	void Tick(float deltaTime);
 
@@ -98,7 +100,7 @@ public:
 
 protected:
 	virtual void VTMInitialize();
-	virtual bool VTMCanStart();
+	virtual bool VTMCanExecute();
 	virtual void VTMExecute();
 	virtual void VTMTick(float deltaTime);
 	virtual void VOnActionCompleted();
@@ -106,6 +108,7 @@ protected:
 protected:
 	void SetActionProcessSucceed();
 	void SetActionProcessFailed();
+	UCostData* GetCostData();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
@@ -133,4 +136,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Action")
 	EActionProcessState _processState;
+
+	UPROPERTY(EditDefaultsOnly)
+	UCostData* _costData;
 };

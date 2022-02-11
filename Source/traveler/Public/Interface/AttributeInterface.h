@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "Data/CharacterAttribute.h"
+#include "Data/CostData.h"
 #include "AttributeInterface.generated.h"
 
 // This class does not need to be modified.
@@ -32,4 +33,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual bool VSetAttributeChange(EAttributeType attributeType, float deltaValue) PURE_VIRTUAL(IAttributeInterface::SetAttributeChange, return false;);
+
+	UFUNCTION(BlueprintCallable)
+	virtual bool VCanConsume(UCostData* cost) PURE_VIRTUAL(IAttributeInterface::CanConsume, return false;);
+
+	UFUNCTION(BlueprintCallable)
+	virtual bool VTryConsume(UCostData* cost) PURE_VIRTUAL(IAttributeInterface::TryConsume, return false;);
 };
