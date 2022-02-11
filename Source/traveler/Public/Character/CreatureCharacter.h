@@ -83,6 +83,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual UActionBlackBoard* VGetActionBlackBoard() override;
 
+	UFUNCTION(BlueprintCallable)
+	bool VCheckActionIsInProgress(EActionType actionType) override;
+
 	//State Interface implementation---------------------------------------------------
 	FStateData VGetStateData() override;
 

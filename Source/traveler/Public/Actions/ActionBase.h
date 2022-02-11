@@ -108,6 +108,7 @@ protected:
 protected:
 	void SetActionProcessSucceed();
 	void SetActionProcessFailed();
+	UActionComponent* GetActionComponent();
 	UCostData* GetCostData();
 
 protected:

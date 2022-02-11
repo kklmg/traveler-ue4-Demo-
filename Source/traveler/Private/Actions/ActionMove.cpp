@@ -3,6 +3,8 @@
 
 #include "Actions/ActionMove.h"
 #include "Components/AttributeComponent.h"
+#include "Components/ActionComponent.h"
+#include "Interface/StateInterface.h"
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 
@@ -11,6 +13,15 @@ UActionMove::UActionMove()
 {
 	_actionName = ActionName::MOVE;
 	_actionType = EActionType::EACT_Moving;
+}
+
+bool UActionMove::VTMCanExecute()
+{
+	EMovementMode movementMode = _stateInterface->VGetStateData().MovementMode;
+	//bool bIsWalking = movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking;
+	bool bIsDodging = GetActionComponent()->CheckActionIsInProgress(EActionType::EACT_Dodge);
+
+	return/* bIsWalking && */(!bIsDodging);
 }
 
 void UActionMove::VTMExecute()

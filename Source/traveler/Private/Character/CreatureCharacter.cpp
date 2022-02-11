@@ -189,6 +189,11 @@ FORCEINLINE UActionBlackBoard* ACreatureCharacter::VGetActionBlackBoard()
 	return _actionComponent->GetActionBlackBoard();
 }
 
+bool ACreatureCharacter::VCheckActionIsInProgress(EActionType actionType)
+{
+	return _actionComponent->CheckActionIsInProgress(actionType);
+}
+
 FStateData ACreatureCharacter::VGetStateData()
 {
 	return _stateComponent->VGetStateData();

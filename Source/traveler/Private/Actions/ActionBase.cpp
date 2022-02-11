@@ -144,6 +144,11 @@ void UActionBase::SetActionProcessFailed()
 	VOnActionCompleted();
 }
 
+UActionComponent* UActionBase::GetActionComponent()
+{
+	return _actionComp;
+}
+
 UCostData* UActionBase::GetCostData()
 {
 	return _costData;

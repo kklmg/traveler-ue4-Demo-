@@ -12,6 +12,8 @@
 #include "Command/CommandActor.h"
 #include "Interface/CharacterCameraInterface.h"
 #include "Interface/MeshSocketTransformProvider.h"
+#include "Interface/ActionInterface.h"
+
 
 ABowBase::ABowBase()
 {
@@ -64,7 +66,9 @@ bool ABowBase::VTMCanFire()
 
 bool ABowBase::VTMCanAim()
 {
-	return true;
+	IActionInterface* actionInterface = Cast<IActionInterface>(GetWeaponOwner());
+
+	return actionInterface ? actionInterface->VCheckActionIsInProgress(EActionType::EACT_Dodge) == false : true;
 }
 
 void ABowBase::VTMStartFiring()

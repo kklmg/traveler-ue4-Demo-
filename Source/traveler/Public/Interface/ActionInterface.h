@@ -29,4 +29,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual UActionBlackBoard* VGetActionBlackBoard() PURE_VIRTUAL(UActionInterface::VGetActionBlackBoard, return nullptr;);
+
+	UFUNCTION(BlueprintCallable)
+	virtual bool VCheckActionIsInProgress(EActionType actionType) PURE_VIRTUAL(UActionInterface::VCheckActionIsInProgress, return nullptr;);
 };

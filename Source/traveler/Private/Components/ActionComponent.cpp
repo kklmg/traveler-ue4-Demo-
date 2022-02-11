@@ -118,7 +118,6 @@ UActionBlackBoard* UActionComponent::GetActionBlackBoard()
 	return _actionBlackBoard;
 }
 
-
 void UActionComponent::OnCharacterStateChanged(FStateData newStateData)
 {
 	if (_cachedStateData.MovementMode != newStateData.MovementMode)
@@ -158,4 +157,11 @@ void UActionComponent::ClearActionProcessPool()
 	}
 	_mapActionProcessPool.Empty();
 }
+
+bool UActionComponent::CheckActionIsInProgress(EActionType actionType)
+{
+	return _mapActionProcessPool.Contains(actionType);
+}
+
+
 

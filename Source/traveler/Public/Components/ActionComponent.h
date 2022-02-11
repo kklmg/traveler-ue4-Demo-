@@ -35,6 +35,8 @@ public:
 	void AddToActionProcessPool(UActionBase* action);
 	void ClearActionProcessPool();
 
+	bool CheckActionIsInProgress(EActionType actionType);
+
 	UFUNCTION()
 	void OnCharacterStateChanged(FStateData newStateData);
 

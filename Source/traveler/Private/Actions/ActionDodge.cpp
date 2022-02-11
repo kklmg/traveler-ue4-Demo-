@@ -3,7 +3,8 @@
 
 #include "Actions/ActionDodge.h"
 #include "Character/CreatureCharacter.h"
-
+#include "Interface/StateInterface.h"
+#include "Interface/WeaponInterface.h"
 
 
 UActionDodge::UActionDodge()
@@ -17,13 +18,26 @@ UActionDodge::UActionDodge()
 	
 }
 
+bool UActionDodge::VTMCanExecute()
+{
+	EMovementMode movementMode = _stateInterface->VGetStateData().MovementMode;
+	bool bIsWalking = movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking;
+
+	return bIsWalking;
+}
+
 void UActionDodge::VTMExecute()
 {
 	ACharacter* actionOwner = GetActionOwner();
-	check(actionOwner != nullptr);
+	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(actionOwner);
+
+	if(weaponInterface)
+	{
+		weaponInterface->VStopAiming();
+		weaponInterface->VStopFiring();
+	}
 
 	UAnimInstance* animInstance = actionOwner->GetMesh()->GetAnimInstance();
-
 	if (_aniMontage && animInstance)
 	{
 		//bind 
@@ -32,13 +46,18 @@ void UActionDodge::VTMExecute()
 		//play montage
 		actionOwner->PlayAnimMontage(_aniMontage);
 	}
+
+	_shiftDirection = actionOwner->GetVelocity().IsNearlyZero() ? 
+						actionOwner->GetActorForwardVector() :  actionOwner->GetVelocity().GetSafeNormal();
+
+	actionOwner->SetActorRotation(_shiftDirection.Rotation());
 }
 
 void UActionDodge::VTMTick(float deltaTime)
 {
 	Super::VTMTick(deltaTime);
 
-	GetActionOwner()->AddMovementInput(GetActionOwner()->GetActorForwardVector(), _dodgeSpeed * deltaTime);
+	GetActionOwner()->AddMovementInput(_shiftDirection, _dodgeSpeed * deltaTime);
 }
 
 
@@ -55,7 +74,7 @@ void UActionDodge::OnAnimMontageFinished(UAnimMontage* montage,bool interrupted)
 
 	animInstance->OnMontageEnded.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
 	
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("End Dodge animation"));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("End Dodge animation"));
 
 	SetActionProcessSucceed();
 }

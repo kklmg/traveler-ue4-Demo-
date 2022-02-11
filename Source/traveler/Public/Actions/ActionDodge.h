@@ -16,6 +16,7 @@ class TRAVELER_API UActionDodge : public UActionBase
 public:
 	UActionDodge();
 
+	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
 
@@ -27,4 +28,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = animation)
 	UAnimMontage* _aniMontage;
+
+	FVector _shiftDirection;
 };

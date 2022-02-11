@@ -17,6 +17,7 @@ class TRAVELER_API UActionMove : public UActionBase
 public:
 	UActionMove();
 public:
+	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
 };
