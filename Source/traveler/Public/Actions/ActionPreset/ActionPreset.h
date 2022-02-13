@@ -20,7 +20,7 @@ public:
 	void virtual VEnter();
 	void virtual VLeave();
 
-	bool TryGetActionInstance(EActionType actionType, UActionBase** outActionInstance);
+	bool TryMakeActionInstance(EActionType actionType, UActionBase** outActionInstance);
 	bool TryGetActionClass(EActionType actionType, TSubclassOf<UActionBase> outActionClass);
 
 	UActionBase* MakeActionInstance(EActionType actionType);

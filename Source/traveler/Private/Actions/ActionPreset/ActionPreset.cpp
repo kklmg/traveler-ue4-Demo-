@@ -14,7 +14,7 @@ void UActionPreset::VLeave()
 	_mapActionInstaces.Empty();
 }
 
-bool UActionPreset::TryGetActionInstance(EActionType actionType, UActionBase** outActionInstance)
+bool UActionPreset::TryMakeActionInstance(EActionType actionType, UActionBase** outActionInstance)
 {
 	//try find action instance and return
 	if (_mapActionInstaces.Contains(actionType))

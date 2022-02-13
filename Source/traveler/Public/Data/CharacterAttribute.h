@@ -27,6 +27,8 @@ public:
 	void Initialize(EAttributeType attributeType, FText attributeText, float value, float growthRate = 1.0f);
 	void Initialize(EAttributeType attributeType, FText attributeText, float value, float minValue, float maxValue, float growthRate = 1.0f);
 
+	void Tick(float deltaTime);
+
 	UFUNCTION(BlueprintCallable)
 	void SetValue(float newValue);
 	UFUNCTION(BlueprintCallable)
@@ -73,5 +75,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float _growthRate;
 
+	UPROPERTY(EditDefaultsOnly)
+	float _recoverPercentSecond;
+
 	float _previousValue;
+	float _elapsedTime;
 };

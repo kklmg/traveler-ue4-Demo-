@@ -32,7 +32,6 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void AddToActionProcessPool(UActionBase* action);
 	void ClearActionProcessPool();
 
 	bool CheckActionIsInProgress(EActionType actionType);
@@ -55,8 +54,11 @@ private:
 
 	FStateData _cachedStateData;
 
+	//UPROPERTY()
+	//TMap<EActionType, UActionBase*> _mapActionProcessPool;
+
 	UPROPERTY()
-	TMap<EActionType, UActionBase*> _mapActionProcessPool;
+	TArray<UActionBase*> _mapActionProcessPool;
 
 	UPROPERTY()
 	UActionBlackBoard* _actionBlackBoard;

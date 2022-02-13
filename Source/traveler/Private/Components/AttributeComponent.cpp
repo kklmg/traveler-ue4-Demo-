@@ -44,6 +44,14 @@ void UAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+
+	for (auto attribute : _mapAttributes)
+	{
+		if(attribute.Value)
+		{
+			attribute.Value->Tick(DeltaTime);
+		}
+	}
 }
 
 //

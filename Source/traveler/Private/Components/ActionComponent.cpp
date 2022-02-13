@@ -28,6 +28,7 @@ void UActionComponent::InitializeComponent()
 	Super::InitializeComponent();
 
 	_actionBlackBoard = NewObject<UActionBlackBoard>(this);
+	_mapActionProcessPool.SetNum(int32(EActionType::EACT_Max),false);
 }
 
 // Called when the game starts
@@ -58,58 +59,48 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 {
-	if (_pCurrentActionPreset == nullptr || _mapActionProcessPool.Contains(actionType))
+	if (_pCurrentActionPreset == nullptr)
 	{
 		return nullptr;
 	}
 
-	UActionBase* action = nullptr;
 
-	if (_pCurrentActionPreset->TryGetActionInstance(actionType, &action))
+	int32 index = int32(actionType);
+
+	//the same action is in progress 
+	if(_mapActionProcessPool[index] &&
+		_mapActionProcessPool[index]->GetActionProcessState() == EActionProcessState::EAPS_Running)
 	{
-		action->Abort();
-		action->Initialize(this, _actionBlackBoard);
-		action->Execute();
-
-		if (action->IsInstantAction() == false)
-		{
-			AddToActionProcessPool(action);
-		}
+		return nullptr;
 	}
-	return action;
+
+
+	if (_pCurrentActionPreset->TryMakeActionInstance(actionType, &_mapActionProcessPool[index]))
+	{
+		_mapActionProcessPool[index]->Initialize(this, _actionBlackBoard);
+		_mapActionProcessPool[index]->Execute();
+	}
+	return _mapActionProcessPool[index];
 }
 
-
-void UActionComponent::AddToActionProcessPool(UActionBase* action)
-{
-	if (action == nullptr) return;
-
-	_mapActionProcessPool.Add(action->GetActionType(), action);
-}
 
 void UActionComponent::_TickActionProcess(float deltaTime)
 {
 	TArray<EActionType> finieshedActionKeys;
 
-	//find out all finished actions
-	for (auto pair : _mapActionProcessPool)
+	for (int32 i = 0; i < _mapActionProcessPool.Num(); ++i)
 	{
-		if (pair.Value->IsCompleted())
+		if (_mapActionProcessPool[i])
 		{
-			finieshedActionKeys.Add(pair.Key);
+			if(_mapActionProcessPool[i]->IsCompleted())
+			{
+				_mapActionProcessPool[i] = nullptr;
+			}
+			else
+			{
+				_mapActionProcessPool[i]->Tick(deltaTime);
+			}
 		}
-	}
-
-	//remove all finished actions
-	for (auto key : finieshedActionKeys)
-	{
-		_mapActionProcessPool.Remove(key);
-	}
-
-	//tick actions
-	for (auto pair : _mapActionProcessPool)
-	{
-		pair.Value->Tick(deltaTime);
 	}
 }
 
@@ -151,16 +142,21 @@ void UActionComponent::OnCharacterStateChanged(FStateData newStateData)
 
 void UActionComponent::ClearActionProcessPool()
 {
-	for (auto pair : _mapActionProcessPool)
+	for (int32 i = 0; i < _mapActionProcessPool.Num(); ++i)
 	{
-		pair.Value->Abort();
+		if (_mapActionProcessPool[i])
+		{
+			_mapActionProcessPool[i]->Abort();
+			_mapActionProcessPool[i] = nullptr;
+		}
 	}
-	_mapActionProcessPool.Empty();
 }
 
 bool UActionComponent::CheckActionIsInProgress(EActionType actionType)
 {
-	return _mapActionProcessPool.Contains(actionType);
+	int32 index = int32(actionType);
+	return _mapActionProcessPool[index] 
+			&& _mapActionProcessPool[index]->GetActionProcessState() == EActionProcessState::EAPS_Running;
 }
 
 

@@ -79,6 +79,10 @@ FORCEINLINE bool UActionBase::CanExecute()
 
 void UActionBase::Tick(float deltaTime)
 {
+	if (_processState != EActionProcessState::EAPS_Running)
+	{
+		return;
+	}
 	VTMTick(deltaTime);
 }
 
@@ -91,13 +95,16 @@ void UActionBase::VTMExecute()
 {
 }
 
-void UActionBase::VTMTick(float deltaTime) 
+void UActionBase::VTMTick(float deltaTime)
 {
 }
 
-void UActionBase::Abort() 
+void UActionBase::Abort()
 {
-	_processState = EActionProcessState::EAPS_Aborted;
+	if (_processState == EActionProcessState::EAPS_Running)
+	{
+		_processState = EActionProcessState::EAPS_Aborted;
+	}
 }
 
 

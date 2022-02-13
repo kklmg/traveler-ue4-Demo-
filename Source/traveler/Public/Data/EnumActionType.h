@@ -27,6 +27,7 @@ enum class EActionType : uint8
 	EACT_WeaponStopFire UMETA(DisplayName = "WeaponStopFire"),
 	EACT_WeaponStartAim UMETA(DisplayName = "WeaponStartAim"),
 	EACT_WeaponStopAim UMETA(DisplayName = "WeaponStopAim"),
+	EACT_Max UMETA(DisplayName = "Max"),
 };
 
 UENUM(BlueprintType)

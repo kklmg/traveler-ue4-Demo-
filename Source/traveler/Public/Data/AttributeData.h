@@ -24,6 +24,8 @@ public:
 	float Value;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
 	float GrowthRate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = attributes)
+	float RecoverPercentPerSecond;
 
 	float GetGrowedValue(int level);
 	FText GetLocaleText();

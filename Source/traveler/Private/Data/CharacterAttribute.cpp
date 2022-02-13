@@ -24,6 +24,7 @@ void UCharacterAttribute::Initialize(FAttributeRow* attributeRow , int level)
 	_maxValue = _currentValue;
 
 	_growthRate = attributeRow->GrowthRate;
+	_recoverPercentSecond = attributeRow->RecoverPercentPerSecond;
 }
 
 void UCharacterAttribute::Initialize(EAttributeType attributeType, FText attributeText, float value, float growthRate)
@@ -44,6 +45,18 @@ void UCharacterAttribute::Initialize(EAttributeType attributeType, FText attribu
 	_currentValue = value;
 	_previousValue = value;
 	_growthRate = growthRate;
+}
+
+void UCharacterAttribute::Tick(float deltaTime)
+{
+	_elapsedTime += deltaTime;
+	if(_elapsedTime >1.0f)
+	{
+		float recovery = _maxValue * _recoverPercentSecond;
+		ApplyValueChange(recovery);
+
+		_elapsedTime = 0.0f;
+	}
 }
 
 
