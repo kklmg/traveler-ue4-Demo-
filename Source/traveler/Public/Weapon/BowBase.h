@@ -69,9 +69,9 @@ private:
 	float _CalculateDamage();
 	float _CalculateProjectileSpeed();
 
-	
-
-	void _UpdateProjectilesTransform(float deltaDegree);
+	void UpdateArrowsTransform();
+	void AttachArrowsToHand();
+	void AttachArrowsToBow();
 
 private:
 
@@ -86,7 +86,7 @@ private:
 	float _holdCountOnce;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _ProjectilesInterval;
+	float _arrowsInterval;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _maxDamage;

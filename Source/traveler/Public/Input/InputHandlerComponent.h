@@ -78,7 +78,7 @@ public:
 //	FButtonSignature Action2ButtonUpDelegate;
 //	FButtonSignature Action3ButtonDownUpDelegate;
 //	FButtonSignature Action4ButtonDownUpDelegate;
-
+	void HandleButtonsPressing(float deltaTime);
 
 	void ConsumeMovementInput();
 

@@ -16,6 +16,9 @@ struct FBowAnimationModelBase
 public:
 	UPROPERTY(BlueprintReadWrite)
 	EBowState BowState;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsHoldingArrows;
 };
 
 //UCLASS()

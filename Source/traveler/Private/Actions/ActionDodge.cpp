@@ -41,7 +41,7 @@ void UActionDodge::VTMExecute()
 	if (_aniMontage && animInstance)
 	{
 		//bind 
-		animInstance->OnMontageBlendingOut.AddDynamic(this, &UActionDodge::OnAnimMontageFinished);
+		animInstance->OnMontageEnded.AddDynamic(this, &UActionDodge::OnAnimMontageFinished);
 
 		//play montage
 		actionOwner->PlayAnimMontage(_aniMontage);
@@ -72,7 +72,7 @@ void UActionDodge::OnAnimMontageFinished(UAnimMontage* montage,bool interrupted)
 	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
 	if (animInstance == nullptr) return;
 
-	animInstance->OnMontageBlendingOut.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
+	animInstance->OnMontageEnded.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
 	
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("End Dodge animation"));
 

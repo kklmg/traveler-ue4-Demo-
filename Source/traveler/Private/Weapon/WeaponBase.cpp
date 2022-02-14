@@ -69,7 +69,7 @@ ACreatureCharacter* AWeaponBase::GetWeaponOwner()
 
 void AWeaponBase::StartFiring()
 {
-	if (VTMCanFire() && _isFiring == false)
+	if (_isFiring == false && VTMCanFire())
 	{
 		_isFiring = true;
 		VTMStartFiring();
@@ -93,8 +93,11 @@ void AWeaponBase::StopFiring()
 
 void AWeaponBase::StarAiming()
 {
-	if (VTMCanAim() && _isAiming == false) 
+	if (_isAiming == false && VTMCanAim())
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Start Aiming !!"));
+
+
 		_isAiming = true;
 		VTMStarAiming();
 	}

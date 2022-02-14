@@ -35,7 +35,7 @@ ABowBase::ABowBase()
 	_aimingCameraOffset = FVector(50, 50, 50);
 
 	_holdCountOnce = 5;
-	_ProjectilesInterval = 2;
+	_arrowsInterval = 2;
 }
 
 void ABowBase::VInitialize(ACreatureCharacter* weaponOwner)
@@ -54,8 +54,9 @@ void ABowBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	
 	_animationModel.BowState = _bowState;
+	_animationModel.bIsHoldingArrows = _holdingArrows.Num() > 0;
+	UpdateArrowsTransform();
 }
 
 bool ABowBase::VTMCanFire()
@@ -102,7 +103,7 @@ void ABowBase::VTMAimingInProgress(float deltaTime)
 	rotator.Roll = 0;
 
 	GetWeaponOwner()->SetActorRotation(rotator);
-	_UpdateProjectilesTransform(_ProjectilesInterval);
+	AttachArrowsToHand();
 
 	_strength = FMath::Clamp(_strength + deltaTime * _drawingVelocity, 0.0f, 1.0f);
 }
@@ -118,7 +119,7 @@ void ABowBase::VTMStopAiming()
 		_characterCamera->VCancelDragCamera();
 	}
 
-	ClearHoldingArrows();
+	//ClearHoldingArrows();
 	GetWeaponOwner()->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, true);
 }
 
@@ -128,7 +129,30 @@ void ABowBase::VReset()
 }
 
 
-void ABowBase::_UpdateProjectilesTransform(float deltaDegree)
+void ABowBase::UpdateArrowsTransform()
+{
+	switch (_bowState)
+	{
+		case EBowState::EBS_Normal:
+		{
+			AttachArrowsToBow();
+		}
+		break;
+		case EBowState::EBS_Drawing:
+		case EBowState::EBS_FullyDrawed:
+		case EBowState::EBS_OverDrawing:
+		{
+			AttachArrowsToHand();
+		}
+		break;
+		case EBowState::EBS_Released:
+			break;
+		default:
+			break;
+	}
+}
+
+void ABowBase::AttachArrowsToHand()
 {
 	if (!_characterCamera) return;
 
@@ -180,7 +204,7 @@ void ABowBase::_UpdateProjectilesTransform(float deltaDegree)
 	for (int i = 0; i < _holdingArrows.Num(); ++i)
 	{
 		//compute quaternion
-		curDeltaDegree = (i % 2) ? deltaDegree * i  : deltaDegree * i*-1;
+		curDeltaDegree = (i % 2) ? _arrowsInterval * i : _arrowsInterval * i * -1;
 		curDeltaQuat = FQuat(muzzleLeft, FMath::DegreesToRadians(curDeltaDegree));
 
 		projectileQuat = curDeltaQuat * projectileQuat;
@@ -191,6 +215,36 @@ void ABowBase::_UpdateProjectilesTransform(float deltaDegree)
 		{
 			_holdingArrows[i]->SetActorLocationAndRotation(rightHandTransform.GetLocation(), projectileQuat);
 			_holdingArrows[i]->SetLaunchDirection(ToHitQuat.Vector());
+		}
+	}
+}
+
+void ABowBase::AttachArrowsToBow()
+{
+	//get muzzle transform
+	FTransform muzzleTransform;
+	FTransform bowStringTransform;
+
+	VTryGetMeshSocketTransform(EMeshSocketType::MST_Muzzle, RTS_World, muzzleTransform);
+	VTryGetMeshSocketTransform(EMeshSocketType::MST_BowString, RTS_World, bowStringTransform);
+
+	FVector muzzleLeft = muzzleTransform.GetRotation().RotateVector(FVector::LeftVector);
+
+	float curDeltaDegree = 0;
+	FQuat curDeltaQuat;
+
+	for (int i = 0; i < _holdingArrows.Num(); ++i)
+	{
+		//compute quaternion
+		curDeltaDegree = (i % 2) ? _arrowsInterval * i : _arrowsInterval * i * -1;
+		curDeltaQuat = FQuat(muzzleLeft, FMath::DegreesToRadians(curDeltaDegree));
+
+		FQuat projectileQuat = curDeltaQuat * muzzleTransform.GetRotation();
+
+		//apply location,rotation
+		if (_holdingArrows[i] != NULL)
+		{
+			_holdingArrows[i]->SetActorLocationAndRotation(bowStringTransform.GetLocation(), projectileQuat);
 		}
 	}
 }
@@ -272,6 +326,9 @@ EBowState ABowBase::GetBowState()
 
 void ABowBase::HoldArrows()
 {
-	ClearHoldingArrows();
-	_quiverComponent->SpawnArrows(_holdCountOnce, GetWeaponOwner(), _holdingArrows);
+	//ClearHoldingArrows();
+	if (_holdingArrows.Num() == 0) 
+	{
+		_quiverComponent->SpawnArrows(_holdCountOnce, GetWeaponOwner(), _holdingArrows);
+	}
 }

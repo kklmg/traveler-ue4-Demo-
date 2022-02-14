@@ -19,6 +19,10 @@ void UButtonInputAim::VTMPress()
 
 void UButtonInputAim::VTMPressing(float deltaTime)
 {
+	if (_actionInterface)
+	{
+		_actionInterface->VExecuteAction(EActionType::EACT_WeaponStartAim);
+	}
 }
 
 void UButtonInputAim::VTMRelease()

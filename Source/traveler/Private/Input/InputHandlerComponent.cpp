@@ -44,8 +44,8 @@ void UInputHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-
 	ConsumeMovementInput();
+	HandleButtonsPressing(DeltaTime);
 }
 
 void UInputHandlerComponent::BindInputs(UInputComponent* PlayerInputComponent)
@@ -121,6 +121,17 @@ void UInputHandlerComponent::ReceiveInputCameraZoomInOut(float value)
 	}
 }
 
+
+void UInputHandlerComponent::HandleButtonsPressing(float deltaTime)
+{
+	for (auto buttonInput : _mapButtons)
+	{
+		if(buttonInput.Value)
+		{
+			buttonInput.Value->Pressing(deltaTime);
+		}
+	}
+}
 
 void UInputHandlerComponent::ConsumeMovementInput()
 {
