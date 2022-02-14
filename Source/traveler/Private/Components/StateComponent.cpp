@@ -88,7 +88,7 @@ void UStateComponent::VSetAnimationState(EAnimationState newState)
 
 EAnimationState UStateComponent::VGetAnimationState()
 {
-	return EAnimationState();
+	return _stateData.AnimationState;
 }
 
 FOnSituationStateChanged* UStateComponent::VGetSituationStateChangedDelegate()

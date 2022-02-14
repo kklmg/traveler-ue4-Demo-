@@ -56,6 +56,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChanged onValueChanged;
 
+protected:
+	void ResetLastValueChangedTimer();
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	EAttributeType _attributeType;
@@ -79,5 +82,7 @@ private:
 	float _recoverPercentSecond;
 
 	float _previousValue;
-	float _elapsedTime;
+	float _elapsedTimeFromLastRecover;
+	float _elapsedTimeFromLastValueChanged;
+	bool _canRecover;
 };

@@ -4,6 +4,7 @@
 #include "Components/AttributeComponent.h"
 #include "Character/CreatureCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Interface/WeaponInterface.h"
 
 
 UActionJump::UActionJump()
@@ -19,6 +20,14 @@ void UActionJump::VTMExecute()
 	if (_animationModelProviderInterface)
 	{
 		_animationModelProviderInterface->VGetAnimationModelRef().bWantToJump = true;
+	}
+
+	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(GetActionOwner());
+
+	if (weaponInterface)
+	{
+		weaponInterface->VStopAiming();
+		weaponInterface->VStopFiring();
 	}
 
 	FTimerHandle jumpTimerHandle;

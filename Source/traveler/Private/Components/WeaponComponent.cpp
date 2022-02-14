@@ -13,10 +13,18 @@ UWeaponComponent::UWeaponComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-
 	
+	// ...
+	bWantsInitializeComponent = true;
+	
+}
+
+
+void UWeaponComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+
+
 }
 
 // Called when the game starts
@@ -27,11 +35,6 @@ void UWeaponComponent::BeginPlay()
 	_animationModelProvider = GetOwner<IAnimationModelProvider>();
 	_stateInterface = GetOwner<IStateInterface>();
 
-	if(_stateInterface)
-	{
-		_stateInterface->VGetAnimationStateChangedDelegate()->AddDynamic(this,&UWeaponComponent::OnAnimationStateChanged);
-	}
-
 	if (DefaultWeaponClass)
 	{
 		//FActorSpawnParameters params;
@@ -39,6 +42,13 @@ void UWeaponComponent::BeginPlay()
 		bow->VInitialize(GetOwner<ACreatureCharacter>());
 		EquipWeapon(bow);
 	}
+
+	if (_stateInterface)
+	{
+		OnAnimationStateChanged(_stateInterface->VGetAnimationState(), _stateInterface->VGetAnimationState());
+		_stateInterface->VGetAnimationStateChangedDelegate()->AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
+	}
+
 	// ...
 }
 

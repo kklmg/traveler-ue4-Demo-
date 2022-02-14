@@ -20,4 +20,8 @@ public:
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
+
+private:
+	UPROPERTY(EditDefaultsOnly)
+	UCostData* _sprintCost;
 };

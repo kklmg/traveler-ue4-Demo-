@@ -49,13 +49,26 @@ void UCharacterAttribute::Initialize(EAttributeType attributeType, FText attribu
 
 void UCharacterAttribute::Tick(float deltaTime)
 {
-	_elapsedTime += deltaTime;
-	if(_elapsedTime >1.0f)
+	if(_canRecover)
 	{
-		float recovery = _maxValue * _recoverPercentSecond;
-		ApplyValueChange(recovery);
+		_elapsedTimeFromLastRecover += deltaTime;
 
-		_elapsedTime = 0.0f;
+		//execute recover
+		if (_elapsedTimeFromLastRecover > 0.5f)
+		{
+			float recovery = _maxValue * _recoverPercentSecond * 0.5f;
+			ApplyValueChange(recovery);
+			_elapsedTimeFromLastRecover = 0.0f;
+		}
+	}
+	else
+	{
+		_elapsedTimeFromLastValueChanged += deltaTime;
+
+		if (_elapsedTimeFromLastValueChanged > 1.0f)
+		{
+			_canRecover = true;
+		}
 	}
 }
 
@@ -65,8 +78,12 @@ void UCharacterAttribute::SetValue(float newValue)
 {
 	newValue = FMath::Clamp(newValue, _minValue, _maxValue);
 
+	if (newValue == _currentValue)return;
+
 	_previousValue = _currentValue;
 	_currentValue = newValue;
+
+	ResetLastValueChangedTimer();
 
 	onValueChanged.Broadcast(_previousValue, _currentValue);
 }
@@ -84,6 +101,12 @@ FORCEINLINE EAttributeType UCharacterAttribute::GetAttributeType()
 FORCEINLINE FText UCharacterAttribute::GetText()
 {
 	return _attributeText;
+}
+
+void UCharacterAttribute::ResetLastValueChangedTimer()
+{
+	_elapsedTimeFromLastValueChanged = 0.0f;
+	_canRecover = false;
 }
 
 FORCEINLINE float UCharacterAttribute::GetValue()

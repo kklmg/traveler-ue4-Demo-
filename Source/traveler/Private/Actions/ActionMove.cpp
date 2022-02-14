@@ -7,12 +7,17 @@
 #include "Interface/StateInterface.h"
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
+#include "Data/CostData.h"
+#include "Interface/AttributeInterface.h"
 
 
 UActionMove::UActionMove() 
 {
 	_actionName = ActionName::MOVE;
 	_actionType = EActionType::EACT_Moving;
+
+	_sprintCost = CreateDefaultSubobject<UCostData>(TEXT("SprintCost"));
+	_sprintCost->SetCost(EAttributeType::EATT_Stamina, 0.25f);
 }
 
 bool UActionMove::VTMCanExecute()
@@ -28,6 +33,7 @@ void UActionMove::VTMExecute()
 {
 	FVector out_MovementInput;
 	bool out_bTurnToMovingDirection = true;
+	bool out_bWantToSprint = false;
 
 
 	if (GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, out_MovementInput))
@@ -38,6 +44,18 @@ void UActionMove::VTMExecute()
 		if(out_bTurnToMovingDirection)
 		{
 			GetActionOwner()->SetActorRotation(out_MovementInput.Rotation());
+		}
+
+		GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_WantToSprint, out_bWantToSprint);
+		if(out_bWantToSprint && _attributeInterface)
+		{
+			if(_attributeInterface->VTryConsume(_sprintCost))
+			{
+			}
+			else
+			{
+				GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, false);
+			}
 		}
 		
 		//translation

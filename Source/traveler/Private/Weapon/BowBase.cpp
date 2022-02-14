@@ -69,7 +69,9 @@ bool ABowBase::VTMCanAim()
 {
 	IActionInterface* actionInterface = Cast<IActionInterface>(GetWeaponOwner());
 
-	return actionInterface ? actionInterface->VCheckActionIsInProgress(EActionType::EACT_Dodge) == false : true;
+	bool bIsDodging = actionInterface ? actionInterface->VCheckActionIsInProgress(EActionType::EACT_Dodge) : false;
+
+	return (_characterAnimationState == EAnimationState::EAnimState_Walk || _characterAnimationState == EAnimationState::EAnimState_Fall) && bIsDodging == false;
 }
 
 void ABowBase::VTMStartFiring()

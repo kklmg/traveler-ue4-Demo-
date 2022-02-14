@@ -95,9 +95,6 @@ void AWeaponBase::StarAiming()
 {
 	if (_isAiming == false && VTMCanAim())
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Start Aiming !!"));
-
-
 		_isAiming = true;
 		VTMStarAiming();
 	}
