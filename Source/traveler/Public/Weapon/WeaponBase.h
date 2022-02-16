@@ -76,9 +76,8 @@ public:
 
 	virtual void VWeaponControlButtonA();
 	virtual void VWeaponControlButtonB();
-
-	virtual void VWeaponControlAxisA(float value);
-	virtual void VWeaponControlAxisB(float value);
+	virtual void VWeaponControlButtonC();
+	virtual void VWeaponControlButtonD();
 
 	void StopAllActions();
 	virtual void VReset();

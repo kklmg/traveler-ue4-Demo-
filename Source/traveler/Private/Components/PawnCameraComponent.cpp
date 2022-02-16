@@ -7,39 +7,33 @@
 UPawnCameraComponent::UPawnCameraComponent() 
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
-	_dragSpeed = 0.0f;
+	_dragStep = 0.2f;
 }
+
+void UPawnCameraComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	_originalLocation = GetRelativeLocation();
+}
+
 
 // Called every frame
 void UPawnCameraComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) 
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	_factor = FMath::Clamp(_factor + _dragSpeed * DeltaTime, 0.0f, 1.0f);
-
+	_factor = FMath::Clamp(_factor + _dragStep * DeltaTime, 0.0f, 1.0f);
 	FVector newLocation = FMath::Lerp(_originalLocation, _draggedLocation, _factor);
-
-	
 	SetRelativeLocation(newLocation);
-	if (_factor == 0.0f) 
-	{
-		_isDragging = false;
-	}
 }
 
 void UPawnCameraComponent::DragCamera(FVector offset) 
 {
-	if (_isDragging == false)
-	{
-		_originalLocation = GetRelativeLocation();
-		_draggedLocation = GetRelativeLocation() + offset;
-		_dragSpeed = 4.0f;
-		_isDragging = true;
-	}
+	_draggedLocation = _originalLocation + offset;
+	_dragStep = 4.0f;
 }
 
 void UPawnCameraComponent::CancelDrag() 
 {
-	_dragSpeed = -4.0f;
+	_dragStep = -4.0f;
 }

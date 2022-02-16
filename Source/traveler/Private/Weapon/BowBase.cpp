@@ -34,20 +34,23 @@ ABowBase::ABowBase()
 	_maxProjectileVelocity = 3000.0f;
 	_aimingCameraOffset = FVector(50, 50, 50);
 
-	_holdCountOnceMin = 1;
-	_holdCountOnceMax = 11;
-	_holdCountOnce = 5;
-	_holdCountStep = 2;
+	_arrowSpawnCountArray.Add(1);
+	_arrowSpawnCountArray.Add(3);
+	_arrowSpawnCountArray.Add(5);
+	_arrowSpawnCountArray.Add(7);
+	_arrowSpawnCountArray.Add(9);
+	_arrowSpawnCountArray.Add(11);
+	_arrowSpawnCountSelectID = 0;
 
-	_arrowsIntervalMin = 2.0f;
-	_arrowsIntervalMax = 10;
-	_arrowsInterval = 2;
-	_arrowsIntervalStep = 0.05f;
+	_arrowIntervalArray.Add(2);
+	_arrowIntervalArray.Add(6);
+	_arrowIntervalArray.Add(10);
+	_arrowIntervalSelectID = 0;
 
-	_handRollMin = 0.0f;
-	_handRollMax = 1.0f;
-	_handRoll = 0.0f;
-	_handRollStep = 0.05f;
+	_handRollArray.Add(0);
+	_handRollArray.Add(0.5f);
+	_handRollArray.Add(1.0f);
+	_handRollSelectID = 0;
 }
 
 void ABowBase::VInitialize(ACreatureCharacter* weaponOwner)
@@ -68,7 +71,7 @@ void ABowBase::Tick(float DeltaTime)
 
 	_animationModel.BowState = _bowState;
 	_animationModel.bIsHoldingArrows = _holdingArrows.Num() > 0;
-	_animationModel.HandRoll = _handRoll;
+	_animationModel.HandRoll = _handRollArray[_handRollSelectID];
 
 	UpdateArrowsTransform();
 }
@@ -220,9 +223,11 @@ void ABowBase::AttachArrowsToHand()
 	for (int i = 0; i < _holdingArrows.Num(); ++i)
 	{
 		//compute quaternion
-		curDeltaDegree = (i % 2) ? _arrowsInterval * i : _arrowsInterval * i * -1;
-		curDeltaQuat = FQuat(muzzleLeft, FMath::DegreesToRadians(curDeltaDegree));
+		curDeltaDegree = (i % 2) ? 
+			_arrowIntervalArray[_arrowIntervalSelectID] * i 
+				: _arrowIntervalArray[_arrowIntervalSelectID] * i * -1;
 
+		curDeltaQuat = FQuat(muzzleLeft, FMath::DegreesToRadians(curDeltaDegree));
 		projectileQuat = curDeltaQuat * projectileQuat;
 		ToHitQuat = curDeltaQuat * ToHitQuat;
 		
@@ -255,9 +260,11 @@ void ABowBase::AttachArrowsToBow()
 	for (int i = 0; i < _holdingArrows.Num(); ++i)
 	{
 		//compute quaternion
-		curDeltaDegree = (i % 2) ? _arrowsInterval * i : _arrowsInterval * i * -1;
-		curDeltaQuat = FQuat(bowStringUp, FMath::DegreesToRadians(curDeltaDegree));
+		curDeltaDegree = (i % 2) ?
+			_arrowIntervalArray[_arrowIntervalSelectID] * i 
+				: _arrowIntervalArray[_arrowIntervalSelectID] * i * -1;
 
+		curDeltaQuat = FQuat(bowStringUp, FMath::DegreesToRadians(curDeltaDegree));
 		arrowQuat = curDeltaQuat * arrowQuat;
 
 		//apply location,rotation
@@ -314,31 +321,25 @@ void ABowBase::LaunchArrows()
 	_holdingArrows.Empty();
 }
 
-void ABowBase::AdjustHandRotation(float value)
+void ABowBase::AdjustHandRotation()
 {
-	_handRoll =
-		FMath::Clamp(_handRoll + _handRollStep * value, _handRollMin, _handRollMax);
+	_handRollSelectID = (_handRollSelectID + 1) % _handRollArray.Num();
 }
 
-void ABowBase::AdjustArrowIntervals(float value)
+void ABowBase::AdjustArrowIntervals()
 {
-	_arrowsInterval =
-		FMath::Clamp(_arrowsInterval + _arrowsIntervalStep * value, _arrowsIntervalMin, _arrowsIntervalMax);
+	_arrowIntervalSelectID = (_arrowIntervalSelectID + 1) % _arrowIntervalArray.Num();
 }
 
 void ABowBase::IncreaseArrows()
 {
-	_holdCountOnce =
-		FMath::Clamp(_holdCountOnce + _holdCountStep, _holdCountOnceMin, _holdCountOnceMax);
-
+	_arrowSpawnCountSelectID = (_arrowSpawnCountSelectID + 1) % _arrowSpawnCountArray.Num();
 	TakeOutArrows();
 }
 
 void ABowBase::DecreaseArrows()
 {
-	_holdCountOnce =
-		FMath::Clamp(_holdCountOnce - _holdCountStep, _holdCountOnceMin, _holdCountOnceMax);
-
+	_arrowSpawnCountSelectID = (_arrowSpawnCountArray.Num() + _arrowSpawnCountSelectID - 1) % _arrowSpawnCountArray.Num();
 	TakeOutArrows();
 }
 
@@ -365,16 +366,15 @@ void ABowBase::VWeaponControlButtonB()
 	DecreaseArrows();
 }
 
-void ABowBase::VWeaponControlAxisA(float value)
+void ABowBase::VWeaponControlButtonC()
 {
-	AdjustHandRotation(value);
+	AdjustHandRotation();
 }
 
-void ABowBase::VWeaponControlAxisB(float value)
+void ABowBase::VWeaponControlButtonD()
 {
-	AdjustArrowIntervals(value);
+	AdjustArrowIntervals();
 }
-
 
 float ABowBase::_CalculateDamage()
 {
@@ -396,6 +396,6 @@ void ABowBase::TakeOutArrows()
 	ClearHoldingArrows();
 	if (_holdingArrows.Num() == 0) 
 	{
-		_quiverComponent->SpawnArrows(_holdCountOnce, GetWeaponOwner(), _holdingArrows);
+		_quiverComponent->SpawnArrows(_arrowSpawnCountArray[_arrowSpawnCountSelectID], GetWeaponOwner(), _holdingArrows);
 	}
 }

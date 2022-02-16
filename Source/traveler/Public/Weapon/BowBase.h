@@ -49,18 +49,16 @@ public:
 
 	virtual void VWeaponControlButtonA() override;
 	virtual void VWeaponControlButtonB() override;
-
-	virtual void VWeaponControlAxisA(float value) override;
-	virtual void VWeaponControlAxisB(float value) override;
+	virtual void VWeaponControlButtonC() override;
+	virtual void VWeaponControlButtonD() override;
 
 protected:
 	void TakeOutArrows();
 	void ClearHoldingArrows();
 	void LaunchArrows();
 
-	void AdjustHandRotation(float value);
-	void AdjustArrowIntervals(float value);
-
+	void AdjustHandRotation();
+	void AdjustArrowIntervals();
 	void IncreaseArrows();
 	void DecreaseArrows();
 
@@ -96,31 +94,19 @@ private:
 	float _drawingVelocity;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _holdCountOnceMin;
+	TArray<float> _arrowSpawnCountArray;
 	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _holdCountOnceMax;
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _holdCountOnce;
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _holdCountStep;
+	int32  _arrowSpawnCountSelectID;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _arrowsIntervalMin;
+	TArray<float> _arrowIntervalArray;
 	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _arrowsIntervalMax;
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _arrowsInterval;
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _arrowsIntervalStep;
+	int32 _arrowIntervalSelectID;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _handRollMin;
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _handRollMax;
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _handRoll;
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	float _handRollStep;
+	TArray<float> _handRollArray;
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	int32 _handRollSelectID;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _maxDamage;

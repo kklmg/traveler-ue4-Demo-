@@ -27,11 +27,10 @@ void UWeaponComponent::InitializeComponent()
 
 void UWeaponComponent::BindInputs(UInputComponent* PlayerInputComponent)
 {
-	PlayerInputComponent->BindAxis("WeaponAxisA", this, &UWeaponComponent::WeaponControlAxisA);
-	PlayerInputComponent->BindAxis("WeaponAxisB", this, &UWeaponComponent::WeaponControlAxisB);
-
 	PlayerInputComponent->BindAction("WeaponButtonA", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonA);
 	PlayerInputComponent->BindAction("WeaponButtonB", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonB);
+	PlayerInputComponent->BindAction("WeaponButtonC", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonC);
+	PlayerInputComponent->BindAction("WeaponButtonD", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonD);
 }
 
 // Called when the game starts
@@ -177,19 +176,19 @@ void UWeaponComponent::WeaponControlButtonB()
 	}
 }
 
-void UWeaponComponent::WeaponControlAxisA(float value)
+void UWeaponComponent::WeaponControlButtonC()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->VWeaponControlAxisA(value);
+		_weaponIns->VWeaponControlButtonC();
 	}
 }
 
-void UWeaponComponent::WeaponControlAxisB(float value)
+void UWeaponComponent::WeaponControlButtonD()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->VWeaponControlAxisB(value);
+		_weaponIns->VWeaponControlButtonD();
 	}
 }
 

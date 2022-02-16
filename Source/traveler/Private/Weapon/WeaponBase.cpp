@@ -142,13 +142,16 @@ void AWeaponBase::VWeaponControlButtonB()
 {
 }
 
-void AWeaponBase::VWeaponControlAxisA(float value)
+void AWeaponBase::VWeaponControlButtonC()
 {
 }
 
-void AWeaponBase::VWeaponControlAxisB(float value)
+void AWeaponBase::VWeaponControlButtonD()
 {
 }
+
+
+
 
 FName AWeaponBase::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
 {

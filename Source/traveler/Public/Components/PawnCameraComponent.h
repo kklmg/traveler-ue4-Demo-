@@ -18,6 +18,7 @@ public:
 	// Sets default values for this component's properties
 	UPawnCameraComponent();
 
+	virtual void BeginPlay();
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -29,7 +30,7 @@ public:
 
 private:
 	bool _isDragging;
-	float _dragSpeed;
+	float _dragStep;
 	float _factor;
 	FVector _draggedLocation;
 	FVector _originalLocation;

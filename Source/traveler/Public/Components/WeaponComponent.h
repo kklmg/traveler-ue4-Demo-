@@ -46,9 +46,8 @@ public:
 
 	void WeaponControlButtonA();
 	void WeaponControlButtonB();
-
-	void WeaponControlAxisA(float value);
-	void WeaponControlAxisB(float value);
+	void WeaponControlButtonC();
+	void WeaponControlButtonD();
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
 	FDelegateWeapon OnWeaponChanged;
