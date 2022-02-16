@@ -23,6 +23,8 @@ public:
 	// Sets default values for this component's properties
 	UWeaponComponent();
 
+	void BindInputs(UInputComponent* PlayerInputComponent);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -42,6 +44,11 @@ public:
 	void StartAiming();
 	void StopAiming();
 
+	void WeaponControlButtonA();
+	void WeaponControlButtonB();
+
+	void WeaponControlAxisA(float value);
+	void WeaponControlAxisB(float value);
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
 	FDelegateWeapon OnWeaponChanged;

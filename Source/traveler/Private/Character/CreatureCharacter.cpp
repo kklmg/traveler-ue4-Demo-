@@ -117,6 +117,11 @@ void ACreatureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	{
 		_inputHandlerComponent->BindInputs(PlayerInputComponent);
 	}
+	if (_weaponComponent)
+	{
+		_weaponComponent->BindInputs(PlayerInputComponent);
+	}
+
 }
 
 float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)

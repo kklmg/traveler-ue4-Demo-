@@ -45,11 +45,24 @@ public:
 	UFUNCTION(BlueprintPure)
 	EBowState GetBowState();
 
-	void HoldArrows();
+	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState) override;
+
+	virtual void VWeaponControlButtonA() override;
+	virtual void VWeaponControlButtonB() override;
+
+	virtual void VWeaponControlAxisA(float value) override;
+	virtual void VWeaponControlAxisB(float value) override;
+
+protected:
+	void TakeOutArrows();
 	void ClearHoldingArrows();
 	void LaunchArrows();
 
-	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState) override;
+	void AdjustHandRotation(float value);
+	void AdjustArrowIntervals(float value);
+
+	void IncreaseArrows();
+	void DecreaseArrows();
 
 protected:
 	virtual bool VTMCanFire() override;
@@ -83,10 +96,31 @@ private:
 	float _drawingVelocity;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _holdCountOnceMin;
+	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _holdCountOnceMax;
+	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _holdCountOnce;
+	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _holdCountStep;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _arrowsIntervalMin;
+	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _arrowsIntervalMax;
+	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _arrowsInterval;
+	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _arrowsIntervalStep;
+
+	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _handRollMin;
+	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _handRollMax;
+	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _handRoll;
+	UPROPERTY(EditAnyWhere, Category = Projectile)
+	float _handRollStep;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _maxDamage;

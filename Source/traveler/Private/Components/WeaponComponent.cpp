@@ -23,8 +23,15 @@ UWeaponComponent::UWeaponComponent()
 void UWeaponComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
+}
 
+void UWeaponComponent::BindInputs(UInputComponent* PlayerInputComponent)
+{
+	PlayerInputComponent->BindAxis("WeaponAxisA", this, &UWeaponComponent::WeaponControlAxisA);
+	PlayerInputComponent->BindAxis("WeaponAxisB", this, &UWeaponComponent::WeaponControlAxisB);
 
+	PlayerInputComponent->BindAction("WeaponButtonA", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonA);
+	PlayerInputComponent->BindAction("WeaponButtonB", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonB);
 }
 
 // Called when the game starts
@@ -70,7 +77,6 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		_animationModelProvider->VGetAnimationModelRef().bIsWeaponFiring = _weaponIns ? _weaponIns->IsFiring() : false;
 		_animationModelProvider->VGetAnimationModelRef().bIsWeaponAiming = _weaponIns ? _weaponIns->IsAiming() : false;
 	}
-
 }
 
 void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
@@ -152,6 +158,38 @@ void UWeaponComponent::StopAiming()
 	if (_animationModelProvider)
 	{
 		_animationModelProvider->VGetAnimationModelRef().bIsWeaponAiming = false;
+	}
+}
+
+void UWeaponComponent::WeaponControlButtonA()
+{
+	if (_weaponIns)
+	{
+		_weaponIns->VWeaponControlButtonA();
+	}
+}
+
+void UWeaponComponent::WeaponControlButtonB()
+{
+	if (_weaponIns)
+	{
+		_weaponIns->VWeaponControlButtonB();
+	}
+}
+
+void UWeaponComponent::WeaponControlAxisA(float value)
+{
+	if (_weaponIns)
+	{
+		_weaponIns->VWeaponControlAxisA(value);
+	}
+}
+
+void UWeaponComponent::WeaponControlAxisB(float value)
+{
+	if (_weaponIns)
+	{
+		_weaponIns->VWeaponControlAxisB(value);
 	}
 }
 

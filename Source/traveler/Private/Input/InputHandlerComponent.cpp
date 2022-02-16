@@ -50,6 +50,7 @@ void UInputHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UInputHandlerComponent::BindInputs(UInputComponent* PlayerInputComponent)
 {
+	//Bind Axis Inputs
 	PlayerInputComponent->BindAxis("MoveForward", this, &UInputHandlerComponent::ReceiveInputMoveX);
 	PlayerInputComponent->BindAxis("MoveRight", this, &UInputHandlerComponent::ReceiveInputMoveY);
 
@@ -57,6 +58,7 @@ void UInputHandlerComponent::BindInputs(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("CameraPitch", this, &UInputHandlerComponent::ReceiveInputCameraArmPitch);
 	PlayerInputComponent->BindAxis("CameraZoomInOut", this, &UInputHandlerComponent::ReceiveInputCameraZoomInOut);
 
+	//bind Button inputs
 	for (TSubclassOf<UButtonInputActionBase> buttonClass : _presetButtons)
 	{
 		if (buttonClass == nullptr)continue;

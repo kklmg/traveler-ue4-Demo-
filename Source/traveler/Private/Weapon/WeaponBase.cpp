@@ -134,6 +134,22 @@ bool AWeaponBase::IsAiming()
 	return _isAiming;
 }
 
+void AWeaponBase::VWeaponControlButtonA()
+{
+}
+
+void AWeaponBase::VWeaponControlButtonB()
+{
+}
+
+void AWeaponBase::VWeaponControlAxisA(float value)
+{
+}
+
+void AWeaponBase::VWeaponControlAxisB(float value)
+{
+}
+
 FName AWeaponBase::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
 {
 	return _meshSocketComponent->GetMeshSocketNameByType(meshSocketType);

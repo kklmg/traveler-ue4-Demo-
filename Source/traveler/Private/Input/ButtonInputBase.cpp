@@ -14,16 +14,7 @@ UButtonInputBase::UButtonInputBase()
 
 void UButtonInputBase::Press()
 {
-	if (OnButtonPressed.IsBound()) 
-	{
-		OnButtonPressed.Execute(this);
-	}
-	else
-	{
-		UE_LOG(LogMyInput,Warning, TEXT("pressed Button_ %s: delegate is not bound"), *_buttonName);
-	}
 	_isPressing = true;
-
 	VTMPress();
 }
 
@@ -38,17 +29,7 @@ void UButtonInputBase::Pressing(float deltaTime)
 
 void UButtonInputBase::Release()
 {
-	if (OnButtonPressed.IsBound())
-	{
-		OnButtonPressed.Execute(this);
-	}
-	else
-	{
-		UE_LOG(LogMyInput, Warning, TEXT("Released Button_ %s: delegate is not bound"), *_buttonName);
-	}
-
 	VTMRelease();
-
 	_isPressing = false;
 }
 

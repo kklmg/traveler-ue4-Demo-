@@ -34,8 +34,20 @@ ABowBase::ABowBase()
 	_maxProjectileVelocity = 3000.0f;
 	_aimingCameraOffset = FVector(50, 50, 50);
 
+	_holdCountOnceMin = 1;
+	_holdCountOnceMax = 11;
 	_holdCountOnce = 5;
+	_holdCountStep = 2;
+
+	_arrowsIntervalMin = 2.0f;
+	_arrowsIntervalMax = 10;
 	_arrowsInterval = 2;
+	_arrowsIntervalStep = 0.05f;
+
+	_handRollMin = 0.0f;
+	_handRollMax = 1.0f;
+	_handRoll = 0.0f;
+	_handRollStep = 0.05f;
 }
 
 void ABowBase::VInitialize(ACreatureCharacter* weaponOwner)
@@ -56,6 +68,8 @@ void ABowBase::Tick(float DeltaTime)
 
 	_animationModel.BowState = _bowState;
 	_animationModel.bIsHoldingArrows = _holdingArrows.Num() > 0;
+	_animationModel.HandRoll = _handRoll;
+
 	UpdateArrowsTransform();
 }
 
@@ -230,7 +244,10 @@ void ABowBase::AttachArrowsToBow()
 	VTryGetMeshSocketTransform(EMeshSocketType::MST_Muzzle, RTS_World, muzzleTransform);
 	VTryGetMeshSocketTransform(EMeshSocketType::MST_BowString, RTS_World, bowStringTransform);
 
-	FVector muzzleLeft = muzzleTransform.GetRotation().RotateVector(FVector::LeftVector);
+	FVector arrowForward = (muzzleTransform.GetLocation() - bowStringTransform.GetLocation()).GetSafeNormal();
+	FQuat arrowQuat = arrowForward.ToOrientationQuat();
+
+	FVector bowStringUp = bowStringTransform.GetRotation().RotateVector(FVector::UpVector);
 
 	float curDeltaDegree = 0;
 	FQuat curDeltaQuat;
@@ -239,14 +256,14 @@ void ABowBase::AttachArrowsToBow()
 	{
 		//compute quaternion
 		curDeltaDegree = (i % 2) ? _arrowsInterval * i : _arrowsInterval * i * -1;
-		curDeltaQuat = FQuat(muzzleLeft, FMath::DegreesToRadians(curDeltaDegree));
+		curDeltaQuat = FQuat(bowStringUp, FMath::DegreesToRadians(curDeltaDegree));
 
-		FQuat projectileQuat = curDeltaQuat * muzzleTransform.GetRotation();
+		arrowQuat = curDeltaQuat * arrowQuat;
 
 		//apply location,rotation
 		if (_holdingArrows[i] != NULL)
 		{
-			_holdingArrows[i]->SetActorLocationAndRotation(bowStringTransform.GetLocation(), projectileQuat);
+			_holdingArrows[i]->SetActorLocationAndRotation(bowStringTransform.GetLocation(), arrowQuat);
 		}
 	}
 }
@@ -275,7 +292,7 @@ void ABowBase::OnEnterAnimFrame_StartDrawingBowString()
 
 void ABowBase::OnEnterAnimFrame_TakeOutArrows()
 {
-	HoldArrows();
+	TakeOutArrows();
 }
 
 
@@ -297,6 +314,34 @@ void ABowBase::LaunchArrows()
 	_holdingArrows.Empty();
 }
 
+void ABowBase::AdjustHandRotation(float value)
+{
+	_handRoll =
+		FMath::Clamp(_handRoll + _handRollStep * value, _handRollMin, _handRollMax);
+}
+
+void ABowBase::AdjustArrowIntervals(float value)
+{
+	_arrowsInterval =
+		FMath::Clamp(_arrowsInterval + _arrowsIntervalStep * value, _arrowsIntervalMin, _arrowsIntervalMax);
+}
+
+void ABowBase::IncreaseArrows()
+{
+	_holdCountOnce =
+		FMath::Clamp(_holdCountOnce + _holdCountStep, _holdCountOnceMin, _holdCountOnceMax);
+
+	TakeOutArrows();
+}
+
+void ABowBase::DecreaseArrows()
+{
+	_holdCountOnce =
+		FMath::Clamp(_holdCountOnce - _holdCountStep, _holdCountOnceMin, _holdCountOnceMax);
+
+	TakeOutArrows();
+}
+
 void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
 {
 	Super::VOnCharacterAnimationStateChanged(prevState, newState);
@@ -308,6 +353,26 @@ void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAni
 			StopAllActions();
 		}
 	}
+}
+
+void ABowBase::VWeaponControlButtonA()
+{
+	IncreaseArrows();
+}
+
+void ABowBase::VWeaponControlButtonB()
+{
+	DecreaseArrows();
+}
+
+void ABowBase::VWeaponControlAxisA(float value)
+{
+	AdjustHandRotation(value);
+}
+
+void ABowBase::VWeaponControlAxisB(float value)
+{
+	AdjustArrowIntervals(value);
 }
 
 
@@ -326,9 +391,9 @@ EBowState ABowBase::GetBowState()
 	return _bowState;
 }
 
-void ABowBase::HoldArrows()
+void ABowBase::TakeOutArrows()
 {
-	//ClearHoldingArrows();
+	ClearHoldingArrows();
 	if (_holdingArrows.Num() == 0) 
 	{
 		_quiverComponent->SpawnArrows(_holdCountOnce, GetWeaponOwner(), _holdingArrows);

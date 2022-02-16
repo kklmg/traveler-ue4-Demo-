@@ -54,34 +54,9 @@ public:
 	UFUNCTION()
 	void ReceiveInputCameraZoomInOut(float value);
 
-//	UFUNCTION()
-//		void OnAction1ButtonDown();
-//	UFUNCTION()
-//		void OnAction1ButtonUp();
-//	UFUNCTION()
-//		void OnAction2ButtonDown();
-//	UFUNCTION()
-//		void OnAction2ButtonUp();
-//	UFUNCTION()
-//		void OnAction3ButtonDown();
-//	UFUNCTION()
-//		void OnAction3ButtonUp();
-//
-//TArray<FButtonSignature> _buttonSignatures;
-//
-//	FButtonSignature Action1ButtonDownDelegate;
-//	FButtonSignature Action2ButtonDownDelegate;
-//	FButtonSignature Action3ButtonDownUpDelegate;
-//	FButtonSignature Action4ButtonDownUpDelegate;
-//
-//	FButtonSignature Action1ButtonUpDelegate;
-//	FButtonSignature Action2ButtonUpDelegate;
-//	FButtonSignature Action3ButtonDownUpDelegate;
-//	FButtonSignature Action4ButtonDownUpDelegate;
+protected:
 	void HandleButtonsPressing(float deltaTime);
-
 	void ConsumeMovementInput();
-
 	void InitializeButtons();
 
 private:

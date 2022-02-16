@@ -62,6 +62,8 @@ public:
 	EWeaponType WeaponType;
 
 public:
+
+//Controls
 	void StartFiring();
 	void FiringInProgress(float deltaTime);
 	void StopFiring();
@@ -72,6 +74,12 @@ public:
 	void StopAiming();
 	bool IsAiming();
 
+	virtual void VWeaponControlButtonA();
+	virtual void VWeaponControlButtonB();
+
+	virtual void VWeaponControlAxisA(float value);
+	virtual void VWeaponControlAxisB(float value);
+
 	void StopAllActions();
 	virtual void VReset();
 
@@ -80,6 +88,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	ACreatureCharacter* GetWeaponOwner();
+
+	
 
 	//UFUNCTION(BlueprintCallable)
 	//UWeaponAnimationModelBase* GetAnimationModel();

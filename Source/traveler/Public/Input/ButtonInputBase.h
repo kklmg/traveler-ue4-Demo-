@@ -21,9 +21,6 @@ class TRAVELER_API UButtonInputBase : public UObject
 public:
 
 	UButtonInputBase();
-public:
-	FButtonInputSignature OnButtonPressed;
-	FButtonInputSignature OnButtonReleased;
 
 public:
 	void Press();

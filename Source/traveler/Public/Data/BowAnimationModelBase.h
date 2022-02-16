@@ -19,6 +19,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsHoldingArrows;
+
+	UPROPERTY(BlueprintReadWrite)
+	float HandRoll;
 };
 
 //UCLASS()
