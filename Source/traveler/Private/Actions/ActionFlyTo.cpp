@@ -15,19 +15,19 @@ UActionFlyTo::UActionFlyTo()
 
 
 	_bInstantAction = false;
-	_flyingSpeed = 2000;
-	_turnningSpeed = 500;
+	//_flyingSpeed = 2000;
+	//_turnningSpeed = 500;
 
-	_bUpdateDestination = true;
+	//_bUpdateDestination = true;
 
-	//Roll
-	_limitedRollDegree = 80.0f;
-	_limitedPitchDegree = 80.0f;
-	_yawDegreePerSecond = 25;
-	_pitchDegreePerSecond = 10;
-	_rollDegreePerSecond = -30;
-	_resetFactor = 0;
-	_resetFactorSpeed = 0.5f;
+	////Roll
+	//_limitedRollDegree = 80.0f;
+	//_limitedPitchDegree = 80.0f;
+	//_yawDegreePerSecond = 25;
+	//_pitchDegreePerSecond = 10;
+	//_rollDegreePerSecond = -30;
+	//_resetFactor = 0;
+	//_resetFactorSpeed = 0.5f;
 }
 
 void UActionFlyTo::VTMExecute()
@@ -81,6 +81,8 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	FVector upVector = character->GetActorUpVector();
 	FVector rightVector = character->GetActorRightVector();
 
+
+	//Get Actor Bounds
 	
 
 	//Destination
@@ -89,6 +91,11 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	FVector destLocXY(_destination.X, _destination.Y, curLocation.Z);
 	float distance = (_destination - curLocation).Size();
 
+	//get actor bounds
+	FVector outOrigin;
+	FVector outBoxExtent;
+	character->GetActorBounds(true, outOrigin, outBoxExtent);
+
 
 	//debug message
 	DrawDebugLine(GetWorld(), curLocation, _destination, FColor::Red, false, -1.0f, 0U, 30.0f);
@@ -96,6 +103,8 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), GetActionOwner()->GetActorLocation() + forwardVector * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat(distance));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Velocity: " + FString::SanitizeFloat((character->GetVelocity()).Size()));
+
+
 
 
 

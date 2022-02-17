@@ -28,6 +28,31 @@ protected:
 	void OnCharacterWantToSprint(bool wantToSprint);
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = Flying)
+	bool _bUpdateDestination;
+
+	UPROPERTY(EditDefaultsOnly, Category = Flying)
+	float _rollLimit;
+	UPROPERTY(EditDefaultsOnly, Category = Flying)
+	float _rollRate;
+
+	UPROPERTY(EditDefaultsOnly, Category = Flying)
+	float _pitchLimit;
+	UPROPERTY(EditDefaultsOnly, Category = Flying)
+	float _pitchRate;
+
+	UPROPERTY(EditDefaultsOnly, Category = Flying)
+	float _yawRate;
+
+
+
+	float _preRoll;
+
+	float _resetFactor;
+	float _resetFactorSpeed;
+
+
+
 
 	IActionInterface* _actionInterface;
 	IAttributeInterface* _attributeInterface;
