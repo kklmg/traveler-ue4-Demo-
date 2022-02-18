@@ -22,36 +22,36 @@ public:
 private:
 	bool _GetDestination(FVector& outVector);
 
-	//UPROPERTY(EditDefaultsOnly, Category = speed)
-	//bool _bUpdateDestination;
+	UPROPERTY(EditDefaultsOnly, Category = speed)
+	bool _bUpdateDestination;
 
-	//UPROPERTY(EditDefaultsOnly, Category = speed)
-	//float _flyingSpeed;
+	UPROPERTY(EditDefaultsOnly, Category = speed)
+	float _flyingSpeed;
 
-	//UPROPERTY(EditDefaultsOnly, Category = speed)
-	//float _turnningSpeed;
+	UPROPERTY(EditDefaultsOnly, Category = speed)
+	float _turnningSpeed;
 
-	//UPROPERTY(EditDefaultsOnly, Category = speed)
-	//float _limitedRollDegree;
+	UPROPERTY(EditDefaultsOnly, Category = speed)
+	float _limitedRollDegree;
 
-	//UPROPERTY(EditDefaultsOnly, Category = speed)
-	//float _limitedPitchDegree;
+	UPROPERTY(EditDefaultsOnly, Category = speed)
+	float _limitedPitchDegree;
 
-	//UPROPERTY(EditDefaultsOnly, Category = speed)
-	//float _rollDegreePerSecond;
+	UPROPERTY(EditDefaultsOnly, Category = speed)
+	float _rollDegreePerSecond;
 
-	//UPROPERTY(EditDefaultsOnly, Category = speed)
-	//float _yawDegreePerSecond;
+	UPROPERTY(EditDefaultsOnly, Category = speed)
+	float _yawDegreePerSecond;
 
-	//UPROPERTY(EditDefaultsOnly, Category = speed)
-	//float _pitchDegreePerSecond;
+	UPROPERTY(EditDefaultsOnly, Category = speed)
+	float _pitchDegreePerSecond;
 
-	//FVector _destination;
+	FVector _destination;
 
-	//float _preRoll;
+	float _preRoll;
 
-	//float _resetFactor;
-	//float _resetFactorSpeed;
+	float _resetFactor;
+	float _resetFactorSpeed;
 
 
 	float _YawTurnning(FVector dirToDestination, FVector dirForward, float deltaTime);

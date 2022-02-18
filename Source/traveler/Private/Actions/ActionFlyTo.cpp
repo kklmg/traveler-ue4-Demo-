@@ -15,19 +15,19 @@ UActionFlyTo::UActionFlyTo()
 
 
 	_bInstantAction = false;
-	//_flyingSpeed = 2000;
-	//_turnningSpeed = 500;
+	_flyingSpeed = 2000;
+	_turnningSpeed = 500;
 
-	//_bUpdateDestination = true;
+	_bUpdateDestination = true;
 
-	////Roll
-	//_limitedRollDegree = 80.0f;
-	//_limitedPitchDegree = 80.0f;
-	//_yawDegreePerSecond = 25;
-	//_pitchDegreePerSecond = 10;
-	//_rollDegreePerSecond = -30;
-	//_resetFactor = 0;
-	//_resetFactorSpeed = 0.5f;
+	//Roll
+	_limitedRollDegree = 80.0f;
+	_limitedPitchDegree = 80.0f;
+	_yawDegreePerSecond = 25;
+	_pitchDegreePerSecond = 10;
+	_rollDegreePerSecond = -30;
+	_resetFactor = 0;
+	_resetFactorSpeed = 0.5f;
 }
 
 void UActionFlyTo::VTMExecute()
@@ -96,7 +96,6 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	FVector outBoxExtent;
 	character->GetActorBounds(true, outOrigin, outBoxExtent);
 
-
 	//debug message
 	DrawDebugLine(GetWorld(), curLocation, _destination, FColor::Red, false, -1.0f, 0U, 30.0f);
 	DrawDebugLine(GetWorld(), curLocation, destLocXY, FColor::Green, false, -1.0f, 0U, 30.0f);
@@ -104,15 +103,11 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat(distance));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Velocity: " + FString::SanitizeFloat((character->GetVelocity()).Size()));
 
-
-
-
-
 	//Check Is at destination
 	//-------------------------------------------------------------------------------------------------------------
 	if (distance < 1000)
 	{
-		if(_resetFactor==1.0f)
+		if(_resetFactor == 1.0f)
 		{
 			SetActionProcessSucceed();
 			_resetFactor = 0;
@@ -196,6 +191,7 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	//-------------------------------------------------------------------------------------------------------------
 	character->AddActorWorldRotation(turnQuat);
 	character->AddMovementInput(forwardVector);
+	
 }
 
 bool UActionFlyTo::_GetDestination(FVector& outVector)
