@@ -17,6 +17,7 @@
 #include "Components/WeaponComponent.h"
 #include "Components/MeshSocketComponent.h"
 #include "Components/MyCharacterMovementComponent.h"
+#include "Components/IKComponent.h"
 #include "Input/InputHandlerComponent.h"
 
 
@@ -91,6 +92,13 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 	{
 		_inputHandlerComponent = CreateDefaultSubobject<UInputHandlerComponent>(TEXT("InputHandlerComponent"));
 		check(_inputHandlerComponent != nullptr);
+	}
+
+	//IK
+	if (_IKComponent == nullptr)
+	{
+		_IKComponent = CreateDefaultSubobject<UIKComponent>(TEXT("IKComponent"));
+		check(_IKComponent != nullptr);
 	}
 }
 

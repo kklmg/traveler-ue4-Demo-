@@ -35,32 +35,58 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-
-
+	if (_bActivateFootIK)
+	{	// ...
+		_IKDataLeftFoot = FootTrace(EMeshSocketType::MST_LeftFoot);
+		_IKDataRightFoot = FootTrace(EMeshSocketType::MST_RightFoot);
+	}
 }
 
-void UIKComponent::FootTrace()
+FIKData UIKComponent::FootTrace(EMeshSocketType meshSocketType)
 {
-	if (!_meshSocketProvider) return;
-	if (!_animationModelProvider) return;
+	if (!_meshSocketProvider) return FIKData();
+	if (!_animationModelProvider) return FIKData();
 
-	FTransform LeftFootTransform; 
-    FTransform RightFootTransform;
+	FIKData result;
 
-    _meshSocketProvider->VTryGetMeshSocketTransform(EMeshSocketType::MST_LeftFoot,ERelativeTransformSpace::RTS_World,LeftFootTransform);
-    _meshSocketProvider->VTryGetMeshSocketTransform(EMeshSocketType::MST_RightFoot,ERelativeTransformSpace::RTS_World,RightFootTransform);
+	//get Foot Transform
+	FTransform out_FootTransform; 
+    _meshSocketProvider->VTryGetMeshSocketTransform(meshSocketType,ERelativeTransformSpace::RTS_World, out_FootTransform);
+	FVector footLocation = out_FootTransform.GetLocation();
 
-    FVector traceStart;
-    FVector traceEnd; 
+	//get actor bounds
+	FVector out_Origin;
+	FVector out_Extent;
+	GetOwner()->GetActorBounds(true, out_Origin, out_Extent);
+	
+	//Line Tracting parameters
+	FVector actorLocation = GetOwner()->GetActorLocation();
 
-
-	FHitResult pHitResult;
+	FVector TraceStart(footLocation.X, footLocation.Y, actorLocation.Z);
+	FVector TraceEnd(footLocation.X, footLocation.Y, actorLocation.Z - out_Extent.Z-10.0f);
+	
+	FHitResult hitResult;
 	TArray<AActor*> ignoreArray;
 	ignoreArray.Add(GetOwner());
 
-	bool bDebug = true;
+	//Execute Line Tracing 
+	if(UKismetSystemLibrary::LineTraceSingle(GetWorld(), TraceStart, TraceEnd,
+		UEngineTypes::ConvertToTraceType(ECC_Visibility), true, ignoreArray, EDrawDebugTrace::ForOneFrame, hitResult, true))
+	{
+		result.Offset = TraceStart.Z - hitResult.Distance;
+		result.bImpact = true;
+	}
 
-	bool bResult = UKismetSystemLibrary::LineTraceSingle(GetWorld(), traceStart, traceEnd,
-		UEngineTypes::ConvertToTraceType(ECC_Visibility), true, ignoreArray, EDrawDebugTrace::None, pHitResult, true);
+	return result;
+}
+
+FIKData UIKComponent::GetIKData_LeftFoot()
+{
+	return _IKDataLeftFoot;
+}
+
+FIKData UIKComponent::GetIKData_RightFoot()
+{
+	return _IKDataRightFoot;
 }
 

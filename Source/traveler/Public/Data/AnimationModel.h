@@ -47,6 +47,10 @@ public:
 	float CameraPitchMin;
 	UPROPERTY(BlueprintReadWrite)
 	float CameraPitchNormal;
+	UPROPERTY(BlueprintReadWrite)
+	float LeftFootOffset;
+	UPROPERTY(BlueprintReadWrite)
+	float RightFootOffset;
 	
 
 

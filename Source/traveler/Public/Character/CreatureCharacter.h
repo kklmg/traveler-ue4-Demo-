@@ -29,6 +29,7 @@ class UPawnCameraComponent;
 class UCameraSpringArmComponent;
 class UWeaponComponent;
 class UMeshSocketComponent;
+class UIKComponent;
 
 
 class AWeaponBase;
@@ -177,6 +178,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UMeshSocketComponent* _meshSocketComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UIKComponent* _IKComponent;
 
 	UPROPERTY()
 	FAnimationModel _animationModel;
