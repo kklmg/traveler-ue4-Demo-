@@ -11,6 +11,8 @@
 class IAnimationModelProvider;
 class IMeshSocketTransformProvider;
 
+class ACharacter;
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UIKComponent : public UActorComponent
@@ -41,9 +43,16 @@ private:
 	UPROPERTY(EditAnywhere)
 	bool _bActivateFootIK;
 
+	UPROPERTY(EditDefaultsOnly)
+	float _traceOffset;
+
+	UPROPERTY(EditAnywhere)
+	ACharacter* _character;
+
 	IAnimationModelProvider* _animationModelProvider;
 	IMeshSocketTransformProvider* _meshSocketProvider;
 
 	FIKData _IKDataLeftFoot;
 	FIKData _IKDataRightFoot;
+	float _halfHeight;
 };

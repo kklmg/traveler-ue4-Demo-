@@ -5,6 +5,9 @@
 #include "Interface/AnimationModelProvider.h"
 #include "Interface/MeshSocketTransformProvider.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "DrawDebugHelpers.h"
+#include "GameFramework/Character.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values for this component's properties
 UIKComponent::UIKComponent()
@@ -14,6 +17,7 @@ UIKComponent::UIKComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	_traceOffset = 20.0f;
 }
 
 
@@ -23,9 +27,14 @@ void UIKComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	_character = GetOwner<ACharacter>();
+	if (_character)
+	{
+		_halfHeight = _character->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
+	}
+
 	_animationModelProvider = GetOwner<IAnimationModelProvider>();
     _meshSocketProvider = GetOwner<IMeshSocketTransformProvider>();
-
 }
 
 
@@ -34,11 +43,15 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-	if (_bActivateFootIK)
-	{	// ...
-		_IKDataLeftFoot = FootTrace(EMeshSocketType::MST_LeftFoot);
-		_IKDataRightFoot = FootTrace(EMeshSocketType::MST_RightFoot);
+	// update foot ik data
+	if (_bActivateFootIK && _character && _animationModelProvider)
+	{
+		FAnimationModel animModel = _animationModelProvider->VGetAnimationModel();
+		if((animModel.MovementMode == EMovementMode::MOVE_Walking || animModel.MovementMode== EMovementMode::MOVE_NavWalking))
+		{ 
+			_IKDataLeftFoot = FootTrace(EMeshSocketType::MST_LeftFoot);
+			_IKDataRightFoot = FootTrace(EMeshSocketType::MST_RightFoot);	
+		}
 	}
 }
 
@@ -53,28 +66,39 @@ FIKData UIKComponent::FootTrace(EMeshSocketType meshSocketType)
 	FTransform out_FootTransform; 
     _meshSocketProvider->VTryGetMeshSocketTransform(meshSocketType,ERelativeTransformSpace::RTS_World, out_FootTransform);
 	FVector footLocation = out_FootTransform.GetLocation();
-
-	//get actor bounds
-	FVector out_Origin;
-	FVector out_Extent;
-	GetOwner()->GetActorBounds(true, out_Origin, out_Extent);
 	
 	//Line Tracting parameters
 	FVector actorLocation = GetOwner()->GetActorLocation();
 
 	FVector TraceStart(footLocation.X, footLocation.Y, actorLocation.Z);
-	FVector TraceEnd(footLocation.X, footLocation.Y, actorLocation.Z - out_Extent.Z-10.0f);
+	FVector TraceEnd(footLocation.X, footLocation.Y, actorLocation.Z - _halfHeight - _traceOffset);
 	
+
+	//DrawDebugLine(GetWorld(), curLocation, destLocXY, FColor::Green, false, -1.0f, 0U, 30.0f);
+	///GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "origin: " + out_Origin.ToString());
+	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "extent: " + out_Extent.ToString());
+
 	FHitResult hitResult;
 	TArray<AActor*> ignoreArray;
 	ignoreArray.Add(GetOwner());
 
 	//Execute Line Tracing 
-	if(UKismetSystemLibrary::LineTraceSingle(GetWorld(), TraceStart, TraceEnd,
+	if (UKismetSystemLibrary::LineTraceSingle(GetWorld(), TraceStart, TraceEnd, 
 		UEngineTypes::ConvertToTraceType(ECC_Visibility), true, ignoreArray, EDrawDebugTrace::ForOneFrame, hitResult, true))
 	{
-		result.Offset = TraceStart.Z - hitResult.Distance;
+		result.Offset = hitResult.ImpactPoint.Z - TraceEnd.Z;
 		result.bImpact = true;
+		result.Normal = hitResult.Normal;
+
+		
+		float pitch = -FMath::RadiansToDegrees(FMath::Atan2(hitResult.Normal.X, hitResult.Normal.Z));
+		float roll = FMath::RadiansToDegrees(FMath::Atan2(hitResult.Normal.Y,hitResult.Normal.Z));
+
+		result.rotator = FRotator(pitch, 0.0f, roll);
+
+		DrawDebugLine(GetWorld(), hitResult.ImpactPoint, hitResult.ImpactPoint + result.Normal * 100, FColor::Black, false, -1.0f, 0U, 5.0f);
+		//DrawDebugSphere(GetWorld(), hitResult.ImpactPoint,20,4,FColor::Purple);
+		//DrawDebugBox(GetWorld(), out_Origin, out_Extent, FColor::Cyan);
 	}
 
 	return result;

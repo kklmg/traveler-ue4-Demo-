@@ -16,4 +16,8 @@ public:
 	bool bImpact;
 	UPROPERTY(BlueprintReadWrite)
 	float Offset;
+	UPROPERTY(BlueprintReadWrite)
+	FVector Normal;
+	UPROPERTY(BlueprintReadWrite)
+	FRotator rotator;
 };
