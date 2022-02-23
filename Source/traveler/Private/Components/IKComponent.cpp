@@ -17,7 +17,7 @@ UIKComponent::UIKComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_traceOffset = 20.0f;
+	_traceOffset = 30.0f;
 }
 
 
@@ -69,9 +69,10 @@ FIKData UIKComponent::FootTrace(EMeshSocketType meshSocketType)
 	
 	//Line Tracting parameters
 	FVector actorLocation = GetOwner()->GetActorLocation();
+	float groundHeight = actorLocation.Z - _halfHeight;
 
 	FVector TraceStart(footLocation.X, footLocation.Y, actorLocation.Z);
-	FVector TraceEnd(footLocation.X, footLocation.Y, actorLocation.Z - _halfHeight - _traceOffset);
+	FVector TraceEnd(footLocation.X, footLocation.Y, groundHeight - _traceOffset);
 	
 
 	//DrawDebugLine(GetWorld(), curLocation, destLocXY, FColor::Green, false, -1.0f, 0U, 30.0f);
@@ -86,7 +87,7 @@ FIKData UIKComponent::FootTrace(EMeshSocketType meshSocketType)
 	if (UKismetSystemLibrary::LineTraceSingle(GetWorld(), TraceStart, TraceEnd, 
 		UEngineTypes::ConvertToTraceType(ECC_Visibility), true, ignoreArray, EDrawDebugTrace::ForOneFrame, hitResult, true))
 	{
-		result.Offset = hitResult.ImpactPoint.Z - TraceEnd.Z;
+		result.Offset = hitResult.ImpactPoint.Z - groundHeight;
 		result.bImpact = true;
 		result.Normal = hitResult.Normal;
 
