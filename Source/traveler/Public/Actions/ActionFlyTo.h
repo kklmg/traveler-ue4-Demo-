@@ -55,4 +55,6 @@ private:
 
 
 	float _YawTurnning(FVector dirToDestination, FVector dirForward, float deltaTime);
+
+	float ComputePitch();
 };

@@ -7,6 +7,7 @@
 #include "DrawDebugHelpers.h"
 #include "GameSystem/MyBlueprintFunctionLibrary.h"
 #include "DrawDebugHelpers.h"
+#include "Components/MyCharacterMovementComponent.h"
 
 
 UActionFlyTo::UActionFlyTo()
@@ -35,15 +36,16 @@ void UActionFlyTo::VTMExecute()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Execute Fly To"));
 
-	if(_GetDestination(_destination))
-	{
-		
-	}
-	else
+	UMyCharacterMovementComponent* movementComp 
+		= Cast<UMyCharacterMovementComponent>(GetActionOwner()->GetMovementComponent());
+	
+	if (_GetDestination(_destination) == false || movementComp == false)
 	{
 		UE_LOG(LogAction, Warning, TEXT("Fly to: No Destination Setted"))
 		SetActionProcessFailed();
+		return;
 	}
+	movementComp->computePitchTime(_destination.Z);
 }
 
 void UActionFlyTo::VTMTick(float deltaTime)
@@ -284,5 +286,57 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "DeltaYaw: " + FString::SanitizeFloat(resultDeltaYaw));
 
 	return resultDeltaYaw;
+}
+
+float UActionFlyTo::ComputePitch()
+{
+	float pitchLimit = FMath::DegreesToRadians(50);
+	float pitchSpeed = FMath::DegreesToRadians(10);
+	float speed = 500;
+	float altitudeOffset = 1000;
+
+	float timeToMaxSpeed = pitchLimit / pitchSpeed;
+
+	//w: angular velocity
+	//v: vertical velocity
+	//A: altitude Offset
+	// -----------------------------------
+	//=> v = speed * sin(w * t);
+	//=> integral: -cos(w * t) / w
+	//=> S(0,t) : (1 - cos(w *t) )/w
+	//=>  ((1 - cos(w *t) )/w) * 2 = A
+	//=> t = arccos((2 - aw)/2) / w 
+
+	//compute max distanceTraveled during pitch
+	//Definite Integral: S(0,PitchLimit) sin(pitchLimit)
+	// 
+	// 
+	//(-cos(wt)+1)/w * speed;
+	float distanceTraveledDuringPitchMax =	2 * speed * (-FMath::Cos(pitchLimit) + 1) / pitchSpeed;
+
+	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "Pitch Travel: " + FString::SanitizeFloat(distanceTraveledDuringPitchMax));
+
+
+	float maxSpeed = speed * FMath::Sin(pitchLimit);
+	
+	if (altitudeOffset > distanceTraveledDuringPitchMax)
+	{
+		return (altitudeOffset - distanceTraveledDuringPitchMax) / timeToMaxSpeed;
+	}
+	else
+	{
+		//w: angular velocity
+		//v: vertical velocity
+		//A: Target altitude
+		// -----------------------------------
+		//=> v = sin(w * t);
+		//=> integral: -cos(w * t) / w
+		//=> S(0,t) : (1 - cos(w *t) )/w
+		//=>  ((1 - cos(w *t) )/w) * 2 = A
+		//=> t = arccos((2 - aw)/2) / w 
+
+		return FMath::Acos((2 - altitudeOffset * pitchSpeed) / 2) / pitchSpeed;
+	}
+
 }
 

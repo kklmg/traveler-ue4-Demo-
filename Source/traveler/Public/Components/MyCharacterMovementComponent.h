@@ -17,7 +17,10 @@ UCLASS()
 class TRAVELER_API UMyCharacterMovementComponent : public UCharacterMovementComponent
 {
 	GENERATED_BODY()
+public:
+	UMyCharacterMovementComponent();
 
+	float computePitchTime(float targetAltitude);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -28,6 +31,9 @@ protected:
 	void OnCharacterWantToSprint(bool wantToSprint);
 
 private:
+	
+
+
 	UPROPERTY(EditDefaultsOnly, Category = Flying)
 	bool _bUpdateDestination;
 
