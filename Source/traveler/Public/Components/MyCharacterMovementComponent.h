@@ -10,6 +10,40 @@ class IActionInterface;
 class IAttributeInterface;
 class IAnimationModelProvider;
 
+USTRUCT(BlueprintType)
+struct FFlygingSimulationData
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite)
+	float TimeFrame_StartAccelerate;
+	UPROPERTY(BlueprintReadWrite)
+	float TimeFrame_OnMaxSpeed;
+	UPROPERTY(BlueprintReadWrite)
+	float TimeFrame_StartDecelerate;
+	UPROPERTY(BlueprintReadWrite)
+	float TimeFrame_Stop;
+
+
+	float ElapsedTime;
+
+	bool bIsSimulating;
+
+	void StopSimulation()
+	{
+		ElapsedTime = 0.0f;
+		bIsSimulating = false;
+	}
+
+	void ShowDebugMessage()
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "TimeFrame_StartAccelerate: " + FString::SanitizeFloat(TimeFrame_StartAccelerate));
+		GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "TimeFrame_OnMaxSpeed: " + FString::SanitizeFloat(TimeFrame_OnMaxSpeed));
+		GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "TimeFrame_StartDecelerate: " + FString::SanitizeFloat(TimeFrame_StartDecelerate));
+		GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "TimeFrame_Stop: " + FString::SanitizeFloat(TimeFrame_Stop));
+	}
+};
+
 /**
  * 
  */
@@ -20,7 +54,7 @@ class TRAVELER_API UMyCharacterMovementComponent : public UCharacterMovementComp
 public:
 	UMyCharacterMovementComponent();
 
-	float computePitchTime(float targetAltitude);
+	FFlygingSimulationData GenerateFlyingUpSimulationData(float targetAltitude);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,9 +64,12 @@ protected:
 	UFUNCTION()
 	void OnCharacterWantToSprint(bool wantToSprint);
 
-private:
-	
+	void StartSimulationFlyingUp(float targetAltitude);
+	void SimulationTick(float deltaTime);
 
+private:
+
+	FFlygingSimulationData _simulationData;
 
 	UPROPERTY(EditDefaultsOnly, Category = Flying)
 	bool _bUpdateDestination;

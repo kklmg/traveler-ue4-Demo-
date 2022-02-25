@@ -87,24 +87,30 @@ void UMyCharacterMovementComponent::OnCharacterWantToSprint(bool wantToSprint)
 	}
 }
 
-void UMyCharacterMovementComponent::SimulateFlying(float deltaTime)
+void UMyCharacterMovementComponent::StartSimulationFlyingUp(float targetAltitude)
 {
-	float time = computePitchTime(10);
-
-	
-
+	_simulationData = GenerateFlyingUpSimulationData(targetAltitude);
+	_simulationData.bIsSimulating = true;
 }
 
-float UMyCharacterMovementComponent::computePitchTime(float targetAltitude)
+void UMyCharacterMovementComponent::SimulationTick(float deltaTime)
 {
-	float altitudeOffset = targetAltitude - GetActorLocation().Z;
+	if (_simulationData.bIsSimulating)
+	{
+		_simulationData.ElapsedTime += deltaTime;
+	}
+}
 
+FFlygingSimulationData UMyCharacterMovementComponent::GenerateFlyingUpSimulationData(float targetAltitude)
+{
 
-	float radPitchLimit = altitudeOffset > 0.0f ? FMath::DegreesToRadians(_pitchLimit) : FMath::DegreesToRadians(_pitchLimit) * -1;
-	float radPitchRate = altitudeOffset > 0.0f ? FMath::DegreesToRadians(_pitchRate) : FMath::DegreesToRadians(_pitchRate) * -1;
-	float timeToPitchLimit = _pitchLimit / _pitchRate;
+	float altitudeOffset = FMath::Abs(targetAltitude - GetActorLocation().Z);
+	float radPitchLimit = FMath::DegreesToRadians(_pitchLimit);
+	float radPitchRate = FMath::DegreesToRadians(_pitchRate);
+	float durationAcclerateToMax = _pitchLimit / _pitchRate;
 
-	float pitchTime = 0.0f;
+	float duration_Accelerate = 0.0f;
+	float duration_Steady = 0.0f;
 
 	//w: angular velocity
 	//v: vertical velocity
@@ -120,33 +126,36 @@ float UMyCharacterMovementComponent::computePitchTime(float targetAltitude)
 	//Definite Integral: S(0,PitchLimit) sin(pitchLimit)
 	// 
 	// 
-	//(-cos(wt)+1)/w * speed;
-	float distanceTraveledDuringPitchMax = 2 * MaxFlySpeed * (-FMath::Cos(radPitchLimit) + 1) / radPitchRate;
+	//(-cos(wt)+1)/w * speed * 2;
+	float TravelableDistanceDuringAcceleration =
+					FMath::Abs(2 * MaxFlySpeed * (1 - FMath::Cos(radPitchLimit)) / radPitchRate);
 
 	float maxSpeed = MaxFlySpeed * FMath::Sin(radPitchLimit);
 
-	if (altitudeOffset > distanceTraveledDuringPitchMax)
+	if (altitudeOffset > TravelableDistanceDuringAcceleration)
 	{
-		pitchTime = (altitudeOffset - distanceTraveledDuringPitchMax) / timeToPitchLimit;
+		duration_Accelerate = _pitchLimit / _pitchRate;
+		duration_Steady = (altitudeOffset - TravelableDistanceDuringAcceleration) / maxSpeed;
 	}
 	else
 	{
-		//w: angular velocity
-		//v: vertical velocity
-		//A: Target altitude
-		// -----------------------------------
-		//=> v = sin(w * t);
-		//=> integral: -cos(w * t) / w
-		//=> S(0,t) : (1 - cos(w *t) )/w
-		//=>  ((1 - cos(w *t) )/w) * 2 = A
-		//=> t = arccos((2 - aw)/2) / w 
-
-		pitchTime = FMath::Acos((2 - altitudeOffset * radPitchRate) / 2) / radPitchRate;
+		//speed * (1 - cos(wt)) / w = altitudeOffset / 2
+		//=>time_acc = arccos(1 - (altitudeOffset * w / (2 * speed) ) ) / w
+		duration_Accelerate = FMath::Acos((1 - ((altitudeOffset * radPitchRate) / (2 * MaxFlySpeed)))) / radPitchRate;
+		duration_Steady = 0;
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "Pitch Travel: " + FString::SanitizeFloat(distanceTraveledDuringPitchMax));
-	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "Traveled time: " + FString::SanitizeFloat(pitchTime));
-	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "Altitude Offset: " + FString::SanitizeFloat(altitudeOffset));
 
-	return pitchTime;
+	FFlygingSimulationData simulationData;
+	simulationData.TimeFrame_StartAccelerate = 0;
+	simulationData.TimeFrame_OnMaxSpeed = simulationData.TimeFrame_StartAccelerate + duration_Accelerate;
+	simulationData.TimeFrame_StartDecelerate = simulationData.TimeFrame_OnMaxSpeed + duration_Steady;
+	simulationData.TimeFrame_Stop = simulationData.TimeFrame_StartDecelerate + duration_Accelerate;
+
+
+	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "Travelable Distance during Acceleration: " + FString::SanitizeFloat(TravelableDistanceDuringAcceleration));
+	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "Altitude Offset: " + FString::SanitizeFloat(altitudeOffset));
+	simulationData.ShowDebugMessage();
+
+	return simulationData;
 }

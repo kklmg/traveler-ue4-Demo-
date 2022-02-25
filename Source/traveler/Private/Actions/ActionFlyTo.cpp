@@ -45,7 +45,7 @@ void UActionFlyTo::VTMExecute()
 		SetActionProcessFailed();
 		return;
 	}
-	movementComp->computePitchTime(_destination.Z);
+	movementComp->GenerateFlyingUpSimulationData(_destination.Z);
 }
 
 void UActionFlyTo::VTMTick(float deltaTime)
