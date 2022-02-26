@@ -69,7 +69,7 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 
 	//the same action is in progress 
 	if(_mapActionProcessPool[index] &&
-		_mapActionProcessPool[index]->GetActionProcessState() == EActionProcessState::EAPS_Running)
+		_mapActionProcessPool[index]->GetActionProcessState() == EProcessState::EPS_Running)
 	{
 		return nullptr;
 	}
@@ -156,7 +156,7 @@ bool UActionComponent::CheckActionIsInProgress(EActionType actionType)
 {
 	int32 index = int32(actionType);
 	return _mapActionProcessPool[index] 
-			&& _mapActionProcessPool[index]->GetActionProcessState() == EActionProcessState::EAPS_Running;
+			&& _mapActionProcessPool[index]->GetActionProcessState() == EProcessState::EPS_Running;
 }
 
 

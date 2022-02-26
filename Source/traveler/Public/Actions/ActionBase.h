@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Data/EnumActionType.h"
+#include "Data/EnumProcessState.h"
 #include "ActionBase.generated.h"
 
 
@@ -16,20 +17,6 @@ class IAnimationModelProvider;
 
 class UCostData;
 
-UENUM(BlueprintType)
-enum class EActionProcessState : uint8
-{
-	EAPS_UnInitialized UMETA(DisplayName = "UnInitialized"),
-	EAPS_ReadyToExecute UMETA(DisplayName = "ReadyToExecute"),
-	// Living processes
-	EAPS_Running UMETA(DisplayName = "Running"),  // initialized and running
-	EAPS_Paused UMETA(DisplayName = "Paused"),  // initialized but paused
-
-	// Dead processes
-	EAPS_SUCCEEDED UMETA(DisplayName = "SUCCEEDED"),  // execution succeed
-	EAPS_FAILED UMETA(DisplayName = "FAILED"),  // execution failed 
-	EAPS_Aborted UMETA(DisplayName = "Aborted"),
-};
 
 namespace ActionName
 {
@@ -90,7 +77,7 @@ public:
 	bool IsCompleted();
 
 	UFUNCTION(BlueprintCallable)
-	EActionProcessState GetActionProcessState();
+	EProcessState GetActionProcessState();
 
 	UFUNCTION(BlueprintCallable)
 	ACharacter* GetActionOwner();
@@ -136,7 +123,7 @@ private:
 	UActionComponent* _actionComp;
 
 	UPROPERTY(VisibleAnywhere, Category = "Action")
-	EActionProcessState _processState;
+	EProcessState _processState;
 
 	UPROPERTY(EditDefaultsOnly)
 	UCostData* _costData;

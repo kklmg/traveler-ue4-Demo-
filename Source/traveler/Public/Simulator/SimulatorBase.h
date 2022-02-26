@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Process/ProcessSectionBase.h"
 #include "SimulatorBase.generated.h"
 
 DECLARE_DELEGATE_OneParam(FSimulationSignal, float);
@@ -10,19 +11,6 @@ DECLARE_DELEGATE_OneParam(FSimulationSignal, float);
 /**
  * 
  */
-
-USTRUCT(BlueprintType)
-struct FProcessSection
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	FSimulationSignal OnStartDelegate;
-	FSimulationSignal OnTickDelegate;
-	FSimulationSignal OnEndDelegate;
-
-	float durationTime;
-};
-
 
 
 UCLASS(Blueprintable)
@@ -35,11 +23,10 @@ public:
 	void Tick(float deltaTime);
 
 private:
-	float _sectionProcessElapsedTime;
-	float _totalProcessElapsedTime;
+	float _elapsedTime;
 
 	int32 curProcessIndex;
 
 	UPROPERTY()
-	TArray<FProcessSection> _processSections;
+	TArray<UProcessSectionBase*> _processSections;
 };

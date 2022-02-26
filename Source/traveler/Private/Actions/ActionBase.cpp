@@ -14,7 +14,7 @@ DEFINE_LOG_CATEGORY(LogAction);
 
 UActionBase::UActionBase()
 {
-	_processState = EActionProcessState::EAPS_UnInitialized;
+	_processState = EProcessState::EPS_UnInitialized;
 	_bInstantAction = true;
 	_actionName = TEXT("UnKnown");
 	_actionType = EActionType::EACT_None;
@@ -35,7 +35,7 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 	_attributeInterface = Cast<IAttributeInterface>(_actionOwner);
 	_animationModelProviderInterface = Cast<IAnimationModelProvider>(_actionOwner);
 	
-	_processState = EActionProcessState::EAPS_ReadyToExecute;
+	_processState = EProcessState::EPS_ReadyToExecute;
 
 	VTMInitialize();
 }
@@ -47,7 +47,7 @@ void UActionBase::VTMInitialize()
 
 void UActionBase::Pause()
 {
-	_processState = EActionProcessState::EAPS_Paused;
+	_processState = EProcessState::EPS_Paused;
 }
 
 FORCEINLINE void UActionBase::Execute()
@@ -56,7 +56,7 @@ FORCEINLINE void UActionBase::Execute()
 	{
 		UE_LOG(LogAction, Warning, TEXT("Can't execute Action"));
 
-		_processState = EActionProcessState::EAPS_FAILED;
+		_processState = EProcessState::EPS_FAILED;
 		return;
 	}
 
@@ -67,19 +67,19 @@ FORCEINLINE void UActionBase::Execute()
 
 	VTMExecute();
 
-	_processState = _bInstantAction ? EActionProcessState::EAPS_SUCCEEDED : EActionProcessState::EAPS_Running;
+	_processState = _bInstantAction ? EProcessState::EPS_SUCCEEDED : EProcessState::EPS_Running;
 }
 
 FORCEINLINE bool UActionBase::CanExecute()
 {
 	bool bEnoughResources = _attributeInterface && _attributeInterface->VCanConsume(_costData);
 
-	return (_processState == EActionProcessState::EAPS_ReadyToExecute && bEnoughResources && VTMCanExecute());
+	return (_processState == EProcessState::EPS_ReadyToExecute && bEnoughResources && VTMCanExecute());
 }
 
 void UActionBase::Tick(float deltaTime)
 {
-	if (_processState != EActionProcessState::EAPS_Running)
+	if (_processState != EProcessState::EPS_Running)
 	{
 		return;
 	}
@@ -101,9 +101,9 @@ void UActionBase::VTMTick(float deltaTime)
 
 void UActionBase::Abort()
 {
-	if (_processState == EActionProcessState::EAPS_Running)
+	if (_processState == EProcessState::EPS_Running)
 	{
-		_processState = EActionProcessState::EAPS_Aborted;
+		_processState = EProcessState::EPS_Aborted;
 	}
 }
 
@@ -121,10 +121,10 @@ EActionType UActionBase::GetActionType()
 
 FORCEINLINE bool UActionBase::IsCompleted()
 {
-	return (_processState == EActionProcessState::EAPS_SUCCEEDED || _processState == EActionProcessState::EAPS_FAILED || _processState == EActionProcessState::EAPS_Aborted);
+	return (_processState == EProcessState::EPS_SUCCEEDED || _processState == EProcessState::EPS_FAILED || _processState == EProcessState::EPS_Aborted);
 }
 
-FORCEINLINE EActionProcessState UActionBase::GetActionProcessState()
+FORCEINLINE EProcessState UActionBase::GetActionProcessState()
 {
 	return _processState;
 }
@@ -141,13 +141,13 @@ FORCEINLINE UActionBlackBoard* UActionBase::GetActionBlackBoard()
 
 void UActionBase::SetActionProcessSucceed()
 {
-	_processState = EActionProcessState::EAPS_SUCCEEDED;
+	_processState = EProcessState::EPS_SUCCEEDED;
 	VOnActionCompleted();
 }
 
 void UActionBase::SetActionProcessFailed()
 {
-	_processState = EActionProcessState::EAPS_FAILED;
+	_processState = EProcessState::EPS_FAILED;
 	VOnActionCompleted();
 }
 

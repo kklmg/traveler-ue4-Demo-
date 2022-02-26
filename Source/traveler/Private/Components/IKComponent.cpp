@@ -97,7 +97,7 @@ FIKData UIKComponent::FootTrace(EMeshSocketType meshSocketType)
 
 		result.rotator = FRotator(pitch, 0.0f, roll);
 
-		DrawDebugLine(GetWorld(), hitResult.ImpactPoint, hitResult.ImpactPoint + result.Normal * 100, FColor::Black, false, -1.0f, 0U, 5.0f);
+		//DrawDebugLine(GetWorld(), hitResult.ImpactPoint, hitResult.ImpactPoint + result.Normal * 100, FColor::Black, false, -1.0f, 0U, 5.0f);
 		//DrawDebugSphere(GetWorld(), hitResult.ImpactPoint,20,4,FColor::Purple);
 		//DrawDebugBox(GetWorld(), out_Origin, out_Extent, FColor::Cyan);
 	}
