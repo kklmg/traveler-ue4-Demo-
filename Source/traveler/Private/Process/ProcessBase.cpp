@@ -25,8 +25,24 @@ void UProcessBase::VEnd()
 
 void UProcessBase::VReset()
 {
-	_processState == EProcessState::EPS_ReadyToExecute;
+	_processState = EProcessState::EPS_ReadyToExecute;
 	VTMReset();
+}
+
+void UProcessBase::VTMEnter()
+{
+}
+
+void UProcessBase::VTMTick(float deltaTime)
+{
+}
+
+void UProcessBase::VTMEnd()
+{
+}
+
+void UProcessBase::VTMReset()
+{
 }
 
 

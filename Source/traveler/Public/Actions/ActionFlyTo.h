@@ -26,9 +26,6 @@ private:
 	bool _bUpdateDestination;
 
 	UPROPERTY(EditDefaultsOnly, Category = speed)
-	float _flyingSpeed;
-
-	UPROPERTY(EditDefaultsOnly, Category = speed)
 	float _turnningSpeed;
 
 	UPROPERTY(EditDefaultsOnly, Category = speed)
@@ -54,7 +51,9 @@ private:
 	float _resetFactorSpeed;
 
 
-	float _YawTurnning(FVector dirToDestination, FVector dirForward, float deltaTime);
+	float _YawTurnning(float flyingSpeed,FVector dirToDestination, FVector dirForward, float deltaTime);
 
 	float ComputePitch();
+
+	float GetBreakingDistance_Z(float offset, float curPitch, float pitchRate);
 };

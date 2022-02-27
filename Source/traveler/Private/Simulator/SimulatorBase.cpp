@@ -11,14 +11,20 @@ void USimulatorBase::Tick(float deltaTime)
 {
 	_elapsedTime += deltaTime;
 
-	if (_processSections.Num() > curProcessIndex) return;
+	//if (_processSections.Num() > curProcessIndex) return;
 
-	
 
-	if ( > _processSections[curProcessIndex].durationTime)
-	{
-		curProcessIndex++;
-	
-	}
-	
+
+	//_processSections[curProcessIndex]->VTick(deltaTime);
+
+
+
+	//processsec
+
+	//if ( > _processSections[curProcessIndex].durationTime)
+	//{
+	//	curProcessIndex++;
+	//
+	//}
+	//
 }

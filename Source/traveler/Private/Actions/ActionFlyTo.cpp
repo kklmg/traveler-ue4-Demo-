@@ -17,7 +17,6 @@ UActionFlyTo::UActionFlyTo()
 
 
 	_bInstantAction = false;
-	_flyingSpeed = 2000;
 	_turnningSpeed = 500;
 
 	_bUpdateDestination = true;
@@ -70,7 +69,7 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	//Get Flying Speed
 	//-------------------------------------------------------------------------------------------------------------
 	ACreatureCharacter* character = Cast<ACreatureCharacter>(GetActionOwner());
-	_flyingSpeed = character->GetCharacterMovement()->MaxFlySpeed;
+	float flyingSpeed = character->GetCharacterMovement()->MaxFlySpeed;
 
 
 	//Current Transform State
@@ -80,7 +79,7 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	FQuat curQuat = curTransform.GetRotation();
 	FRotator curRotator = curQuat.Rotator();
 
-	FVector forwardVector = character->GetActorForwardVector();
+	FVector actorForward = character->GetActorForwardVector();
 	FVector upVector = character->GetActorUpVector();
 	FVector rightVector = character->GetActorRightVector();
 
@@ -102,7 +101,7 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	//debug message
 	DrawDebugLine(GetWorld(), curLocation, _destination, FColor::Red, false, -1.0f, 0U, 30.0f);
 	DrawDebugLine(GetWorld(), curLocation, destLocXY, FColor::Green, false, -1.0f, 0U, 30.0f);
-	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), GetActionOwner()->GetActorLocation() + forwardVector * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
+	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), GetActionOwner()->GetActorLocation() + actorForward * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat(distance));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Velocity: " + FString::SanitizeFloat((character->GetVelocity()).Size()));
 
@@ -131,19 +130,58 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	}
 
 
-	FRotator newRotation = forwardVector.Rotation();
-	FVector newForwardVector = forwardVector;
+	FRotator newRotation = actorForward.Rotation();
+	FVector newForwardVector = actorForward;
 
 
 	//Yaw
 	//-------------------------------------------------------------------------------------------------------------
-	float deltaYaw = _YawTurnning(dirToDestination, forwardVector, deltaTime);
+	float deltaYaw = _YawTurnning(flyingSpeed,dirToDestination, actorForward, deltaTime);
 	newRotation.Yaw += deltaYaw;
 
 
 	//Pitch
 	//-------------------------------------------------------------------------------------------------------------
-	float curPitch = forwardVector.Rotation().Pitch;
+	float altitudeOffset = _destination.Z - curLocation.Z;
+
+	float verticalSpeed = actorForward.Z * flyingSpeed;
+	float verticalStep = verticalSpeed * deltaTime;
+
+	FRotator forward_Rotator = actorForward.Rotation();
+
+	float breakingDistance = 0; 
+
+	
+	float pitchStep = _pitchDegreePerSecond * deltaTime;
+
+
+	//forward_Rotator.Pitch += pitchStep;
+
+	//FVector forwardArfterPitch = forward_Rotator.Vector().GetSafeNormal();
+
+	//float afterAltitude = forwardArfterPitch.Z * flyingSpeed;
+
+
+	
+
+	//float verticalStepMax = _pitchDegreePerSecond * deltaTime;
+
+	
+
+
+
+	//if(verticalStep > altitudeOffset)
+	//{
+	//	deltaPitch = _pitchDegreePerSecond 
+	//
+	//
+	//}
+
+	
+	float deltaPitch = _pitchDegreePerSecond * deltaTime;
+	
+
+
 
 	//float verticalSpeed = _flyingSpeed * FMath::Sin(curPitch);
 	//float HorizontalSpeed = _flyingSpeed * FMath::Cos(curPitch);
@@ -151,36 +189,34 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	//float s = curPitch / _pitchDegreePerSecond;
 	//float d = verticalSpeed
 
-	float heightOffset = _destination.Z - curLocation.Z;
-
 	//if(heightOffset)
 
+	GetBreakingDistance_Z(altitudeOffset, forward_Rotator.Pitch, _pitchDegreePerSecond);
 
-	float deltaPitch = _pitchDegreePerSecond * deltaTime;
 
 
 	float pitchAfterRotation = 0;
-	if (FMath::Abs(heightOffset) < 100)
+	if (FMath::Abs(altitudeOffset) < 100)
 	{
-		if (curPitch == 0)
+		if (forward_Rotator.Pitch == 0)
 		{
 			deltaPitch = 0;
 		}
 		else
 		{
-			deltaPitch = -curPitch;
+			deltaPitch = -forward_Rotator.Pitch;
 		}
 	}
 	else
 	{
-		if (heightOffset < 0)
+		if (altitudeOffset < 0)
 		{
 			deltaPitch = -deltaPitch;
 		}
-		pitchAfterRotation = curPitch + deltaPitch;
+		pitchAfterRotation = forward_Rotator.Pitch + deltaPitch;
 		pitchAfterRotation = FMath::Clamp(pitchAfterRotation, -_limitedPitchDegree, _limitedPitchDegree);
 
-		deltaPitch = pitchAfterRotation - curPitch;
+		deltaPitch = pitchAfterRotation - forward_Rotator.Pitch;
 	}
 
 
@@ -188,12 +224,12 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	newForwardVector = newRotation.Vector();
 
 
-	FQuat turnQuat = FQuat::FindBetween(forwardVector,newForwardVector);
+	FQuat turnQuat = FQuat::FindBetween(actorForward,newForwardVector);
 
 	//apply movement
 	//-------------------------------------------------------------------------------------------------------------
 	character->AddActorWorldRotation(turnQuat);
-	character->AddMovementInput(forwardVector);
+	character->AddMovementInput(actorForward);
 	
 }
 
@@ -203,9 +239,7 @@ bool UActionFlyTo::_GetDestination(FVector& outVector)
 }
 
 
-
-
-float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, float deltaTime)
+float UActionFlyTo::_YawTurnning(float flyingSpeed,FVector dirToDestination, FVector dirForward, float deltaTime)
 {
 	//-------------------------------------------------------------------------------------------------------------
 	//Direction to Destination
@@ -233,7 +267,7 @@ float UActionFlyTo::_YawTurnning(FVector dirToDestination, FVector dirForward, f
 
 	//Compute Turning Radius, CircleCenter 
 	//-------------------------------------------------------------------------------------------------------------
-	float turningRadius = _flyingSpeed / FMath::DegreesToRadians(_yawDegreePerSecond);
+	float turningRadius = flyingSpeed / FMath::DegreesToRadians(_yawDegreePerSecond);
 	FVector dirRight = GetActionOwner()->GetActorRightVector();
 	dirRight.Z = 0;
 	dirRight.Normalize();
@@ -338,5 +372,15 @@ float UActionFlyTo::ComputePitch()
 		return FMath::Acos((2 - altitudeOffset * pitchSpeed) / 2) / pitchSpeed;
 	}
 
+}
+
+float UActionFlyTo::GetBreakingDistance_Z(float offset, float curPitch, float pitchRate)
+{
+	//cos(cur)- cos(cur + rate*t ) / w = distnace
+
+	float timeToPitch0 = FMath::Abs(curPitch) / pitchRate;
+	float result = FMath::Cos(FMath::DegreesToRadians(curPitch)) - cos(FMath::DegreesToRadians(curPitch + timeToPitch0 * pitchRate)) / FMath::DegreesToRadians(pitchRate);
+	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "breaking distance: " + FString::SanitizeFloat(result));
+	return result;
 }
 
