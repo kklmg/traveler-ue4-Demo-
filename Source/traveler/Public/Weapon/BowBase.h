@@ -16,6 +16,8 @@ class UQuiverComponent;
 
 class ICharacterCameraInterface;
 
+class UcrosshairWidget;
+
 /**
  * 
  */
@@ -85,6 +87,13 @@ private:
 	void AttachArrowsToBow();
 
 private:
+
+	// crosshair class to spawn.
+	UPROPERTY(VisibleAnywhere, Category = Projectile)
+	TSubclassOf<UcrosshairWidget> _crosshairWidgetClass;
+
+	UPROPERTY()
+	UcrosshairWidget* _crosshairWidgetIns;
 
 	// Projectile class to spawn.
 	UPROPERTY(VisibleAnywhere, Category = Projectile)

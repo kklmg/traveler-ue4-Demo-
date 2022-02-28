@@ -13,6 +13,7 @@
 #include "Interface/CharacterCameraInterface.h"
 #include "Interface/MeshSocketTransformProvider.h"
 #include "Interface/ActionInterface.h"
+#include "UI/crosshairWidget.h"
 
 
 ABowBase::ABowBase()
@@ -63,6 +64,11 @@ void ABowBase::VInitialize(ACreatureCharacter* weaponOwner)
 void ABowBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if(_crosshairWidgetClass)
+	{
+		_crosshairWidgetIns = NewObject<UcrosshairWidget>(this, _crosshairWidgetClass);
+	}
 }
 
 void ABowBase::Tick(float DeltaTime)
@@ -112,6 +118,11 @@ void ABowBase::VTMStarAiming()
 		weaponOwner->VSetCameraArmPitchLimit(-60, 60);
 		weaponOwner->VDragCamera(_aimingCameraOffset);
 		weaponOwner->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, false);
+
+		if(_crosshairWidgetIns)
+		{
+			_crosshairWidgetIns->AddToViewport(100);
+		}
 	}
 }
 
@@ -136,6 +147,11 @@ void ABowBase::VTMStopAiming()
 	{
 		_characterCamera->VResetCameraArmPitchLimit();
 		_characterCamera->VCancelDragCamera();
+	}
+
+	if (_crosshairWidgetIns)
+	{
+		_crosshairWidgetIns->RemoveFromViewport();
 	}
 
 	//ClearHoldingArrows();
