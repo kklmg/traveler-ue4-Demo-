@@ -16,7 +16,7 @@ class UQuiverComponent;
 
 class ICharacterCameraInterface;
 
-class UcrosshairWidget;
+class UCrosshairWidgetBase;
 
 /**
  * 
@@ -89,11 +89,11 @@ private:
 private:
 
 	// crosshair class to spawn.
-	UPROPERTY(VisibleAnywhere, Category = Projectile)
-	TSubclassOf<UcrosshairWidget> _crosshairWidgetClass;
+	UPROPERTY(EditAnyWhere, Category = UI)
+	TSubclassOf<UCrosshairWidgetBase> _crosshairWidgetClass;
 
 	UPROPERTY()
-	UcrosshairWidget* _crosshairWidgetIns;
+	UCrosshairWidgetBase* _crosshairWidgetIns;
 
 	// Projectile class to spawn.
 	UPROPERTY(VisibleAnywhere, Category = Projectile)

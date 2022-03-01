@@ -380,7 +380,7 @@ float UActionFlyTo::GetBreakingDistance_Z(float offset, float curPitch, float pi
 
 	float timeToPitch0 = FMath::Abs(curPitch) / pitchRate;
 	float result = FMath::Cos(FMath::DegreesToRadians(curPitch)) - cos(FMath::DegreesToRadians(curPitch + timeToPitch0 * pitchRate)) / FMath::DegreesToRadians(pitchRate);
-	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "breaking distance: " + FString::SanitizeFloat(result));
+	//GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "breaking distance: " + FString::SanitizeFloat(result));
 	return result;
 }
 

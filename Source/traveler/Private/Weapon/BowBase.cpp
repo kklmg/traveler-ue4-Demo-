@@ -13,7 +13,7 @@
 #include "Interface/CharacterCameraInterface.h"
 #include "Interface/MeshSocketTransformProvider.h"
 #include "Interface/ActionInterface.h"
-#include "UI/crosshairWidget.h"
+#include "UI/CrosshairWidgetBase.h"
 
 
 ABowBase::ABowBase()
@@ -67,7 +67,7 @@ void ABowBase::BeginPlay()
 
 	if(_crosshairWidgetClass)
 	{
-		_crosshairWidgetIns = NewObject<UcrosshairWidget>(this, _crosshairWidgetClass);
+		_crosshairWidgetIns = NewObject<UCrosshairWidgetBase>(this, _crosshairWidgetClass);
 	}
 }
 
@@ -136,6 +136,12 @@ void ABowBase::VTMAimingInProgress(float deltaTime)
 	AttachArrowsToHand();
 
 	_strength = FMath::Clamp(_strength + deltaTime * _drawingVelocity, 0.0f, 1.0f);
+
+	if (_crosshairWidgetIns)
+	{
+		_crosshairWidgetIns->Animate(deltaTime,true);
+	}
+
 }
 
 void ABowBase::VTMStopAiming()
