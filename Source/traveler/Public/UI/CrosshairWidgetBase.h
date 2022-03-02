@@ -66,26 +66,32 @@ class TRAVELER_API UCrosshairWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	virtual void NativeConstruct() override;
+	UCrosshairWidgetBase(const FObjectInitializer& ObjectInitializer);
 
-	virtual void NativeOnInitialized() override;
-
-	void Animate(float deltaTime, bool isForward);
-
+	virtual void NativeConstruct() override;	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-	void SetDurationTime(float durationTime);
+	void Animate(float deltaTime);
+	void SetAnimForward(bool isForward);
 
-public:
-	UPROPERTY(EditAnyWhere,BlueprintReadOnly, Instanced)
-	TArray<UAnimatedImageBase*> AnimElements;
+	void SetDurationTime(float durationTime);
+	void SetIsOnTarget(bool isOnTarget);
 
 private:
+	UPROPERTY()
+	TArray<UAnimatedImageBase*> _animElements;
+
 	UPROPERTY(EditAnyWhere)
 	float _durationTime;
 
 	UPROPERTY(EditAnyWhere)
-	UPanelWidget* widget;
+	float _ZOrder;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UImage* _widgetOnTarget;
 
 	float _elapsedTime;
+
+	bool _bIsAnimForward;
+	bool _bIsOnTarget;
 };

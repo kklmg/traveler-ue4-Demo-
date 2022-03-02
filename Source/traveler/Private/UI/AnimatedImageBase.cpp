@@ -10,6 +10,12 @@ UAnimatedImageBase::UAnimatedImageBase()
 
 }
 
+void UAnimatedImageBase::Initialize()
+{
+	_startLocation = RenderTransform.Translation;
+	_startAngle = RenderTransform.Angle;
+}
+
 void UAnimatedImageBase::Animate(float alpha)
 {
 	FWidgetTransform widgetTransform;
@@ -26,10 +32,9 @@ void UAnimatedImageBase::Animate(float alpha)
 
 	widgetTransform.Translation.X = FMath::Lerp(_startLocation.X, _endLocation.X, curveValue.X);
 	widgetTransform.Translation.Y = FMath::Lerp(_startLocation.Y, _endLocation.Y, curveValue.Y);
+	widgetTransform.Angle = FMath::Lerp(_startAngle, _endAngle, curveValue.Z);
+
 	//widgetTransform.Angle;
 
 	SetRenderTransform(widgetTransform);
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("widget animation"));
-
 }

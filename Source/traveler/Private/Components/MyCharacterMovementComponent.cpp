@@ -153,9 +153,9 @@ FFlygingSimulationData UMyCharacterMovementComponent::GenerateFlyingUpSimulation
 	simulationData.TimeFrame_Stop = simulationData.TimeFrame_StartDecelerate + duration_Accelerate;
 
 
-	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "Travelable Distance during Acceleration: " + FString::SanitizeFloat(TravelableDistanceDuringAcceleration));
-	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "Altitude Offset: " + FString::SanitizeFloat(altitudeOffset));
-	simulationData.ShowDebugMessage();
+//	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "Travelable Distance during Acceleration: " + FString::SanitizeFloat(TravelableDistanceDuringAcceleration));
+//	GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Black, "Altitude Offset: " + FString::SanitizeFloat(altitudeOffset));
+//	simulationData.ShowDebugMessage();
 
 	return simulationData;
 }

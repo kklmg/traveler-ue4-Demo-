@@ -18,21 +18,23 @@ class TRAVELER_API UAnimatedImageBase : public UImage
 public:
 	UAnimatedImageBase();
 
+	void Initialize();
+
 	void Animate(float alpha);
 
 private:
-	UPROPERTY(EditAnyWhere)
+	UPROPERTY()
 	FVector2D _startLocation;
 
-	UPROPERTY(EditAnyWhere)
+	UPROPERTY()
+	float _startAngle;
+
+	UPROPERTY(EditAnyWhere, category = AnimData)
 	FVector2D _endLocation;
 
-	UPROPERTY(EditAnyWhere)
-	FRotator StartRotation;
+	UPROPERTY(EditAnyWhere, category = AnimData)
+	float _endAngle;
 
-	UPROPERTY(EditAnyWhere)
-	FRotator EndRotation;
-
-	UPROPERTY(EditAnyWhere)
+	UPROPERTY(EditAnyWhere, category = AnimData)
 	UCurveVector* _animCurve;
 };

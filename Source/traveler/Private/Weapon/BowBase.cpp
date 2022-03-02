@@ -79,6 +79,11 @@ void ABowBase::Tick(float DeltaTime)
 	_animationModel.bIsHoldingArrows = _holdingArrows.Num() > 0;
 	_animationModel.HandRoll = _handRollArray[_handRollSelectID];
 
+	if (_crosshairWidgetIns)
+	{
+		_crosshairWidgetIns->Animate(DeltaTime);
+	}
+
 	UpdateArrowsTransform();
 }
 
@@ -113,7 +118,7 @@ void ABowBase::VTMStopFiring()
 void ABowBase::VTMStarAiming()
 {
 	ACreatureCharacter* weaponOwner = GetWeaponOwner();
-	if(weaponOwner && weaponOwner->VGetAnimationModel().bIsSprinting == false)
+	if(weaponOwner /*&& weaponOwner->VGetAnimationModel().bIsSprinting == false*/)
 	{
 		weaponOwner->VSetCameraArmPitchLimit(-60, 60);
 		weaponOwner->VDragCamera(_aimingCameraOffset);
@@ -121,7 +126,7 @@ void ABowBase::VTMStarAiming()
 
 		if(_crosshairWidgetIns)
 		{
-			_crosshairWidgetIns->AddToViewport(100);
+			_crosshairWidgetIns->SetAnimForward(true);
 		}
 	}
 }
@@ -136,12 +141,6 @@ void ABowBase::VTMAimingInProgress(float deltaTime)
 	AttachArrowsToHand();
 
 	_strength = FMath::Clamp(_strength + deltaTime * _drawingVelocity, 0.0f, 1.0f);
-
-	if (_crosshairWidgetIns)
-	{
-		_crosshairWidgetIns->Animate(deltaTime,true);
-	}
-
 }
 
 void ABowBase::VTMStopAiming()
@@ -157,7 +156,7 @@ void ABowBase::VTMStopAiming()
 
 	if (_crosshairWidgetIns)
 	{
-		_crosshairWidgetIns->RemoveFromViewport();
+		_crosshairWidgetIns->SetAnimForward(false);
 	}
 
 	//ClearHoldingArrows();
@@ -212,10 +211,21 @@ void ABowBase::AttachArrowsToHand()
 	FVector LineTraceEnd = cameraLocation + cameraForward * cameraComp->OrthoFarClipPlane;
 
 	FVector hitLocation = LineTraceEnd;
-	if (GetWorld()->LineTraceSingleByChannel(hitResult, LineTraceStart, LineTraceEnd, ECC_Visibility, CollisionParams))
+	
+	//Execute line Tracing
+	bool bHitted = false;
+	bHitted = GetWorld()->LineTraceSingleByChannel(hitResult, LineTraceStart, LineTraceEnd, ECC_Visibility, CollisionParams);
+
+	if (bHitted)
 	{
 		hitLocation = hitResult.ImpactPoint;
 	}
+
+	if (_crosshairWidgetIns)
+	{
+		_crosshairWidgetIns->SetIsOnTarget(bHitted);
+	}
+
 
 	//get hand transform
 	FTransform rightHandTransform;
