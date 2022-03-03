@@ -16,6 +16,11 @@ AArrowActorBase::AArrowActorBase()
 
 	_elapsedTimeFromLaunch = 0.0f;
 	_elapsedTimeFromHit = 0.0f;
+
+	if(_meshComp)
+	{
+		_meshComp->SetCollisionProfileName(FName("Projectile"));
+	}
 }
 
 void AArrowActorBase::BeginPlay()
@@ -29,7 +34,6 @@ void AArrowActorBase::BeginPlay()
 
 	if (_meshComp)
 	{
-		_meshComp->SetCollisionProfileName(FName("Projectile"));
 		_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		//OnHit 
@@ -95,6 +99,7 @@ void AArrowActorBase::VReset()
 
 	FDetachmentTransformRules detachRule(EDetachmentRule::KeepWorld,true);
 	DetachFromActor(detachRule);
+	
 }
 
 void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
@@ -102,7 +107,6 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	_projectileMovementComp->Velocity = FVector::ZeroVector;
 	_arrowState = EArrowState::EAS_Hitted;
 	_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
 
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
