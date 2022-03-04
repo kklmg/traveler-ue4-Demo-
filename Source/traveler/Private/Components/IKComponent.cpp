@@ -85,7 +85,7 @@ FIKData UIKComponent::FootTrace(EMeshSocketType meshSocketType)
 
 	//Execute Line Tracing 
 	if (UKismetSystemLibrary::LineTraceSingle(GetWorld(), TraceStart, TraceEnd, 
-		UEngineTypes::ConvertToTraceType(ECC_Visibility), true, ignoreArray, EDrawDebugTrace::ForOneFrame, hitResult, true))
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility), true, ignoreArray, EDrawDebugTrace::ForOneFrame, hitResult, true))
 	{
 		result.Offset = hitResult.ImpactPoint.Z - groundHeight;
 		result.bImpact = true;

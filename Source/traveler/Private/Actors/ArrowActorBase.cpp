@@ -98,22 +98,24 @@ void AArrowActorBase::VReset()
 	_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	FDetachmentTransformRules detachRule(EDetachmentRule::KeepWorld,true);
-	DetachFromActor(detachRule);
+	//DetachFromActor(detachRule);
+	DetachRootComponentFromParent();
 	
 }
 
 void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	_projectileMovementComp->Velocity = FVector::ZeroVector;
+	//_projectileMovementComp->Velocity = FVector::ZeroVector;
 	_arrowState = EArrowState::EAS_Hitted;
-	_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
 		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, Hit.ImpactPoint);
 	}
-
-	AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform);
+	//Todo
+	AddActorWorldOffset(GetActorForwardVector() * 30);
+	AttachToComponent(OtherComponent, FAttachmentTransformRules::KeepWorldTransform, Hit.BoneName);
 
 	if (OtherActor != GetInstigator())
 	{
