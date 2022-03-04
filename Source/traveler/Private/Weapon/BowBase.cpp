@@ -104,7 +104,7 @@ bool ABowBase::VTMCanAim()
 
 void ABowBase::VTMStartFiring()
 {
-	_bowState = EBowState::EBS_Released;
+	_bowState = EBowState::EBS_ReleaseStart;
 }
 
 void ABowBase::VTMFiringInProgress(float deltaTime)
@@ -185,7 +185,8 @@ void ABowBase::UpdateArrowsTransform()
 			AttachArrowsToHand();
 		}
 		break;
-		case EBowState::EBS_Released:
+		case EBowState::EBS_ReleaseStart:
+		case EBowState::EBS_ReleaseEnd:
 			break;
 		default:
 			break;
@@ -311,7 +312,7 @@ void ABowBase::OnEnterAnimFrame_ReleaseBowString()
 {
 	LaunchArrows();
 	
-	_bowState = EBowState::EBS_Released;
+	_bowState = EBowState::EBS_ReleaseEnd;
 }
 
 void ABowBase::OnEnterAnimFrame_ReloadCompleted()

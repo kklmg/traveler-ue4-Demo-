@@ -26,6 +26,7 @@ enum class EBowState : uint8
 	EBS_Drawing UMETA(DisplayName = "Drawing"),
 	EBS_FullyDrawed UMETA(DisplayName = "FullyDrawed"),
 	EBS_OverDrawing UMETA(DisplayName = "OverDrawing"),
-	EBS_Released UMETA(DisplayName = "Released"),
+	EBS_ReleaseStart UMETA(DisplayName = "ReleaseStart"),
+	EBS_ReleaseEnd UMETA(DisplayName = "ReleaseEnd"),
 };
 
