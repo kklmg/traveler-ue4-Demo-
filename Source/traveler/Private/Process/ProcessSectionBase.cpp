@@ -5,7 +5,7 @@
 
 void UProcessSectionBase::VTMEnter()
 {
-	Super::VEnter();
+	Super::VExecute();
 }
 
 void UProcessSectionBase::VTMTick(float deltaTime)
@@ -15,10 +15,10 @@ void UProcessSectionBase::VTMTick(float deltaTime)
 	_elapsedTime += deltaTime;
 }
 
-void UProcessSectionBase::VTMEnd()
-{
-	Super::VEnd();
-}
+//void UProcessSectionBase::VTMEnd()
+//{
+//	Super::VEnd();
+//}
 
 float UProcessSectionBase::GetElapsedTime()
 {

@@ -3,10 +3,19 @@
 
 #include "Process/ProcessBase.h"
 
-void UProcessBase::VEnter()
+void UProcessBase::VInitialize()
 {
-	_processState = EProcessState::EPS_Running;
-	VTMEnter();
+	_processState = EProcessState::EPS_ReadyToExecute;
+	VTMInitialize();
+}
+
+void UProcessBase::VExecute()
+{
+	if (_processState == EProcessState::EPS_ReadyToExecute && VTMCanExecute())
+	{
+		_processState = EProcessState::EPS_Running;
+		VTMExecute();
+	}
 }
 
 void UProcessBase::VTick(float deltaTime)
@@ -17,19 +26,32 @@ void UProcessBase::VTick(float deltaTime)
 	}
 }
 
-void UProcessBase::VEnd()
+void UProcessBase::VAbort()
 {
-	_processState = EProcessState::EPS_SUCCEEDED;
-	VTMEnd();
+	if (VIsAlive())
+	{
+		_processState = EProcessState::EPS_Aborted;
+		VTMOnDead();
+	}
 }
+
 
 void UProcessBase::VReset()
 {
-	_processState = EProcessState::EPS_ReadyToExecute;
+	_processState = EProcessState::EPS_UnInitialized;
 	VTMReset();
 }
 
-void UProcessBase::VTMEnter()
+void UProcessBase::VTMInitialize()
+{
+}
+
+bool UProcessBase::VTMCanExecute()
+{
+	return true;
+}
+
+void UProcessBase::VTMExecute()
 {
 }
 
@@ -37,7 +59,19 @@ void UProcessBase::VTMTick(float deltaTime)
 {
 }
 
-void UProcessBase::VTMEnd()
+void UProcessBase::VTMOnDead()
+{
+}
+
+void UProcessBase::VTMOnSucceed()
+{
+}
+
+void UProcessBase::VTMOnFailed()
+{
+}
+
+void UProcessBase::VTMOnAborted()
 {
 }
 
@@ -45,10 +79,28 @@ void UProcessBase::VTMReset()
 {
 }
 
+void UProcessBase::SetSucceed()
+{
+	if(_processState == EProcessState::EPS_Running)
+	{
+		_processState = EProcessState::EPS_SUCCEEDED;
+		VTMOnSucceed();
+	}
+}
+
+void UProcessBase::SetFailed()
+{
+	if (_processState == EProcessState::EPS_Running)
+	{
+		_processState = EProcessState::EPS_FAILED;
+		VTMOnFailed();
+	}
+}
+
 
 bool UProcessBase::VIsAlive()
 {
-	return (_processState == EProcessState::EPS_Running || _processState == EProcessState::EPS_Running);
+	return (_processState == EProcessState::EPS_Running || _processState == EProcessState::EPS_Paused);
 }
 bool UProcessBase::VIsDead()
 {

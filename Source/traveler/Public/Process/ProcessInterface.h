@@ -24,9 +24,11 @@ class TRAVELER_API IProcessInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	virtual void VEnter()  PURE_VIRTUAL(IProcessInterface::VEnter, );
+	virtual FName VGetName() PURE_VIRTUAL(IProcessInterface::VGetName,return FName(););
+	virtual void VInitialize() PURE_VIRTUAL(IProcessInterface::VInitialize,);
+	virtual void VExecute()  PURE_VIRTUAL(IProcessInterface::VExecute, );
 	virtual void VTick(float deltaTime) PURE_VIRTUAL(IProcessInterface::VTick, );
-	virtual void VEnd() PURE_VIRTUAL(IProcessInterface::VEnd, );
+	virtual void VAbort() PURE_VIRTUAL(IProcessInterface::VAbort, );
 	virtual void VReset() PURE_VIRTUAL(IProcessInterface::VReset, );
 	virtual bool VIsAlive() PURE_VIRTUAL(IProcessInterface::VIsAlive, return false; );
 	virtual bool VIsDead() PURE_VIRTUAL(IProcessInterface::VIsDead, return true;);

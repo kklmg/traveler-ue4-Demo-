@@ -16,7 +16,7 @@ class TRAVELER_API UProcessSectionBase : public UProcessBase
 public:
 	virtual void VTMEnter();
 	virtual void VTMTick(float deltaTime);
-	virtual void VTMEnd();
+	//virtual void VTMEnd();
 	virtual void VTMReset();
 
 	float GetElapsedTime();

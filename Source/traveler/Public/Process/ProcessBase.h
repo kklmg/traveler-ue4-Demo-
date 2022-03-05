@@ -15,22 +15,32 @@ class TRAVELER_API UProcessBase : public UObject, public IProcessInterface
 {
 	GENERATED_BODY()
 public:
-	virtual void VEnter() final;
+	virtual void VInitialize() final;
+	virtual void VExecute() final;
 	virtual void VTick(float deltaTime) final;
-	virtual void VEnd() final;
+	virtual void VAbort() final;
 	virtual void VReset() final;
-
-	virtual void VTMEnter();
-	virtual void VTMTick(float deltaTime);
-	virtual void VTMEnd();
-	virtual void VTMReset();
 
 	virtual bool VIsAlive() final;
 	virtual bool VIsDead() final;
 	virtual EProcessState VGetProcessState() final;
 	virtual void VSetState(EProcessState newState) final;
 
-protected:
+protected:	
+	virtual void VTMInitialize();
+	virtual bool VTMCanExecute();
+	virtual void VTMExecute();
+	virtual void VTMTick(float deltaTime);
+	virtual void VTMReset();
+
+	virtual void SetSucceed();
+	virtual void SetFailed();
+
+
+	virtual void VTMOnDead();
+	virtual void VTMOnSucceed();
+	virtual void VTMOnFailed();
+	virtual void VTMOnAborted();
 
 private:
 	EProcessState _processState;
