@@ -98,8 +98,8 @@ void AArrowActorBase::VReset()
 	_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	FDetachmentTransformRules detachRule(EDetachmentRule::KeepWorld,true);
-	//DetachFromActor(detachRule);
-	DetachRootComponentFromParent();
+	DetachFromActor(detachRule);
+	//DetachRootComponentFromParent();
 	
 }
 

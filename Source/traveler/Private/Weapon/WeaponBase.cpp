@@ -6,6 +6,11 @@
 #include "Components/PoseableMeshComponent.h"
 #include "Data/WeaponAnimationModelBase.h"
 #include "Components/MeshSocketComponent.h"
+#include "Process/ProcessManagerBase.h"
+#include "Interface/ActionInterface.h"
+#include "Interface/CharacterCameraInterface.h"
+#include "Process/ProcessInterface.h"
+
 
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -28,9 +33,7 @@ AWeaponBase::AWeaponBase()
 		check(_meshSocketComponent != nullptr);
 		_meshSocketComponent->Initialize(_skeletalMeshComponent);
 	}
-
-	_isReadyToFire = false;
-	WeaponType = EWeaponType::EWT_None;
+	_weaponType = EWeaponType::EWT_None;
 }
 
 // Called when the game starts or when spawned
@@ -38,17 +41,47 @@ void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	_processManager = NewObject<UProcessManagerBase>(this);
 }
 
 void AWeaponBase::VInitialize(ACreatureCharacter* weaponOwner)
 {
 	_weaponOwner = weaponOwner;
+	_ownerActionInterface = Cast<IActionInterface>(_weaponOwner);
+	_ownerCameraInterface = Cast<ICharacterCameraInterface>(_weaponOwner);
 }
 
 // Called every frame
 void AWeaponBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	_processManager->Tick(DeltaTime);
+}
+
+void AWeaponBase::ExecuteProcess(FName processName)
+{
+	_processManager->ExecuteProcess(processName);
+}
+
+void AWeaponBase::StopProcess(FName processName)
+{
+	_processManager->StopProcess(processName);
+}
+
+void AWeaponBase::StopAllProcesses()
+{
+	_processManager->StopAllProcess();
+}
+
+void AWeaponBase::AddToProcessStorage(IProcessInterface* process)
+{
+	_processManager->AddProcess(process);
+}
+
+bool AWeaponBase::IsProcessRunning(FName processName)
+{
+	return _processManager->GetProcessState(processName) == EProcessState::EPS_Running;
 }
 
 USkeletalMeshComponent* AWeaponBase::GetMeshComponent()
@@ -61,77 +94,29 @@ ACreatureCharacter* AWeaponBase::GetWeaponOwner()
 	return _weaponOwner;
 }
 
-//UWeaponAnimationModelBase* AWeaponBase::GetAnimationModel()
-//{
-//	return _animationModel;
-//}
-
-
-void AWeaponBase::StartFiring()
+EWeaponType AWeaponBase::GetWeaponType()
 {
-	if (_isFiring == false && VTMCanFire())
-	{
-		_isFiring = true;
-		VTMStartFiring();
-	}
-}
-void AWeaponBase::FiringInProgress(float deltaTime)
-{
-	if (_isFiring)
-	{
-		VTMFiringInProgress(deltaTime);
-	}
-}
-void AWeaponBase::StopFiring()
-{
-	if (_isFiring)
-	{
-		_isFiring = false;
-		VTMStopFiring();
-	}
+	return _weaponType;
 }
 
-void AWeaponBase::StarAiming()
-{
-	if (_isAiming == false && VTMCanAim())
-	{
-		_isAiming = true;
-		VTMStarAiming();
-	}
-}
-void AWeaponBase::AimingInProgress(float deltaTime)
-{
-	if (_isAiming)
-	{
-		VTMAimingInProgress(deltaTime);
-	}
-}
-void AWeaponBase::StopAiming()
-{
-	if (_isAiming)
-	{
-		_isAiming = false;
-		VTMStopAiming();
-	}
-}
-
-void AWeaponBase::StopAllActions()
-{
-	StopFiring();
-	StopAiming();
-}
 
 void AWeaponBase::VReset()
 {
 }
 
-bool AWeaponBase::IsFiring()
+EAnimationState AWeaponBase::GetOwnerAnimationState()
 {
-	return _isFiring;
+	return _characterAnimationState;
 }
-bool AWeaponBase::IsAiming()
+
+IActionInterface* AWeaponBase::GetOwnerActionInterface()
 {
-	return _isAiming;
+	return _ownerActionInterface;
+}
+
+ICharacterCameraInterface* AWeaponBase::GetOwnerCameraInterface()
+{
+	return _ownerCameraInterface;
 }
 
 void AWeaponBase::VWeaponControlButtonA()
@@ -149,8 +134,6 @@ void AWeaponBase::VWeaponControlButtonC()
 void AWeaponBase::VWeaponControlButtonD()
 {
 }
-
-
 
 
 FName AWeaponBase::GetMeshSocketNameByType(EMeshSocketType meshSocketType)

@@ -116,3 +116,8 @@ void UProcessBase::VSetState(EProcessState newState)
 {
 	_processState = newState;
 }
+
+//FName UProcessBase::VGetProcessName()
+//{
+//	return FName();
+//}

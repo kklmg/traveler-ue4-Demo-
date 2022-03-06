@@ -14,11 +14,12 @@ UCLASS()
 class TRAVELER_API UProcessManagerBase : public UObject
 {
 	GENERATED_BODY()
-
 public:
 	void ExecuteProcess(FName processName);
 	void StopProcess(FName processName);
 	void StopAllProcess();
+
+	void AddProcess(IProcessInterface* process);
 
 	EProcessState GetProcessState(FName processName);
 

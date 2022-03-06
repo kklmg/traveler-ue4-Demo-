@@ -25,6 +25,7 @@ UCLASS()
 class TRAVELER_API ABowBase : public AWeaponBase
 {
 	GENERATED_BODY()
+
 public:
 	ABowBase();
 public:
@@ -47,6 +48,12 @@ public:
 	UFUNCTION(BlueprintPure)
 	EBowState GetBowState();
 
+	void SetBowState(EBowState bowState);
+	void DragCamera(bool bDrag);
+	void AnimateCrosshair(bool bForward);
+	void SetStrength(float elapsedTime);
+	
+
 	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState) override;
 
 	virtual void VWeaponControlButtonA() override;
@@ -65,17 +72,6 @@ protected:
 	void DecreaseArrows();
 
 protected:
-	virtual bool VTMCanFire() override;
-	virtual bool VTMCanAim() override;
-
-	virtual void VTMStartFiring() override;
-	virtual void VTMFiringInProgress(float deltaTime) override;
-	virtual void VTMStopFiring() override;
-
-	virtual void VTMStarAiming() override;
-	virtual void VTMAimingInProgress(float deltaTime) override;
-	virtual void VTMStopAiming() override;
-
 	virtual void VReset() override;
 
 private:
@@ -136,8 +132,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = AnimationModel)
 	FBowAnimationModelBase _animationModel;
-
-	ICharacterCameraInterface* _characterCamera;
 
 	UPROPERTY(VisibleAnywhere, Category = Projectile)
 	UQuiverComponent* _quiverComponent;

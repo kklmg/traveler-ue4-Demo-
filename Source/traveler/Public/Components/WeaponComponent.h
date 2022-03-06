@@ -34,6 +34,11 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void ExecuteWeaponProcess(FName processName);
+	void StopWeaponProcess(FName processName);
+	void StopAllWeaponProcesses();
+
+
 	void EquipWeapon(AWeaponBase* weapon);
 
 	void TakeOutWeapon(bool isTakeOut);

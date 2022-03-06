@@ -15,6 +15,8 @@
 #include "Interface/ActionInterface.h"
 #include "UI/CrosshairWidgetBase.h"
 
+#include "Weapon/WeaponProcess/BowProcess/BowProcessFire.h"
+#include "Weapon/WeaponProcess/BowProcess/BowProcessAim.h"
 
 ABowBase::ABowBase()
 {
@@ -25,7 +27,7 @@ ABowBase::ABowBase()
 		check(_quiverComponent != nullptr);
 	}
 
-	WeaponType = EWeaponType::EWT_Bow;
+	_weaponType	= EWeaponType::EWT_Bow;
 	_bowState = EBowState::EBS_Normal;
 
 	_strength = 0.0f;
@@ -58,7 +60,13 @@ void ABowBase::VInitialize(ACreatureCharacter* weaponOwner)
 {
 	Super::VInitialize(weaponOwner);
 
-	_characterCamera = Cast<ICharacterCameraInterface>(weaponOwner);
+	UBowProcessFire* processFire = NewObject<UBowProcessFire>(this);
+	processFire->VSetWeapon(this);
+	AddToProcessStorage(processFire);
+
+	UBowProcessAim* processAim = NewObject<UBowProcessAim>(this);
+	processAim->VSetWeapon(this);
+	AddToProcessStorage(processAim);
 }
 
 void ABowBase::BeginPlay()
@@ -87,87 +95,10 @@ void ABowBase::Tick(float DeltaTime)
 	UpdateArrowsTransform();
 }
 
-bool ABowBase::VTMCanFire()
-{
-	return (_characterAnimationState == EAnimationState::EAnimState_Walk || _characterAnimationState == EAnimationState::EAnimState_Fall )
-			&& ( _bowState == EBowState::EBS_FullyDrawed || _bowState == EBowState::EBS_OverDrawing);
-}
-
-bool ABowBase::VTMCanAim()
-{
-	IActionInterface* actionInterface = Cast<IActionInterface>(GetWeaponOwner());
-
-	bool bIsDodging = actionInterface ? actionInterface->VCheckActionIsInProgress(EActionType::EACT_Dodge) : false;
-
-	return (_characterAnimationState == EAnimationState::EAnimState_Walk || _characterAnimationState == EAnimationState::EAnimState_Fall) && bIsDodging == false;
-}
-
-void ABowBase::VTMStartFiring()
-{
-	_bowState = EBowState::EBS_ReleaseStart;
-}
-
-void ABowBase::VTMFiringInProgress(float deltaTime)
-{
-}
-
-void ABowBase::VTMStopFiring()
-{
-}
-
-void ABowBase::VTMStarAiming()
-{
-	ACreatureCharacter* weaponOwner = GetWeaponOwner();
-	if(weaponOwner /*&& weaponOwner->VGetAnimationModel().bIsSprinting == false*/)
-	{
-		weaponOwner->VSetCameraArmPitchLimit(-60, 60);
-		weaponOwner->VDragCamera(_aimingCameraOffset);
-		weaponOwner->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, false);
-
-		if(_crosshairWidgetIns)
-		{
-			_crosshairWidgetIns->SetAnimForward(true);
-		}
-	}
-}
-
-void ABowBase::VTMAimingInProgress(float deltaTime)
-{
-	FRotator rotator = GetWeaponOwner()->VGetCameraRotation();
-	rotator.Pitch = 0;
-	rotator.Roll = 0;
-
-	GetWeaponOwner()->SetActorRotation(rotator);
-	AttachArrowsToHand();
-
-	_strength = FMath::Clamp(_strength + deltaTime * _drawingVelocity, 0.0f, 1.0f);
-}
-
-void ABowBase::VTMStopAiming()
-{
-	_bowState = EBowState::EBS_Normal;
-	_strength = 0.0f;
-
-	if (_characterCamera)
-	{
-		_characterCamera->VResetCameraArmPitchLimit();
-		_characterCamera->VCancelDragCamera();
-	}
-
-	if (_crosshairWidgetIns)
-	{
-		_crosshairWidgetIns->SetAnimForward(false);
-	}
-
-	//ClearHoldingArrows();
-	GetWeaponOwner()->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, true);
-}
-
 void ABowBase::VReset()
 {
 	Super::VReset();
 }
-
 
 void ABowBase::UpdateArrowsTransform()
 {
@@ -181,11 +112,11 @@ void ABowBase::UpdateArrowsTransform()
 		case EBowState::EBS_Drawing:
 		case EBowState::EBS_FullyDrawed:
 		case EBowState::EBS_OverDrawing:
+		case EBowState::EBS_ReleaseStart:
 		{
 			AttachArrowsToHand();
 		}
 		break;
-		case EBowState::EBS_ReleaseStart:
 		case EBowState::EBS_ReleaseEnd:
 			break;
 		default:
@@ -193,22 +124,28 @@ void ABowBase::UpdateArrowsTransform()
 	}
 }
 
+void ABowBase::SetStrength(float elapsedTime)
+{
+	_strength = FMath::Clamp(elapsedTime * _drawingVelocity, 0.1f, 1.5f);
+}
+
 void ABowBase::AttachArrowsToHand()
 {
-	if (!_characterCamera) return;
+	ICharacterCameraInterface* cameraInterface = GetOwnerCameraInterface();
+	if (!cameraInterface) return;
 
-	UCameraComponent* cameraComp = _characterCamera->VGetCameraComponent();
+	UCameraComponent* cameraComp = cameraInterface->VGetCameraComponent();
 	if (!cameraComp) return;
 
 	//Get Camera State
-	FRotator cameraRotator = _characterCamera->VGetCameraRotation();
+	FRotator cameraRotator = cameraInterface->VGetCameraRotation();
 	FVector cameraLocation = cameraComp->GetComponentLocation();
 	FVector cameraForward = cameraComp->GetForwardVector();
 
 	//get arrow hit location using line tracing
 	FHitResult hitResult;
 	FCollisionQueryParams CollisionParams;
-	FVector LineTraceStart = cameraLocation + cameraForward * _characterCamera->VGetCameraArmLength();
+	FVector LineTraceStart = cameraLocation + cameraForward * cameraInterface->VGetCameraArmLength();
 	FVector LineTraceEnd = cameraLocation + cameraForward * cameraComp->OrthoFarClipPlane;
 
 	FVector hitLocation = LineTraceEnd;
@@ -335,7 +272,6 @@ void ABowBase::OnEnterAnimFrame_TakeOutArrows()
 	TakeOutArrows();
 }
 
-
 void ABowBase::ClearHoldingArrows()
 {
 	for (AArrowActorBase* arrow : _holdingArrows)
@@ -384,7 +320,7 @@ void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAni
 	{
 		if(newState!= EAnimationState::EAnimState_Fall && newState != EAnimationState::EAnimState_Walk)
 		{
-			StopAllActions();
+			StopAllProcesses();
 		}
 	}
 }
@@ -422,6 +358,34 @@ float ABowBase::_CalculateProjectileSpeed()
 EBowState ABowBase::GetBowState()
 {
 	return _bowState;
+}
+
+void ABowBase::SetBowState(EBowState bowState)
+{
+	_bowState = bowState;
+}
+
+void ABowBase::DragCamera(bool bDrag)
+{
+	ICharacterCameraInterface* cameraInterface = GetOwnerCameraInterface();
+	if (!cameraInterface) return;
+
+	if (bDrag) 
+	{
+		cameraInterface->VSetCameraArmPitchLimit(-60, 60);
+		cameraInterface->VDragCamera(_aimingCameraOffset);
+	}
+	else
+	{
+		cameraInterface->VResetCameraArmPitchLimit();
+		cameraInterface->VCancelDragCamera();
+	}
+}
+
+void ABowBase::AnimateCrosshair(bool bForward)
+{
+	if (!_crosshairWidgetIns) return;
+	_crosshairWidgetIns->SetAnimForward(bForward);
 }
 
 void ABowBase::TakeOutArrows()

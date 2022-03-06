@@ -15,7 +15,7 @@ void UProcessManagerBase::ExecuteProcess(FName processName)
 		process->VInitialize();
 		process->VExecute();
 		
-		_runningProcesses.Add(process->VGetName(),process);
+		_runningProcesses.Add(process->VGetProcessName(),process);
 	}
 
 	UE_LOG(LogTemp, Log, TEXT("no process instance: %s"), *processName.ToString());
@@ -39,6 +39,22 @@ void UProcessManagerBase::StopAllProcess()
 	}
 
 	_runningProcesses.Empty();
+}
+
+void UProcessManagerBase::AddProcess(IProcessInterface* process)
+{
+	if (!process) return;
+
+	if (_processesStorage.Contains(process->VGetProcessName()))
+	{
+		//_processesStorage[processName] = process;
+		UE_LOG(LogTemp, Warning, TEXT("Try to add duplicated process!"));
+	}
+	else
+	{
+		_processesStorage.Add(process->VGetProcessName(), process);
+	}
+
 }
 
 EProcessState UProcessManagerBase::GetProcessState(FName processName)

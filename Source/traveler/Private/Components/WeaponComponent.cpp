@@ -64,17 +64,37 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-	if (_weaponIns)
-	{
-		_weaponIns->FiringInProgress(DeltaTime);
-		_weaponIns->AimingInProgress(DeltaTime);
-	}
 	if(_animationModelProvider)
 	{
 		_animationModelProvider->VGetAnimationModelRef().weapon = _weaponIns;	
-		_animationModelProvider->VGetAnimationModelRef().bIsWeaponFiring = _weaponIns ? _weaponIns->IsFiring() : false;
-		_animationModelProvider->VGetAnimationModelRef().bIsWeaponAiming = _weaponIns ? _weaponIns->IsAiming() : false;
+		_animationModelProvider->VGetAnimationModelRef().bIsWeaponFiring = _weaponIns ? 
+			_weaponIns->IsProcessRunning(WeaponProcessName::FIRE) : false;
+		_animationModelProvider->VGetAnimationModelRef().bIsWeaponAiming = _weaponIns ?
+		_weaponIns->IsProcessRunning(WeaponProcessName::AIM) : false;
+	}
+}
+
+void UWeaponComponent::ExecuteWeaponProcess(FName processName)
+{
+	if (_weaponIns)
+	{
+		_weaponIns->ExecuteProcess(processName);
+	}
+}
+
+void UWeaponComponent::StopWeaponProcess(FName processName)
+{
+	if (_weaponIns)
+	{
+		_weaponIns->StopProcess(processName);
+	}
+}
+
+void UWeaponComponent::StopAllWeaponProcesses()
+{
+	if (_weaponIns)
+	{
+		_weaponIns->StopAllProcesses();
 	}
 }
 
@@ -84,7 +104,7 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 	{
 		if (_weaponIns)
 		{
-			_weaponIns->StopAllActions();
+			_weaponIns->StopAllProcesses();
 		}
 
 		_weaponIns = newWeapon;
@@ -114,7 +134,7 @@ void UWeaponComponent::StartFiring()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->StartFiring();
+		_weaponIns->ExecuteProcess(WeaponProcessName::FIRE);
 	}
 	if (_animationModelProvider)
 	{
@@ -126,7 +146,7 @@ void UWeaponComponent::StopFiring()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->StopFiring();
+		_weaponIns->StopProcess(WeaponProcessName::FIRE);
 		OnWeaponFireEnd.Broadcast(_weaponIns);
 	}
 	if (_animationModelProvider)
@@ -139,7 +159,7 @@ void UWeaponComponent::StartAiming()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->StarAiming();
+		_weaponIns->ExecuteProcess(WeaponProcessName::AIM);
 		OnWeaponAimStart.Broadcast(_weaponIns);
 	}
 	if (_animationModelProvider)
@@ -151,7 +171,7 @@ void UWeaponComponent::StopAiming()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->StopAiming();
+		_weaponIns->StopProcess(WeaponProcessName::AIM);
 		OnWeaponAimEnd.Broadcast(_weaponIns);
 	}
 	if (_animationModelProvider)
@@ -199,19 +219,12 @@ AWeaponBase* UWeaponComponent::GetEquipedWeapon()
 
 bool UWeaponComponent::IsFiring()
 {
-	if(_weaponIns)
-	{
-		return _weaponIns->IsFiring();
-	}
-	return false;
+	return _weaponIns ? _weaponIns->IsProcessRunning(WeaponProcessName::FIRE) : false;
 }
+
 bool UWeaponComponent::IsAiming()
 {
-	if (_weaponIns)
-	{
-		return _weaponIns->IsAiming();
-	}
-	return false;
+	return _weaponIns ? _weaponIns->IsProcessRunning(WeaponProcessName::AIM) : false;
 }
 
 void UWeaponComponent::OnAnimationStateChanged(EAnimationState prevState, EAnimationState newState)

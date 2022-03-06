@@ -26,6 +26,8 @@ public:
 	virtual EProcessState VGetProcessState() final;
 	virtual void VSetState(EProcessState newState) final;
 
+	//virtual FName VGetProcessName();
+
 protected:	
 	virtual void VTMInitialize();
 	virtual bool VTMCanExecute();
@@ -33,14 +35,13 @@ protected:
 	virtual void VTMTick(float deltaTime);
 	virtual void VTMReset();
 
-	virtual void SetSucceed();
-	virtual void SetFailed();
-
-
 	virtual void VTMOnDead();
 	virtual void VTMOnSucceed();
 	virtual void VTMOnFailed();
 	virtual void VTMOnAborted();
+
+	void SetSucceed();
+	void SetFailed();
 
 private:
 	EProcessState _processState;

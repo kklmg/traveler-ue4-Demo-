@@ -10,12 +10,19 @@
 #include "WeaponBase.generated.h"
 
 class ACreatureCharacter;
-
 class UPoseableMeshComponent;
 class UMeshSocketComponent;
-
 class UWeaponAnimationModelBase;
+class UProcessManagerBase;
+class IActionInterface;
+class ICharacterCameraInterface;
+class IProcessInterface;
 
+namespace WeaponProcessName
+{
+	const FName FIRE = FName(TEXT("FIRE"));
+	const FName AIM = FName(TEXT("AIM"));
+}
 
 UCLASS()
 class TRAVELER_API AWeaponBase : public AActor, public IMeshSocketTransformProvider
@@ -36,6 +43,32 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	EAnimationState GetOwnerAnimationState();
+	IActionInterface* GetOwnerActionInterface();
+	ICharacterCameraInterface* GetOwnerCameraInterface();
+
+	virtual void VWeaponControlButtonA();
+	virtual void VWeaponControlButtonB();
+	virtual void VWeaponControlButtonC();
+	virtual void VWeaponControlButtonD();
+
+	virtual void VReset();
+
+	UFUNCTION(BlueprintPure)
+	USkeletalMeshComponent* GetMeshComponent();
+
+	UFUNCTION(BlueprintPure)
+	ACreatureCharacter* GetWeaponOwner();
+
+	UFUNCTION(BlueprintPure)
+	EWeaponType GetWeaponType();
+
+	void ExecuteProcess(FName processName);
+	void StopProcess(FName processName);
+	void StopAllProcesses();
+	void AddToProcessStorage(IProcessInterface* process);
+	bool IsProcessRunning(FName processName);
+
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
 	UFUNCTION(BlueprintCallable)
 	virtual bool VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
@@ -44,6 +77,13 @@ public:
 	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
 
 	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState);
+
+
+protected:
+	UPROPERTY(VisibleAnywhere)
+	EWeaponType _weaponType;
+
+	EAnimationState _characterAnimationState;
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -55,60 +95,9 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	ACreatureCharacter* _weaponOwner;
 
-	bool _isReadyToFire;
+	UPROPERTY()
+	UProcessManagerBase* _processManager;
 
-public:
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
-	EWeaponType WeaponType;
-
-public:
-
-//Controls
-	void StartFiring();
-	void FiringInProgress(float deltaTime);
-	void StopFiring();
-	bool IsFiring();
-
-	void StarAiming();
-	void AimingInProgress(float deltaTime);
-	void StopAiming();
-	bool IsAiming();
-
-	virtual void VWeaponControlButtonA();
-	virtual void VWeaponControlButtonB();
-	virtual void VWeaponControlButtonC();
-	virtual void VWeaponControlButtonD();
-
-	void StopAllActions();
-	virtual void VReset();
-
-	UFUNCTION(BlueprintCallable)
-	USkeletalMeshComponent* GetMeshComponent();
-
-	UFUNCTION(BlueprintCallable)
-	ACreatureCharacter* GetWeaponOwner();
-
-	
-
-	//UFUNCTION(BlueprintCallable)
-	//UWeaponAnimationModelBase* GetAnimationModel();
-
-protected:
-	virtual bool VTMCanFire() PURE_VIRTUAL(AWeaponBase::VTMCanFire, return false;);
-	virtual bool VTMCanAim() PURE_VIRTUAL(AWeaponBase::VTMCanAim, return false;);
-
-	virtual void VTMStartFiring() PURE_VIRTUAL(AWeaponBase::VTMStartFiring, );
-	virtual void VTMFiringInProgress(float deltaTime) PURE_VIRTUAL(AWeaponBase::VTMFiringInProgress, );
-	virtual void VTMStopFiring()PURE_VIRTUAL(AWeaponBase::VTMStopFiring, );
-
-	virtual void VTMStarAiming()PURE_VIRTUAL(AWeaponBase::VTMStarAiming, );
-	virtual void VTMAimingInProgress(float deltaTime)PURE_VIRTUAL(AWeaponBase::VTMAimingInProgress, );
-	virtual void VTMStopAiming()PURE_VIRTUAL(AWeaponBase::VTMStopAiming, );
-
-	//UPROPERTY()
-	//UWeaponAnimationModelBase* _animationModel;
-protected:
-	bool _isFiring;
-	bool _isAiming;
-	EAnimationState _characterAnimationState;
+	IActionInterface* _ownerActionInterface;
+	ICharacterCameraInterface* _ownerCameraInterface;
 };
