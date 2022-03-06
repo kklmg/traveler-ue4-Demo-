@@ -11,11 +11,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
 
 class UCommandActor;
 class AArrowActorBase;
-
 class UQuiverComponent;
-
 class ICharacterCameraInterface;
-
 class UCrosshairWidgetBase;
 
 /**

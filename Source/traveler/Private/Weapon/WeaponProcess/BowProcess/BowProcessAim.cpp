@@ -46,7 +46,7 @@ void UBowProcessAim::VTMExecute()
 void UBowProcessAim::VTMTick(float deltaTime)
 {
 	Super::VTMTick(deltaTime);
-	if (_bow) return;
+	if (!_bow) return;
 
 	_bow->SetStrength(GetElapsedTime());
 

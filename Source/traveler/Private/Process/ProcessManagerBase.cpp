@@ -11,7 +11,7 @@ void UProcessManagerBase::ExecuteProcess(FName processName)
 	}
 	else if (_processesStorage.Contains(processName))
 	{
-		IProcessInterface* process = _processesStorage[processName];
+		TScriptInterface<IProcessInterface> process = _processesStorage[processName];
 		process->VInitialize();
 		process->VExecute();
 		
@@ -33,7 +33,7 @@ void UProcessManagerBase::StopProcess(FName processName)
 
 void UProcessManagerBase::StopAllProcess()
 {
-	for (TPair<FName, IProcessInterface*> processElement : _runningProcesses)
+	for (TPair<FName, TScriptInterface<IProcessInterface>> processElement : _runningProcesses)
 	{
 		processElement.Value->VAbort();
 	}
@@ -52,7 +52,11 @@ void UProcessManagerBase::AddProcess(IProcessInterface* process)
 	}
 	else
 	{
-		_processesStorage.Add(process->VGetProcessName(), process);
+		TScriptInterface<IProcessInterface> processInterface;
+		processInterface.SetInterface(process);
+		processInterface.SetObject(Cast<UObject>(process));
+
+		_processesStorage.Add(process->VGetProcessName(), processInterface);
 	}
 
 }
@@ -71,7 +75,7 @@ void UProcessManagerBase::Tick(float deltaTime)
 	TArray<FName> deadProcesses;
 
 	//Tick Processes
-	for(TPair<FName, IProcessInterface*> processElement : _runningProcesses)
+	for(TPair<FName, TScriptInterface<IProcessInterface>> processElement : _runningProcesses)
 	{
 		processElement.Value->VTick(deltaTime);
 		if (processElement.Value->VIsDead())

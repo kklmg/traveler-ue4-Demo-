@@ -26,6 +26,8 @@ public:
 	void Tick(float deltaTime);
 
 private:
-	TMap<FName,IProcessInterface*> _runningProcesses;
-	TMap<FName, IProcessInterface*> _processesStorage;
+	UPROPERTY()
+	TMap<FName, TScriptInterface<IProcessInterface>> _runningProcesses;
+	UPROPERTY()
+	TMap<FName, TScriptInterface<IProcessInterface>> _processesStorage;
 };

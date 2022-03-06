@@ -20,6 +20,7 @@ bool UBowProcessFire::VTMCanExecute()
 
 void UBowProcessFire::VTMExecute()
 {
+	Super::VTMExecute();
 	if (!_bow) return;
 	EBowState bowState = _bow->GetBowState();
 
@@ -36,12 +37,15 @@ void UBowProcessFire::VTMExecute()
 
 void UBowProcessFire::VTMTick(float deltaTime)
 {
+	Super::VTMTick(deltaTime);
 }
 
 void UBowProcessFire::VTMReset()
 {
+	Super::VTMReset();
 }
 
 void UBowProcessFire::VTMOnDead()
 {
+	Super::VTMOnDead();
 }
