@@ -16,7 +16,7 @@ class TRAVELER_API UProcessBase : public UObject, public IProcessInterface
 	GENERATED_BODY()
 public:
 	virtual void VInitialize() final;
-	virtual void VExecute() final;
+	virtual bool VExecute() final;
 	virtual void VTick(float deltaTime) final;
 	virtual void VAbort() final;
 	virtual void VReset() final;
@@ -27,8 +27,12 @@ public:
 	virtual void VSetState(EProcessState newState) final;
 
 	//virtual FName VGetProcessName();
+	virtual bool VCanExecute() final;
+	virtual bool VIsInstantProcess() override;
 
 protected:	
+
+
 	virtual void VTMInitialize();
 	virtual bool VTMCanExecute();
 	virtual void VTMExecute();

@@ -18,7 +18,16 @@ public:
 	EBowState BowState;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool bIsHoldingArrows;
+	bool bIsDrawingBow;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsArrowsSpawned;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsFiring;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsAiming;
 
 	UPROPERTY(BlueprintReadWrite)
 	float HandRoll;

@@ -9,13 +9,14 @@ void UProcessBase::VInitialize()
 	VTMInitialize();
 }
 
-void UProcessBase::VExecute()
+bool UProcessBase::VExecute()
 {
-	if (_processState == EProcessState::EPS_ReadyToExecute && VTMCanExecute())
-	{
-		_processState = EProcessState::EPS_Running;
-		VTMExecute();
-	}
+	if (!VCanExecute()) return false;
+
+	_processState = EProcessState::EPS_Running;
+	VTMExecute();
+
+	return true;
 }
 
 void UProcessBase::VTick(float deltaTime)
@@ -46,10 +47,16 @@ void UProcessBase::VTMInitialize()
 {
 }
 
+bool UProcessBase::VCanExecute()
+{
+	return _processState == EProcessState::EPS_ReadyToExecute && VTMCanExecute();
+}
+
 bool UProcessBase::VTMCanExecute()
 {
 	return true;
 }
+
 
 void UProcessBase::VTMExecute()
 {
@@ -116,6 +123,12 @@ void UProcessBase::VSetState(EProcessState newState)
 {
 	_processState = newState;
 }
+
+bool UProcessBase::VIsInstantProcess()
+{
+	return false;
+}
+
 
 //FName UProcessBase::VGetProcessName()
 //{

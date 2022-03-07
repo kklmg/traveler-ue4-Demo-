@@ -26,7 +26,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	FVector PendingInput;
 
-
 	UPROPERTY(BlueprintReadWrite)
 	FVector MovingVelocity;
 	UPROPERTY(BlueprintReadWrite)
@@ -37,7 +36,6 @@ public:
 	TEnumAsByte<enum EMovementMode> MovementMode;
 	UPROPERTY(BlueprintReadWrite)
 	bool bWantToJump;
-
 
 	UPROPERTY(BlueprintReadWrite)
 	float CameraPitch;
@@ -52,12 +50,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	float RightFootOffset;
 	
-
-
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsWeaponFiring;
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsWeaponAiming;
 	UPROPERTY(BlueprintReadWrite)
 	bool bTakeOutWeapon;
 	UPROPERTY(BlueprintReadWrite)

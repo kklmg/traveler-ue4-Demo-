@@ -26,13 +26,14 @@ public:
 
 	virtual FName VGetProcessName() PURE_VIRTUAL(IProcessInterface::VGetProcessName,return FName(););
 	virtual void VInitialize() PURE_VIRTUAL(IProcessInterface::VInitialize,);
-	virtual void VExecute()  PURE_VIRTUAL(IProcessInterface::VExecute, );
+	virtual bool VExecute() PURE_VIRTUAL(IProcessInterface::VExecute, return true; );
 	virtual void VTick(float deltaTime) PURE_VIRTUAL(IProcessInterface::VTick, );
 	virtual void VAbort() PURE_VIRTUAL(IProcessInterface::VAbort, );
 	virtual void VReset() PURE_VIRTUAL(IProcessInterface::VReset, );
 	virtual bool VIsAlive() PURE_VIRTUAL(IProcessInterface::VIsAlive, return false; );
 	virtual bool VIsDead() PURE_VIRTUAL(IProcessInterface::VIsDead, return true;);
-
+	virtual bool VIsInstantProcess() PURE_VIRTUAL(IProcessInterface::VIsInstantProcess, return false;);
+	virtual bool VCanExecute() PURE_VIRTUAL(IProcessInterface::VCanExecute, return true;);
 
 	virtual EProcessState VGetProcessState() PURE_VIRTUAL(IProcessInterface::VGetProcessState, return EProcessState::EPS_None;);
 	virtual void VSetState(EProcessState newState)PURE_VIRTUAL(IProcessInterface::VSetState, );

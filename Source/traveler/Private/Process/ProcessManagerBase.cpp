@@ -13,12 +13,29 @@ void UProcessManagerBase::ExecuteProcess(FName processName)
 	{
 		TScriptInterface<IProcessInterface> process = _processesStorage[processName];
 		process->VInitialize();
-		process->VExecute();
-		
-		_runningProcesses.Add(process->VGetProcessName(),process);
-	}
 
-	UE_LOG(LogTemp, Log, TEXT("no process instance: %s"), *processName.ToString());
+		if(process->VCanExecute())
+		{
+			process->VExecute();
+
+			if (process->VIsInstantProcess() == false)
+			{
+				_runningProcesses.Add(process->VGetProcessName(), process);
+			}
+
+			FString logString(TEXT("Execute Process: "));
+			logString.Append(processName.ToString());
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, logString);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Log, TEXT(" process cant be executed: %s"), *processName.ToString());
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("no process instance: %s"), *processName.ToString());
+	}
 }
 
 void UProcessManagerBase::StopProcess(FName processName)
@@ -27,6 +44,10 @@ void UProcessManagerBase::StopProcess(FName processName)
 	{
 		_runningProcesses[processName]->VAbort();
 		_runningProcesses.Remove(processName);
+
+		FString logString(TEXT("Stop Process: "));
+		logString.Append(processName.ToString());
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, logString);
 	}
 
 }

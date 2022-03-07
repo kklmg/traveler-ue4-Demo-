@@ -66,11 +66,7 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 	if(_animationModelProvider)
 	{
-		_animationModelProvider->VGetAnimationModelRef().weapon = _weaponIns;	
-		_animationModelProvider->VGetAnimationModelRef().bIsWeaponFiring = _weaponIns ? 
-			_weaponIns->IsProcessRunning(WeaponProcessName::FIRE) : false;
-		_animationModelProvider->VGetAnimationModelRef().bIsWeaponAiming = _weaponIns ?
-		_weaponIns->IsProcessRunning(WeaponProcessName::AIM) : false;
+		_animationModelProvider->VGetAnimationModelRef().weapon = _weaponIns;
 	}
 }
 

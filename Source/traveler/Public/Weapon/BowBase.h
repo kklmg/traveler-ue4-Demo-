@@ -49,6 +49,7 @@ public:
 	void DragCamera(bool bDrag);
 	void AnimateCrosshair(bool bForward);
 	void SetStrength(float elapsedTime);
+	bool IsDrawingBow();
 	
 
 	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState) override;

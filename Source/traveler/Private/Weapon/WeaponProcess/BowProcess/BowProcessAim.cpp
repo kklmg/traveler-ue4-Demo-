@@ -12,6 +12,7 @@ FName UBowProcessAim::VGetProcessName()
 
 bool UBowProcessAim::VTMCanExecute()
 {
+	if (!Super::VTMCanExecute()) return false;
 	if (!_bow) return false;
 	
 	IActionInterface* actionInterface = _bow->GetOwnerActionInterface();

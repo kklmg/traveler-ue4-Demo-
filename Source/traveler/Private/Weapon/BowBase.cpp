@@ -83,8 +83,11 @@ void ABowBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	_animationModel.bIsAiming = IsProcessRunning(WeaponProcessName::AIM);
+	_animationModel.bIsFiring = IsProcessRunning(WeaponProcessName::FIRE);
 	_animationModel.BowState = _bowState;
-	_animationModel.bIsHoldingArrows = _holdingArrows.Num() > 0;
+	_animationModel.bIsArrowsSpawned = _holdingArrows.Num() > 0;
+	_animationModel.bIsDrawingBow = IsDrawingBow();
 	_animationModel.HandRoll = _handRollArray[_handRollSelectID];
 
 	if (_crosshairWidgetIns)
@@ -122,11 +125,36 @@ void ABowBase::UpdateArrowsTransform()
 		default:
 			break;
 	}
+
+	const UEnum* CharStateEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EBowState"), true);
+	GEngine->AddOnScreenDebugMessage(1, 0.0f, FColor::Red, CharStateEnum->GetNameStringByValue((int64)_bowState));
 }
 
 void ABowBase::SetStrength(float elapsedTime)
 {
 	_strength = FMath::Clamp(elapsedTime * _drawingVelocity, 0.1f, 1.5f);
+}
+
+bool ABowBase::IsDrawingBow()
+{
+	switch (_bowState)
+	{
+		case EBowState::EBS_Drawing:
+		case EBowState::EBS_FullyDrawed:
+		case EBowState::EBS_OverDrawing:
+		case EBowState::EBS_ReleaseStart:
+		{
+			return true;
+		}
+		break;
+		case EBowState::EBS_Normal:
+		case EBowState::EBS_ReleaseEnd:
+		default:
+		{
+			return false; 
+		}
+		break;
+	}
 }
 
 void ABowBase::AttachArrowsToHand()
@@ -303,13 +331,15 @@ void ABowBase::AdjustArrowIntervals()
 void ABowBase::IncreaseArrows()
 {
 	_arrowSpawnCountSelectID = (_arrowSpawnCountSelectID + 1) % _arrowSpawnCountArray.Num();
-	TakeOutArrows();
+	ClearHoldingArrows();
+	//TakeOutArrows();
 }
 
 void ABowBase::DecreaseArrows()
 {
 	_arrowSpawnCountSelectID = (_arrowSpawnCountArray.Num() + _arrowSpawnCountSelectID - 1) % _arrowSpawnCountArray.Num();
-	TakeOutArrows();
+	ClearHoldingArrows();
+	//TakeOutArrows();
 }
 
 void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
