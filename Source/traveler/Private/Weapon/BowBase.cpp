@@ -275,13 +275,16 @@ void ABowBase::AttachArrowsToBow()
 
 void ABowBase::OnEnterAnimFrame_ReleaseBowString()
 {
-	LaunchArrows();
-	
+	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
+
+	LaunchArrows();	
 	_bowState = EBowState::EBS_ReleaseEnd;
 }
 
 void ABowBase::OnEnterAnimFrame_ReloadCompleted()
 {
+	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
+
 	_bowState = EBowState::EBS_FullyDrawed;
 }
 
@@ -292,6 +295,8 @@ FBowAnimationModelBase ABowBase::GetAnimationModel()
 
 void ABowBase::OnEnterAnimFrame_StartDrawingBowString()
 {
+	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
+	
 	_bowState = EBowState::EBS_Drawing;
 }
 
@@ -332,6 +337,7 @@ void ABowBase::IncreaseArrows()
 {
 	_arrowSpawnCountSelectID = (_arrowSpawnCountSelectID + 1) % _arrowSpawnCountArray.Num();
 	ClearHoldingArrows();
+	_bowState = EBowState::EBS_Normal;
 	//TakeOutArrows();
 }
 
@@ -339,6 +345,7 @@ void ABowBase::DecreaseArrows()
 {
 	_arrowSpawnCountSelectID = (_arrowSpawnCountArray.Num() + _arrowSpawnCountSelectID - 1) % _arrowSpawnCountArray.Num();
 	ClearHoldingArrows();
+	_bowState = EBowState::EBS_Normal;
 	//TakeOutArrows();
 }
 
