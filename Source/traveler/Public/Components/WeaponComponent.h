@@ -38,16 +38,9 @@ public:
 	void StopWeaponProcess(FName processName);
 	void StopAllWeaponProcesses();
 
-
 	void EquipWeapon(AWeaponBase* weapon);
 
 	void TakeOutWeapon(bool isTakeOut);
-
-	void StartFiring();
-	void StopFiring();
-
-	void StartAiming();
-	void StopAiming();
 
 	void WeaponControlButtonA();
 	void WeaponControlButtonB();
@@ -56,20 +49,6 @@ public:
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
 	FDelegateWeapon OnWeaponChanged;
-
-	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
-	FDelegateWeapon OnWeaponFireStart;
-
-	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
-	FDelegateWeapon OnWeaponFireEnd;
-
-	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
-	FDelegateWeapon OnWeaponAimStart;
-
-	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
-	FDelegateWeapon OnWeaponAimEnd;
-
-public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "DefaultWeapon")
 	TSubclassOf<AWeaponBase> DefaultWeaponClass;

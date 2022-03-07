@@ -121,11 +121,9 @@ public:
 	//Weapon Interface implementation---------------------------------------------------
 	virtual void VEquipWeapon(AWeaponBase* weapon) override;
 	virtual AWeaponBase* VGetEquipedWeapon() override;
-	virtual void VStartFiring() override;
-	virtual void VStopFiring() override;
-	virtual void VStartAiming() override;
-	virtual void VStopAiming() override;
-
+	virtual void VExecuteWeaponProcess(FName weaponProcessName) override;
+	virtual void VStopWeaponProcess(FName weaponProcessName) override;
+	virtual void VStopAllProcess() override;
 
 	//AnimationModel Provider Interface implementation --------------------------------------------------
 	virtual FAnimationModel VGetAnimationModel() override;

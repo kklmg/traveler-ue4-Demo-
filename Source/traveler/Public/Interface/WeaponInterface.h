@@ -26,9 +26,7 @@ public:
 	virtual void VEquipWeapon(AWeaponBase* weapon)PURE_VIRTUAL (UWeaponInterface::VSetDamage, );
 	virtual AWeaponBase* VGetEquipedWeapon()PURE_VIRTUAL (UWeaponInterface::VGetEquipedWeapon,return nullptr; );
 
-	virtual void VStartFiring() PURE_VIRTUAL(UWeaponInterface::VStartFiring,);
-	virtual void VStopFiring() PURE_VIRTUAL(UWeaponInterface::VStopFiring,);
-
-	virtual void VStartAiming() PURE_VIRTUAL(UWeaponInterface::VStartAiming,);
-	virtual void VStopAiming() PURE_VIRTUAL(UWeaponInterface::VStopAiming,);
+	virtual void VExecuteWeaponProcess(FName weaponProcessName) PURE_VIRTUAL(UWeaponInterface::VExecuteWeaponProcess, );
+	virtual void VStopWeaponProcess(FName weaponProcessName) PURE_VIRTUAL(UWeaponInterface::VStopWeaponProcess, );
+	virtual void VStopAllProcess() PURE_VIRTUAL(UWeaponInterface::VStopAllProcess, );
 };

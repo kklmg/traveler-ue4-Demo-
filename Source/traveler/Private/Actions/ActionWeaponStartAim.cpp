@@ -13,20 +13,11 @@ UActionWeaponStartAim::UActionWeaponStartAim()
 	_bInstantAction = true;
 }
 
-//bool UActionWeaponStartAim::VTMCanExecute()
-//{
-//	EMovementMode movementMode = _stateInterface->VGetStateData().MovementMode;
-//	GetActionComponent()->
-//	bool bIsWalking = movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking;
-//
-//	return bIsWalking;
-//}
-
 void UActionWeaponStartAim::VTMExecute()
 {
 	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(GetActionOwner());
 	if(weaponInterface)
 	{
-		weaponInterface->VStartAiming();
+		weaponInterface->VStopWeaponProcess(WeaponProcessName::AIM);
 	}
 }

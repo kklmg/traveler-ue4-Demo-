@@ -328,24 +328,19 @@ AWeaponBase* ACreatureCharacter::VGetEquipedWeapon()
 	return _weaponComponent->GetEquipedWeapon();
 }
 
-void ACreatureCharacter::VStartFiring()
+void ACreatureCharacter::VExecuteWeaponProcess(FName weaponProcessName)
 {
-	_weaponComponent->StartFiring();
+	_weaponComponent->ExecuteWeaponProcess(weaponProcessName);
 }
 
-void ACreatureCharacter::VStopFiring()
+void ACreatureCharacter::VStopWeaponProcess(FName weaponProcessName)
 {
-	_weaponComponent->StopFiring();
+	_weaponComponent->StopWeaponProcess(weaponProcessName);
 }
 
-void ACreatureCharacter::VStartAiming()
+void ACreatureCharacter::VStopAllProcess()
 {
-	_weaponComponent->StartAiming();
-}
-
-void ACreatureCharacter::VStopAiming()
-{
-	_weaponComponent->StopAiming();
+	_weaponComponent->StopAllWeaponProcesses();
 }
 
 FAnimationModel ACreatureCharacter::VGetAnimationModel()

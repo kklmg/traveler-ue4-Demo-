@@ -16,6 +16,6 @@ void UActionWeaponStopAim::VTMExecute()
 	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(GetActionOwner());
 	if (weaponInterface)
 	{
-		weaponInterface->VStopAiming();
+		weaponInterface->VStopWeaponProcess(WeaponProcessName::AIM);
 	}
 }

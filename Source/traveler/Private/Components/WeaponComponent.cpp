@@ -130,56 +130,6 @@ void UWeaponComponent::TakeOutWeapon(bool isTakeOut)
 }
 
 
-void UWeaponComponent::StartFiring() 
-{
-	if (_weaponIns)
-	{
-		_weaponIns->ExecuteProcess(WeaponProcessName::FIRE);
-	}
-	if (_animationModelProvider)
-	{
-		_animationModelProvider->VGetAnimationModelRef().bIsWeaponFiring = true;
-	}
-}
-
-void UWeaponComponent::StopFiring()
-{
-	if (_weaponIns)
-	{
-		_weaponIns->StopProcess(WeaponProcessName::FIRE);
-		OnWeaponFireEnd.Broadcast(_weaponIns);
-	}
-	if (_animationModelProvider)
-	{
-		_animationModelProvider->VGetAnimationModelRef().bIsWeaponFiring = false;
-	}
-}
-
-void UWeaponComponent::StartAiming()
-{
-	if (_weaponIns)
-	{
-		_weaponIns->ExecuteProcess(WeaponProcessName::AIM);
-		OnWeaponAimStart.Broadcast(_weaponIns);
-	}
-	if (_animationModelProvider)
-	{
-		_animationModelProvider->VGetAnimationModelRef().bIsWeaponAiming = true;
-	}
-}
-void UWeaponComponent::StopAiming()
-{
-	if (_weaponIns)
-	{
-		_weaponIns->StopProcess(WeaponProcessName::AIM);
-		OnWeaponAimEnd.Broadcast(_weaponIns);
-	}
-	if (_animationModelProvider)
-	{
-		_animationModelProvider->VGetAnimationModelRef().bIsWeaponAiming = false;
-	}
-}
-
 void UWeaponComponent::WeaponControlButtonA()
 {
 	if (_weaponIns)

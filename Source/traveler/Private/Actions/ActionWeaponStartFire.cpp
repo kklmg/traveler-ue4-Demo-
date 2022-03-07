@@ -16,6 +16,6 @@ void UActionWeaponStartFire::VTMExecute()
 	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(GetActionOwner());
 	if (weaponInterface)
 	{
-		weaponInterface->VStartFiring();
+		weaponInterface->VExecuteWeaponProcess(WeaponProcessName::FIRE);
 	}
 }

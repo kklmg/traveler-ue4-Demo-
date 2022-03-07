@@ -33,8 +33,8 @@ void UActionDodge::VTMExecute()
 
 	if(weaponInterface)
 	{
-		weaponInterface->VStopAiming();
-		weaponInterface->VStopFiring();
+		weaponInterface->VStopWeaponProcess(WeaponProcessName::AIM);
+		weaponInterface->VStopWeaponProcess(WeaponProcessName::FIRE);
 	}
 
 	UAnimInstance* animInstance = actionOwner->GetMesh()->GetAnimInstance();
