@@ -61,7 +61,7 @@ void AWeaponBase::Tick(float DeltaTime)
 
 void AWeaponBase::ExecuteProcess(FName processName)
 {
-	_processManager->ExecuteProcess(processName);
+	_processManager->ExecutePresetedProcess(processName);
 }
 
 void AWeaponBase::StopProcess(FName processName)
@@ -76,12 +76,12 @@ void AWeaponBase::StopAllProcesses()
 
 void AWeaponBase::AddToProcessStorage(IProcessInterface* process)
 {
-	_processManager->AddProcess(process);
+	_processManager->AddToProcessPresets(process);
 }
 
 bool AWeaponBase::IsProcessRunning(FName processName)
 {
-	return _processManager->GetProcessState(processName) == EProcessState::EPS_Running;
+	return _processManager->IsProcessRunning(processName);
 }
 
 USkeletalMeshComponent* AWeaponBase::GetMeshComponent()

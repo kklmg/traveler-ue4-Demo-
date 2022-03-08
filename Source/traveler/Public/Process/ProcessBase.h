@@ -32,7 +32,6 @@ public:
 
 protected:	
 
-
 	virtual void VTMInitialize();
 	virtual bool VTMCanExecute();
 	virtual void VTMExecute();

@@ -15,13 +15,16 @@ class TRAVELER_API UProcessManagerBase : public UObject
 {
 	GENERATED_BODY()
 public:
-	void ExecuteProcess(FName processName);
+	void ExecuteProcess(IProcessInterface* process);
+
+	void ExecutePresetedProcess(FName processName);
 	void StopProcess(FName processName);
 	void StopAllProcess();
 
-	void AddProcess(IProcessInterface* process);
+	void AddToProcessPresets(IProcessInterface* process);
 
-	EProcessState GetProcessState(FName processName);
+
+	bool IsProcessRunning(FName processName);
 
 	void Tick(float deltaTime);
 
@@ -29,5 +32,5 @@ private:
 	UPROPERTY()
 	TMap<FName, TScriptInterface<IProcessInterface>> _runningProcesses;
 	UPROPERTY()
-	TMap<FName, TScriptInterface<IProcessInterface>> _processesStorage;
+	TMap<FName, TScriptInterface<IProcessInterface>> _processPresets;
 };

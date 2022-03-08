@@ -14,6 +14,7 @@
 #include "Interface/CharacterCameraInterface.h"
 #include "Interface/WeaponInterface.h"
 #include "Interface/MeshSocketTransformProvider.h"
+#include "Damage/DamageHandlerInterface.h"
 #include "CreatureCharacter.generated.h"
 
 
@@ -29,6 +30,7 @@ class UPawnCameraComponent;
 class UCameraSpringArmComponent;
 class UWeaponComponent;
 class UMeshSocketComponent;
+class UDamageHandlerComponent;
 class UIKComponent;
 
 
@@ -40,7 +42,8 @@ class UActionBlackBoard;
 
 UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface,public IStateInterface, 
-										public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider,public IMeshSocketTransformProvider
+										public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider,
+										public IMeshSocketTransformProvider, public IDamageHandlerInterface
 {
 	GENERATED_BODY()
 
@@ -125,9 +128,14 @@ public:
 	virtual void VStopWeaponProcess(FName weaponProcessName) override;
 	virtual void VStopAllProcess() override;
 
+
 	//AnimationModel Provider Interface implementation --------------------------------------------------
 	virtual FAnimationModel VGetAnimationModel() override;
 	virtual FAnimationModel& VGetAnimationModelRef() override;
+
+
+	//Damage Handler Interface implementation --------------------------------------------------
+	virtual void VHandleDamage(UMyDamageType* damageType) override;
 
 
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
@@ -176,6 +184,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UMeshSocketComponent* _meshSocketComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UDamageHandlerComponent* _damageHandlerComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UIKComponent* _IKComponent;

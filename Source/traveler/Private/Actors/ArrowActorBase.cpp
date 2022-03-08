@@ -13,6 +13,7 @@ AArrowActorBase::AArrowActorBase()
 	_lifeAfterLaunch = 20.0f;
 	_lifeAfterHit = 5.0f;
 	_basicSpeed = 2000.0f;
+	_damage = 5.0f;
 
 	_elapsedTimeFromLaunch = 0.0f;
 	_elapsedTimeFromHit = 0.0f;
@@ -111,7 +112,7 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
-		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, Hit.ImpactPoint);
+		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity, Hit.ImpactPoint);
 	}
 	//Todo
 	AddActorWorldOffset(GetActorForwardVector() * 30);
@@ -120,6 +121,7 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	if (OtherActor != GetInstigator())
 	{
 		UGameplayStatics::ApplyDamage(OtherActor, _damage, GetInstigator()->GetController(), this, _damageTypeClass);
+		//UGameplayStatics::apply
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("arrow hitted"));

@@ -18,7 +18,9 @@
 #include "Components/MeshSocketComponent.h"
 #include "Components/MyCharacterMovementComponent.h"
 #include "Components/IKComponent.h"
+#include "Components/DamageHandlerComponent.h"
 #include "Input/InputHandlerComponent.h"
+#include "Components/DamageHandlerComponent.h"
 
 
 ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializer) 
@@ -93,6 +95,14 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 		_inputHandlerComponent = CreateDefaultSubobject<UInputHandlerComponent>(TEXT("InputHandlerComponent"));
 		check(_inputHandlerComponent != nullptr);
 	}
+	
+	//Damage Handler component
+	if (_damageHandlerComponent == nullptr)
+	{
+		_damageHandlerComponent = CreateDefaultSubobject<UDamageHandlerComponent>(TEXT("DamageHandlerComponent"));
+		check(_damageHandlerComponent != nullptr);
+	}
+
 
 	//IK
 	if (_IKComponent == nullptr)
@@ -136,13 +146,12 @@ float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent con
 {
 	float actualDamage = Super::TakeDamage(DamageAmount,DamageEvent,EventInstigator,DamageCauser);
 
-
 	//GetAttributeComponent()->SetHealth();
-	_attributeComponent->SetAttributeChange(EAttributeType::EATT_Health, -actualDamage);
+	//_attributeComponent->SetAttributeChange(EAttributeType::EATT_Health, -actualDamage);
 
-	_billboardWidgetComponent->ShowWidget(EWidgetType::WT_HealthBar);
+	//_billboardWidgetComponent->ShowWidget(EWidgetType::WT_HealthBar);
 
-	GEngine->AddOnScreenDebugMessage(-1, -5, FColor::Red, "TakeDamage: " + FString::SanitizeFloat(actualDamage));
+	//GEngine->AddOnScreenDebugMessage(-1, -5, FColor::Red, "TakeDamage: " + FString::SanitizeFloat(actualDamage));
 
 	return actualDamage;
 }
@@ -351,6 +360,11 @@ FAnimationModel ACreatureCharacter::VGetAnimationModel()
 FAnimationModel& ACreatureCharacter::VGetAnimationModelRef()
 {
 	return _animationModel;
+}
+
+void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType)
+{
+	_damageHandlerComponent->HandleDamage(damageType);
 }
 
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
