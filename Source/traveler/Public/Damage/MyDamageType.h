@@ -30,9 +30,19 @@ public:
 
 	FName GetDamageTypeName();
 
+public:
+	UPROPERTY(EditDefaultsOnly)
 	EElementalDamageType DamageType;
+
+	UPROPERTY(EditDefaultsOnly)
 	bool bIsContinuousDamage;
+
+	UPROPERTY(EditDefaultsOnly)
 	float BasicDamage;
+
+	UPROPERTY(EditDefaultsOnly)
 	float DamageHandleInterval;
+
+	UPROPERTY(EditDefaultsOnly)
 	float DamageHandleCount;
 };

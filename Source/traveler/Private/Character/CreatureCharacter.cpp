@@ -144,16 +144,7 @@ void ACreatureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	float actualDamage = Super::TakeDamage(DamageAmount,DamageEvent,EventInstigator,DamageCauser);
-
-	//GetAttributeComponent()->SetHealth();
-	//_attributeComponent->SetAttributeChange(EAttributeType::EATT_Health, -actualDamage);
-
-	//_billboardWidgetComponent->ShowWidget(EWidgetType::WT_HealthBar);
-
-	//GEngine->AddOnScreenDebugMessage(-1, -5, FColor::Red, "TakeDamage: " + FString::SanitizeFloat(actualDamage));
-
-	return actualDamage;
+	return Super::TakeDamage(DamageAmount,DamageEvent,EventInstigator,DamageCauser);
 }
 
 FORCEINLINE UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
@@ -365,6 +356,16 @@ FAnimationModel& ACreatureCharacter::VGetAnimationModelRef()
 void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType)
 {
 	_damageHandlerComponent->HandleDamage(damageType);
+}
+
+void ACreatureCharacter::VShowWidget(EWidgetType widgeType)
+{
+	_billboardWidgetComponent->ShowWidget(widgeType);
+}
+
+void ACreatureCharacter::VHideWidget(EWidgetType widgeType)
+{
+	_billboardWidgetComponent->HideWidget(widgeType);
 }
 
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)

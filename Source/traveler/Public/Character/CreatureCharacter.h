@@ -15,6 +15,7 @@
 #include "Interface/WeaponInterface.h"
 #include "Interface/MeshSocketTransformProvider.h"
 #include "Damage/DamageHandlerInterface.h"
+#include "Interface/ActorUIInterface.h"
 #include "CreatureCharacter.generated.h"
 
 
@@ -43,7 +44,7 @@ class UActionBlackBoard;
 UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface,public IStateInterface, 
 										public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider,
-										public IMeshSocketTransformProvider, public IDamageHandlerInterface
+										public IMeshSocketTransformProvider, public IDamageHandlerInterface, public IActorUIInterface
 {
 	GENERATED_BODY()
 
@@ -136,6 +137,11 @@ public:
 
 	//Damage Handler Interface implementation --------------------------------------------------
 	virtual void VHandleDamage(UMyDamageType* damageType) override;
+
+
+	//Actor UI Interface implementation --------------------------------------------------
+	virtual void VShowWidget(EWidgetType widgeType) override;
+	virtual void VHideWidget(EWidgetType widgeType) override;
 
 
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------

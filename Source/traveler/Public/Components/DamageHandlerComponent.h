@@ -9,6 +9,9 @@
 
 class UDamageProcessManager;
 
+class IAttributeInterface;
+class IActorUIInterface;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UDamageHandlerComponent : public UActorComponent
 {
@@ -20,6 +23,9 @@ public:
 
 	void HandleDamage(UMyDamageType* damageType);
 
+	UFUNCTION()
+	void OnHealthChanged(float preValue,float newValue);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -29,4 +35,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
 	UDamageProcessManager* _damageProcessManager;
+	IAttributeInterface* _attributeInterface;
+	IActorUIInterface* _actorUIInterface;
 };

@@ -4,6 +4,8 @@
 #include "Actors/ArrowActorBase.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Damage/DamageHandlerInterface.h"
+#include "Damage/MyDamageType.h"
 
 AArrowActorBase::AArrowActorBase()
 {
@@ -30,7 +32,7 @@ void AArrowActorBase::BeginPlay()
 
 	if (_damageTypeClass)
 	{
-		_damageType = NewObject<UDamageType>(this, _damageTypeClass);
+		_damageType = NewObject<UMyDamageType>(this, _damageTypeClass);
 	}
 
 	if (_meshComp)
@@ -114,14 +116,20 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	{
 		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity, Hit.ImpactPoint);
 	}
+
 	//Todo
 	AddActorWorldOffset(GetActorForwardVector() * 30);
 	AttachToComponent(OtherComponent, FAttachmentTransformRules::KeepWorldTransform, Hit.BoneName);
 
-	if (OtherActor != GetInstigator())
+	//apply damagge
+	IDamageHandlerInterface* damageHandler = Cast<IDamageHandlerInterface>(OtherActor);
+
+	if (OtherActor != GetInstigator() && _damageType && damageHandler)
 	{
-		UGameplayStatics::ApplyDamage(OtherActor, _damage, GetInstigator()->GetController(), this, _damageTypeClass);
-		//UGameplayStatics::apply
+		damageHandler->VHandleDamage(_damageType);
+
+		//UGameplayStatics::ApplyDamage(OtherActor, _damage, GetInstigator()->GetController(), this, _damageTypeClass);
+		
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("arrow hitted"));

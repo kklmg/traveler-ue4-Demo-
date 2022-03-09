@@ -4,6 +4,8 @@
 #include "Components/DamageHandlerComponent.h"
 #include "Damage/DamageProcessManager.h"
 #include "Damage/DamageProcessBase.h"
+#include "Interface/AttributeInterface.h"
+#include "Interface/ActorUIInterface.h"
 
 // Sets default values for this component's properties
 UDamageHandlerComponent::UDamageHandlerComponent()
@@ -21,8 +23,17 @@ void UDamageHandlerComponent::HandleDamage(UMyDamageType* damageType)
 	if (!damageType) return;
 
 	UDamageProcessBase* damageProcess = NewObject<UDamageProcessBase>(this);
+	damageProcess->SetData(GetOwner(),damageType);
 
 	_damageProcessManager->ExecuteProcess(damageProcess);
+}
+
+void UDamageHandlerComponent::OnHealthChanged(float preValue, float newValue)
+{
+	if(_actorUIInterface)
+	{
+		_actorUIInterface->VShowWidget(EWidgetType::WT_HealthBar);
+	}
 }
 
 // Called when the game starts
@@ -32,7 +43,18 @@ void UDamageHandlerComponent::BeginPlay()
 
 	// ...
 	_damageProcessManager = NewObject<UDamageProcessManager>(this);
-	
+	_attributeInterface = Cast<IAttributeInterface>(GetOwner());
+	_actorUIInterface = Cast<IActorUIInterface>(GetOwner());
+
+	if(_attributeInterface)
+	{
+		UCharacterAttribute* attHealth = _attributeInterface->VGetAttribute(EAttributeType::EATT_Health);
+		if(attHealth)
+		{
+			attHealth->onValueChanged.AddDynamic(this, &UDamageHandlerComponent::OnHealthChanged);
+		}
+
+	}
 }
 
 

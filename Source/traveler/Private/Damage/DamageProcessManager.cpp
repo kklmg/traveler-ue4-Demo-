@@ -39,6 +39,7 @@ void UDamageProcessManager::ExecuteProcess(UDamageProcessBase* process)
 	{
 		return;
 	}
+	process->VExecute();
 
 	//add to process pool
 	//---------------------------------------------------------------------

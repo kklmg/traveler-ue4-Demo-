@@ -18,6 +18,7 @@ UCLASS()
 class TRAVELER_API UDamageProcessBase : public UProcessBase
 {
 	GENERATED_BODY()
+
 public:
 	void SetData(AActor* actor, UMyDamageType* damageType);
 
