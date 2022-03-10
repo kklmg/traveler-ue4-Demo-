@@ -76,4 +76,6 @@ void UDamageProcessManager::Tick(float deltaTime)
 			_emptyIndicies.Add(i);
 		}
 	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red,"Process pool num: "+ FString::FromInt(_runningProcesses.Num()));
 }

@@ -23,6 +23,7 @@ void UDamageProcessBase::VTMExecute()
 	if (_damageType)
 	{
 		_damageRemainCount = _damageType->DamageHandleCount;
+		_damageInterval = _damageType->DamageHandleInterval;
 	}
 }
 
@@ -56,7 +57,7 @@ void UDamageProcessBase::VTMTick(float deltaTime)
 
 void UDamageProcessBase::VTMOnDead()
 {
-
+	_elapsedTime = 0;
 }
 
 void UDamageProcessBase::VTMReset()

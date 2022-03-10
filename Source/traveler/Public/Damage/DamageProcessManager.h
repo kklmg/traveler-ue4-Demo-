@@ -17,6 +17,7 @@ class TRAVELER_API UDamageProcessManager : public UObject
 public:
 	UDamageProcessManager();
 
+	UFUNCTION()
 	void ExecuteProcess(UDamageProcessBase* process);
 
 	void Tick(float deltaTime);

@@ -20,6 +20,7 @@ class TRAVELER_API UDamageProcessBase : public UProcessBase
 	GENERATED_BODY()
 
 public:
+	UFUNCTION()
 	void SetData(AActor* actor, UMyDamageType* damageType);
 
 	virtual bool VTMCanExecute() override;
