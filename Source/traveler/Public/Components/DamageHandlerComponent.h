@@ -12,6 +12,8 @@ class UDamageProcessManager;
 class IAttributeInterface;
 class IActorUIInterface;
 
+class AMyHUD;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UDamageHandlerComponent : public UActorComponent
 {
@@ -34,9 +36,11 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
-	
 	UPROPERTY()
 	UDamageProcessManager* _damageProcessManager;
+
+	UPROPERTY()
+	AMyHUD* _hud;
 
 	IAttributeInterface* _attributeInterface;
 	IActorUIInterface* _actorUIInterface;

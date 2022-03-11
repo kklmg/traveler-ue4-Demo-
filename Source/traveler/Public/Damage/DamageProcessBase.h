@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Process/ProcessBase.h"
 #include "Damage/MyDamageType.h"
+#include "UI/MyHUD.h"
 #include "DamageProcessBase.generated.h"
 
 class IAttributeInterface;
@@ -21,7 +22,7 @@ class TRAVELER_API UDamageProcessBase : public UProcessBase
 
 public:
 	UFUNCTION()
-	void SetData(AActor* actor, UMyDamageType* damageType);
+	void SetData(AActor* actor, UMyDamageType* damageType, AMyHUD* hud);
 
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
@@ -38,6 +39,12 @@ private:
 
 	UPROPERTY()
 	UMyDamageType* _damageType;
+
+	UPROPERTY()
+	AActor* _damageReceiver;
+
+	UPROPERTY()
+	AMyHUD* _hud;
 
 	UPROPERTY()
 	UDamageHandlerComponent* _damageHandler;

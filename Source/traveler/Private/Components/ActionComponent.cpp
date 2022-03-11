@@ -8,7 +8,7 @@
 #include "Components/PawnCameraComponent.h"
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameSystem/MyBlueprintFunctionLibrary.h"
+#include "GameSystem/MyGameplayStatics.h"
 #include "Interface/StateInterface.h"
 
 // Sets default values for this component's properties

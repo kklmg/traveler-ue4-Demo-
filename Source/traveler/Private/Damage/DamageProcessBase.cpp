@@ -5,9 +5,12 @@
 #include "Components/DamageHandlerComponent.h"
 #include "Interface/AttributeInterface.h"
 
-void UDamageProcessBase::SetData(AActor* actor, UMyDamageType* damageType)
+
+void UDamageProcessBase::SetData(AActor* actor, UMyDamageType* damageType, AMyHUD* hud)
 {
 	_damageType = damageType;
+	_damageReceiver = actor;
+	_hud = hud;
 	_attributeInterface = Cast<IAttributeInterface>(actor);
 }
 
@@ -47,6 +50,17 @@ void UDamageProcessBase::VTMTick(float deltaTime)
 		_damageRemainCount--;
 
 		_attributeInterface->VSetAttributeChange(EAttributeType::EATT_Health, -_damageType->BasicDamage);
+
+		//show damage om screen
+		if(_hud)
+		{
+			FDamageDisplayData damageDisplayData;
+			damageDisplayData.Damage = _damageType->BasicDamage;
+			damageDisplayData.DamageType = _damageType->DamageType;
+			damageDisplayData.Location = _damageReceiver->GetActorLocation();
+
+			_hud->ShowDamage(damageDisplayData);
+		}
 	}
 
 	if (_damageRemainCount <= 0)

@@ -7,6 +7,8 @@
 #include "DamageProcessManager.generated.h"
 
 class UDamageProcessBase;
+
+class AMyHUD;
 /**
  * 
  */

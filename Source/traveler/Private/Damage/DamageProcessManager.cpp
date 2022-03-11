@@ -3,6 +3,7 @@
 
 #include "Damage/DamageProcessManager.h"
 #include "Damage/DamageProcessBase.h"
+#include "UI/MyHUD.h"
 
 
 UDamageProcessManager::UDamageProcessManager()

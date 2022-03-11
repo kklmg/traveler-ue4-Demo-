@@ -6,6 +6,7 @@
 #include "Damage/DamageProcessBase.h"
 #include "Interface/AttributeInterface.h"
 #include "Interface/ActorUIInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UDamageHandlerComponent::UDamageHandlerComponent()
@@ -23,7 +24,7 @@ void UDamageHandlerComponent::HandleDamage(UMyDamageType* damageType)
 	if (!damageType) return;
 
 	UDamageProcessBase* damageProcess = NewObject<UDamageProcessBase>(this);
-	damageProcess->SetData(GetOwner(),damageType);
+	damageProcess->SetData(GetOwner(), damageType, _hud);
 
 	_damageProcessManager->ExecuteProcess(damageProcess);
 }
@@ -34,6 +35,8 @@ void UDamageHandlerComponent::OnHealthChanged(float preValue, float newValue)
 	{
 		_actorUIInterface->VShowWidget(EWidgetType::WT_HealthBar);
 	}
+
+	GetWorld()->GetGameInstance();
 }
 
 // Called when the game starts
@@ -53,8 +56,10 @@ void UDamageHandlerComponent::BeginPlay()
 		{
 			attHealth->onValueChanged.AddDynamic(this, &UDamageHandlerComponent::OnHealthChanged);
 		}
-
 	}
+
+	_hud = Cast<AMyHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+
 }
 
 

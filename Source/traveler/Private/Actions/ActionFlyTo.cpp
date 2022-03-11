@@ -5,7 +5,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Character/CreatureCharacter.h"
 #include "DrawDebugHelpers.h"
-#include "GameSystem/MyBlueprintFunctionLibrary.h"
+#include "GameSystem/MyGameplayStatics.h"
 #include "DrawDebugHelpers.h"
 #include "Components/MyCharacterMovementComponent.h"
 
@@ -276,7 +276,7 @@ float UActionFlyTo::_YawTurnning(float flyingSpeed,FVector dirToDestination, FVe
 		: GetActionOwner()->GetActorLocation() + dirRight * turningRadius;
 
 	//float distanceFronCurLocToDest = UMyBlueprintFunctionLibrary::ComputeDistance(_actionOwner->GetActorLocation(), _destination, EPlane::Plane_XY);
-	float distanceFronDestLocToCircleCenter = UMyBlueprintFunctionLibrary::ComputeDistance(_destination, circleCenter, EPlane::Plane_XY);
+	float distanceFronDestLocToCircleCenter = UMyGameplayStatics::ComputeDistance(_destination, circleCenter, EPlane::Plane_XY);
 
 	
 	//debug message

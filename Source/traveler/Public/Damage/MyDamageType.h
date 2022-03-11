@@ -9,6 +9,7 @@
 UENUM(BlueprintType)
 enum class EElementalDamageType : uint8
 {
+	EEDT_None UMETA(DisplayName = "None"),
 	EEDT_Physics UMETA(DisplayName = "Physics"),
 	EEDT_Fire UMETA(DisplayName = "Fire"),
 	EEDT_Water UMETA(DisplayName = "Water"),

@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GameSystem/MyBlueprintFunctionLibrary.h"
+#include "GameSystem/MyGameplayStatics.h"
 #include "Camera/CameraComponent.h"
 
-FVector UMyBlueprintFunctionLibrary::InptAxisToCameraDirection(FVector inputAxis, UCameraComponent* cameraComp)
+FVector UMyGameplayStatics::InptAxisToCameraDirection(FVector inputAxis, UCameraComponent* cameraComp)
 {
 	//Get Camera Rotation Matrix
 	FRotator cameraRotator = cameraComp->GetComponentRotation();
@@ -17,7 +17,7 @@ FVector UMyBlueprintFunctionLibrary::InptAxisToCameraDirection(FVector inputAxis
 	return moveDirection;
 }
 
-float UMyBlueprintFunctionLibrary::ComputeDistance(FVector from, FVector to, EPlane plane /*= Plane_None*/)
+float UMyGameplayStatics::ComputeDistance(FVector from, FVector to, EPlane plane /*= Plane_None*/)
 {
 	FVector dirFromTo = to - from;
 

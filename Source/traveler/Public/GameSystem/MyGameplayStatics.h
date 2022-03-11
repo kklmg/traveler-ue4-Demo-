@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "MyBlueprintFunctionLibrary.generated.h"
+#include "MyGameplayStatics.generated.h"
 
 class UCameraComponent;
 
@@ -21,7 +21,7 @@ enum EPlane
 };
 
 UCLASS()
-class TRAVELER_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
+class TRAVELER_API UMyGameplayStatics : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
