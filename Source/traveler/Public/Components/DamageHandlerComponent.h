@@ -23,7 +23,7 @@ public:
 	// Sets default values for this component's properties
 	UDamageHandlerComponent();
 
-	void HandleDamage(UMyDamageType* damageType);
+	void HandleDamage(UMyDamageType* damageType, FHitResult hitResult);
 
 	UFUNCTION()
 	void OnHealthChanged(float preValue,float newValue);

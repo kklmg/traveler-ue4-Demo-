@@ -19,12 +19,12 @@ UDamageHandlerComponent::UDamageHandlerComponent()
 }
 
 
-void UDamageHandlerComponent::HandleDamage(UMyDamageType* damageType)
+void UDamageHandlerComponent::HandleDamage(UMyDamageType* damageType, FHitResult hitResult)
 {
 	if (!damageType) return;
 
 	UDamageProcessBase* damageProcess = NewObject<UDamageProcessBase>(this);
-	damageProcess->SetData(GetOwner(), damageType, _hud);
+	damageProcess->SetData(GetOwner(), damageType, hitResult, _hud);
 
 	_damageProcessManager->ExecuteProcess(damageProcess);
 }

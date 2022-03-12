@@ -6,12 +6,13 @@
 #include "Interface/AttributeInterface.h"
 
 
-void UDamageProcessBase::SetData(AActor* actor, UMyDamageType* damageType, AMyHUD* hud)
+void UDamageProcessBase::SetData(AActor* damageReceiver,  UMyDamageType* damageType, FHitResult hitResult, AMyHUD* hud)
 {
 	_damageType = damageType;
-	_damageReceiver = actor;
+	_damageReceiver = damageReceiver;
 	_hud = hud;
-	_attributeInterface = Cast<IAttributeInterface>(actor);
+	_attributeInterface = Cast<IAttributeInterface>(damageReceiver);
+	_hitResult = hitResult;
 }
 
 bool UDamageProcessBase::VTMCanExecute()
@@ -57,7 +58,7 @@ void UDamageProcessBase::VTMTick(float deltaTime)
 			FDamageDisplayData damageDisplayData;
 			damageDisplayData.Damage = _damageType->BasicDamage;
 			damageDisplayData.DamageType = _damageType->DamageType;
-			damageDisplayData.Location = _damageReceiver->GetActorLocation();
+			damageDisplayData.Location = _hitResult.ImpactPoint;
 
 			_hud->ShowDamage(damageDisplayData);
 		}

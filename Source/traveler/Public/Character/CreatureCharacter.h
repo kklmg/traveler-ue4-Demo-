@@ -136,7 +136,7 @@ public:
 
 
 	//Damage Handler Interface implementation --------------------------------------------------
-	virtual void VHandleDamage(UMyDamageType* damageType) override;
+	virtual void VHandleDamage(UMyDamageType* damageType, FHitResult hitResult) override;
 
 
 	//Actor UI Interface implementation --------------------------------------------------

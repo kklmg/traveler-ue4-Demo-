@@ -353,9 +353,9 @@ FAnimationModel& ACreatureCharacter::VGetAnimationModelRef()
 	return _animationModel;
 }
 
-void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType)
+void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType, FHitResult hitResult)
 {
-	_damageHandlerComponent->HandleDamage(damageType);
+	_damageHandlerComponent->HandleDamage(damageType, hitResult);
 }
 
 void ACreatureCharacter::VShowWidget(EWidgetType widgeType)

@@ -22,7 +22,7 @@ class TRAVELER_API UDamageProcessBase : public UProcessBase
 
 public:
 	UFUNCTION()
-	void SetData(AActor* actor, UMyDamageType* damageType, AMyHUD* hud);
+	void SetData(AActor* damageReceiver, UMyDamageType* damageType, FHitResult hitResult, AMyHUD* hud);
 
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
@@ -42,6 +42,9 @@ private:
 
 	UPROPERTY()
 	AActor* _damageReceiver;
+
+	UPROPERTY()
+	FHitResult _hitResult;
 
 	UPROPERTY()
 	AMyHUD* _hud;

@@ -126,7 +126,7 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 
 	if (OtherActor != GetInstigator() && _damageType && damageHandler)
 	{
-		damageHandler->VHandleDamage(_damageType);
+		damageHandler->VHandleDamage(_damageType, Hit);
 
 		//UGameplayStatics::ApplyDamage(OtherActor, _damage, GetInstigator()->GetController(), this, _damageTypeClass);
 		

@@ -41,7 +41,7 @@ class TRAVELER_API UDamageWidget : public UUserWidget
 public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-	void SetData(float damageAmount,FDamageWidgetData damageWidgetData);
+	void SetData(FVector worldLocation, float damageAmount, FDamageWidgetData damageWidgetData, FVector2D offset = FVector2D::ZeroVector);
 
 	bool IsLifeOver();
 	
@@ -54,4 +54,10 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	float ElapsedTime;
+
+	UPROPERTY()
+	FVector2D ScrollOffset;
+
+	UPROPERTY(BlueprintReadOnly)
+	FVector WorldLocation;
 };
