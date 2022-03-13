@@ -4,25 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "Process/ProcessBase.h"
-#include "Damage/MyDamageType.h"
 #include "UI/MyHUD.h"
-#include "DamageProcessBase.generated.h"
+#include "StatusEffectProcessBase.generated.h"
 
 class IAttributeInterface;
+class IActorUIInterface;
 
 class UDamageHandlerComponent;
+
 /**
  * 
  */
-
 UCLASS()
-class TRAVELER_API UDamageProcessBase : public UProcessBase
+class TRAVELER_API UStatusEffectProcessBase : public UProcessBase
 {
 	GENERATED_BODY()
 
 public:
-	UFUNCTION()
-	void SetData(AActor* damageReceiver, UMyDamageType* damageType, FHitResult hitResult, AMyHUD* hud);
+	void SetData(AActor* effectReceiver, AMyHUD* hud);
 
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
@@ -33,24 +32,26 @@ public:
 	virtual void VTMReset() override;
 
 private:
+	bool _bHasDamage;
+
 	float _elapsedTime;
 	float _damageInterval;
 	float _damageRemainCount;
+	float _duration;
+
 
 	UPROPERTY()
-	UMyDamageType* _damageType;
-
-	UPROPERTY()
-	AActor* _damageReceiver;
-
-	UPROPERTY()
-	FHitResult _hitResult;
+	AActor* _effectReceiver;
 
 	UPROPERTY()
 	AMyHUD* _hud;
 
 	UPROPERTY()
+	FName _effectName;
+
+	UPROPERTY()
 	UDamageHandlerComponent* _damageHandler;
 
 	IAttributeInterface* _attributeInterface;
+	IActorUIInterface* _UIInterface;
 };
