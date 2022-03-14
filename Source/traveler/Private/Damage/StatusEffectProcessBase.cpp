@@ -18,6 +18,8 @@ void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AMyHUD* hud)
 bool UStatusEffectProcessBase::VTMCanExecute()
 {
 	if (!VTMCanExecute()) return false;
+
+	//_UIInterface->VShowWidget(widgetryp)
    
 
 	return true;

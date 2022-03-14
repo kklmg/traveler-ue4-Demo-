@@ -21,7 +21,6 @@ class TRAVELER_API UDamageProcessBase : public UProcessBase
 	GENERATED_BODY()
 
 public:
-	UFUNCTION()
 	void SetData(AActor* damageReceiver, UMyDamageType* damageType, FHitResult hitResult, AMyHUD* hud);
 
 	virtual bool VTMCanExecute() override;
