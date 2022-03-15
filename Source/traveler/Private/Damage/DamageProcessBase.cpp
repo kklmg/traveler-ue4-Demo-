@@ -4,6 +4,7 @@
 #include "Damage/DamageProcessBase.h"
 #include "Components/DamageHandlerComponent.h"
 #include "Interface/AttributeInterface.h"
+#include "UI/UIProcess/FlickeringUIProcess.h"
 
 
 void UDamageProcessBase::SetData(AActor* damageReceiver,  UMyDamageType* damageType, FHitResult hitResult, AMyHUD* hud)

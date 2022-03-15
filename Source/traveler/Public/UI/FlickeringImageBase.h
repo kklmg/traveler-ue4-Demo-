@@ -6,6 +6,7 @@
 #include "Components/Image.h"
 #include "FlickeringImageBase.generated.h"
 
+class UCompositeProcessBase;
 /**
  * 
  */
@@ -14,9 +15,21 @@ class TRAVELER_API UFlickeringImageBase : public UImage
 {
 	GENERATED_BODY()
 public:
-	 void Tick(float deltaTime);
+	void Initialize();
+	void Tick(float deltaTime);
 
 private:
-	float remainingTime;
-	float flickeringTime;
+	UPROPERTY(EditDefaultsOnly)
+	float _flickeringTime;
+
+	UPROPERTY(EditDefaultsOnly)
+	float _coolingTime;
+
+	UPROPERTY(EditDefaultsOnly)
+	UCurveFloat* _opactiryCurve;
+
+	float _remainingTime;
+
+private:
+	UCompositeProcessBase* _compositeProcess;
 };

@@ -14,14 +14,21 @@ class TRAVELER_API UProcessSectionBase : public UProcessBase
 {
 	GENERATED_BODY()
 public:
-	virtual void VTMEnter();
+	void SetDuration(float duration);
+	float GetElapsedTime();
+
+	virtual void VTMInitialize();
+	virtual bool VTMCanExecute();
+	virtual void VTMExecute();
 	virtual void VTMTick(float deltaTime);
-	//virtual void VTMEnd();
 	virtual void VTMReset();
 
-	float GetElapsedTime();
-	
+	virtual void VTMOnDead();
+	virtual void VTMOnSucceed();
+	virtual void VTMOnFailed();
+	virtual void VTMOnAborted();	
 
 private:
 	float _elapsedTime;
+	float _duration;
 };

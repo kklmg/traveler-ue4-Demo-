@@ -25,11 +25,9 @@ void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	APlayerController* controller = UGameplayStatics::GetPlayerController(world, 0);
 	if (!controller) return;
 
-
 	//world location to screen location
 	FVector2D renderLocation;
 	bool isOnScreen = UGameplayStatics::ProjectWorldToScreen(controller, WorldLocation, renderLocation);
-
 
 	float scale = UWidgetLayoutLibrary::GetViewportScale(this);
 	renderLocation /= scale;

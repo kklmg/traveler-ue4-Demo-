@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Process/CompositeProcessBase.h"
 #include "ActorStatusWidgetBase.generated.h"
 
 
@@ -25,9 +26,7 @@ enum class EActorStatusUI/* : uint8*/
 };
 ENUM_CLASS_FLAGS(EActorStatusUI);
 
-
-
-
+class UFlickeringWidget;
 
 /**
  * 
@@ -40,9 +39,37 @@ class TRAVELER_API UActorStatusWidgetBase : public UUserWidget
 public:
 	void SetData();
 
-	void ShowStatus(EActorStatusUI actorStatus);
-	void HideStatus(EActorStatusUI actorStatus);
+	void ShowStatus(EActorStatusUI actorStatus, float duration);
+	void HideStatus(EActorStatusUI actorStatus, float duration);
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, meta = (Bitmask, BitmaskEnum = EActorStatusUI))
+protected:
+	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Bitmask, BitmaskEnum = EActorStatusUI))
 	int32 StatusFlag = 0;
+
+private:
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusFire;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusWater;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusIce;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusElectricity;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusPoision;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusStun;
+
+	UPROPERTY()
+	TMap<EActorStatusUI, UFlickeringWidget*> _widgetMap; 
 };
