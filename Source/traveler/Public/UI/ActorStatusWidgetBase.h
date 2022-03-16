@@ -26,6 +26,7 @@ enum class EActorStatusUI/* : uint8*/
 };
 ENUM_CLASS_FLAGS(EActorStatusUI);
 
+class UPanelWidget;
 class UFlickeringWidget;
 
 /**
@@ -46,30 +47,14 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Bitmask, BitmaskEnum = EActorStatusUI))
-	int32 StatusFlag = 0;
-
 private:
 
 	UPROPERTY(EditAnyWhere, meta = (bindwidget))
-	UFlickeringWidget* statusFire;
+	UPanelWidget* statusHolder;
 
-	UPROPERTY(EditAnyWhere, meta = (bindwidget))
-	UFlickeringWidget* statusWater;
-
-	UPROPERTY(EditAnyWhere, meta = (bindwidget))
-	UFlickeringWidget* statusIce;
-
-	UPROPERTY(EditAnyWhere, meta = (bindwidget))
-	UFlickeringWidget* statusElectricity;
-
-	UPROPERTY(EditAnyWhere, meta = (bindwidget))
-	UFlickeringWidget* statusPoision;
-
-	UPROPERTY(EditAnyWhere, meta = (bindwidget))
-	UFlickeringWidget* statusStun;
+	UPROPERTY(EditAnyWhere)
+	TMap<EActorStatusUI, TSubclassOf<UFlickeringWidget>> _widgetClassMap;
 
 	UPROPERTY()
-	TMap<EActorStatusUI, UFlickeringWidget*> _widgetMap; 
+	TMap<EActorStatusUI, UFlickeringWidget*> _widgetInsMap; 
 };

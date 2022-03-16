@@ -9,9 +9,27 @@
 
 class UCompositeProcessBase;
 
+class UFlickeringUIProcess;
+class UProcessSectionBase;
+
 /**
  * 
  */
+
+USTRUCT(BlueprintType)
+struct FTimeFrameFlickeringData
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
+	float  onRemainingTime;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
+	float FlickeringDuration;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
+	float CoolingDuration;
+};
 
 UCLASS()
 class TRAVELER_API UFlickeringWidget : public UUserWidget
@@ -27,15 +45,29 @@ protected:
 
 private:
 	UPROPERTY(EditAnywhere)
-	float _flickeringTime;
+	float _flickeringDuration;
 
 	UPROPERTY(EditAnywhere)
-	float _coolingTime;
+	float _coolingDuration;
 
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* _opactiryCurve;
 
+	UPROPERTY(EditAnywhere)
+	TArray<FTimeFrameFlickeringData> _flickeringTimeLineData;
+
+	int32 _currentTimeIndex;
 	float _elapsedTime;
+	float _duration;
 private:
+	
+
+	UPROPERTY()
+	UFlickeringUIProcess* _flickeringProcess;
+
+	UPROPERTY()
+	UProcessSectionBase* _coolingProcess;
+
+	UPROPERTY()
 	UCompositeProcessBase* _compositeProcess;
 };

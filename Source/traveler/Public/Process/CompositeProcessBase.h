@@ -16,6 +16,7 @@ class TRAVELER_API UCompositeProcessBase : public UProcessBase
 
 public:
 	void AddProcess(UProcessBase* process);
+	void setIsLoop(bool isLoop);
 
 	virtual void VTMInitialize() override;
 	virtual bool VTMCanExecute() override;
@@ -34,5 +35,6 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	FName _processName;
 
+	bool _bLoop;
 	int32 _curProcessID;
 };

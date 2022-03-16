@@ -10,38 +10,30 @@ void UCompositeProcessBase::AddProcess(UProcessBase* process)
 }
 
 
+void UCompositeProcessBase::setIsLoop(bool isLoop)
+{
+	_bLoop = isLoop;
+}
+
 void UCompositeProcessBase::VTMInitialize()
 {
 	Super::VTMInitialize();
 
-    for (UProcessBase* process : _procesPool)
-    {
-        if (process) 
-        {
-			process->VInitialize();
-        }
-    }
     _curProcessID = 0;
+	_procesPool[_curProcessID]->VInitialize();
 }
 
 bool UCompositeProcessBase::VTMCanExecute()
 {
 	if (!Super::VTMCanExecute()) return false;
 
-	if (_procesPool.Num() == 0) return false;
+	if (_curProcessID >= _procesPool.Num()) return false;
 
-    for(UProcessBase* process : _procesPool)
-    {
-		if (!process) return false;
-		if (!process->VCanExecute()) return false;
-    }
-
-	return true;
+	return 	_procesPool[_curProcessID]->VCanExecute();
 }
 
 void UCompositeProcessBase::VTMExecute()
 {
-    _curProcessID = 0;
 	_procesPool[_curProcessID]->VExecute();
 }
 
@@ -63,18 +55,25 @@ void UCompositeProcessBase::VTMTick(float deltaTime)
     if(_procesPool[_curProcessID]->VIsDead())
     {
         //move index
-		++_curProcessID;
-        
-        //no next process 
-		if (_curProcessID >= _procesPool.Num())
+        if(_bLoop)
         {
-			SetSucceed();
+			_curProcessID = (_curProcessID + 1) % _procesPool.Num();
         }
-        //execute next process
         else
         {
-            _procesPool[_curProcessID]->VExecute();
+			++_curProcessID;
+
+            //no next process 
+            if (_curProcessID >= _procesPool.Num())
+            {
+                SetSucceed();
+				return;
+            }
         }
+
+        //execute next process
+        _procesPool[_curProcessID]->VInitialize();
+        _procesPool[_curProcessID]->VExecute();
     }
 }
 

@@ -16,6 +16,7 @@ float UProcessSectionBase::GetElapsedTime()
 void UProcessSectionBase::VTMInitialize()
 {
 	Super::VTMInitialize();
+	_elapsedTime = 0;
 }
 
 bool UProcessSectionBase::VTMCanExecute()
@@ -32,7 +33,7 @@ void UProcessSectionBase::VTMExecute()
 
 void UProcessSectionBase::VTMTick(float deltaTime)
 {
-	Super::VTick(deltaTime);
+	Super::VTMTick(deltaTime);
 
 	_elapsedTime += deltaTime;
 

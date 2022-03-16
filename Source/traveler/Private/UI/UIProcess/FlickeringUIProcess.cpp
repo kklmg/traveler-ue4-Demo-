@@ -6,11 +6,16 @@
 void UFlickeringUIProcess::VTMInitialize()
 {
 	Super::VTMInitialize();
+	_elapsedTime = 0.0f;
 }
 
-void UFlickeringUIProcess::SetData(float duration, UCurveFloat* opacityCurve)
+void UFlickeringUIProcess::SetDuration(float duration)
 {
 	_duration = duration;
+}
+
+void UFlickeringUIProcess::SetOpacityCurve(UCurveFloat* opacityCurve)
+{
 	_opacityCurve = opacityCurve;
 }
 

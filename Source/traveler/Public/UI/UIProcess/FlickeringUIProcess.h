@@ -14,7 +14,8 @@ class TRAVELER_API UFlickeringUIProcess : public UUIProcessBase
 {
 	GENERATED_BODY()
 public:
-	void SetData(float duration,UCurveFloat* opacityCurve);
+	void SetDuration(float duration);
+	void SetOpacityCurve(UCurveFloat* opacityCurve);
 
 protected:
 	virtual void VTMInitialize() override;

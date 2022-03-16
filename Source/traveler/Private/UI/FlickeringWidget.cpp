@@ -9,8 +9,9 @@
 
 UFlickeringWidget::UFlickeringWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	_flickeringTime = 2;
-	_coolingTime = 2;
+	_flickeringDuration = 2;
+	_coolingDuration = 2;
+	_duration = 15;
 }
 
 void UFlickeringWidget::NativeConstruct()
@@ -20,17 +21,20 @@ void UFlickeringWidget::NativeConstruct()
 	if (!_compositeProcess)
 	{
 		_compositeProcess = NewObject<UCompositeProcessBase>(this);
+		_compositeProcess->setIsLoop(true);
 
 		//setup flickering process
-		UFlickeringUIProcess* flickeringProcess = NewObject<UFlickeringUIProcess>(this);
-		flickeringProcess->SetData(_flickeringTime, _opactiryCurve);
-
+		_flickeringProcess = NewObject<UFlickeringUIProcess>(this);
+		_flickeringProcess->SetWidget(this);
+		_flickeringProcess->SetDuration(_flickeringDuration);
+		_flickeringProcess->SetOpacityCurve(_opactiryCurve);
+		
 		//setup cooling process
-		UProcessSectionBase* coolingProcess = NewObject<UProcessSectionBase>(this);
-		coolingProcess->SetDuration(_coolingTime);
+		_coolingProcess = NewObject<UProcessSectionBase>(this);
+		_coolingProcess->SetDuration(_coolingDuration);
 
-		_compositeProcess->AddProcess(flickeringProcess);
-		_compositeProcess->AddProcess(coolingProcess);
+		_compositeProcess->AddProcess(_flickeringProcess);
+		_compositeProcess->AddProcess(_coolingProcess);
 
 		_compositeProcess->VInitialize();
 		_compositeProcess->VExecute();
@@ -43,7 +47,17 @@ void UFlickeringWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	_elapsedTime += InDeltaTime;
+	float remainingTime = _duration - _elapsedTime;
 
+	//change flickering rate by remaining time
+	while (_currentTimeIndex < _flickeringTimeLineData.Num() 
+		&& remainingTime < _flickeringTimeLineData[_currentTimeIndex].onRemainingTime)
+		{
+			_flickeringProcess->SetDuration(_flickeringTimeLineData[_currentTimeIndex].FlickeringDuration);
+			_coolingProcess->SetDuration(_flickeringTimeLineData[_currentTimeIndex].CoolingDuration);
+
+			++_currentTimeIndex;
+		}
 
 	if (!_compositeProcess) return;
 
