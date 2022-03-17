@@ -8,15 +8,15 @@
 
 
 UENUM(BlueprintType)
-enum class EWidgetType: uint8
+enum class EActorUI: uint8
 {
-	WT_None UMETA(DisplayName = "None"),
-	WT_HealthBar UMETA(DisplayName = "HealthBar"),
-	WT_DamageInfo UMETA(DisplayName = "DamageInfo"),
+	ActorUI_None UMETA(DisplayName = "None"),
+	ActorUI_HealthBar UMETA(DisplayName = "HealthBar"),
+	ActorUI_DamageInfo UMETA(DisplayName = "DamageInfo"),
 };
 
 USTRUCT(BlueprintType)
-struct FWidgetData
+struct FActorUIData
 {
 	GENERATED_USTRUCT_BODY()
 public:
@@ -35,7 +35,7 @@ class TRAVELER_API UBillBoardWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	static UBillBoardWidget* MakeInstance(UObject* outer, AActor* owner,FWidgetData widgetData);
+	static UBillBoardWidget* MakeInstance(UObject* outer, AActor* owner,FActorUIData widgetData);
 	static UBillBoardWidget* MakeInstance(UObject* outer,TSubclassOf<UBillBoardWidget> widgetClass,AActor* owner, FVector widgetOffset);
 
 public:

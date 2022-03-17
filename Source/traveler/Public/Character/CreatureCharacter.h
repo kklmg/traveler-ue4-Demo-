@@ -140,8 +140,8 @@ public:
 
 
 	//Actor UI Interface implementation --------------------------------------------------
-	virtual void VShowWidget(EWidgetType widgeType) override;
-	virtual void VHideWidget(EWidgetType widgeType) override;
+	virtual void VShowWidget(EActorUI widgeType) override;
+	virtual void VHideWidget(EActorUI widgeType) override;
 
 
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------

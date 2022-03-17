@@ -15,8 +15,7 @@ enum class EElementalDamageType : uint8
 	EEDT_Water UMETA(DisplayName = "Water"),
 	EEDT_Ice UMETA(DisplayName = "Ice"),
 	EEDT_Electricity UMETA(DisplayName = "Electricity"),
-	EEDT_Poision UMETA(DisplayName = "Poision"),
-
+	EEDT_Poison UMETA(DisplayName = "Poison"),
 };
 
 /**

@@ -21,12 +21,10 @@ void UBillBoardWidgetComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-
-	ShowWidget(EWidgetType::WT_HealthBar);
-
+	//ShowWidget(EWidgetType::WT_HealthBar);
 }
 
-void UBillBoardWidgetComponent::ShowWidget(EWidgetType widgeType)
+void UBillBoardWidgetComponent::ShowWidget(EActorUI widgeType)
 {
 	if (_mapWidgetInstance.Contains(widgeType))
 	{
@@ -43,7 +41,7 @@ void UBillBoardWidgetComponent::ShowWidget(EWidgetType widgeType)
 	}
 }
 
-void UBillBoardWidgetComponent::HideWidget(EWidgetType widgeType)
+void UBillBoardWidgetComponent::HideWidget(EActorUI widgeType)
 {
 	if (_mapWidgetInstance.Contains(widgeType))
 	{

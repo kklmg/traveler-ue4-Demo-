@@ -358,12 +358,12 @@ void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType, FHitResult hit
 	_damageHandlerComponent->HandleDamage(damageType, hitResult);
 }
 
-void ACreatureCharacter::VShowWidget(EWidgetType widgeType)
+void ACreatureCharacter::VShowWidget(EActorUI widgeType)
 {
 	_billboardWidgetComponent->ShowWidget(widgeType);
 }
 
-void ACreatureCharacter::VHideWidget(EWidgetType widgeType)
+void ACreatureCharacter::VHideWidget(EActorUI widgeType)
 {
 	_billboardWidgetComponent->HideWidget(widgeType);
 }

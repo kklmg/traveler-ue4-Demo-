@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Process/CompositeProcessBase.h"
+#include "UI/FlickeringWidget.h"
 #include "ActorStatusWidgetBase.generated.h"
 
 
@@ -27,7 +28,6 @@ enum class EActorStatusUI/* : uint8*/
 ENUM_CLASS_FLAGS(EActorStatusUI);
 
 class UPanelWidget;
-class UFlickeringWidget;
 
 /**
  * 
@@ -38,8 +38,6 @@ class TRAVELER_API UActorStatusWidgetBase : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void SetData();
-
 	void ShowStatus(EActorStatusUI actorStatus, float duration);
 	void HideStatus(EActorStatusUI actorStatus, float duration);
 
@@ -52,9 +50,17 @@ private:
 	UPROPERTY(EditAnyWhere, meta = (bindwidget))
 	UPanelWidget* statusHolder;
 
+	UPROPERTY(EditAnywhere)
+	UCurveFloat* _opacityCurve;
+
+	UPROPERTY(EditAnywhere)
+	TArray<FTimeFrameFlickeringData> _flickeringTimeLineData;
+
 	UPROPERTY(EditAnyWhere)
 	TMap<EActorStatusUI, TSubclassOf<UFlickeringWidget>> _widgetClassMap;
 
 	UPROPERTY()
 	TMap<EActorStatusUI, UFlickeringWidget*> _widgetInsMap; 
 };
+
+

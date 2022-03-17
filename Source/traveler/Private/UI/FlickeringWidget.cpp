@@ -9,14 +9,12 @@
 
 UFlickeringWidget::UFlickeringWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	_flickeringDuration = 2;
-	_coolingDuration = 2;
 	_duration = 15;
 }
 
-void UFlickeringWidget::NativeConstruct()
+bool UFlickeringWidget::Initialize()
 {
-	Super::NativeConstruct();
+	if (!Super::Initialize()) return false;
 
 	if (!_compositeProcess)
 	{
@@ -26,19 +24,21 @@ void UFlickeringWidget::NativeConstruct()
 		//setup flickering process
 		_flickeringProcess = NewObject<UFlickeringUIProcess>(this);
 		_flickeringProcess->SetWidget(this);
-		_flickeringProcess->SetDuration(_flickeringDuration);
-		_flickeringProcess->SetOpacityCurve(_opactiryCurve);
-		
+
 		//setup cooling process
 		_coolingProcess = NewObject<UProcessSectionBase>(this);
-		_coolingProcess->SetDuration(_coolingDuration);
 
 		_compositeProcess->AddProcess(_flickeringProcess);
 		_compositeProcess->AddProcess(_coolingProcess);
-
-		_compositeProcess->VInitialize();
-		_compositeProcess->VExecute();
 	}
+
+
+	return true;
+}
+
+void UFlickeringWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
 }
 
 
@@ -62,4 +62,46 @@ void UFlickeringWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 	if (!_compositeProcess) return;
 
 	_compositeProcess->VTick(InDeltaTime);
+}
+
+void UFlickeringWidget::SetDuration(float duration)
+{
+	_duration = duration;
+}
+
+void UFlickeringWidget::SetOpacityCurve(UCurveFloat* curve)
+{
+	_opacityCurve = curve;
+}
+
+void UFlickeringWidget::SetTimeLineData(TArray<FTimeFrameFlickeringData> timeLineData)
+{
+	_flickeringTimeLineData = timeLineData;
+}
+
+void UFlickeringWidget::ExecuteFlickeringProcess()
+{
+	if (!_flickeringProcess) return;
+	if (!_coolingProcess) return;
+	if (!_compositeProcess) return;
+
+	if (_currentTimeIndex < _flickeringTimeLineData.Num())
+	{
+		_flickeringProcess->SetDuration(_flickeringTimeLineData[_currentTimeIndex].FlickeringDuration);
+		_flickeringProcess->SetOpacityCurve(_opacityCurve);
+
+		_coolingProcess->SetDuration(_flickeringTimeLineData[_currentTimeIndex].CoolingDuration);
+
+		_compositeProcess->VInitialize();
+		_compositeProcess->VExecute();
+	}
+}
+
+void UFlickeringWidget::Reset()
+{
+	_currentTimeIndex = 0;
+	_elapsedTime = 0.0f;
+
+	//_compositeProcess->VAbort();
+	//_compositeProcess->VInitialize();
 }

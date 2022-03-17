@@ -38,29 +38,25 @@ class TRAVELER_API UFlickeringWidget : public UUserWidget
 	
 public:
 	UFlickeringWidget(const FObjectInitializer& ObjectInitializer);
+	
+	void SetDuration(float duration);
+	void SetOpacityCurve(UCurveFloat* curve);
+	void SetTimeLineData(TArray<FTimeFrameFlickeringData> timeLineData); 
+	void ExecuteFlickeringProcess();
+	void Reset();
 
 protected:
+	virtual bool Initialize() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
+
 private:
-	UPROPERTY(EditAnywhere)
-	float _flickeringDuration;
+	UPROPERTY()
+	UCurveFloat* _opacityCurve;
 
-	UPROPERTY(EditAnywhere)
-	float _coolingDuration;
-
-	UPROPERTY(EditAnywhere)
-	UCurveFloat* _opactiryCurve;
-
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	TArray<FTimeFrameFlickeringData> _flickeringTimeLineData;
-
-	int32 _currentTimeIndex;
-	float _elapsedTime;
-	float _duration;
-private:
-	
 
 	UPROPERTY()
 	UFlickeringUIProcess* _flickeringProcess;
@@ -70,4 +66,10 @@ private:
 
 	UPROPERTY()
 	UCompositeProcessBase* _compositeProcess;
+
+	int32 _currentTimeIndex;
+
+	float _elapsedTime;
+
+	float _duration;
 };

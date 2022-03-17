@@ -30,16 +30,16 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ShowWidget(EWidgetType widgeType);
-	void HideWidget(EWidgetType widgeType);
+	void ShowWidget(EActorUI widgeType);
+	void HideWidget(EActorUI widgeType);
 
 private:
 
 	UPROPERTY(EditDefaultsOnly)
-	TMap<EWidgetType,FWidgetData> _mapWidgetClass;
+	TMap<EActorUI,FActorUIData> _mapWidgetClass;
 
 	UPROPERTY()
-	TMap<EWidgetType, UBillBoardWidget*> _mapWidgetInstance;
+	TMap<EActorUI, UBillBoardWidget*> _mapWidgetInstance;
 
 	UPROPERTY()
 	UBillBoardWidget* _widget;

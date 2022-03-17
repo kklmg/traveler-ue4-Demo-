@@ -23,6 +23,6 @@ class TRAVELER_API IActorUIInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void VShowWidget(EWidgetType widgeType) PURE_VIRTUAL(IActorUIInterface::VShowWidget,);
-	virtual void VHideWidget(EWidgetType widgeType) PURE_VIRTUAL(IActorUIInterface::VHideWidget,);
+	virtual void VShowWidget(EActorUI widgeType) PURE_VIRTUAL(IActorUIInterface::VShowWidget,);
+	virtual void VHideWidget(EActorUI widgeType) PURE_VIRTUAL(IActorUIInterface::VHideWidget,);
 };

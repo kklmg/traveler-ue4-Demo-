@@ -16,7 +16,7 @@ UBillBoardWidget* UBillBoardWidget::MakeInstance(UObject* outer, TSubclassOf<UBi
 	return newWidget;
 }
 
-UBillBoardWidget* UBillBoardWidget::MakeInstance(UObject* outer, AActor* owner, FWidgetData widgetData)
+UBillBoardWidget* UBillBoardWidget::MakeInstance(UObject* outer, AActor* owner, FActorUIData widgetData)
 {
 	UBillBoardWidget* newWidget = nullptr;
 	newWidget = NewObject<UBillBoardWidget>(outer, widgetData.WidgetClass);
