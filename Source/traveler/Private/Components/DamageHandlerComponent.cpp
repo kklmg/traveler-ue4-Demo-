@@ -33,7 +33,7 @@ void UDamageHandlerComponent::OnHealthChanged(float preValue, float newValue)
 {
 	if(_actorUIInterface)
 	{
-		_actorUIInterface->VShowWidget(EActorUI::ActorUI_HealthBar);
+		_actorUIInterface->VShowActorUI(EActorUI::ActorUI_Status);
 	}
 
 	GetWorld()->GetGameInstance();

@@ -4,6 +4,7 @@
 #include "Damage/DamageProcessBase.h"
 #include "Components/DamageHandlerComponent.h"
 #include "Interface/AttributeInterface.h"
+#include "Interface/ActorUIInterface.h"
 #include "UI/UIProcess/FlickeringUIProcess.h"
 
 
@@ -13,6 +14,7 @@ void UDamageProcessBase::SetData(AActor* damageReceiver,  UMyDamageType* damageT
 	_damageReceiver = damageReceiver;
 	_hud = hud;
 	_attributeInterface = Cast<IAttributeInterface>(damageReceiver);
+	_actorUIInterface = Cast<IActorUIInterface>(damageReceiver);
 	_hitResult = hitResult;
 }
 
@@ -29,6 +31,12 @@ void UDamageProcessBase::VTMExecute()
 	{
 		_damageRemainCount = _damageType->DamageHandleCount;
 		_damageInterval = _damageType->DamageHandleInterval;
+	}
+
+	//test code
+	if(_actorUIInterface)
+	{
+		_actorUIInterface->VShowActorStatusUI(EActorStatusUI::EAStatus_Fire,10);
 	}
 }
 
@@ -73,6 +81,12 @@ void UDamageProcessBase::VTMTick(float deltaTime)
 
 void UDamageProcessBase::VTMOnDead()
 {
+	//test code
+	if (_actorUIInterface)
+	{
+		_actorUIInterface->VHideActorStatusUI(EActorStatusUI::EAStatus_Fire);
+	}
+
 	_elapsedTime = 0;
 }
 

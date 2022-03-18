@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "UI/BillBoardWidget.h"
+#include "Data/ActorUIData.h"
 #include "ActorUIInterface.generated.h"
 
 // This class does not need to be modified.
@@ -23,6 +23,8 @@ class TRAVELER_API IActorUIInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void VShowWidget(EActorUI widgeType) PURE_VIRTUAL(IActorUIInterface::VShowWidget,);
-	virtual void VHideWidget(EActorUI widgeType) PURE_VIRTUAL(IActorUIInterface::VHideWidget,);
+	virtual void VShowActorUI(EActorUI UIType) PURE_VIRTUAL(IActorUIInterface::VShowActorUI,);
+	virtual void VHideActorUI(EActorUI UIType) PURE_VIRTUAL(IActorUIInterface::VHideActorUI,);
+	virtual void VShowActorStatusUI(EActorStatusUI StatusUIType, float duration) PURE_VIRTUAL(IActorUIInterface::VShowActorStatusUI,);
+	virtual void VHideActorStatusUI(EActorStatusUI StatusUIType) PURE_VIRTUAL(IActorUIInterface::VHideActorStatusUI,);
 };

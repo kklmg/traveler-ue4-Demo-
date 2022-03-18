@@ -23,7 +23,7 @@ class UActionComponent;
 class UAttributeComponent;
 class UWidgetComponent;
 class UBillboardComponent;
-class UBillBoardWidgetComponent;
+class UActorUIComponent;
 class UAnimationEventComponent;
 class UInputHandlerComponent;
 class UStateComponent;
@@ -140,8 +140,10 @@ public:
 
 
 	//Actor UI Interface implementation --------------------------------------------------
-	virtual void VShowWidget(EActorUI widgeType) override;
-	virtual void VHideWidget(EActorUI widgeType) override;
+	virtual void VShowActorUI(EActorUI UIType) override;
+	virtual void VHideActorUI(EActorUI UIType) override;
+	virtual void VShowActorStatusUI(EActorStatusUI StatusUIType, float duration) override;
+	virtual void VHideActorStatusUI(EActorStatusUI StatusUIType) override;
 
 
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
@@ -171,7 +173,7 @@ protected:
 	UAttributeComponent* _attributeComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UBillBoardWidgetComponent* _billboardWidgetComponent;
+	UActorUIComponent* _actorUIComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UAnimationEventComponent* _animationEventComponent;

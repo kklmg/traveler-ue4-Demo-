@@ -92,6 +92,7 @@ void UProcessBase::SetSucceed()
 	{
 		_processState = EProcessState::EPS_SUCCEEDED;
 		VTMOnSucceed();
+		VTMOnDead();
 	}
 }
 
@@ -101,6 +102,7 @@ void UProcessBase::SetFailed()
 	{
 		_processState = EProcessState::EPS_FAILED;
 		VTMOnFailed();
+		VTMOnDead();
 	}
 }
 

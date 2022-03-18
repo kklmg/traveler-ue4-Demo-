@@ -9,7 +9,7 @@
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Components/BillBoardWidgetComponent.h"
+#include "Components/ActorUIComponent.h"
 #include "Components/AnimationEventComponent.h"
 #include "Components/StateComponent.h"
 #include "Components/PawnCameraComponent.h"
@@ -77,17 +77,17 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 		_weaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
 		check(_weaponComponent != nullptr);
 	}
-	//Create billboard component
-	if (_billboardWidgetComponent == nullptr)
+	//Create ActorUIComponent component
+	if (_actorUIComponent == nullptr)
 	{
-		_billboardWidgetComponent = CreateDefaultSubobject<UBillBoardWidgetComponent>(TEXT("BillBoardWidgetComponent"));
-		check(_billboardWidgetComponent != nullptr);
+		_actorUIComponent = CreateDefaultSubobject<UActorUIComponent>(TEXT("ActorUIComponent"));
+		check(_actorUIComponent != nullptr);
 	}
 	//Create Animation Event component
 	if (_animationEventComponent == nullptr)
 	{
 		_animationEventComponent = CreateDefaultSubobject<UAnimationEventComponent>(TEXT("AnimationEventComponent"));
-		check(_billboardWidgetComponent != nullptr);
+		check(_actorUIComponent != nullptr);
 	}
 	//Create InputHandler component
 	if (_inputHandlerComponent == nullptr)
@@ -102,7 +102,6 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 		_damageHandlerComponent = CreateDefaultSubobject<UDamageHandlerComponent>(TEXT("DamageHandlerComponent"));
 		check(_damageHandlerComponent != nullptr);
 	}
-
 
 	//IK
 	if (_IKComponent == nullptr)
@@ -154,7 +153,7 @@ FORCEINLINE UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
 
 FORCEINLINE UAnimationEventComponent* ACreatureCharacter::GetAnimationEventComponent()
 {
-return _animationEventComponent;
+	return _animationEventComponent;
 }
 
 FORCEINLINE UCharacterAttribute* ACreatureCharacter::VGetAttribute(EAttributeType attributeType)
@@ -358,14 +357,24 @@ void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType, FHitResult hit
 	_damageHandlerComponent->HandleDamage(damageType, hitResult);
 }
 
-void ACreatureCharacter::VShowWidget(EActorUI widgeType)
+void ACreatureCharacter::VShowActorUI(EActorUI UIType)
 {
-	_billboardWidgetComponent->ShowWidget(widgeType);
+	_actorUIComponent->ShowActorUI(UIType);
 }
 
-void ACreatureCharacter::VHideWidget(EActorUI widgeType)
+void ACreatureCharacter::VHideActorUI(EActorUI UIType)
 {
-	_billboardWidgetComponent->HideWidget(widgeType);
+	_actorUIComponent->HideActorUI(UIType);
+}
+
+void ACreatureCharacter::VShowActorStatusUI(EActorStatusUI StatusUIType, float duration)
+{
+	_actorUIComponent->ShowActorStatusUI(StatusUIType, duration);
+}
+
+void ACreatureCharacter::VHideActorStatusUI(EActorStatusUI StatusUIType)
+{
+	_actorUIComponent->HideActorStatusUI(StatusUIType);
 }
 
 FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)

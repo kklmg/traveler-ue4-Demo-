@@ -1,30 +1,34 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Components/BillBoardWidgetComponent.h"
+#include "Components/ActorUIComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/ActorStatusWidgetBase.h"
 
 
-UBillBoardWidgetComponent::UBillBoardWidgetComponent()
+UActorUIComponent::UActorUIComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UBillBoardWidgetComponent::InitializeComponent()
+void UActorUIComponent::InitializeComponent()
 {
 
 }
 
-void UBillBoardWidgetComponent::BeginPlay()
+void UActorUIComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//ShowWidget(EWidgetType::WT_HealthBar);
+	
+	if(_bShowStatusDefault)
+	{
+		ShowActorUI(EActorUI::ActorUI_Status);
+	}
 }
 
-void UBillBoardWidgetComponent::ShowWidget(EActorUI widgeType)
+void UActorUIComponent::ShowActorUI(EActorUI widgeType)
 {
 	if (_mapWidgetInstance.Contains(widgeType))
 	{
@@ -41,7 +45,7 @@ void UBillBoardWidgetComponent::ShowWidget(EActorUI widgeType)
 	}
 }
 
-void UBillBoardWidgetComponent::HideWidget(EActorUI widgeType)
+void UActorUIComponent::HideActorUI(EActorUI widgeType)
 {
 	if (_mapWidgetInstance.Contains(widgeType))
 	{
@@ -49,7 +53,31 @@ void UBillBoardWidgetComponent::HideWidget(EActorUI widgeType)
 	}
 }
 
-void UBillBoardWidgetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UActorUIComponent::ShowActorStatusUI(EActorStatusUI StatusUIType, float duration)
+{
+	ShowActorUI(EActorUI::ActorUI_Status);
+
+	if (_mapWidgetInstance.Contains(EActorUI::ActorUI_Status) == false) return;
+	UActorStatusWidgetBase* statusUI = Cast<UActorStatusWidgetBase>(_mapWidgetInstance[EActorUI::ActorUI_Status]);
+
+	if(statusUI)
+	{
+		statusUI->ShowStatus(StatusUIType, duration);
+	}
+}
+
+void UActorUIComponent::HideActorStatusUI(EActorStatusUI StatusUIType)
+{
+	if (_mapWidgetInstance.Contains(EActorUI::ActorUI_Status) == false) return;
+	UActorStatusWidgetBase* statusUI = Cast<UActorStatusWidgetBase>(_mapWidgetInstance[EActorUI::ActorUI_Status]);
+
+	if (statusUI)
+	{
+		statusUI->HideStatus(StatusUIType);
+	}
+}
+
+void UActorUIComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 

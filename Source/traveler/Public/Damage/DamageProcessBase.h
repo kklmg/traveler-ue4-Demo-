@@ -9,6 +9,7 @@
 #include "DamageProcessBase.generated.h"
 
 class IAttributeInterface;
+class IActorUIInterface;
 
 class UDamageHandlerComponent;
 /**
@@ -52,4 +53,5 @@ private:
 	UDamageHandlerComponent* _damageHandler;
 
 	IAttributeInterface* _attributeInterface;
+	IActorUIInterface* _actorUIInterface;
 };

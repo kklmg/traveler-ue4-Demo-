@@ -5,7 +5,8 @@
 #include "CoreMinimal.h"
 #include "Components/PrimitiveComponent.h"
 #include "UI/BillBoardWidget.h"
-#include "BillBoardWidgetComponent.generated.h"
+#include "Data/ActorUIData.h"
+#include "ActorUIComponent.generated.h"
 
 
 class UUserWidget;
@@ -13,13 +14,13 @@ class UUserWidget;
  * 
  */
 UCLASS()
-class TRAVELER_API UBillBoardWidgetComponent : public UPrimitiveComponent
+class TRAVELER_API UActorUIComponent : public UPrimitiveComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UBillBoardWidgetComponent();
+	UActorUIComponent();
 protected:
 
 	virtual void InitializeComponent() override;
@@ -30,10 +31,15 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ShowWidget(EActorUI widgeType);
-	void HideWidget(EActorUI widgeType);
+	void ShowActorUI(EActorUI widgeType);
+	void HideActorUI(EActorUI widgeType);
+	void ShowActorStatusUI(EActorStatusUI StatusUIType, float duration);
+	void HideActorStatusUI(EActorStatusUI StatusUIType);
 
 private:
+
+	UPROPERTY(EditDefaultsOnly)
+	bool _bShowStatusDefault;
 
 	UPROPERTY(EditDefaultsOnly)
 	TMap<EActorUI,FActorUIData> _mapWidgetClass;

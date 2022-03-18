@@ -12,6 +12,7 @@ void UActorStatusWidgetBase::ShowStatus(EActorStatusUI actorStatus, float durati
 	{
 		_widgetInsMap[actorStatus]->Reset();
 		_widgetInsMap[actorStatus]->SetDuration(duration);
+		_widgetInsMap[actorStatus]->SetVisibility(ESlateVisibility::Visible);
 	}
 	else if(_widgetClassMap.Contains(actorStatus))
 	{
@@ -27,12 +28,11 @@ void UActorStatusWidgetBase::ShowStatus(EActorStatusUI actorStatus, float durati
 	}
 }
 
-void UActorStatusWidgetBase::HideStatus(EActorStatusUI actorStatus, float duration)
+void UActorStatusWidgetBase::HideStatus(EActorStatusUI actorStatus)
 {
 	if (_widgetInsMap.Contains(actorStatus))
 	{
-		_widgetInsMap[actorStatus]->RemoveFromParent();
-		_widgetInsMap.Remove(actorStatus);
+		_widgetInsMap[actorStatus]->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 

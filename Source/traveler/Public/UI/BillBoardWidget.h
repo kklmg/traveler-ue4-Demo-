@@ -4,28 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Data/ActorUIData.h"
 #include "BillBoardWidget.generated.h"
 
 
-UENUM(BlueprintType)
-enum class EActorUI: uint8
-{
-	ActorUI_None UMETA(DisplayName = "None"),
-	ActorUI_HealthBar UMETA(DisplayName = "HealthBar"),
-	ActorUI_DamageInfo UMETA(DisplayName = "DamageInfo"),
-};
 
-USTRUCT(BlueprintType)
-struct FActorUIData
-{
-	GENERATED_USTRUCT_BODY()
-public:
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UBillBoardWidget> WidgetClass;
-	UPROPERTY(EditDefaultsOnly)
-	FVector WidgetOffset;
-};
 
 /**
  * 
@@ -41,10 +24,12 @@ public:
 public:
 	void SetData(AActor* widgetOwner,FVector widgetOffset);
 
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
 	UFUNCTION(BlueprintCallable)
 	AActor* GetWidgetOwner();
+
+protected:
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
 private:
 	UPROPERTY()
 	AActor* _widgetOwner;
