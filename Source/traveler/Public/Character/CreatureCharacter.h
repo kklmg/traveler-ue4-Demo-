@@ -133,6 +133,7 @@ public:
 	//AnimationModel Provider Interface implementation --------------------------------------------------
 	virtual FAnimationModel VGetAnimationModel() override;
 	virtual FAnimationModel& VGetAnimationModelRef() override;
+	virtual UAnimationModelBase* VGetAnimationModelBase() override;
 
 
 	//Damage Handler Interface implementation --------------------------------------------------
@@ -201,4 +202,7 @@ protected:
 
 	UPROPERTY()
 	FAnimationModel _animationModel;
+
+	UPROPERTY()
+	UAnimationModelBase* _animationModelBase;
 };

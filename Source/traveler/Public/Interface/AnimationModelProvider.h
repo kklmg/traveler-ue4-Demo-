@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "Data/AnimationModel.h"
+#include "Data/AnimationModelBase.h"
 #include "AnimationModelProvider.generated.h"
 
 // This class does not need to be modified.
@@ -30,4 +31,6 @@ public:
 	UFUNCTION()
 	virtual FAnimationModel& VGetAnimationModelRef() PURE_VIRTUAL(IAnimationModelProvider::VGetAnimationModelRef, return temp;);
 
+	UFUNCTION(BlueprintCallable)
+	virtual UAnimationModelBase* VGetAnimationModelBase() PURE_VIRTUAL(IAnimationModelProvider::VGetAnimationModelBase, return nullptr;);
 };

@@ -352,6 +352,11 @@ FAnimationModel& ACreatureCharacter::VGetAnimationModelRef()
 	return _animationModel;
 }
 
+UAnimationModelBase* ACreatureCharacter::VGetAnimationModelBase()
+{
+	return _animationModelBase;
+}
+
 void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType, FHitResult hitResult)
 {
 	_damageHandlerComponent->HandleDamage(damageType, hitResult);
