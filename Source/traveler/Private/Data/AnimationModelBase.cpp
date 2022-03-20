@@ -16,97 +16,100 @@ UReactiveDataBase* UAnimationModelBase::GetData(FName dataKey)
 }
 
 
+UReactive_Int* UAnimationModelBase::GetData_Int(FName dataKey)
+{
+	return GetOrCreate<UReactive_Int>(dataKey);
+}
+
+UReactive_Float* UAnimationModelBase::GetData_Float(FName dataKey)
+{
+	return GetOrCreate<UReactive_Float>(dataKey);
+}
+
+UReactive_Bool* UAnimationModelBase::GetData_Bool(FName dataKey)
+{
+	return GetOrCreate<UReactive_Bool>(dataKey);
+}
+
+UReactive_UInt8* UAnimationModelBase::GetData_UInt8(FName dataKey)
+{
+	return GetOrCreate<UReactive_UInt8>(dataKey);
+}
+
+UReactive_Vector* UAnimationModelBase::GetData_Vector(FName dataKey)
+{
+	return GetOrCreate<UReactive_Vector>(dataKey);
+}
+
+UReactive_Quat* UAnimationModelBase::GetData_Quat(FName dataKey)
+{
+	return GetOrCreate<UReactive_Quat>(dataKey);
+}
+
+UReactive_UObject* UAnimationModelBase::GetData_UObject(FName dataKey)
+{
+	return GetOrCreate<UReactive_UObject>(dataKey);
+}
+
 void UAnimationModelBase::SetInt(FName dataKey, int value)
 {
-	if (_dataMap.Contains(dataKey))
+	UReactive_Int* data = GetOrCreate<UReactive_Int>(dataKey);
+	if(data) 
 	{
-		UReactive_Int* data = Cast<UReactive_Int>(_dataMap[dataKey]);
-
-		if(data)
-		{
-			data->SetValue(value);
-		}
-	}
-	else
-	{
-		UReactive_Int* newData = NewObject<UReactive_Int>(this);
-		newData->SetValue(value);
-		_dataMap.Add(dataKey, newData);
+		data->SetValue(value);
 	}
 }
 
 void UAnimationModelBase::SetFloat(FName dataKey, float value)
 {
-	if (_dataMap.Contains(dataKey))
+	UReactive_Float* data = GetOrCreate<UReactive_Float>(dataKey);
+	if (data)
 	{
-		UReactive_Int* data = Cast<UReactive_Int>(_dataMap[dataKey]);
-
-		if (data)
-		{
-			data->SetValue(value);
-		}
-	}
-	else
-	{
-		UReactive_Int* newData = NewObject<UReactive_Int>(this);
-		newData->SetValue(value);
-		_dataMap.Add(dataKey, newData);
+		data->SetValue(value);
 	}
 }
 
 void UAnimationModelBase::SetBool(FName dataKey, bool value)
 {
-	if (_dataMap.Contains(dataKey))
+	UReactive_Bool* data = GetOrCreate<UReactive_Bool>(dataKey);
+	if (data)
 	{
-		UReactive_Float* data = Cast<UReactive_Float>(_dataMap[dataKey]);
-
-		if (data)
-		{
-			data->SetValue(value);
-		}
-	}
-	else
-	{
-		UReactive_Float* newData = NewObject<UReactive_Float>(this);
-		newData->SetValue(value);
-		_dataMap.Add(dataKey, newData);
+		data->SetValue(value);
 	}
 }
 
 void UAnimationModelBase::SetVector(FName dataKey, FVector value)
 {
-	if (_dataMap.Contains(dataKey))
+	UReactive_Vector* data = GetOrCreate<UReactive_Vector>(dataKey);
+	if (data)
 	{
-		UReactive_Vector* data = Cast<UReactive_Vector>(_dataMap[dataKey]);
-
-		if (data)
-		{
-			data->SetValue(value);
-		}
-	}
-	else
-	{
-		UReactive_Vector* newData = NewObject<UReactive_Vector>(this);
-		newData->SetValue(value);
-		_dataMap.Add(dataKey, newData);
+		data->SetValue(value);
 	}
 }
 
 void UAnimationModelBase::SetQuat(FName dataKey, FQuat value)
 {
-	if (_dataMap.Contains(dataKey))
+	UReactive_Quat* data = GetOrCreate<UReactive_Quat>(dataKey);
+	if (data)
 	{
-		UReactive_Quat* data = Cast<UReactive_Quat>(_dataMap[dataKey]);
-
-		if (data)
-		{
-			data->SetValue(value);
-		}
+		data->SetValue(value);
 	}
-	else
+}
+
+void UAnimationModelBase::SetUInt8(FName dataKey, uint8 value)
+{
+	UReactive_UInt8* data = GetOrCreate<UReactive_UInt8>(dataKey);
+	if (data)
 	{
-		UReactive_Quat* newData = NewObject<UReactive_Quat>(this);
-		newData->SetValue(value);
-		_dataMap.Add(dataKey, newData);
+		data->SetValue(value);
+	}
+}
+
+void UAnimationModelBase::SetUObject(FName dataKey, UObject* value)
+{
+	UReactive_UObject* data = GetOrCreate<UReactive_UObject>(dataKey);
+	if (data)
+	{
+		data->SetValue(value);
 	}
 }
