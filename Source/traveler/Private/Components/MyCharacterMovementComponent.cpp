@@ -24,9 +24,7 @@ void UMyCharacterMovementComponent::BeginPlay()
 
 	_actionInterface = GetOwner<IActionInterface>();
 	_attributeInterface = GetOwner<IAttributeInterface>();
-	_animationModelProviderInterface = GetOwner<IAnimationModelProvider>();
 	
-
 	if(_attributeInterface && _actionInterface)
 	{
 		//set walking speed 
@@ -39,26 +37,36 @@ void UMyCharacterMovementComponent::BeginPlay()
 		_actionInterface->VGetActionBlackBoard()->
 			GetValueChangedDelegate_Bool(EActionDataKey::EACTD_WantToSprint).AddUFunction(this, FName(TEXT("OnCharacterWantToSprint")));
 	}
+
+	IAnimationModelProvider* animationModelProviderInterface = GetOwner<IAnimationModelProvider>();
+	if (animationModelProviderInterface)
+	{
+		_animationViewModel = animationModelProviderInterface->VGetAnimationModel();
+	}
 }
 
 void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (_animationModelProviderInterface)
+}
+
+void UMyCharacterMovementComponent::OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode)
+{
+	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
+
+	if(_animationViewModel)
 	{
-		FAnimationModel& model = _animationModelProviderInterface->VGetAnimationModelRef();
-		model.MovingVelocity = Velocity;
-		model.MovementMode = MovementMode;
+		_animationViewModel->SetUInt8(AnimationDataKey::byteMovementMode, MovementMode);
+	}
+}
 
-		FVector horizonVelocity = Velocity;
-		horizonVelocity.Z = 0;
+void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity)
+{
+	Super::OnMovementUpdated(DeltaSeconds, OldLocation, OldVelocity);
 
-		float speed = horizonVelocity.Size();
-		model.bIsSprinting = speed > model.WalkingSpeed+0.1f;
-		model.NormalizedSpeed = speed / model.SprintSpeed;
-		model.NormalizedSpeed_IdleWalk = speed / model.WalkingSpeed;
-		model.NormalizedSpeed_WalkSprint = (speed - model.WalkingSpeed) / (model.SprintSpeed - model.WalkingSpeed);
-		model.PendingInput = GetPendingInputVector();
+	if (_animationViewModel)
+	{
+		_animationViewModel->SetVector(AnimationDataKey::vMovingVelocity, Velocity);
 	}
 }
 
@@ -69,7 +77,7 @@ void UMyCharacterMovementComponent::OnCharacterWantToSprint(bool wantToSprint)
 		if (wantToSprint)
 		{
 			//set to Sprint speed 
-			UCharacterAttribute* speed = _attributeInterface->VGetAttribute(EAttributeType::EATT_SprintSpeed);
+			UCharacterAttribute* speed = _attributeInterface->VGetAttribute(EAttributeType::EATT_SprintingSpeed);
 			if (speed)
 			{
 				MaxWalkSpeed = speed->GetValue();

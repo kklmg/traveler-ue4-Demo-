@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Data/AnimationModel.h"
 #include "Data/AnimationModelBase.h"
 #include "AnimationModelProvider.generated.h"
 
@@ -15,7 +14,6 @@ class UAnimationModelProvider : public UInterface
 	GENERATED_BODY()
 };
 
-static FAnimationModel temp;
 /**
  * 
  */
@@ -26,11 +24,5 @@ class TRAVELER_API IAnimationModelProvider
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintCallable)
-	virtual FAnimationModel VGetAnimationModel() PURE_VIRTUAL(IAnimationModelProvider::VGetAnimationModel, return FAnimationModel(););
-
-	UFUNCTION()
-	virtual FAnimationModel& VGetAnimationModelRef() PURE_VIRTUAL(IAnimationModelProvider::VGetAnimationModelRef, return temp;);
-
-	UFUNCTION(BlueprintCallable)
-	virtual UAnimationModelBase* VGetAnimationModelBase() PURE_VIRTUAL(IAnimationModelProvider::VGetAnimationModelBase, return nullptr;);
+	virtual UAnimationModelBase* VGetAnimationModel() PURE_VIRTUAL(IAnimationModelProvider::VGetAnimationModel, return nullptr;);
 };

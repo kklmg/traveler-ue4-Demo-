@@ -10,6 +10,7 @@
 class UCharacterAttribute;
 class UDataTable;
 class UCostData;
+class UAnimationModelBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UAttributeComponent : public UActorComponent
@@ -52,6 +53,9 @@ public:
 
 private:
 	void InitializeAttributes();
+
+	UPROPERTY()
+	UAnimationModelBase* _animationViewModel;
 
 	UPROPERTY(EditDefaultsOnly, Category = Attributes)
 	TMap<EAttributeType,UCharacterAttribute*> _mapAttributes;

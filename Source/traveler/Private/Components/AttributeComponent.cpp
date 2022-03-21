@@ -10,6 +10,7 @@
 #include "Interface/AnimationModelProvider.h"
 
 
+
 // Sets default values for this component's properties
 UAttributeComponent::UAttributeComponent()
 {
@@ -28,6 +29,12 @@ UAttributeComponent::UAttributeComponent()
 
 void UAttributeComponent::InitializeComponent()
 {
+	IAnimationModelProvider* animationModelProvider = GetOwner<IAnimationModelProvider>();
+	if (animationModelProvider)
+	{
+		_animationViewModel = animationModelProvider->VGetAnimationModel();
+	}
+
 	InitializeAttributes();
 }
 
@@ -105,7 +112,7 @@ bool UAttributeComponent::CanConsumeStatus(EAttributeType attributeType, float C
 			case EAttributeType::EATT_Strength:
 			case EAttributeType::EATT_Defence:
 			case EAttributeType::EATT_WalkingSpeed:
-			case EAttributeType::EATT_SprintSpeed:
+			case EAttributeType::EATT_SprintingSpeed:
 			case EAttributeType::EATT_FlyingSpeed:
 			default:
 			{
@@ -189,35 +196,19 @@ void UAttributeComponent::InitializeAttributes()
 
 	}
 
-	//Animation view model setting
-	IAnimationModelProvider* animationModelProvider = GetOwner<IAnimationModelProvider>();
-	if(animationModelProvider)
+	if(_animationViewModel)
 	{
 		UCharacterAttribute* walkingSpeed = GetAttribute(EAttributeType::EATT_WalkingSpeed);
-		if(walkingSpeed)
+		if (walkingSpeed)
 		{
-			animationModelProvider->VGetAnimationModelRef().WalkingSpeed = walkingSpeed->GetValue();
+			_animationViewModel->SetFloat(AnimationDataKey::fWalkingSpeed,walkingSpeed->GetValue());
 		}
-		UCharacterAttribute* sprintSpeed = GetAttribute(EAttributeType::EATT_SprintSpeed);
-		if (sprintSpeed)
+		UCharacterAttribute* sprintingSpeed = GetAttribute(EAttributeType::EATT_SprintingSpeed);
+		if (sprintingSpeed)
 		{
-			animationModelProvider->VGetAnimationModelRef().SprintSpeed = sprintSpeed->GetValue();
+			_animationViewModel->SetFloat(AnimationDataKey::fSprintingSpeed, sprintingSpeed->GetValue());
 		}
 	}
-
-	//for(TSubclasrAttribute> atsOf<UCharactetributeClass: _ArrayAttributeClasses)
-	//{
-	//	UCharacterAttribute* attribute = NewObject<UCharacterAttribute>(this, attributeClass);
-
-	//	if (_mapAttributes.Contains(attribute->GetName()))
-	//	{
-	//		UE_LOG(LogTemp, Warning, TEXT("trying add duplicated attribute"));
-	//	}
-	//	else
-	//	{
-	//		_mapAttributes.Add(attribute->GetName(), attribute);
-	//	}
-	//}
 }
 
 

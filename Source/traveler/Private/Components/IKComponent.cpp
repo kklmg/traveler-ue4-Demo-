@@ -8,6 +8,7 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
 UIKComponent::UIKComponent()
@@ -33,8 +34,14 @@ void UIKComponent::BeginPlay()
 		_halfHeight = _character->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
 	}
 
-	_animationModelProvider = GetOwner<IAnimationModelProvider>();
-    _meshSocketProvider = GetOwner<IMeshSocketTransformProvider>();
+	_meshSocketProvider = GetOwner<IMeshSocketTransformProvider>();
+
+	IAnimationModelProvider* animationModelProvider = GetOwner<IAnimationModelProvider>();
+	if(animationModelProvider)
+	{
+		_animationViewModel = animationModelProvider->VGetAnimationModel();
+	}
+  
 }
 
 
@@ -44,10 +51,11 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// update foot ik data
-	if (_bActivateFootIK && _character && _animationModelProvider)
+	if (_bActivateFootIK && _character && _animationViewModel)
 	{
-		FAnimationModel animModel = _animationModelProvider->VGetAnimationModel();
-		if((animModel.MovementMode == EMovementMode::MOVE_Walking || animModel.MovementMode== EMovementMode::MOVE_NavWalking))
+		EMovementMode movementMode = _character->GetCharacterMovement()->MovementMode;
+
+		if ((movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking))
 		{ 
 			_IKDataLeftFoot = FootTrace(EMeshSocketType::MST_LeftFoot);
 			_IKDataRightFoot = FootTrace(EMeshSocketType::MST_RightFoot);	
@@ -58,7 +66,7 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 FIKData UIKComponent::FootTrace(EMeshSocketType meshSocketType)
 {
 	if (!_meshSocketProvider) return FIKData();
-	if (!_animationModelProvider) return FIKData();
+	if (!_animationViewModel) return FIKData();
 
 	FIKData result;
 

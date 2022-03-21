@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Data/EnumActionType.h"
 #include "Data/EnumProcessState.h"
+
 #include "ActionBase.generated.h"
 
 
@@ -15,6 +16,7 @@ class IStateInterface;
 class IAttributeInterface;
 class IAnimationModelProvider;
 
+class UAnimationModelBase;
 class UCostData;
 
 
@@ -97,6 +99,7 @@ protected:
 	void SetActionProcessFailed();
 	UActionComponent* GetActionComponent();
 	UCostData* GetCostData();
+	UAnimationModelBase* GetAnimationViewModel();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
@@ -110,7 +113,6 @@ protected:
 
 	IStateInterface* _stateInterface;
 	IAttributeInterface* _attributeInterface;
-	IAnimationModelProvider* _animationModelProviderInterface;
 
 private:
 	UPROPERTY()
@@ -127,4 +129,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	UCostData* _costData;
+
+	UPROPERTY()
+	UAnimationModelBase* _animationViewModel;
 };

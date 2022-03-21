@@ -12,6 +12,8 @@ class ACreatureCharacter;
 class IAnimationModelProvider;
 class IStateInterface;
 
+class UAnimationModelBase;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeaponBase*,weapon);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -71,6 +73,8 @@ private:
 	UPROPERTY()
 	AWeaponBase* _weaponIns;
 
-	IAnimationModelProvider* _animationModelProvider;
+	UPROPERTY()
+	UAnimationModelBase* _animationViewModel;
+
 	IStateInterface* _stateInterface;
 };

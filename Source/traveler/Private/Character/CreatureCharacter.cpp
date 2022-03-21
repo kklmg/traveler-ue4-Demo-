@@ -115,8 +115,18 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 void ACreatureCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
-	
+void ACreatureCharacter::PreInitializeComponents()
+{
+	if (_animationModelClass)
+	{
+		_animationModelIns = NewObject<UAnimationModelBase>(this, _animationModelClass);
+	}
+	else
+	{
+		_animationModelIns = NewObject<UAnimationModelBase>(this);
+	}
 }
 
 // Called every frame
@@ -342,19 +352,9 @@ void ACreatureCharacter::VStopAllProcess()
 	_weaponComponent->StopAllWeaponProcesses();
 }
 
-FAnimationModel ACreatureCharacter::VGetAnimationModel()
+UAnimationModelBase* ACreatureCharacter::VGetAnimationModel()
 {
-	return _animationModel;
-}
-
-FAnimationModel& ACreatureCharacter::VGetAnimationModelRef()
-{
-	return _animationModel;
-}
-
-UAnimationModelBase* ACreatureCharacter::VGetAnimationModelBase()
-{
-	return _animationModelBase;
+	return _animationModelIns;
 }
 
 void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType, FHitResult hitResult)

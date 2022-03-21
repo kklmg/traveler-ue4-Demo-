@@ -38,8 +38,11 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_animationModelProvider = GetOwner<IAnimationModelProvider>();
-	_stateInterface = GetOwner<IStateInterface>();
+	IAnimationModelProvider* animationModelProvider = GetOwner<IAnimationModelProvider>();
+	if(animationModelProvider)
+	{
+		_animationViewModel = animationModelProvider->VGetAnimationModel();
+	}
 
 	if (DefaultWeaponClass)
 	{
@@ -49,12 +52,12 @@ void UWeaponComponent::BeginPlay()
 		EquipWeapon(bow);
 	}
 
+	_stateInterface = GetOwner<IStateInterface>();
 	if (_stateInterface)
 	{
 		OnAnimationStateChanged(_stateInterface->VGetAnimationState(), _stateInterface->VGetAnimationState());
 		_stateInterface->VGetAnimationStateChangedDelegate()->AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
 	}
-
 	// ...
 }
 
@@ -63,11 +66,6 @@ void UWeaponComponent::BeginPlay()
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if(_animationModelProvider)
-	{
-		_animationModelProvider->VGetAnimationModelRef().weapon = _weaponIns;
-	}
 }
 
 void UWeaponComponent::ExecuteWeaponProcess(FName processName)
@@ -106,6 +104,11 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 		_weaponIns = newWeapon;
 
 		OnWeaponChanged.Broadcast(_weaponIns);
+
+		if(_animationViewModel)
+		{
+			_animationViewModel->SetUObject(AnimationDataKey::objWeapon,_weaponIns);
+		}
 
 		//Get Character
 		ACreatureCharacter* character = GetOwner<ACreatureCharacter>();

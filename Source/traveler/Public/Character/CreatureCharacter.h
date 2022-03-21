@@ -54,6 +54,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void PreInitializeComponents() override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -131,9 +133,7 @@ public:
 
 
 	//AnimationModel Provider Interface implementation --------------------------------------------------
-	virtual FAnimationModel VGetAnimationModel() override;
-	virtual FAnimationModel& VGetAnimationModelRef() override;
-	virtual UAnimationModelBase* VGetAnimationModelBase() override;
+	virtual UAnimationModelBase* VGetAnimationModel() override;
 
 
 	//Damage Handler Interface implementation --------------------------------------------------
@@ -201,8 +201,8 @@ protected:
 	UIKComponent* _IKComponent;
 
 	UPROPERTY()
-	FAnimationModel _animationModel;
+	UAnimationModelBase* _animationModelIns;
 
-	UPROPERTY()
-	UAnimationModelBase* _animationModelBase;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UAnimationModelBase> _animationModelClass;
 };

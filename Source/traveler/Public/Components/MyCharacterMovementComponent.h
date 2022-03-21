@@ -10,6 +10,8 @@ class IActionInterface;
 class IAttributeInterface;
 class IAnimationModelProvider;
 
+class UAnimationModelBase;
+
 USTRUCT(BlueprintType)
 struct FFlygingSimulationData
 {
@@ -61,6 +63,9 @@ protected:
 
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
+	virtual void OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity) override;
+
 	UFUNCTION()
 	void OnCharacterWantToSprint(bool wantToSprint);
 
@@ -89,6 +94,9 @@ private:
 
 	float _resetFactor;
 	float _resetFactorSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = Flying)
+	UAnimationModelBase* _animationViewModel;
 
 	IActionInterface* _actionInterface;
 	IAttributeInterface* _attributeInterface;

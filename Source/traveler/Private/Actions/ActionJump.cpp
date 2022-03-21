@@ -17,9 +17,9 @@ UActionJump::UActionJump()
 void UActionJump::VTMExecute()
 {
 	Super::VTMExecute();
-	if (_animationModelProviderInterface)
+	if (GetAnimationViewModel())
 	{
-		_animationModelProviderInterface->VGetAnimationModelRef().bWantToJump = true;
+		GetAnimationViewModel()->SetBool(AnimationDataKey::bWantToJump, true);
 	}
 
 	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(GetActionOwner());
@@ -36,9 +36,9 @@ void UActionJump::VTMExecute()
 	{
 		GetActionOwner()->Jump();
 
-		if (_animationModelProviderInterface)
+		if (GetAnimationViewModel())
 		{
-			_animationModelProviderInterface->VGetAnimationModelRef().bWantToJump = false;
+			GetAnimationViewModel()->SetBool(AnimationDataKey::bWantToJump, false);
 		}
 
 		GetWorld()->GetTimerManager().ClearTimer(jumpTimerHandle);

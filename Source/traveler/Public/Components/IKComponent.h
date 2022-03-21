@@ -11,6 +11,8 @@
 class IAnimationModelProvider;
 class IMeshSocketTransformProvider;
 
+class UAnimationModelBase;
+
 class ACharacter;
 
 
@@ -49,7 +51,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	ACharacter* _character;
 
-	IAnimationModelProvider* _animationModelProvider;
+	UPROPERTY()
+	class UAnimationModelBase* _animationViewModel;
+
 	IMeshSocketTransformProvider* _meshSocketProvider;
 
 	FIKData _IKDataLeftFoot;

@@ -32,22 +32,16 @@ void UCameraSpringArmComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_animationModelProvider = GetOwner<IAnimationModelProvider>();
+	IAnimationModelProvider	*animationModelProvider = GetOwner<IAnimationModelProvider>();
+	if(animationModelProvider)
+	{
+		_animationViewModel = animationModelProvider->VGetAnimationModel();
+	}
 }
 
 void UCameraSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super:: TickComponent(DeltaTime,TickType,ThisTickFunction);
-
-	if (_animationModelProvider)
-	{
-		FAnimationModel& animationModel = _animationModelProvider->VGetAnimationModelRef();
-
-		animationModel.CameraPitchMax = _pitchMax;
-		animationModel.CameraPitchMin = _pitchMin;
-		animationModel.CameraPitch = GetComponentRotation().Pitch;
-		animationModel.CameraPitchNormal = (animationModel.CameraPitch - _pitchMin) / (_pitchMax - _pitchMin);
-	}
 }
 
 void UCameraSpringArmComponent::Pitch(float AxisValue)
@@ -57,6 +51,11 @@ void UCameraSpringArmComponent::Pitch(float AxisValue)
 	rotation.Pitch = pitch > 0 ? FMath::Clamp(rotation.Pitch + AxisValue, 0.0f, _pitchMax) : FMath::Clamp(rotation.Pitch + AxisValue, _pitchMin, 0.0f);
 
 	SetRelativeRotation(rotation);
+
+	if (_animationViewModel)
+	{
+		_animationViewModel->SetFloat(AnimationDataKey::fCameraPitch, rotation.Pitch);
+	}
 }
 void UCameraSpringArmComponent::Yaw(float AxisValue)
 {
@@ -74,17 +73,22 @@ void UCameraSpringArmComponent::SetPitchLimit(float pitchMin, float pitchMax)
 {
 	_pitchMin = FMath::Max(pitchMin, _pitchMinDefault);
 	_pitchMax = FMath::Min(pitchMax, _pitchMaxDefault);
+
+	if(_animationViewModel)
+	{
+		_animationViewModel->SetFloat(AnimationDataKey::fCameraPitchMin, _pitchMin);
+		_animationViewModel->SetFloat(AnimationDataKey::fCameraPitchMax, _pitchMax);
+	}
 }
 
 void UCameraSpringArmComponent::ResetPitchLimit()
 {
 	_pitchMin = _pitchMinDefault;
 	_pitchMax = _pitchMaxDefault;
-}
 
-float UCameraSpringArmComponent::GetPitch01()
-{
-	float pitch = GetRelativeRotation().Pitch;
-	return (pitch - _pitchMin) / (_pitchMax - _pitchMin);
+	if (_animationViewModel)
+	{
+		_animationViewModel->SetFloat(AnimationDataKey::fCameraPitchMin, _pitchMin);
+		_animationViewModel->SetFloat(AnimationDataKey::fCameraPitchMax, _pitchMax);
+	}
 }
-

@@ -6,7 +6,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "CameraSpringArmComponent.generated.h"
 
-class IAnimationModelProvider;
+class UAnimationModelBase;
+
+
 /**
  * 
  */
@@ -31,9 +33,6 @@ public:
 
 	void SetPitchLimit(float pitchMin,float pitchMax);
 
-	UFUNCTION(BlueprintCallable, Category = getter)
-	float GetPitch01();
-
 private:
 	UPROPERTY(VisibleAnywhere, Category = pitch)
 	float _pitchMin;
@@ -51,5 +50,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = zoom)
 	float _zoomStep;
 
-	IAnimationModelProvider* _animationModelProvider;
+	UPROPERTY()
+	UAnimationModelBase* _animationViewModel;
 };

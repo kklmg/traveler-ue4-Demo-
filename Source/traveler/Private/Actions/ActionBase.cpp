@@ -10,6 +10,7 @@
 #include "Interface/AnimationModelProvider.h"
 #include "Data/CostData.h"
 
+
 DEFINE_LOG_CATEGORY(LogAction);
 
 UActionBase::UActionBase()
@@ -33,10 +34,15 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 	}
 	_stateInterface = Cast<IStateInterface>(_actionOwner);	
 	_attributeInterface = Cast<IAttributeInterface>(_actionOwner);
-	_animationModelProviderInterface = Cast<IAnimationModelProvider>(_actionOwner);
+
+	//get animation view model
+	IAnimationModelProvider* animationModelProviderInterface = Cast<IAnimationModelProvider>(_actionOwner);
+	if(animationModelProviderInterface)
+	{
+		_animationViewModel = animationModelProviderInterface->VGetAnimationModel();
+	}
 	
 	_processState = EProcessState::EPS_ReadyToExecute;
-
 	VTMInitialize();
 }
 
@@ -151,14 +157,19 @@ void UActionBase::SetActionProcessFailed()
 	VOnActionCompleted();
 }
 
-UActionComponent* UActionBase::GetActionComponent()
+FORCEINLINE UActionComponent* UActionBase::GetActionComponent()
 {
 	return _actionComp;
 }
 
-UCostData* UActionBase::GetCostData()
+FORCEINLINE UCostData* UActionBase::GetCostData()
 {
 	return _costData;
+}
+
+FORCEINLINE UAnimationModelBase* UActionBase::GetAnimationViewModel()
+{
+	return _animationViewModel;
 }
 
 void UActionBase::VOnActionCompleted()

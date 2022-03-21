@@ -19,7 +19,7 @@ enum class EAttributeType : uint8
 	EATT_Strength UMETA(DisplayName = "Strength"),
 	EATT_Defence UMETA(DisplayName = "Defence"),
 	EATT_WalkingSpeed UMETA(DisplayName = "WalkingSpeed"),
-	EATT_SprintSpeed UMETA(DisplayName = "SprintSpeed"),
+	EATT_SprintingSpeed UMETA(DisplayName = "SprintingSpeed"),
 	EATT_FlyingSpeed UMETA(DisplayName = "FlyingSpeed"),
 };
 

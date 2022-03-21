@@ -30,7 +30,7 @@ public:
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	FBowAnimationModelBase GetAnimationModel();
 
 	UFUNCTION(BlueprintCallable)
