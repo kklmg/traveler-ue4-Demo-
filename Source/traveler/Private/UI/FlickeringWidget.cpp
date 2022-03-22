@@ -19,11 +19,10 @@ bool UFlickeringWidget::Initialize()
 	if (!_compositeProcess)
 	{
 		_compositeProcess = NewObject<UCompositeProcessBase>(this);
-		_compositeProcess->setIsLoop(true);
 
 		//setup flickering process
 		_flickeringProcess = NewObject<UFlickeringUIProcess>(this);
-		_flickeringProcess->SetWidget(this);
+		
 
 		//setup cooling process
 		_coolingProcess = NewObject<UProcessSectionBase>(this);
@@ -32,6 +31,8 @@ bool UFlickeringWidget::Initialize()
 		_compositeProcess->AddProcess(_coolingProcess);
 	}
 
+	_compositeProcess->setIsLoop(true);
+	_flickeringProcess->SetWidget(this);
 
 	return true;
 }

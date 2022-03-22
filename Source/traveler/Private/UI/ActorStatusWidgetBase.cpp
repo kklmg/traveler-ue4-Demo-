@@ -11,20 +11,11 @@ void UActorStatusWidgetBase::ShowStatus(EActorStatusUI actorStatus, float durati
 	if (_widgetInsMap.Contains(actorStatus))
 	{
 		_widgetInsMap[actorStatus]->Reset();
+		_widgetInsMap[actorStatus]->SetOpacityCurve(_opacityCurve);
 		_widgetInsMap[actorStatus]->SetDuration(duration);
+		_widgetInsMap[actorStatus]->SetTimeLineData(_flickeringTimeLineData);
 		_widgetInsMap[actorStatus]->SetVisibility(ESlateVisibility::Visible);
-	}
-	else if(_widgetClassMap.Contains(actorStatus))
-	{
-		UFlickeringWidget* newStatus = WidgetTree->ConstructWidget<UFlickeringWidget>(_widgetClassMap[actorStatus]);
-		newStatus->SetOpacityCurve(_opacityCurve);
-		newStatus->SetDuration(duration);
-		newStatus->SetTimeLineData(_flickeringTimeLineData);
-
-		newStatus->ExecuteFlickeringProcess();
-
-		statusHolder->AddChild(newStatus);
-		_widgetInsMap.Add(actorStatus,newStatus);
+		_widgetInsMap[actorStatus]->ExecuteFlickeringProcess();
 	}
 }
 
@@ -39,6 +30,13 @@ void UActorStatusWidgetBase::HideStatus(EActorStatusUI actorStatus)
 void UActorStatusWidgetBase::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	_widgetInsMap.Add(EActorStatusUI::EAStatus_Fire, statusFire);
+	_widgetInsMap.Add(EActorStatusUI::EAStatus_Water, statusWater);
+	_widgetInsMap.Add(EActorStatusUI::EAStatus_Ice, statusIce);
+	_widgetInsMap.Add(EActorStatusUI::EAStatus_Electricity, statusElectricity);
+	_widgetInsMap.Add(EActorStatusUI::EAStatus_Poison, statusPoison);
+	_widgetInsMap.Add(EActorStatusUI::EAStatus_Stun, statusStun);
 }
 
 void UActorStatusWidgetBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

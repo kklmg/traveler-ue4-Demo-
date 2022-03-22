@@ -49,5 +49,4 @@ private:
 
 	UPROPERTY()
 	UBillBoardWidget* _widget;
-
 };

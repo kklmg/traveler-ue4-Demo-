@@ -32,16 +32,28 @@ protected:
 private:
 
 	UPROPERTY(EditAnyWhere, meta = (bindwidget))
-	UPanelWidget* statusHolder;
+	UFlickeringWidget* statusFire;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusWater;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusIce;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusElectricity;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusPoison;
+
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UFlickeringWidget* statusStun;
 
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* _opacityCurve;
 
 	UPROPERTY(EditAnywhere)
 	TArray<FTimeFrameFlickeringData> _flickeringTimeLineData;
-
-	UPROPERTY(EditAnyWhere)
-	TMap<EActorStatusUI, TSubclassOf<UFlickeringWidget>> _widgetClassMap;
 
 	UPROPERTY()
 	TMap<EActorStatusUI, UFlickeringWidget*> _widgetInsMap; 
