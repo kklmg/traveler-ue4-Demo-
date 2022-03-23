@@ -53,7 +53,7 @@ void UActorUIComponent::HideActorUI(EActorUI widgeType)
 	}
 }
 
-void UActorUIComponent::ShowActorStatusUI(EActorStatusUI StatusUIType, float duration)
+void UActorUIComponent::ShowActorStatusUI(EStatusEffect StatusType, float duration)
 {
 	ShowActorUI(EActorUI::ActorUI_Status);
 
@@ -62,18 +62,18 @@ void UActorUIComponent::ShowActorStatusUI(EActorStatusUI StatusUIType, float dur
 
 	if(statusUI)
 	{
-		statusUI->ShowStatus(StatusUIType, duration);
+		statusUI->ShowStatus(StatusType, duration);
 	}
 }
 
-void UActorUIComponent::HideActorStatusUI(EActorStatusUI StatusUIType)
+void UActorUIComponent::HideActorStatusUI(EStatusEffect StatusType)
 {
 	if (_mapWidgetInstance.Contains(EActorUI::ActorUI_Status) == false) return;
 	UActorStatusWidgetBase* statusUI = Cast<UActorStatusWidgetBase>(_mapWidgetInstance[EActorUI::ActorUI_Status]);
 
 	if (statusUI)
 	{
-		statusUI->HideStatus(StatusUIType);
+		statusUI->HideStatus(StatusType);
 	}
 }
 

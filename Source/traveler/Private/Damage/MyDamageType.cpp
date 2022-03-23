@@ -5,15 +5,12 @@
 
 UMyDamageType::UMyDamageType()
 {
-	bIsContinuousDamage = false;
-	DamageType = EElementalDamageType::EEDT_Physics;
-	DamageHandleInterval = 0.0f;
-	DamageHandleCount = 1;
+	DamageType = EDamageType::EDamage_Physics;
 }
 
 FName UMyDamageType::GetDamageTypeName()
 {
-	const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EElementalDamageType"), true);
+	const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EDamageType"), true);
 
 	return enumPtr ? FName(enumPtr->GetNameStringByIndex((int32)DamageType)) : FName(TEXT("UnKnown"));
 }

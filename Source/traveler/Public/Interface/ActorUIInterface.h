@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "Data/CombatData.h"
 #include "Data/ActorUIData.h"
 #include "ActorUIInterface.generated.h"
 
@@ -25,6 +26,6 @@ class TRAVELER_API IActorUIInterface
 public:
 	virtual void VShowActorUI(EActorUI UIType) PURE_VIRTUAL(IActorUIInterface::VShowActorUI,);
 	virtual void VHideActorUI(EActorUI UIType) PURE_VIRTUAL(IActorUIInterface::VHideActorUI,);
-	virtual void VShowActorStatusUI(EActorStatusUI StatusUIType, float duration) PURE_VIRTUAL(IActorUIInterface::VShowActorStatusUI,);
-	virtual void VHideActorStatusUI(EActorStatusUI StatusUIType) PURE_VIRTUAL(IActorUIInterface::VHideActorStatusUI,);
+	virtual void VShowActorStatusUI(EStatusEffect StatusType, float duration) PURE_VIRTUAL(IActorUIInterface::VShowActorStatusUI,);
+	virtual void VHideActorStatusUI(EStatusEffect StatusType) PURE_VIRTUAL(IActorUIInterface::VHideActorStatusUI,);
 };

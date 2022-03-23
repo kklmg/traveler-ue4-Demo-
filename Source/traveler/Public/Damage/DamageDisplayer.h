@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Damage/MyDamageType.h"
+#include "Data/CombatData.h"
 #include "UI/DamageWidget.h"
 #include "DamageDisplayer.generated.h"
 
@@ -14,7 +14,7 @@ struct FDamageDisplayData
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(BlueprintReadWrite)
-	EElementalDamageType DamageType;
+	EDamageType DamageType;
 
 	UPROPERTY(BlueprintReadWrite)
 	float Damage;
@@ -48,7 +48,7 @@ private:
 	TArray<int32> _emptySlots;
 
 	UPROPERTY(EditDefaultsOnly)
-	TMap<EElementalDamageType, FDamageWidgetData> _damageDisplaySetting;
+	TMap<EDamageType, FDamageWidgetData> _damageDisplaySetting;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UDamageWidget> _damageWidgetClass;

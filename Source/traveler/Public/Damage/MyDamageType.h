@@ -4,19 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/DamageType.h"
+#include "Data/CombatData.h"
+#include "Data/StatusEffectData.h"
 #include "MyDamageType.generated.h"
 
-UENUM(BlueprintType)
-enum class EElementalDamageType : uint8
-{
-	EEDT_None UMETA(DisplayName = "None"),
-	EEDT_Physics UMETA(DisplayName = "Physics"),
-	EEDT_Fire UMETA(DisplayName = "Fire"),
-	EEDT_Water UMETA(DisplayName = "Water"),
-	EEDT_Ice UMETA(DisplayName = "Ice"),
-	EEDT_Electricity UMETA(DisplayName = "Electricity"),
-	EEDT_Poison UMETA(DisplayName = "Poison"),
-};
 
 /**
  * 
@@ -32,17 +23,11 @@ public:
 
 public:
 	UPROPERTY(EditDefaultsOnly)
-	EElementalDamageType DamageType;
+	EDamageType DamageType;
 
 	UPROPERTY(EditDefaultsOnly)
-	bool bIsContinuousDamage;
+	float Damage;
 
 	UPROPERTY(EditDefaultsOnly)
-	float BasicDamage;
-
-	UPROPERTY(EditDefaultsOnly)
-	float DamageHandleInterval;
-
-	UPROPERTY(EditDefaultsOnly)
-	float DamageHandleCount;
+	TSubclassOf<UStatusEffectData> StatusEffectDataClass;
 };

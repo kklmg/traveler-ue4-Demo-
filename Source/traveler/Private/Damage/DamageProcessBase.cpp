@@ -27,17 +27,11 @@ bool UDamageProcessBase::VTMCanExecute()
 
 void UDamageProcessBase::VTMExecute()
 {
-	if (_damageType)
-	{
-		_damageRemainCount = _damageType->DamageHandleCount;
-		_damageInterval = _damageType->DamageHandleInterval;
-	}
-
-	//test code
-	if(_actorUIInterface)
-	{
-		_actorUIInterface->VShowActorStatusUI(EActorStatusUI::EAStatus_Fire,10);
-	}
+	//if (_damageType)
+	//{
+	//	_damageRemainCount = _damageType->DamageHandleCount;
+	//	_damageInterval = _damageType->DamageHandleInterval;
+	//}
 }
 
 FName UDamageProcessBase::VGetProcessName()
@@ -47,7 +41,7 @@ FName UDamageProcessBase::VGetProcessName()
 
 bool UDamageProcessBase::VIsInstantProcess()
 {
-	return _damageType ? _damageType->bIsContinuousDamage == false : true;
+	return true;
 }
 
 void UDamageProcessBase::VTMTick(float deltaTime)
@@ -59,10 +53,10 @@ void UDamageProcessBase::VTMTick(float deltaTime)
 		_elapsedTime -= _damageInterval;
 		_damageRemainCount--;
 
-		_attributeInterface->VSetAttributeChange(EAttributeType::EATT_Health, -_damageType->BasicDamage);
+		//_attributeInterface->VSetAttributeChange(EAttributeType::EATT_Health, -_damageType->BasicDamage);
 
 		//show damage om screen
-		if(_hud)
+		/*if(_hud)
 		{
 			FDamageDisplayData damageDisplayData;
 			damageDisplayData.Damage = _damageType->BasicDamage;
@@ -70,7 +64,7 @@ void UDamageProcessBase::VTMTick(float deltaTime)
 			damageDisplayData.Location = _hitResult.ImpactPoint;
 
 			_hud->ShowDamage(damageDisplayData);
-		}
+		}*/
 	}
 
 	if (_damageRemainCount <= 0)
@@ -81,12 +75,6 @@ void UDamageProcessBase::VTMTick(float deltaTime)
 
 void UDamageProcessBase::VTMOnDead()
 {
-	//test code
-	if (_actorUIInterface)
-	{
-		_actorUIInterface->VHideActorStatusUI(EActorStatusUI::EAStatus_Fire);
-	}
-
 	_elapsedTime = 0;
 }
 

@@ -19,19 +19,6 @@ enum class EActorUI : uint8
 	ActorUI_Status UMETA(DisplayName = "Status"),
 };
 
-UENUM(BlueprintType)
-enum class EActorStatusUI : uint8
-{
-	EAStatus_NONE UMETA(Hidden),
-	EAStatus_Fire UMETA(DisplayName = "Fire"),
-	EAStatus_Water UMETA(DisplayName = "Water"),
-	EAStatus_Ice UMETA(DisplayName = "Ice"),
-	EAStatus_Electricity UMETA(DisplayName = "Electricity"),
-	EAStatus_Poison UMETA(DisplayName = "Poison"),
-	EAStatus_Stun UMETA(DisplayName = "Stun"),
-};
-
-
 
 USTRUCT(BlueprintType)
 struct FActorUIData

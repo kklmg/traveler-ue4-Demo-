@@ -19,14 +19,32 @@ UDamageHandlerComponent::UDamageHandlerComponent()
 }
 
 
-void UDamageHandlerComponent::HandleDamage(UMyDamageType* damageType, FHitResult hitResult)
+
+
+void UDamageHandlerComponent::HandleDamage(float basicDamage, EDamageType damageType, AActor* instigator)
 {
+
+}
+
+void UDamageHandlerComponent::HandleDamage(UMyDamageType* damageType, FHitResult hitResult, AActor* instigator)
+{
+	if (!_StatusEffectProcessManager) return;
 	if (!damageType) return;
+	
+	//handle basic damage
+	HandleDamage(damageType->Damage, damageType->DamageType, instigator);
 
-	UDamageProcessBase* damageProcess = NewObject<UDamageProcessBase>(this);
-	damageProcess->SetData(GetOwner(), damageType, hitResult, _hud);
+	//handle status effect
+	if(damageType->StatusEffectDataClass)
+	{
+		UStatusEffectData* statusEffectDataIns = NewObject<UStatusEffectData>(this, damageType->StatusEffectDataClass);
+		VHandleStatusEffect(statusEffectDataIns, hitResult);
+	}
+}
 
-	_damageProcessManager->ExecuteProcess(damageProcess);
+void UDamageHandlerComponent::VHandleStatusEffect(UStatusEffectData* statusEffectData, FHitResult hitResult)
+{
+	_StatusEffectProcessManager->ExecuteProcess(GetOwner(), statusEffectData);
 }
 
 void UDamageHandlerComponent::OnHealthChanged(float preValue, float newValue)
@@ -45,7 +63,7 @@ void UDamageHandlerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	_damageProcessManager = NewObject<UDamageProcessManager>(this);
+	_StatusEffectProcessManager = NewObject<UDamageProcessManager>(this);
 	_attributeInterface = Cast<IAttributeInterface>(GetOwner());
 	_actorUIInterface = Cast<IActorUIInterface>(GetOwner());
 
@@ -69,9 +87,9 @@ void UDamageHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-	if(_damageProcessManager)
+	if(_StatusEffectProcessManager)
 	{
-		_damageProcessManager->Tick(DeltaTime);
+		_StatusEffectProcessManager->Tick(DeltaTime);
 	}
 }
 

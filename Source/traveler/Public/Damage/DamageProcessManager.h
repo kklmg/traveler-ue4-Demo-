@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Process/ProcessManagerBase.h"
+#include "Data/CombatData.h"
 #include "DamageProcessManager.generated.h"
 
-class UDamageProcessBase;
-
+class UStatusEffectProcessBase;
+class UStatusEffectData;
 class AMyHUD;
 /**
  * 
@@ -20,16 +21,14 @@ public:
 	UDamageProcessManager();
 
 	UFUNCTION()
-	void ExecuteProcess(UDamageProcessBase* process);
+	void ExecuteProcess(AActor* owner, UStatusEffectData* effectData);
+	UStatusEffectProcessBase* StopProcess(EStatusEffect statusEffectType);
+
+	bool IsExistStatusEffect(EStatusEffect statusEffectType);
 
 	void Tick(float deltaTime);
 
 private:
 	UPROPERTY()
-	TArray<UDamageProcessBase*> _runningProcesses;
-	UPROPERTY()
-	TArray<uint32> _emptyIndicies;
-
-	UPROPERTY(EditDefaultsOnly)
-	uint32 _poolSize;
+	TMap<EStatusEffect, UStatusEffectProcessBase*> _processMap;
 };

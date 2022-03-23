@@ -359,7 +359,12 @@ UAnimationModelBase* ACreatureCharacter::VGetAnimationModel()
 
 void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType, FHitResult hitResult)
 {
-	_damageHandlerComponent->HandleDamage(damageType, hitResult);
+//	_damageHandlerComponent->HandleDamage(damageType, hitResult);
+}
+
+void ACreatureCharacter::VHandleStatusEffect(UStatusEffectData* statusEffectData, FHitResult hitResult)
+{
+	_damageHandlerComponent->VHandleStatusEffect(statusEffectData, hitResult);
 }
 
 void ACreatureCharacter::VShowActorUI(EActorUI UIType)
@@ -372,12 +377,12 @@ void ACreatureCharacter::VHideActorUI(EActorUI UIType)
 	_actorUIComponent->HideActorUI(UIType);
 }
 
-void ACreatureCharacter::VShowActorStatusUI(EActorStatusUI StatusUIType, float duration)
+void ACreatureCharacter::VShowActorStatusUI(EStatusEffect StatusUIType, float duration)
 {
 	_actorUIComponent->ShowActorStatusUI(StatusUIType, duration);
 }
 
-void ACreatureCharacter::VHideActorStatusUI(EActorStatusUI StatusUIType)
+void ACreatureCharacter::VHideActorStatusUI(EStatusEffect StatusUIType)
 {
 	_actorUIComponent->HideActorStatusUI(StatusUIType);
 }

@@ -6,6 +6,7 @@
 #include "Components/PrimitiveComponent.h"
 #include "UI/BillBoardWidget.h"
 #include "Data/ActorUIData.h"
+#include "Data/CombatData.h"
 #include "ActorUIComponent.generated.h"
 
 
@@ -33,8 +34,8 @@ public:
 
 	void ShowActorUI(EActorUI widgeType);
 	void HideActorUI(EActorUI widgeType);
-	void ShowActorStatusUI(EActorStatusUI StatusUIType, float duration);
-	void HideActorStatusUI(EActorStatusUI StatusUIType);
+	void ShowActorStatusUI(EStatusEffect StatusType, float duration);
+	void HideActorStatusUI(EStatusEffect StatusType);
 
 private:
 

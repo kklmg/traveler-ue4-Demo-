@@ -23,7 +23,9 @@ public:
 	// Sets default values for this component's properties
 	UDamageHandlerComponent();
 
-	void HandleDamage(UMyDamageType* damageType, FHitResult hitResult);
+	void HandleDamage(float basicDamage, EDamageType damageType, AActor* instigator);
+	void HandleDamage(UMyDamageType* damageType, FHitResult hitResult, AActor* instigator);
+	void VHandleStatusEffect(UStatusEffectData* statusEffectData, FHitResult hitResult);
 
 	UFUNCTION()
 	void OnHealthChanged(float preValue,float newValue);
@@ -37,7 +39,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
 	UPROPERTY()
-	UDamageProcessManager* _damageProcessManager;
+	UDamageProcessManager* _StatusEffectProcessManager;
 
 	UPROPERTY()
 	AMyHUD* _hud;

@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Process/CompositeProcessBase.h"
 #include "UI/FlickeringWidget.h"
-#include "Data/ActorUIData.h"
+#include "Data/CombatData.h"
 #include "UI/BillBoardWidget.h"
 #include "ActorStatusWidgetBase.generated.h"
 
@@ -22,8 +22,8 @@ class TRAVELER_API UActorStatusWidgetBase : public UBillBoardWidget
 	GENERATED_BODY()
 	
 public:
-	void ShowStatus(EActorStatusUI actorStatus, float duration);
-	void HideStatus(EActorStatusUI actorStatus);
+	void ShowStatus(EStatusEffect statusEffectType, float duration);
+	void HideStatus(EStatusEffect statusEffectType);
 
 protected:
 	virtual void NativeConstruct() override;
@@ -56,7 +56,7 @@ private:
 	TArray<FTimeFrameFlickeringData> _flickeringTimeLineData;
 
 	UPROPERTY()
-	TMap<EActorStatusUI, UFlickeringWidget*> _widgetInsMap; 
+	TMap<EStatusEffect, UFlickeringWidget*> _widgetInsMap; 
 };
 
 

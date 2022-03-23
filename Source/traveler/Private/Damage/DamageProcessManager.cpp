@@ -2,81 +2,70 @@
 
 
 #include "Damage/DamageProcessManager.h"
-#include "Damage/DamageProcessBase.h"
+#include "Damage/StatusEffectProcessBase.h"
+#include "Data/StatusEffectData.h"
 #include "UI/MyHUD.h"
 
 
 UDamageProcessManager::UDamageProcessManager()
 {
-	_poolSize = 100;
 }
 
-void UDamageProcessManager::ExecuteProcess(UDamageProcessBase* process)
+void UDamageProcessManager::ExecuteProcess(AActor* owner, UStatusEffectData* statusEffectData)
 {
-	if (!process) return;
-
-	//Handle instant process
-	if(process->VIsInstantProcess())
+	if (!statusEffectData) return;
+	
+	if (_processMap.Contains(statusEffectData->StatusEffectType))
 	{
-		process->VInitialize();
-		if(process->VCanExecute())
-		{
-			process->VExecute();	
-		}
-
-		return;
+		_processMap[statusEffectData->StatusEffectType]->CombineEffectData(statusEffectData);
 	}
-
-	//check whether free pool slot is available
-	if (_emptyIndicies.Num() == 0 && _runningProcesses.Num() == _poolSize)
-	{
-		UE_LOG(LogTemp,Warning,TEXT("no avaialable slot for new Damage process"));
-		return;
-	}
-
-	//execute process
-	process->VInitialize();
-	if(process->VCanExecute()==false)
-	{
-		return;
-	}
-	process->VExecute();
-
-	//add to process pool
-	//---------------------------------------------------------------------
-
-	//if emptyslot is available
-	if (_emptyIndicies.Num() > 0)
-	{
-		uint32 emptySlotIndex = _emptyIndicies.Pop();
-		_runningProcesses[emptySlotIndex] = process;
-	}
-	//
 	else
 	{
-		_runningProcesses.Add(process);
+		UStatusEffectProcessBase* newProcess = NewObject<UStatusEffectProcessBase>(this);
+		newProcess->SetData(owner, statusEffectData);
+		newProcess->VInitialize();
+		newProcess->VExecute();
+		_processMap.Add(statusEffectData->StatusEffectType, newProcess);
 	}
+}
+
+UStatusEffectProcessBase* UDamageProcessManager::StopProcess(EStatusEffect statusEffectType)
+{
+	if (_processMap.Contains(statusEffectType))
+	{
+		UStatusEffectProcessBase* process = _processMap[statusEffectType];
+		process->VAbort();
+		 _processMap.Remove(statusEffectType);
+		 return process;
+	}
+
+	return nullptr;
+}
+
+bool UDamageProcessManager::IsExistStatusEffect(EStatusEffect statusEffectType)
+{
+	return _processMap.Contains(statusEffectType);
 }
 
 void UDamageProcessManager::Tick(float deltaTime)
 {
-	for (int32 i = 0; i < _runningProcesses.Num(); ++i)
+	static TArray<EStatusEffect> deadProcesstypes;
+
+	//run processes
+	for (auto processElement : _processMap)
 	{
-		//skip dead process
-		if(_runningProcesses[i]->VIsDead())
-		{
-			continue;
-		}
+		processElement.Value->VTick(deltaTime);
 
-		//tick process
-		_runningProcesses[i]->VTick(deltaTime);
-
-		//mark dead processes
-		if (_runningProcesses[i]->VIsDead())
+		if(processElement.Value->VIsDead())
 		{
-			_emptyIndicies.Add(i);
+			deadProcesstypes.Add(processElement.Key);
 		}
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red,"Process pool num: "+ FString::FromInt(_runningProcesses.Num()));
+	//clear dead processes
+	for(auto deadProcessType : deadProcesstypes)
+	{
+		_processMap.Remove(deadProcessType);
+	}
+	deadProcesstypes.Empty();
 }

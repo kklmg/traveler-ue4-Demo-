@@ -138,13 +138,14 @@ public:
 
 	//Damage Handler Interface implementation --------------------------------------------------
 	virtual void VHandleDamage(UMyDamageType* damageType, FHitResult hitResult) override;
+	virtual void VHandleStatusEffect(UStatusEffectData* statusEffectData, FHitResult hitResult) override;
 
 
 	//Actor UI Interface implementation --------------------------------------------------
 	virtual void VShowActorUI(EActorUI UIType) override;
 	virtual void VHideActorUI(EActorUI UIType) override;
-	virtual void VShowActorStatusUI(EActorStatusUI StatusUIType, float duration) override;
-	virtual void VHideActorStatusUI(EActorStatusUI StatusUIType) override;
+	virtual void VShowActorStatusUI(EStatusEffect StatusType, float duration) override;
+	virtual void VHideActorStatusUI(EStatusEffect StatusType) override;
 
 
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
