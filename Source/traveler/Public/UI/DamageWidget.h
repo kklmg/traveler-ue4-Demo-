@@ -14,8 +14,10 @@ struct FDamageWidgetData
 public:
 	FDamageWidgetData();
 
+	FDamageWidgetData(FColor color);
+
 	UPROPERTY(EditAnyWhere,BlueprintReadOnly)
-	FSlateColor TextColor;
+	FColor TextColor;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	FVector2D TextScale;

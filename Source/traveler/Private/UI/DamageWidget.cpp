@@ -13,6 +13,15 @@ FDamageWidgetData::FDamageWidgetData()
 	Life = 5.0f;
 }
 
+FDamageWidgetData::FDamageWidgetData(FColor color)
+{
+	TextColor = color;
+	TextScale = FVector2D::UnitVector;
+	ScrollSpeed = 20.0f;
+	ScrollDirection = FVector2D(0.0f, -1.0f);
+	Life = 5.0f;
+}
+
 void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime) 
 {
 	if (IsLifeOver()) return;
@@ -50,3 +59,4 @@ bool UDamageWidget::IsLifeOver()
 {
 	return ElapsedTime > DamageWidgetData.Life;
 }
+

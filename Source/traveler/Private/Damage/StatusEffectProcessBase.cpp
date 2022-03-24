@@ -4,19 +4,24 @@
 #include "Damage/StatusEffectProcessBase.h"
 #include "Components/DamageHandlerComponent.h"
 #include "Interface/ActorUIInterface.h"
+#include "Damage/DamageHandlerInterface.h"
+#include "GameSystem/MyGameplayStatics.h"
 
 
 
-void UStatusEffectProcessBase::SetData(AActor* effectReceiver, UStatusEffectData* effectData)
+void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCauser, UStatusEffectData* effectData)
 {
-	effectReceiver = _effectReceiver;
-	_UIInterface = Cast<IActorUIInterface>(effectReceiver);
+	_effectReceiver = effectReceiver;
+	_effectCauser = effectCauser;
+	_actorUIInterface = Cast<IActorUIInterface>(effectReceiver);
+	_damageHandlerInterface = Cast<IDamageHandlerInterface>(effectReceiver);
 
 	if(effectData)
 	{
 		_damage = effectData->Damage;
 		_damageInterval = effectData->DamageInterval;
-		_damageDuration = effectData->DamageDuration;
+		_effectDuration = effectData->EffectDuration;
+		_damageType = UMyGameplayStatics::StatusEffectTypeToDamageType(effectData->StatusEffectType);
 		_statusEffectType = effectData->StatusEffectType;
 		_effectActorClass = effectData->EffectActorClass;
 	}
@@ -37,30 +42,47 @@ void UStatusEffectProcessBase::CombineEffectData(UStatusEffectData* statusEffect
 	{
 		_damage = FMath::Max(_damage, statusEffectData->Damage);
 		_damageInterval = FMath::Min(_damageInterval, statusEffectData->DamageInterval);
-		_damageDuration = FMath::Max(_damageDuration, statusEffectData->DamageDuration);
+		_effectDuration = FMath::Max(_effectDuration, statusEffectData->EffectDuration);
 
 		_statusEffectType = statusEffectData->StatusEffectType;
-
 		_effectActorClass = statusEffectData->EffectActorClass;
 
 		_totalElapsedTime = 0;
 		_ElapsedTimeFromLastDamage = 0;
 	}
+
+	if (_actorUIInterface)
+	{
+		_actorUIInterface->VShowActorStatusUI(_statusEffectType, _effectDuration);
+	}
 }
 
 bool UStatusEffectProcessBase::VTMCanExecute()
 {
-	if (!VTMCanExecute()) return false;
+	if (!Super::VTMCanExecute()) return false;
 
-	if (_damageDuration <= 0.0f) return false;
+	if (_effectDuration <= 0.0f) return false;
    
 	return true;
 }
 
 void UStatusEffectProcessBase::VTMExecute()
 {
-	//_UIInterface->VShowActorStatusUI(EActorStatus,_damageDuration)
-	//SpawnEffectActor();
+	if (_actorUIInterface)
+	{
+		_actorUIInterface->VShowActorStatusUI(_statusEffectType, _effectDuration);
+	}
+
+	if(_effectActorClass)
+	{
+		if(_effectActorIns)
+		{
+			_effectActorIns->Destroy();
+			_effectActorIns = nullptr;
+		}
+
+		_effectActorIns = NewObject<AActor>(this, _effectActorClass);
+	}
 }
 
 bool UStatusEffectProcessBase::VIsInstantProcess()
@@ -76,12 +98,17 @@ void UStatusEffectProcessBase::VTMTick(float deltaTime)
 
 	while (_ElapsedTimeFromLastDamage >= _damageInterval)
 	{
-		//_damageHandler->HandleDamage();
+		if (_damage != 0.0f && _damageHandlerInterface)
+		{
+			_damageHandlerInterface->VHandleDamage(_damage, _damageType, _effectReceiver->GetActorLocation(), _effectCauser);
+		}
+
+
 		_ElapsedTimeFromLastDamage -= _damageInterval;
 	}
 
 
-	if (_totalElapsedTime > _damageDuration)
+	if (_totalElapsedTime > _effectDuration)
 	{
 		SetSucceed();
 	}
@@ -89,21 +116,18 @@ void UStatusEffectProcessBase::VTMTick(float deltaTime)
 
 void UStatusEffectProcessBase::VTMOnDead()
 {
-	if(_attributeInterface)
+	if(_actorUIInterface)
 	{
-		
+		_actorUIInterface->VHideActorStatusUI(_statusEffectType);
+	}
+	if(_effectActorIns)
+	{
+		_effectActorIns->Destroy();
+		_effectActorIns = nullptr;
 	}
 }
 
 void UStatusEffectProcessBase::VTMReset()
 {
 	
-}
-
-void UStatusEffectProcessBase::SpawnEffectActor()
-{
-}
-
-void UStatusEffectProcessBase::DestroyEffectActor()
-{
 }

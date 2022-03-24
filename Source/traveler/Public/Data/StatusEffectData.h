@@ -24,7 +24,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float DamageInterval;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float DamageDuration;
+	float EffectDuration;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor> EffectActorClass;
 };

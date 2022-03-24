@@ -9,7 +9,7 @@ UStatusEffectData::UStatusEffectData()
 	StatusEffectType = EStatusEffect::EStatusEffect_NONE;
 	Damage = 10;
 	DamageInterval = 1.0f;
-	DamageDuration = 15.0f;
+	EffectDuration = 15.0f;
 }
 
 

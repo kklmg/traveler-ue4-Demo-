@@ -7,7 +7,7 @@
 #include "Damage/MyDamageType.h"
 #include "DamageHandlerComponent.generated.h"
 
-class UDamageProcessManager;
+class UStatusEffectProcessManager;
 
 class IAttributeInterface;
 class IActorUIInterface;
@@ -23,9 +23,9 @@ public:
 	// Sets default values for this component's properties
 	UDamageHandlerComponent();
 
-	void HandleDamage(float basicDamage, EDamageType damageType, AActor* instigator);
-	void HandleDamage(UMyDamageType* damageType, FHitResult hitResult, AActor* instigator);
-	void VHandleStatusEffect(UStatusEffectData* statusEffectData, FHitResult hitResult);
+	void HandleDamage(float basicDamage, EDamageType damageType, FVector impactPoint, AActor* causer);
+	void HandleDamage(UMyDamageType* damageType, FVector impactPoint, AActor* causer);
+	void HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer);
 
 	UFUNCTION()
 	void OnHealthChanged(float preValue,float newValue);
@@ -34,12 +34,14 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	float CalculateDamage(float basicDamage, EDamageType damageType, AActor* damageGiver, AActor* damageReceiver);
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
 	UPROPERTY()
-	UDamageProcessManager* _StatusEffectProcessManager;
+	UStatusEffectProcessManager* _StatusEffectProcessManager;
 
 	UPROPERTY()
 	AMyHUD* _hud;

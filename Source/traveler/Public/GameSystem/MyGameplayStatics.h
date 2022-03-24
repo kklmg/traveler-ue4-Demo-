@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Data/CombatData.h"
 #include "MyGameplayStatics.generated.h"
 
 class UCameraComponent;
@@ -29,6 +30,10 @@ public:
 	static FVector InptAxisToCameraDirection(FVector inputAxis,UCameraComponent* cameraComp);	
 
 	static float ComputeDistance(FVector from, FVector to, EPlane plane = Plane_None);
+
+	static EDamageType StatusEffectTypeToDamageType(EStatusEffect statusEffectType);
+
+	//static float CalculateDamage(float basicDamage, EDamageType damageType, AActor* damageGiver, AActor* damageReceiver);
 
 	//static bool CanFaceToDirection(FVector direction, FVector CurLocation,float forwardSpeed,float turningSpeed);
 };

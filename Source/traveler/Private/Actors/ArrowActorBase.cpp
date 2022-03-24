@@ -126,10 +126,8 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 
 	if (OtherActor != GetInstigator() && _damageType && damageHandler)
 	{
-		damageHandler->VHandleDamage(_damageType, Hit);
-
+		damageHandler->VHandleDamage(_damageType, Hit.ImpactPoint, GetInstigator());
 		//UGameplayStatics::ApplyDamage(OtherActor, _damage, GetInstigator()->GetController(), this, _damageTypeClass);
-		
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("arrow hitted"));

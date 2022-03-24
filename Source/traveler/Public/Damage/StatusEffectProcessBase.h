@@ -11,7 +11,7 @@
 class IAttributeInterface;
 class IActorUIInterface;
 
-class UDamageHandlerComponent;
+class IDamageHandlerInterface;
 
 
 
@@ -25,7 +25,7 @@ class TRAVELER_API UStatusEffectProcessBase : public UProcessBase
 	GENERATED_BODY()
 
 public:
-	void SetData(AActor* effectReceiver, UStatusEffectData* effectData);
+	void SetData(AActor* effectReceiver, AActor* effectCauser, UStatusEffectData* effectData);
 	void CombineEffectData(UStatusEffectData* effectData);
 
 protected:
@@ -37,9 +37,6 @@ protected:
 	virtual void VTMOnDead() override;
 	virtual void VTMReset() override;
 
-	void SpawnEffectActor();
-	void DestroyEffectActor();
-
 private:
 	bool _bHasDamage;
 
@@ -48,7 +45,9 @@ private:
 
 	float _damage;
 	float _damageInterval;
-	float _damageDuration;
+	EDamageType _damageType;
+
+	float _effectDuration;
 	EStatusEffect _statusEffectType;
 
 	UPROPERTY()
@@ -61,11 +60,11 @@ private:
 	AActor* _effectReceiver;
 
 	UPROPERTY()
-	AMyHUD* _hud;
+	AActor* _effectCauser;
 
 	UPROPERTY()
-	UDamageHandlerComponent* _damageHandler;
+	AMyHUD* _hud;
 
-	IAttributeInterface* _attributeInterface;
-	IActorUIInterface* _UIInterface;
+	IDamageHandlerInterface* _damageHandlerInterface;
+	IActorUIInterface* _actorUIInterface;
 };

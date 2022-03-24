@@ -357,14 +357,19 @@ UAnimationModelBase* ACreatureCharacter::VGetAnimationModel()
 	return _animationModelIns;
 }
 
-void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType, FHitResult hitResult)
+void ACreatureCharacter::VHandleDamage(float basicDamage, EDamageType damageType, FVector impactPoint, AActor* causer)
 {
-//	_damageHandlerComponent->HandleDamage(damageType, hitResult);
+	_damageHandlerComponent->HandleDamage(basicDamage, damageType, impactPoint, causer);
 }
 
-void ACreatureCharacter::VHandleStatusEffect(UStatusEffectData* statusEffectData, FHitResult hitResult)
+void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType, FVector impactPoint, AActor* causer)
 {
-	_damageHandlerComponent->VHandleStatusEffect(statusEffectData, hitResult);
+	_damageHandlerComponent->HandleDamage(damageType, impactPoint, causer);
+}
+
+void ACreatureCharacter::VHandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer)
+{
+	_damageHandlerComponent->HandleStatusEffect(statusEffectData, impactPoint, causer);
 }
 
 void ACreatureCharacter::VShowActorUI(EActorUI UIType)

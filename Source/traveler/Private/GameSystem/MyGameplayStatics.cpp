@@ -51,3 +51,31 @@ float UMyGameplayStatics::ComputeDistance(FVector from, FVector to, EPlane plane
 	return dirFromTo.Size();
 }
 
+EDamageType UMyGameplayStatics::StatusEffectTypeToDamageType(EStatusEffect statusEffectType)
+{
+	switch (statusEffectType)
+	{
+	case EStatusEffect::EStatusEffect_NONE: return EDamageType::EDamage_None;
+		break;
+	case EStatusEffect::EStatusEffect_Fire: return EDamageType::EDamage_Fire;
+		break;
+	case EStatusEffect::EStatusEffect_Water: return EDamageType::EDamage_Water;
+		break;
+	case EStatusEffect::EStatusEffect_Ice: return EDamageType::EDamage_Ice;
+		break;
+	case EStatusEffect::EStatusEffect_Electricity: return EDamageType::EDamage_Electricity;
+		break;
+	case EStatusEffect::EStatusEffect_Poison: return EDamageType::EDamage_Poison;
+		break;
+	case EStatusEffect::EStatusEffect_Stun: return EDamageType::EDamage_None;
+		break;
+	default: return EDamageType::EDamage_None;
+		break;
+	}
+}
+//
+//float UMyGameplayStatics::CalculateDamage(float basicDamage, EDamageType damageType, AActor* damageGiver, AActor* damageReceiver)
+//{
+//	return 0.0f;
+//}
+

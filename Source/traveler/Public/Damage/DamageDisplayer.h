@@ -12,6 +12,7 @@ USTRUCT(BlueprintType)
 struct FDamageDisplayData
 {
 	GENERATED_USTRUCT_BODY()
+
 public:
 	UPROPERTY(BlueprintReadWrite)
 	EDamageType DamageType;
@@ -58,4 +59,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 _poolSize;
+
+	UPROPERTY(EditDefaultsOnly)
+	UCurveFloat* _damageTextSizeCurve;
 };

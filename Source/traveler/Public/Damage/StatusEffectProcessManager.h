@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Process/ProcessManagerBase.h"
 #include "Data/CombatData.h"
-#include "DamageProcessManager.generated.h"
+#include "StatusEffectProcessManager.generated.h"
 
 class UStatusEffectProcessBase;
 class UStatusEffectData;
@@ -14,14 +14,14 @@ class AMyHUD;
  * 
  */
 UCLASS()
-class TRAVELER_API UDamageProcessManager : public UObject
+class TRAVELER_API UStatusEffectProcessManager : public UObject
 {
 	GENERATED_BODY()
 public:
-	UDamageProcessManager();
+	UStatusEffectProcessManager();
 
 	UFUNCTION()
-	void ExecuteProcess(AActor* owner, UStatusEffectData* effectData);
+	void ExecuteProcess(AActor* effectReceiver, AActor* effectCauser, UStatusEffectData* effectData);
 	UStatusEffectProcessBase* StopProcess(EStatusEffect statusEffectType);
 
 	bool IsExistStatusEffect(EStatusEffect statusEffectType);

@@ -23,7 +23,7 @@ class TRAVELER_API IDamageHandlerInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void VHandleDamage(float basicDamage,EDamageType damageType,AActor* instigator) PURE_VIRTUAL(IDamageHandlerInterface::VHandleDamage, );
-	virtual void VHandleDamage(UMyDamageType* damageType, FHitResult hitResult) PURE_VIRTUAL(IDamageHandlerInterface::VHandleDamage, );
-	virtual void VHandleStatusEffect(UStatusEffectData* statusEffectData, FHitResult hitResult) PURE_VIRTUAL(IDamageHandlerInterface::VHandleStatusEffect, );
+	virtual void VHandleDamage(float basicDamage, EDamageType damageType, FVector impactPoint, AActor* instigator) PURE_VIRTUAL(IDamageHandlerInterface::VHandleDamage, );
+	virtual void VHandleDamage(UMyDamageType* damageType, FVector impactPoint, AActor* instigator) PURE_VIRTUAL(IDamageHandlerInterface::VHandleDamage, );
+	virtual void VHandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* instigator) PURE_VIRTUAL(IDamageHandlerInterface::VHandleStatusEffect, );
 };
