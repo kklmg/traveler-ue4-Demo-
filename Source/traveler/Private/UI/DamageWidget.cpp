@@ -7,16 +7,17 @@
 
 FDamageWidgetData::FDamageWidgetData()
 {
-	TextScale = FVector2D::UnitVector;
+	TextScale = 1.0f;
 	ScrollSpeed = 20.0f;
 	ScrollDirection = FVector2D(0.0f, -1.0f);
 	Life = 5.0f;
-}
+};
 
 FDamageWidgetData::FDamageWidgetData(FColor color)
 {
 	TextColor = color;
-	TextScale = FVector2D::UnitVector;
+
+	TextScale = 1.0f;
 	ScrollSpeed = 20.0f;
 	ScrollDirection = FVector2D(0.0f, -1.0f);
 	Life = 5.0f;
@@ -36,7 +37,7 @@ void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	//world location to screen location
 	FVector2D renderLocation;
-	bool isOnScreen = UGameplayStatics::ProjectWorldToScreen(controller, WorldLocation, renderLocation);
+	bool isOnScreen = UGameplayStatics::ProjectWorldToScreen(controller, DamageWidgetData.TextLocation, renderLocation);
 
 	float scale = UWidgetLayoutLibrary::GetViewportScale(this);
 	renderLocation /= scale;
@@ -47,12 +48,10 @@ void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 }
 
 
-void UDamageWidget::SetData(FVector worldLocation, float damageAmount, FDamageWidgetData damageWidgetData, FVector2D offset)
+void UDamageWidget::SetData(FDamageWidgetData damageWidgetData)
 {
-	WorldLocation = worldLocation,
-	Damage = damageAmount;
 	DamageWidgetData = damageWidgetData;
-	ScrollOffset = offset;
+	ScrollOffset = damageWidgetData.TextOffset;
 }
 
 bool UDamageWidget::IsLifeOver()

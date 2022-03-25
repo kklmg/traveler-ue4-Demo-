@@ -7,7 +7,15 @@ UDamageDisplayer::UDamageDisplayer()
 {
 	_spawnInCircleRadius = 60.0f;
 	_poolSize = 200;
+
+	_damageDisplaySetting.Add(EDamageType::EDamage_Fire, FColor::Red);
+	_damageDisplaySetting.Add(EDamageType::EDamage_Electricity, FColor::Yellow);
+	_damageDisplaySetting.Add(EDamageType::EDamage_Ice, FColor::Cyan);
+	_damageDisplaySetting.Add(EDamageType::EDamage_Physics, FColor::White);
+	_damageDisplaySetting.Add(EDamageType::EDamage_Poison, FColor::Purple);
+	_damageDisplaySetting.Add(EDamageType::EDamage_Water, FColor::Blue);
 }
+
 
 
 void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
@@ -18,11 +26,19 @@ void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 		return;
 	}
 
-	if (_widgetPool.Num() < _poolSize && _emptySlots.Num() > 0)
+	if (_widgetPool.Num() >= _poolSize && _emptySlots.Num() == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No empty pool slot!"));
 		return;
 	}
+
+	//Get random offset
+	FVector2D offset = FMath::RandPointInCircle(_spawnInCircleRadius);
+
+	//Get widget data
+	FDamageWidgetData outDamageWidgetData;
+	GetDamageWidgetData(damageDisplayData, offset, outDamageWidgetData);
+
 
 	//make widget Instance
 	UDamageWidget* newDamageWidgetIns = NewObject<UDamageWidget>(this, _damageWidgetClass);
@@ -33,19 +49,7 @@ void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 		return;
 	}
 
-	//Get random offset
-	FVector2D randomOffset = FMath::RandPointInCircle(_spawnInCircleRadius);
-
-	//set widget data
-	if (_damageDisplaySetting.Contains(damageDisplayData.DamageType))
-	{
-		newDamageWidgetIns->SetData(damageDisplayData.Location, damageDisplayData.Damage, _damageDisplaySetting[damageDisplayData.DamageType], randomOffset);
-	}
-	else
-	{
-		newDamageWidgetIns->SetData(damageDisplayData.Location, damageDisplayData.Damage, FDamageWidgetData(), randomOffset);
-	}
-
+	newDamageWidgetIns->SetData(outDamageWidgetData);
 
 	//add new widget to widgetPool
 	if (_emptySlots.Num() > 0)
@@ -73,5 +77,22 @@ void UDamageDisplayer::Tick(float DeltaTime)
 			_widgetPool[i]->RemoveFromParent();
 			_widgetPool[i] = nullptr;
 		}
+	}
+}
+
+void UDamageDisplayer::GetDamageWidgetData(FDamageDisplayData damageDisplayData, FVector2D offset, FDamageWidgetData& outDamageWidgetData)
+{
+	if (_damageDisplaySetting.Contains(damageDisplayData.DamageType))
+	{
+		outDamageWidgetData = _damageDisplaySetting[damageDisplayData.DamageType];
+	}
+
+	outDamageWidgetData.Damage = damageDisplayData.Damage;
+	outDamageWidgetData.TextLocation = damageDisplayData.Location;
+	outDamageWidgetData.TextOffset = offset;
+
+	if (_textScaleCurve)
+	{
+		outDamageWidgetData.TextScale = _textScaleCurve->GetFloatValue(damageDisplayData.Damage);
 	}
 }

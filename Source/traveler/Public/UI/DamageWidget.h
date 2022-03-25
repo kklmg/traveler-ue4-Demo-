@@ -16,11 +16,20 @@ public:
 
 	FDamageWidgetData(FColor color);
 
+	UPROPERTY(BlueprintReadOnly)
+	float Damage;
+
+	UPROPERTY(BlueprintReadOnly)
+	FVector TextLocation;
+
+	UPROPERTY(BlueprintReadOnly)
+	FVector2D TextOffset;
+
+	UPROPERTY(BlueprintReadOnly)
+	float TextScale;
+
 	UPROPERTY(EditAnyWhere,BlueprintReadOnly)
 	FColor TextColor;
-
-	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
-	FVector2D TextScale;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	float ScrollSpeed;
@@ -43,7 +52,7 @@ class TRAVELER_API UDamageWidget : public UUserWidget
 public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-	void SetData(FVector worldLocation, float damageAmount, FDamageWidgetData damageWidgetData, FVector2D offset = FVector2D::ZeroVector);
+	void SetData(FDamageWidgetData damageWidgetData);
 
 	bool IsLifeOver();
 	
@@ -52,14 +61,8 @@ public:
 	FDamageWidgetData DamageWidgetData;
 
 	UPROPERTY(BlueprintReadOnly)
-	float Damage;
-
-	UPROPERTY(BlueprintReadOnly)
 	float ElapsedTime;
 
 	UPROPERTY()
 	FVector2D ScrollOffset;
-
-	UPROPERTY(BlueprintReadOnly)
-	FVector WorldLocation;
 };

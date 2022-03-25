@@ -42,6 +42,8 @@ public:
 	void Tick(float DeltaTime);
 
 private:
+	void GetDamageWidgetData(FDamageDisplayData damageDisplayData, FVector2D offset, FDamageWidgetData& outDamageWidgetData);
+
 	UPROPERTY()
 	TArray<UDamageWidget*> _widgetPool;
 
@@ -61,5 +63,5 @@ private:
 	int32 _poolSize;
 
 	UPROPERTY(EditDefaultsOnly)
-	UCurveFloat* _damageTextSizeCurve;
+	UCurveFloat* _textScaleCurve;
 };

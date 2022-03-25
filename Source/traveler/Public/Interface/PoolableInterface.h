@@ -6,6 +6,11 @@
 #include "UObject/Interface.h"
 #include "PoolableInterface.generated.h"
 
+
+DECLARE_DELEGATE_OneParam(FOnPoolObjectDie,int32);
+
+static FOnPoolObjectDie tempDelegate;
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UPoolableInterface : public UInterface
@@ -26,5 +31,6 @@ public:
 	virtual void VSetIsActive(bool isActive) PURE_VIRTUAL(IPoolableInterface::VSetIsActive, );
 
 	virtual int VGetPoolId() PURE_VIRTUAL(IPoolableInterface::VGetPoolId, return 0;);
-	virtual void VSetPoolId(int poolId) PURE_VIRTUAL(IPoolableInterface::VSetPoolId, );
+	virtual void VSetPoolId(int32 poolId) PURE_VIRTUAL(IPoolableInterface::VSetPoolId, );
+	virtual FOnPoolObjectDie& VGetPoolObjectDieDelegate() PURE_VIRTUAL(IPoolableInterface::VGetPoolObjectDieDelegate,return tempDelegate;);
 };
