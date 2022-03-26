@@ -5,14 +5,46 @@
 
 UObject* UObjectPoolBase::SpawnObject()
 {
-	if (_spawnObjectClass)
+	if (!_spawnObjectClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No SpawnObjectClass!"));
+		return nullptr;
+	}
+
+	//recycle
+	if (_emptyIndicies.Num() > 0)
+	{
+		int32 emptySlotID = _emptyIndicies.Pop();
+		_spawnedOrder.Add(emptySlotID);
+
+		return _pool[emptySlotID].GetObject();
+	}
+
+	//create new
+	else if (_pool.Num() < _poolSize)
 	{
 		UObject* newObject = NewObject<UObject>(this, _spawnObjectClass);
-		_pool.Add(newObject);
-		return newObject;
+		IPoolableInterface* poolObjectInterface = Cast<IPoolableInterface>(newObject);
+
+		if (newObject && poolObjectInterface)
+		{
+			_spawnedOrder.Add(_pool.Num());
+			poolObjectInterface->VSetPoolId(_pool.Num());
+			poolObjectInterface->VGetPoolObjectDieDelegate().BindUFunction(this, FName("OnObjectDie"));
+			poolObjectInterface->VSetIsActive(true);
+			_pool.Add(newObject);
+
+			return newObject;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to create uobject instance!"))
+				return nullptr;
+		}
 	}
 	else
 	{
+		//UE_LOG(LogTemp, Warning, TEXT("No free slot in pool!"));
 		return nullptr;
 	}
 
@@ -31,21 +63,11 @@ void UObjectPoolBase::SetSpawnObjectClass(TSubclassOf<UObject> objectClass)
 	}
 }
 
-UObject* UObjectPoolBase::GetOrCreate()
+void UObjectPoolBase::OnObjectDie(int32 index)
 {
-	if (!_spawnObjectClass)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No SpawnObjectClass!"));
-		return nullptr;
-	}
-
-	if (_pool.Num() >= _poolSize && _emptyIndicies.Num() == 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No empty slot in pool!"));
-		return nullptr;
-	}
-
-	UObject* newObject = NewObject<UObject>(this, _spawnObjectClass);
-	_pool.Add(newObject);
-	return newObject;
+	_emptyIndicies.Add(index);
+	_spawnedOrder.Remove(index);
+	_spawnedOrder.Add(index);
 }
+
+

@@ -20,7 +20,9 @@ public:
 	void SetSpawnObjectClass(TSubclassOf<UObject> objectClass);
 
 protected:
-	UObject* GetOrCreate();
+
+	UFUNCTION()
+	void OnObjectDie(int32 index);
 
 private:
 	TSubclassOf<UObject> _spawnObjectClass;
