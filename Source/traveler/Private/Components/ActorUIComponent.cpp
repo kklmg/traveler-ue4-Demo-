@@ -49,7 +49,7 @@ void UActorUIComponent::HideActorUI(EActorUI widgeType)
 {
 	if (_mapWidgetInstance.Contains(widgeType))
 	{
-		_mapWidgetInstance[widgeType]->SetVisibility(ESlateVisibility::Hidden);
+		_mapWidgetInstance[widgeType]->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 

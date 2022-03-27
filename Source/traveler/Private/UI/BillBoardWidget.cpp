@@ -37,7 +37,6 @@ void UBillBoardWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-
 	UWorld* world = GetWorld();
 	if (!world) return;
 
@@ -59,7 +58,7 @@ void UBillBoardWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 		}
 		else
 		{
-			SetVisibility(ESlateVisibility::Hidden);
+			SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }

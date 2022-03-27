@@ -5,7 +5,7 @@
 #include "Character/CreatureCharacter.h"
 #include "Components/PoseableMeshComponent.h"
 #include "Data/WeaponAnimationModelBase.h"
-#include "Components/MeshSocketComponent.h"
+#include "Components/ExtraTransformProviderComponent.h"
 #include "Process/ProcessManagerBase.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/CharacterCameraInterface.h"
@@ -27,11 +27,11 @@ AWeaponBase::AWeaponBase()
 	}
 
 	//Create mesh component
-	if (_meshSocketComponent == nullptr)
+	if (_ExtraTransformProviderComponent == nullptr)
 	{
-		_meshSocketComponent = CreateDefaultSubobject<UMeshSocketComponent>(TEXT("MeshSocketComponent"));
-		check(_meshSocketComponent != nullptr);
-		_meshSocketComponent->Initialize(_skeletalMeshComponent);
+		_ExtraTransformProviderComponent = CreateDefaultSubobject<UExtraTransformProviderComponent>(TEXT("ExTransformProviderComponent"));
+		check(_ExtraTransformProviderComponent != nullptr);
+		_ExtraTransformProviderComponent->Initialize(_skeletalMeshComponent);
 	}
 	_weaponType = EWeaponType::EWT_None;
 }
@@ -135,18 +135,17 @@ void AWeaponBase::VWeaponControlButtonD()
 {
 }
 
-
-FName AWeaponBase::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
+bool AWeaponBase::VTryGetSocketName(ETransform transformType, FName& outSocketName)
 {
-	return _meshSocketComponent->GetMeshSocketNameByType(meshSocketType);
+	return _ExtraTransformProviderComponent->VTryGetSocketName(transformType, outSocketName);
+}
+
+bool AWeaponBase::VTryGetTransform(ETransform meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
+{
+	return _ExtraTransformProviderComponent->TryGetTransform(meshSocketType, transformSpace, outTransform);
 }
 
 void AWeaponBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
 {
 	_characterAnimationState = newState;
-}
-
-bool AWeaponBase::VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
-{
-	return _meshSocketComponent->TryGetMeshSocketTransform(meshSocketType, transformSpace, outTransform);
 }

@@ -9,7 +9,7 @@
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actors/ThrowerActorBase.h"
 #include "DrawDebugHelpers.h"
-#include "Interface/MeshSocketTransformProvider.h"
+#include "Interface/ExtraTransformProvider.h"
 
 UActionThrow::UActionThrow()
 {
@@ -54,8 +54,8 @@ void UActionThrow::OnAttackNotifyBegin(float durationTime)
 	APawn* pawn = Cast<APawn>(actionOwner);
 	if (pawn == nullptr) return;
 
-	IMeshSocketTransformProvider* meshSocketTransformProvider = Cast<IMeshSocketTransformProvider>(actionOwner);
-	if (meshSocketTransformProvider == nullptr) return;
+	IExtraTransformProvider* ExtraTransformProvider = Cast<IExtraTransformProvider>(actionOwner);
+	if (ExtraTransformProvider == nullptr) return;
 
 	//set spawn options
 	FActorSpawnParameters spawnParameters;
@@ -63,7 +63,7 @@ void UActionThrow::OnAttackNotifyBegin(float durationTime)
 	spawnParameters.Owner = pawn;
 	
 	FTransform outTransform;
-	meshSocketTransformProvider->VTryGetMeshSocketTransform(_meshSocektType, ERelativeTransformSpace::RTS_World, outTransform);
+	ExtraTransformProvider->VTryGetTransform(_transformType, ERelativeTransformSpace::RTS_World, outTransform);
 
 	//spawn actor
 	_throwerIns = GetWorld()->SpawnActor<AThrowerActorBase>(_throwerClass, outTransform, spawnParameters);
@@ -91,11 +91,11 @@ void UActionThrow::OnAttackNotifyTick(float frameDeltaTime)
 {
 	if (GetActionOwner() == nullptr) return;
 
-	IMeshSocketTransformProvider* meshSocketTransformProvider = Cast<IMeshSocketTransformProvider>(GetActionOwner());
+	IExtraTransformProvider* meshSocketTransformProvider = Cast<IExtraTransformProvider>(GetActionOwner());
 	if (meshSocketTransformProvider == nullptr) return;
 
 	FTransform outTransform;
-	if (meshSocketTransformProvider->VTryGetMeshSocketTransform(_meshSocektType, ERelativeTransformSpace::RTS_World, outTransform))
+	if (meshSocketTransformProvider->VTryGetTransform(_transformType, ERelativeTransformSpace::RTS_World, outTransform))
 	{
 		if(_throwerIns)
 		{

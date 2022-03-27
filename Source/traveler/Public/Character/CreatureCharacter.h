@@ -13,7 +13,7 @@
 #include "Interface/StateInterface.h"
 #include "Interface/CharacterCameraInterface.h"
 #include "Interface/WeaponInterface.h"
-#include "Interface/MeshSocketTransformProvider.h"
+#include "Interface/ExtraTransformProvider.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "Interface/ActorUIInterface.h"
 #include "CreatureCharacter.generated.h"
@@ -30,7 +30,7 @@ class UStateComponent;
 class UPawnCameraComponent;
 class UCameraSpringArmComponent;
 class UWeaponComponent;
-class UMeshSocketComponent;
+class UExtraTransformProviderComponent;
 class UDamageHandlerComponent;
 class UIKComponent;
 
@@ -44,7 +44,7 @@ class UActionBlackBoard;
 UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface,public IStateInterface, 
 										public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider,
-										public IMeshSocketTransformProvider, public IDamageHandlerInterface, public IActorUIInterface
+										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface
 {
 	GENERATED_BODY()
 
@@ -99,6 +99,7 @@ public:
 	virtual void VSetSituationState(ESituationState newState) override;
 	virtual void VSetHealthState(EHealthState newState) override;
 	virtual void VSetPostureState(EPostureState newState) override;
+
 	UFUNCTION(BlueprintCallable)
 	virtual void VSetAnimationState(EAnimationState newState);
 	UFUNCTION(BlueprintCallable)
@@ -151,10 +152,11 @@ public:
 
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
 	UFUNCTION(BlueprintCallable)
-	virtual bool VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
+	virtual bool VTryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
 
 	UFUNCTION(BlueprintCallable)
-	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
+	virtual bool VTryGetSocketName(ETransform transformType, FName& outSocketName);
+
 
 	UFUNCTION(BlueprintCallable)
 	UActionComponent* GetActionComponent();
@@ -194,7 +196,7 @@ protected:
 	UWeaponComponent* _weaponComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UMeshSocketComponent* _meshSocketComponent;
+	UExtraTransformProviderComponent* _ExTransformProviderComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UDamageHandlerComponent* _damageHandlerComponent;

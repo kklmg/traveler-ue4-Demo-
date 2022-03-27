@@ -9,7 +9,7 @@
 #include "IKComponent.generated.h"
 
 class IAnimationModelProvider;
-class IMeshSocketTransformProvider;
+class IExtraTransformProvider;
 
 class UAnimationModelBase;
 
@@ -33,7 +33,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	FIKData FootTrace(EMeshSocketType meshSocketType);
+	FIKData FootTrace(ETransform meshSocketType);
 
 	UFUNCTION(BlueprintCallable)
 	FIKData GetIKData_LeftFoot();
@@ -54,7 +54,7 @@ private:
 	UPROPERTY()
 	class UAnimationModelBase* _animationViewModel;
 
-	IMeshSocketTransformProvider* _meshSocketProvider;
+	IExtraTransformProvider* _meshSocketProvider;
 
 	FIKData _IKDataLeftFoot;
 	FIKData _IKDataRightFoot;

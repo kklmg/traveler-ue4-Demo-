@@ -25,7 +25,7 @@ public:
 private:
 
 	UPROPERTY(EditDefaultsOnly)
-	EMeshSocketType _meshSocektType;
+	ETransform _transformType;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AThrowerActorBase> _throwerClass;

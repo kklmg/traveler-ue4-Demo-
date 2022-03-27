@@ -11,7 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Command/CommandActor.h"
 #include "Interface/CharacterCameraInterface.h"
-#include "Interface/MeshSocketTransformProvider.h"
+#include "Interface/ExtraTransformProvider.h"
 #include "Interface/ActionInterface.h"
 #include "UI/CrosshairWidgetBase.h"
 
@@ -195,14 +195,14 @@ void ABowBase::AttachArrowsToHand()
 
 	//get hand transform
 	FTransform rightHandTransform;
-	IMeshSocketTransformProvider* transformProvider = Cast<IMeshSocketTransformProvider>(GetWeaponOwner());
+	IExtraTransformProvider* transformProvider = Cast<IExtraTransformProvider>(GetWeaponOwner());
 	if(transformProvider)
 	{
-		transformProvider->VTryGetMeshSocketTransform(EMeshSocketType::MST_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
+		transformProvider->VTryGetTransform(ETransform::ETransform_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
 	}
 	//get muzzle transform
 	FTransform muzzleTransform;
-	 VTryGetMeshSocketTransform(EMeshSocketType::MST_Muzzle,RTS_World, muzzleTransform);
+	 VTryGetTransform(ETransform::ETransform_Muzzle,RTS_World, muzzleTransform);
 
 
 	//compute Projectile Transform
@@ -244,8 +244,8 @@ void ABowBase::AttachArrowsToBow()
 	FTransform muzzleTransform;
 	FTransform bowStringTransform;
 
-	VTryGetMeshSocketTransform(EMeshSocketType::MST_Muzzle, RTS_World, muzzleTransform);
-	VTryGetMeshSocketTransform(EMeshSocketType::MST_BowString, RTS_World, bowStringTransform);
+	VTryGetTransform(ETransform::ETransform_Muzzle, RTS_World, muzzleTransform);
+	VTryGetTransform(ETransform::ETransform_BowString, RTS_World, bowStringTransform);
 
 	FVector arrowForward = (muzzleTransform.GetLocation() - bowStringTransform.GetLocation()).GetSafeNormal();
 	FQuat arrowQuat = arrowForward.ToOrientationQuat();

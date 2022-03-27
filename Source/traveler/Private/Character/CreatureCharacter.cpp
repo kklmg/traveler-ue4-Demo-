@@ -15,7 +15,7 @@
 #include "Components/PawnCameraComponent.h"
 #include "Components/CameraSpringArmComponent.h"
 #include "Components/WeaponComponent.h"
-#include "Components/MeshSocketComponent.h"
+#include "Components/ExtraTransformProviderComponent.h"
 #include "Components/MyCharacterMovementComponent.h"
 #include "Components/IKComponent.h"
 #include "Components/DamageHandlerComponent.h"
@@ -37,6 +37,7 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 		_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("StateComponent"));
 		check(_stateComponent != nullptr);
 	}
+
 	//Create Attribute component
 	if (_attributeComponent == nullptr)
 	{
@@ -44,13 +45,14 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 		check(_attributeComponent != nullptr);
 	}
 	
-	//Create Mesh Socket component
-	if (_meshSocketComponent == nullptr)
+	//Create Extra Transform provider component
+	if (_ExTransformProviderComponent == nullptr)
 	{
-		_meshSocketComponent = CreateDefaultSubobject<UMeshSocketComponent>(TEXT("MeshSocketComponent"));
-		check(_meshSocketComponent != nullptr);
-		_meshSocketComponent->Initialize(GetMesh());
+		_ExTransformProviderComponent = CreateDefaultSubobject<UExtraTransformProviderComponent>(TEXT("ExTransformProviderComponent"));
+		check(_ExTransformProviderComponent != nullptr);
+		_ExTransformProviderComponent->Initialize(GetMesh());
 	}
+
 	//Create action component
 	if (_actionComponent == nullptr)
 	{
@@ -392,12 +394,12 @@ void ACreatureCharacter::VHideActorStatusUI(EStatusEffect StatusUIType)
 	_actorUIComponent->HideActorStatusUI(StatusUIType);
 }
 
-FName ACreatureCharacter::GetMeshSocketNameByType(EMeshSocketType meshSocketType)
+bool ACreatureCharacter::VTryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
 {
-	return _meshSocketComponent->GetMeshSocketNameByType(meshSocketType);
+	return _ExTransformProviderComponent->TryGetTransform(transformType,transformSpace,outTransform);
 }
 
-bool ACreatureCharacter::VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
+bool ACreatureCharacter::VTryGetSocketName(ETransform transformType, FName& outSocketName)
 {
-	return _meshSocketComponent->TryGetMeshSocketTransform(meshSocketType,transformSpace,outTransform);
+	return _ExTransformProviderComponent->VTryGetSocketName(transformType, outSocketName);
 }

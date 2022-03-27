@@ -6,6 +6,7 @@
 #include "Character/CreatureCharacter.h"
 #include "Interface/AnimationModelProvider.h"
 #include "Interface/StateInterface.h"
+#include "Interface/ExtraTransformProvider.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -114,8 +115,11 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 		ACreatureCharacter* character = GetOwner<ACreatureCharacter>();
 		check(character != nullptr);
 
+		//get left hand socket name
+		FName leftHandSocketName;
+		character->VTryGetSocketName(ETransform::ETransform_LeftHand, leftHandSocketName);
+
 		//Attach Weapon 
-		FName leftHandSocketName = character->GetMeshSocketNameByType(EMeshSocketType::MST_LeftHand);		
 		_weaponIns->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
 	}
 }

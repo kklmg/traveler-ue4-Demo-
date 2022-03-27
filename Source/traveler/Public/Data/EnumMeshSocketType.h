@@ -9,17 +9,17 @@
  */
 
 UENUM(BlueprintType)
-enum class EMeshSocketType : uint8
+enum class ETransform : uint8
 {
-	MST_None UMETA(DisplayName = "None"),
-	MST_LeftHand UMETA(DisplayName = "LeftHand"),
-	MST_RightHand UMETA(DisplayName = "RightHand"),
-	MST_LeftHandDraw UMETA(DisplayName = "LeftHandDraw"),
-	MST_RightHandDraw UMETA(DisplayName = "RightHandDraw"),
-	MST_Mouth UMETA(DisplayName = "Mouth"),
-	MST_Head UMETA(DisplayName = "Head"),
-	MST_LeftFoot UMETA(DisplayName = "LeftFoot"),
-	MST_RightFoot UMETA(DisplayName = "RightFoot"),
-	MST_Muzzle UMETA(DisplayName = "Muzzle"),
-	MST_BowString UMETA(DisplayName = "BowString"),
+	ETransform_None UMETA(DisplayName = "None"),
+	ETransform_LeftHand UMETA(DisplayName = "LeftHand"),
+	ETransform_RightHand UMETA(DisplayName = "RightHand"),
+	ETransform_LeftHandDraw UMETA(DisplayName = "LeftHandDraw"),
+	ETransform_RightHandDraw UMETA(DisplayName = "RightHandDraw"),
+	ETransform_Mouth UMETA(DisplayName = "Mouth"),
+	ETransform_Head UMETA(DisplayName = "Head"),
+	ETransform_LeftFoot UMETA(DisplayName = "LeftFoot"),
+	ETransform_RightFoot UMETA(DisplayName = "RightFoot"),
+	ETransform_Muzzle UMETA(DisplayName = "Muzzle"),
+	ETransform_BowString UMETA(DisplayName = "BowString"),
 };

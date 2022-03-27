@@ -21,13 +21,10 @@ void UDebugMessageHelper::Message_Vector(FString Categoty, FVector value)
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, Categoty);
 }
 
-void UDebugMessageHelper::Messsage_Enum(TCHAR* enumName, int32 enumValue)
+void UDebugMessageHelper::Messsage_Enum(FString Categoty, TCHAR* enumName, int32 enumValue)
 {
-	FString screenMessage(enumName);
-	screenMessage.Append(TEXT(": "));
-
+	Categoty.Append(TEXT(": "));
 	const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, enumName, true);
-	screenMessage.Append( enumPtr ? enumPtr->GetNameStringByIndex(enumValue) : TEXT("UnKnown"));
-
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, screenMessage);
+	Categoty.Append( enumPtr ? enumPtr->GetNameStringByIndex(enumValue) : TEXT("UnKnown"));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, Categoty);
 }

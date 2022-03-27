@@ -6,12 +6,12 @@
 #include "GameFramework/Actor.h"
 #include "Data/EnumWeaponType.h"
 #include "Data/StateData.h"
-#include "Interface/MeshSocketTransformProvider.h"
+#include "Interface/ExtraTransformProvider.h"
 #include "WeaponBase.generated.h"
 
 class ACreatureCharacter;
 class UPoseableMeshComponent;
-class UMeshSocketComponent;
+class UExtraTransformProviderComponent;
 class UWeaponAnimationModelBase;
 class UProcessManagerBase;
 class IActionInterface;
@@ -25,7 +25,7 @@ namespace WeaponProcessName
 }
 
 UCLASS()
-class TRAVELER_API AWeaponBase : public AActor, public IMeshSocketTransformProvider
+class TRAVELER_API AWeaponBase : public AActor, public IExtraTransformProvider
 {
 	GENERATED_BODY()
 	
@@ -71,10 +71,10 @@ public:
 
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
 	UFUNCTION(BlueprintCallable)
-	virtual bool VTryGetMeshSocketTransform(EMeshSocketType meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
+	virtual bool VTryGetTransform(ETransform meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
 
 	UFUNCTION(BlueprintCallable)
-	FName GetMeshSocketNameByType(EMeshSocketType meshSocketType);
+	virtual bool  VTryGetSocketName(ETransform transformType, FName& outSocketName) override;
 
 	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState);
 
@@ -90,7 +90,7 @@ private:
 	USkeletalMeshComponent* _skeletalMeshComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UMeshSocketComponent* _meshSocketComponent;
+	UExtraTransformProviderComponent* _ExtraTransformProviderComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	ACreatureCharacter* _weaponOwner;

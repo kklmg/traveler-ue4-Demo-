@@ -3,7 +3,7 @@
 
 #include "Components/IKComponent.h"
 #include "Interface/AnimationModelProvider.h"
-#include "Interface/MeshSocketTransformProvider.h"
+#include "Interface/ExtraTransformProvider.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
@@ -34,7 +34,7 @@ void UIKComponent::BeginPlay()
 		_halfHeight = _character->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
 	}
 
-	_meshSocketProvider = GetOwner<IMeshSocketTransformProvider>();
+	_meshSocketProvider = GetOwner<IExtraTransformProvider>();
 
 	IAnimationModelProvider* animationModelProvider = GetOwner<IAnimationModelProvider>();
 	if(animationModelProvider)
@@ -57,13 +57,13 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 
 		if ((movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking))
 		{ 
-			_IKDataLeftFoot = FootTrace(EMeshSocketType::MST_LeftFoot);
-			_IKDataRightFoot = FootTrace(EMeshSocketType::MST_RightFoot);	
+			_IKDataLeftFoot = FootTrace(ETransform::ETransform_LeftFoot);
+			_IKDataRightFoot = FootTrace(ETransform::ETransform_RightFoot);
 		}
 	}
 }
 
-FIKData UIKComponent::FootTrace(EMeshSocketType meshSocketType)
+FIKData UIKComponent::FootTrace(ETransform meshSocketType)
 {
 	if (!_meshSocketProvider) return FIKData();
 	if (!_animationViewModel) return FIKData();
@@ -72,7 +72,7 @@ FIKData UIKComponent::FootTrace(EMeshSocketType meshSocketType)
 
 	//get Foot Transform
 	FTransform out_FootTransform; 
-    _meshSocketProvider->VTryGetMeshSocketTransform(meshSocketType,ERelativeTransformSpace::RTS_World, out_FootTransform);
+    _meshSocketProvider->VTryGetTransform(meshSocketType,ERelativeTransformSpace::RTS_World, out_FootTransform);
 	FVector footLocation = out_FootTransform.GetLocation();
 	
 	//Line Tracting parameters
