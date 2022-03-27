@@ -3,6 +3,7 @@
 
 #include "Components/QuiverComponent.h"
 #include "Actors/ArrowActorBase.h"
+#include "GameSystem/ObjectPoolBase.h"
 
 // Sets default values for this component's properties
 UQuiverComponent::UQuiverComponent()
@@ -12,6 +13,7 @@ UQuiverComponent::UQuiverComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	_poolSize = 256;
 }
 
 
@@ -21,7 +23,8 @@ void UQuiverComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	_arrowPool = NewObject<UObjectPoolBase>(this);
+	_arrowPool->Initialize(_arrowClass, _poolSize);
 }
 
 
@@ -31,69 +34,25 @@ void UQuiverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+
+	/*if (_arrowPool) 
+	{
+		_arrowPool->DrawDebugMessage();
+	}*/
 }
 
 void UQuiverComponent::SpawnArrows(int count, APawn* instigator,TArray<AArrowActorBase*>& outArray)
 {
 	for (int i = 0; i < count; ++i)
 	{
-		AArrowActorBase* arrowIns = CreateOrGetInactivatedFromPool(instigator);
-		if (arrowIns == nullptr)
+		AArrowActorBase* arrowIns = _arrowPool->SpawnObject<AArrowActorBase>();
+		if (arrowIns)
 		{
-			UE_LOG(LogTemp,Warning,TEXT("cant spawn projectile"))
-			return;
+			arrowIns->SetOwner(GetOwner());
+			arrowIns->SetInstigator(instigator);
+			arrowIns->VSetVelocity(FVector::ZeroVector);
+			arrowIns->VReset();
+			outArray.Add(arrowIns);
 		}
-		arrowIns->VSetVelocity(FVector::ZeroVector);
-		arrowIns->VSetIsActive(true);
-
-		outArray.Add(arrowIns);
 	}
-}
-
-
-AArrowActorBase* UQuiverComponent::CreateOrGetInactivatedFromPool(APawn* instigator)
-{
-	//try get reusable actor 
-	if (_inactivatedIndicies.Num() != 0)
-	{
-		int lastIndex = _inactivatedIndicies.Pop();
-
-		if (lastIndex > _arrowPool.Num() - 1)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Something Went wrong at pooling logic"));
-			return nullptr;
-		}
-		return _arrowPool[lastIndex];
-	}
-
-	if (_arrowClass == nullptr)
-	{
-		return nullptr;
-	}
-
-	UWorld* world = GetWorld();
-	if (world == nullptr)
-	{
-		return nullptr;
-	}
-
-	//make projectile instance
-	FActorSpawnParameters spawnParameters;
-	spawnParameters.Owner = GetOwner();
-	spawnParameters.Instigator = instigator;
-	AArrowActorBase* arrowIns = world->SpawnActor<AArrowActorBase>(_arrowClass, spawnParameters);
-
-	if (arrowIns)
-	{
-		arrowIns->VSetPoolId(_arrowPool.Num());
-		arrowIns->OnActorInactivated.BindUFunction(this, FName(TEXT("OnSpawnedActorInactivated")));
-		_arrowPool.Add(arrowIns);
-	}
-
-	return arrowIns;
-}
-
-void UQuiverComponent::OnSpawnedActorInactivated(int poolId)
-{
-	_inactivatedIndicies.Add(poolId);
 }

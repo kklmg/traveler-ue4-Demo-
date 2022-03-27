@@ -10,11 +10,11 @@ void AMyHUD::BeginPlay()
 	if (_damageDisplayerClass)
 	{
 		_damageDisplayerIns = NewObject<UDamageDisplayer>(this, _damageDisplayerClass);
-
 		if(!_damageDisplayerIns)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("make instance of DamageDisplayer failed"));
 		}
+		_damageDisplayerIns->Initialize();
 	}
 	else
 	{

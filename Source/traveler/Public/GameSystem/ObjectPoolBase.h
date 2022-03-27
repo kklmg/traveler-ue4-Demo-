@@ -15,20 +15,40 @@ class TRAVELER_API UObjectPoolBase : public UObject
 {
 	GENERATED_BODY()
 public:
+	UObjectPoolBase();
+
 	UObject* SpawnObject();
 
-	void SetSpawnObjectClass(TSubclassOf<UObject> objectClass);
+	template<typename T>
+	T* SpawnObject();
 
+	void Initialize(TSubclassOf<UObject> objectClass, int32 poolSize);
+	bool IsSpawnable();
+
+	void DrawDebugMessage();
 protected:
 
 	UFUNCTION()
-	void OnObjectDie(int32 index);
+	void OnObjectInactive(int32 index);
 
+	
 private:
+	UPROPERTY()
 	TSubclassOf<UObject> _spawnObjectClass;
-	TArray<TScriptInterface<IPoolableInterface>> _pool;
-	TArray<int32> _emptyIndicies;
-	TArray<int32> _spawnedOrder;
 
-	int32 _poolSize;	
+	UPROPERTY()
+	TArray<TScriptInterface<IPoolableInterface>> _pool;
+
+	TArray<int32> _emptyIndicies;
+	TArray<int32> _spawnedOrder; //todo: find more efficent way
+	
+	int32 _poolSize;
+	bool _bIsActor;
 };
+
+
+template<typename T>
+T* UObjectPoolBase::SpawnObject()
+{
+	return Cast<T>(SpawnObject());
+}

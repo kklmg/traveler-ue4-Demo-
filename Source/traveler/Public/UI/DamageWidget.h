@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Damage/MyDamageType.h"
+#include "Interface/PoolableInterface.h"
 #include "DamageWidget.generated.h"
 
 USTRUCT(BlueprintType)
@@ -39,13 +40,18 @@ public:
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	float Life;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
+	int32 ZOrder;
 };
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDataUpdated);
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UDamageWidget : public UUserWidget
+class TRAVELER_API UDamageWidget : public UUserWidget, public IPoolableInterface
 {
 	GENERATED_BODY()
 	
@@ -53,9 +59,17 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	void SetData(FDamageWidgetData damageWidgetData);
-
-	bool IsLifeOver();
 	
+	//PoolObject Interface implementation---------------------------------
+
+	virtual bool VIsActive() override;
+	virtual void VActivate() override;
+	virtual void VInActivate() override;
+
+	virtual int VGetPoolId()  override;
+	virtual void VSetPoolId(int32 poolId)  override;
+	virtual FOnObjectInactive& VGetObjectInactiveDelegate()  override;
+
 public:
 	UPROPERTY(BlueprintReadOnly)
 	FDamageWidgetData DamageWidgetData;
@@ -65,4 +79,12 @@ public:
 
 	UPROPERTY()
 	FVector2D ScrollOffset;
+
+	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
+	FOnDataUpdated OnDataUpdated;
+
+private:
+	FOnObjectInactive _onObjectInActive;
+	int32 _poolId;
+	bool _bIsActive;
 };

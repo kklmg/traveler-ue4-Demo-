@@ -7,9 +7,9 @@
 #include "PoolableInterface.generated.h"
 
 
-DECLARE_DELEGATE_OneParam(FOnPoolObjectDie,int32);
+DECLARE_DELEGATE_OneParam(FOnObjectInactive,int32);
 
-static FOnPoolObjectDie tempDelegate;
+static FOnObjectInactive tempDelegate;
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
@@ -28,9 +28,10 @@ class TRAVELER_API IPoolableInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual bool VIsActive() PURE_VIRTUAL(IPoolableInterface::VIsActive, return false; );
-	virtual void VSetIsActive(bool isActive) PURE_VIRTUAL(IPoolableInterface::VSetIsActive, );
+	virtual void VActivate() PURE_VIRTUAL(IPoolableInterface::VActivate, );
+	virtual void VInActivate() PURE_VIRTUAL(IPoolableInterface::VInActivate, );
 
 	virtual int VGetPoolId() PURE_VIRTUAL(IPoolableInterface::VGetPoolId, return 0;);
 	virtual void VSetPoolId(int32 poolId) PURE_VIRTUAL(IPoolableInterface::VSetPoolId, );
-	virtual FOnPoolObjectDie& VGetPoolObjectDieDelegate() PURE_VIRTUAL(IPoolableInterface::VGetPoolObjectDieDelegate,return tempDelegate;);
+	virtual FOnObjectInactive& VGetObjectInactiveDelegate() PURE_VIRTUAL(IPoolableInterface::VGetObjectInactiveDelegate,return tempDelegate;);
 };

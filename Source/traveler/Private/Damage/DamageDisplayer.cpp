@@ -2,11 +2,12 @@
 
 
 #include "Damage/DamageDisplayer.h"
+#include "GameSystem/ObjectPoolBase.h"
 
 UDamageDisplayer::UDamageDisplayer()
 {
 	_spawnInCircleRadius = 60.0f;
-	_poolSize = 200;
+	_poolSize = 256;
 
 	_damageDisplaySetting.Add(EDamageType::EDamage_Fire, FColor::Red);
 	_damageDisplaySetting.Add(EDamageType::EDamage_Electricity, FColor::Yellow);
@@ -18,6 +19,12 @@ UDamageDisplayer::UDamageDisplayer()
 
 
 
+void UDamageDisplayer::Initialize()
+{
+	_widgetPool = NewObject<UObjectPoolBase>(this);
+	_widgetPool->Initialize(_damageWidgetClass, _poolSize);
+}
+
 void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 {
 	if(!_damageWidgetClass)
@@ -25,10 +32,9 @@ void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 		UE_LOG(LogTemp, Warning, TEXT("No DamageWidgetClass!"));
 		return;
 	}
-
-	if (_widgetPool.Num() >= _poolSize && _emptySlots.Num() == 0)
+	if (!_widgetPool)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No empty pool slot!"));
+		UE_LOG(LogTemp, Error, TEXT("No pool instance!"));
 		return;
 	}
 
@@ -40,43 +46,23 @@ void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 	GetDamageWidgetData(damageDisplayData, offset, outDamageWidgetData);
 
 
-	//make widget Instance
-	UDamageWidget* newDamageWidgetIns = NewObject<UDamageWidget>(this, _damageWidgetClass);
+	//Spawn widget 
+	UDamageWidget* newDamageWidgetIns = _widgetPool->SpawnObject<UDamageWidget>();
 
 	if(!newDamageWidgetIns)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("make Widget instance failed"));
+		UE_LOG(LogTemp, Warning, TEXT("spawn Widget instance failed"));
 		return;
 	}
 
 	newDamageWidgetIns->SetData(outDamageWidgetData);
-
-	//add new widget to widgetPool
-	if (_emptySlots.Num() > 0)
-	{
-		int32 index = _emptySlots.Pop();
-		_widgetPool[index] = newDamageWidgetIns;
-	}
-
-	else /*if (_widgetPool.Num() < _poolSize)*/
-	{
-		_widgetPool.Add(newDamageWidgetIns);
-	}
-
-	//add to viewPort
-	newDamageWidgetIns->AddToViewport(100);
 }
 
 void UDamageDisplayer::Tick(float DeltaTime)
 {
-	for (int32 i = 0; i < _widgetPool.Num(); ++i)
+	if (_widgetPool) 
 	{
-		if (_widgetPool[i] && _widgetPool[i]->IsLifeOver())
-		{
-			_widgetPool[i]->RemoveFromViewport();
-			_widgetPool[i]->RemoveFromParent();
-			_widgetPool[i] = nullptr;
-		}
+		_widgetPool->DrawDebugMessage();
 	}
 }
 

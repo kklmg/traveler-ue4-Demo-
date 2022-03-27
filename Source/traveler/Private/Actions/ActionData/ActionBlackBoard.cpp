@@ -23,10 +23,10 @@ void UActionBlackBoard::WriteData_FVector(EActionDataKey key, FVector value)
 	_vectorData.WriteData(key, value);
 }
 
-void UActionBlackBoard::WriteData_UObject(EActionDataKey key, UObject* value)
-{
-	_objectData.WriteData(key, value);
-}
+//void UActionBlackBoard::WriteData_UObject(EActionDataKey key, UObject* value)
+//{
+//	_objectData.WriteData(key, value);
+//}
 
 bool UActionBlackBoard::TryGetData_Bool(EActionDataKey key, bool& outValue,bool bConsumeData)
 {
@@ -48,10 +48,10 @@ bool UActionBlackBoard::TryGetData_FVector(EActionDataKey key, FVector& outValue
 	return _vectorData.TryGetData(key,outValue);
 }
 
-bool UActionBlackBoard::TryGetData_UObject(EActionDataKey key, UObject** outValue, bool bConsumeData)
-{
-	return _objectData.TryGetData(key, *outValue);
-}
+//bool UActionBlackBoard::TryGetData_UObject(EActionDataKey key, UObject** outValue, bool bConsumeData)
+//{
+//	return _objectData.TryGetData(key, *outValue);
+//}
 
 TMulticastDelegate<void(bool)>& UActionBlackBoard::GetValueChangedDelegate_Bool(EActionDataKey key)
 {
@@ -84,5 +84,5 @@ void UActionBlackBoard::DeleteData(EActionDataKey key)
 	_floatData.DeleteData(key);
 	_vectorData.DeleteData(key);
 	_quatData.DeleteData(key);
-	_objectData.DeleteData(key);
+	//_objectData.DeleteData(key);
 }

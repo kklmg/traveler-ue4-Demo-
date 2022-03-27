@@ -70,6 +70,7 @@ public:
 
 
 private:
+	UPROPERTY()
 	TMap<EActionDataKey, T> _mapActionData;
 	TMap<EActionDataKey, TMulticastDelegate<void(T)>> _mapActionDataChangedDelegates;
 };
@@ -96,8 +97,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void WriteData_FVector(EActionDataKey key, FVector value);
 
-	UFUNCTION(BlueprintCallable)
-	void WriteData_UObject(EActionDataKey key, UObject* value);
+	//UFUNCTION(BlueprintCallable)
+	//void WriteData_UObject(EActionDataKey key, UObject* value);
 
 	UFUNCTION(BlueprintCallable)
 	bool TryGetData_Bool(EActionDataKey key, bool& outValue,bool bConsumeData = false);
@@ -112,7 +113,7 @@ public:
 	bool TryGetData_FVector(EActionDataKey key, FVector& outValue, bool bConsumeData = false);
 
 	//UFUNCTION()
-	bool TryGetData_UObject(EActionDataKey key, UObject** outValue, bool bConsumeData = false);
+	//bool TryGetData_UObject(EActionDataKey key, UObject** outValue, bool bConsumeData = false);
 
 	TMulticastDelegate<void(bool)>& GetValueChangedDelegate_Bool(EActionDataKey key);
 	TMulticastDelegate<void(int)>& GetValueChangedDelegate_Int(EActionDataKey key);
@@ -129,5 +130,6 @@ private:
 	TActionDataBlackBoard<float> _floatData;
 	TActionDataBlackBoard<FVector> _vectorData;
 	TActionDataBlackBoard<FQuat> _quatData;
-	TActionDataBlackBoard<UObject*> _objectData;
+
+	//TActionDataBlackBoard<UObject*> _objectData;
 };

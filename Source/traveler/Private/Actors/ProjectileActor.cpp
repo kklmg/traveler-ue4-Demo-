@@ -38,7 +38,7 @@ void AProjectileActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (_isActive == false) return;
+	if (_bIsActive == false) return;
 
 	float speed = _projectileMovementComp->Velocity.Size();
 	_shift += speed * DeltaTime;
@@ -72,7 +72,7 @@ void AProjectileActor::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 	{
 		UGameplayStatics::ApplyDamage(OtherActor, _damage, instigator? GetInstigator()->GetController():nullptr, this, _damageTypeClass);
 	}
-	VSetIsActive(false);
+	VInActivate();
 }
 
 void AProjectileActor::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -90,7 +90,7 @@ void AProjectileActor::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 	}
 	if (OtherComp->GetCollisionObjectType() == ECollisionChannel::ECC_WorldStatic)
 	{
-		VSetIsActive(false);
+		VInActivate();
 	}
 }
 

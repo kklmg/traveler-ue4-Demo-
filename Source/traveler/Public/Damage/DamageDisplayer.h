@@ -8,6 +8,8 @@
 #include "UI/DamageWidget.h"
 #include "DamageDisplayer.generated.h"
 
+class UObjectPoolBase;
+
 USTRUCT(BlueprintType)
 struct FDamageDisplayData
 {
@@ -36,6 +38,8 @@ class TRAVELER_API UDamageDisplayer : public UObject
 public:
 	UDamageDisplayer();
 	
+	void Initialize();
+
 	UFUNCTION(BlueprintCallable)
 	void ShowDamage(FDamageDisplayData damageDisplayData);
 
@@ -43,12 +47,6 @@ public:
 
 private:
 	void GetDamageWidgetData(FDamageDisplayData damageDisplayData, FVector2D offset, FDamageWidgetData& outDamageWidgetData);
-
-	UPROPERTY()
-	TArray<UDamageWidget*> _widgetPool;
-
-	UPROPERTY()
-	TArray<int32> _emptySlots;
 
 	UPROPERTY(EditDefaultsOnly)
 	TMap<EDamageType, FDamageWidgetData> _damageDisplaySetting;
@@ -60,8 +58,11 @@ private:
 	float _spawnInCircleRadius;
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 _poolSize;
+	UCurveFloat* _textScaleCurve;
+
+	UPROPERTY()
+	UObjectPoolBase* _widgetPool;
 
 	UPROPERTY(EditDefaultsOnly)
-	UCurveFloat* _textScaleCurve;
+	int32 _poolSize;
 };

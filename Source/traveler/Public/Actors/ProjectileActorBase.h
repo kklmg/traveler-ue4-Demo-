@@ -31,9 +31,11 @@ public:
 
 	//IPoolableInterface
 	virtual bool VIsActive() override;
-	virtual void VSetIsActive(bool isActive) override;
+	virtual void VActivate() override;
+	virtual void VInActivate() override;
 	virtual int VGetPoolId() final;
 	virtual void VSetPoolId(int poolId) final;
+	virtual FOnObjectInactive& VGetObjectInactiveDelegate() override;
 
 	//IThrowableInterface
 	virtual void VSetScale(float scale) override;
@@ -60,7 +62,7 @@ protected:
 	UProjectileMovementComponent* _projectileMovementComp;
 
 	UPROPERTY(VisibleAnywhere)
-	bool _isActive;
+	bool _bIsActive;
 
 	UPROPERTY(VisibleAnywhere)
 	float _elapsedLifeTime;
@@ -82,4 +84,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	float _damage;
+
+	FOnObjectInactive _onOnjectInactive;
 };

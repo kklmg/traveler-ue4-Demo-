@@ -7,6 +7,7 @@
 #include "QuiverComponent.generated.h"
 
 class AArrowActorBase;
+class UObjectPoolBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UQuiverComponent : public UActorComponent
@@ -26,20 +27,14 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void SpawnArrows(int count, APawn* instigator,TArray<AArrowActorBase*>& outArray);
-private:
-	AArrowActorBase* CreateOrGetInactivatedFromPool(APawn* instigator);
 
-	UFUNCTION()
-	void OnSpawnedActorInactivated(int poolId);
 private:
 	UPROPERTY()
-	TArray<AArrowActorBase*> _arrowPool;
-	UPROPERTY()
-	TArray<int> _inactivatedIndicies;
+	UObjectPoolBase* _arrowPool;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 _poolSize;
 
 	UPROPERTY(EditDefaultsOnly, Category = ArrowClass)
-	TSubclassOf<class AArrowActorBase> _arrowClass;
-
-	UPROPERTY()
-	int _poolSize;
+	TSubclassOf<AArrowActorBase> _arrowClass;
 };

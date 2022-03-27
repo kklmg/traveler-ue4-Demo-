@@ -309,7 +309,7 @@ void ABowBase::ClearHoldingArrows()
 {
 	for (AArrowActorBase* arrow : _holdingArrows)
 	{
-		arrow->VSetIsActive(false);
+		arrow->VInActivate();
 	}
 	_holdingArrows.Empty();
 }

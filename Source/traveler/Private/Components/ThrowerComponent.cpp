@@ -8,6 +8,7 @@
 #include "Interface/ThrowerDataProviderInterface.h"
 #include "Actors/ProjectileActor.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "GameSystem/ObjectPoolBase.h"
 
 
 // Sets default values for this component's properties
@@ -18,8 +19,8 @@ UThrowerComponent::UThrowerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_poolSize = 10;
 	_elapsedTime = 0.0f;
+	_poolSize = 256;
 }
 
 
@@ -30,6 +31,9 @@ void UThrowerComponent::BeginPlay()
 
 	// ...
 	_throwerDataProvider = GetOwner<IThrowerDataProviderInterface>();
+	_pool = NewObject<UObjectPoolBase>(this);
+	_pool->Initialize(_spawningActorClass, _poolSize);
+
 
 	if (GetWorld() && _throwerDataProvider)
 	{
@@ -54,7 +58,7 @@ void UThrowerComponent::SpawnThrowingActor()
 	if (_throwerDataProvider == nullptr)return;
 	if (isSpawnable() == false) return;
 
-	AProjectileActor* actor = CreateOrGetInactivatedActor();
+	AProjectileActor* actor = _pool->SpawnObject<AProjectileActor>();
 	
 	if (actor)
 	{
@@ -69,7 +73,6 @@ void UThrowerComponent::SpawnThrowingActor()
 		actor->VSetScale(data.Scale);
 		actor->VSetDamage(data.Damage);
 		actor->VSetVelocity(forward * data.Speed);
-		actor->VSetIsActive(true);
 		actor->VSetScaleCurve(data.ScaleCurve);
 
 		GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "thrower Spawned actor");
@@ -79,57 +82,13 @@ void UThrowerComponent::SpawnThrowingActor()
 
 bool UThrowerComponent::isSpawnable()
 {
-	return _spawnedActors.Num() < _poolSize || _inactivatedActorIndicies.Num() != 0;
+	return _pool ? _pool->IsSpawnable() : false;
 }
 
 void UThrowerComponent::StopSpawning()
 {
 	GetWorld()->GetTimerManager().ClearTimer(_timerHandle);
 }
-
-void UThrowerComponent::OnSpawnedActorInactivated(int poolId)
-{
-	_inactivatedActorIndicies.Add(poolId);
-}
-
-AProjectileActor* UThrowerComponent::CreateOrGetInactivatedActor()
-{
-	//try get reusable actor 
-	if (_inactivatedActorIndicies.Num() != 0)
-	{
-		int lastIndex = _inactivatedActorIndicies.Pop();
-
-		if(lastIndex>_spawnedActors.Num()-1)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Something Went wrong at pooling logic"));
-			return nullptr;
-		}
-		
-		return _spawnedActors[lastIndex];
-	}
-
-	if (_spawningActorClass == nullptr) return nullptr;
-
-	UWorld* world = GetWorld();
-	if (world == nullptr) return nullptr;
-
-
-	FActorSpawnParameters spawnParameters;
-	
-	//make instance
-	AProjectileActor* actor = world->SpawnActor<AProjectileActor>(_spawningActorClass,spawnParameters);
-	
-	if (actor)
-	{
-		actor->VSetPoolId(_spawnedActors.Num());
-		actor->OnActorInactivated.BindUFunction(this,FName(TEXT("OnSpawnedActorInactivated")));
-		_spawnedActors.Add(actor);
-	}
-
-	return actor;
-}
-
-
 	
 void UThrowerComponent::SphereTracing()
 {

@@ -46,12 +46,6 @@ AProjectileActorBase::AProjectileActorBase()
 void AProjectileActorBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (_bIgnoreInstigator && GetInstigator())
-	{
-		_meshComp->IgnoreActorWhenMoving(GetInstigator(), true);
-		GetInstigator()->MoveIgnoreActorAdd(this);
-	}
 }
 
 // Called every frame
@@ -59,12 +53,12 @@ void AProjectileActorBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (_isActive == false) return;
+	if (_bIsActive == false) return;
 
 	_elapsedLifeTime += DeltaTime;
 	if (_bHasLife && _elapsedLifeTime > _lifeTime)
 	{
-		VSetIsActive(false);
+		VInActivate();
 	}
 }
 
@@ -75,28 +69,35 @@ void AProjectileActorBase::VSetLife(float life)
 
 bool AProjectileActorBase::VIsActive()
 {
-	return _isActive;
+	return _bIsActive;
 }
 
-void AProjectileActorBase::VSetIsActive(bool isActive)
+void AProjectileActorBase::VActivate()
 {
-	if (_isActive == isActive) return;
-
-	_isActive = isActive;
-
-	SetActorTickEnabled(_isActive);
-	SetActorHiddenInGame(!_isActive);
-	SetActorEnableCollision(_isActive);
-
-	if(_isActive)
+	if(!_bIsActive)
 	{
+		_bIsActive = true;
+		SetActorTickEnabled(true);
+		SetActorHiddenInGame(false);
+		SetActorEnableCollision(true);
+
 		VReset();
 		VOnActive();
 	}
-	else
+}
+
+void AProjectileActorBase::VInActivate()
+{
+	if (_bIsActive)
 	{
+		_bIsActive = false;
+
+		SetActorTickEnabled(false);
+		SetActorHiddenInGame(true);
+		SetActorEnableCollision(false);
+
+		_onOnjectInactive.ExecuteIfBound(_poolId);
 		VOnInActive();
-		
 	}
 }
 
@@ -115,6 +116,13 @@ void AProjectileActorBase::VReset()
 	_projectileMovementComp->Velocity = FVector::ZeroVector;
 	_projectileMovementComp->SetUpdatedComponent(GetRootComponent());
 	_projectileMovementComp->SetComponentTickEnabled(true);
+	_meshComp->MoveIgnoreActors.Empty();
+
+	if (GetInstigator() && _bIgnoreInstigator)
+	{
+		_meshComp->IgnoreActorWhenMoving(GetInstigator(), true);
+		GetInstigator()->MoveIgnoreActorAdd(this);
+	}
 }
 
 int AProjectileActorBase::VGetPoolId()
@@ -125,6 +133,11 @@ int AProjectileActorBase::VGetPoolId()
 void AProjectileActorBase::VSetPoolId(int poolId)
 {
 	_poolId = poolId;
+}
+
+FOnObjectInactive& AProjectileActorBase::VGetObjectInactiveDelegate()
+{
+	return _onOnjectInactive;
 }
 
 void AProjectileActorBase::VSetScale(float scale)

@@ -10,6 +10,7 @@
 class IThrowerDataProviderInterface;
 
 class AProjectileActor;
+class UObjectPoolBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UThrowerComponent : public UActorComponent 
@@ -37,12 +38,6 @@ public:
 	UFUNCTION()
 	void StopSpawning();
 
-	UFUNCTION()
-	void OnSpawnedActorInactivated(int poolId);
-
-	UFUNCTION()
-	AProjectileActor* CreateOrGetInactivatedActor();
-
 	void SphereTracing();
 
 private:
@@ -52,14 +47,11 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	FTimerHandle _timerHandle;
 
+	UPROPERTY()
+	UObjectPoolBase* _pool;
+
 	UPROPERTY(EditDefaultsOnly)
-	int _poolSize;
-
-	UPROPERTY()
-	TArray<AProjectileActor*> _spawnedActors;
-
-	UPROPERTY()
-	TArray<int> _inactivatedActorIndicies;
+	int32 _poolSize;
 
 	float _elapsedTime;
 	IThrowerDataProviderInterface* _throwerDataProvider;

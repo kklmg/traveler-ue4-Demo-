@@ -11,6 +11,7 @@ FDamageWidgetData::FDamageWidgetData()
 	ScrollSpeed = 20.0f;
 	ScrollDirection = FVector2D(0.0f, -1.0f);
 	Life = 5.0f;
+	ZOrder = 100;
 };
 
 FDamageWidgetData::FDamageWidgetData(FColor color)
@@ -21,11 +22,12 @@ FDamageWidgetData::FDamageWidgetData(FColor color)
 	ScrollSpeed = 20.0f;
 	ScrollDirection = FVector2D(0.0f, -1.0f);
 	Life = 5.0f;
+	ZOrder = 100;
 }
 
 void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime) 
 {
-	if (IsLifeOver()) return;
+	if (!_bIsActive) return;
 
 	ElapsedTime += InDeltaTime;
 
@@ -45,6 +47,12 @@ void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	ScrollOffset += DamageWidgetData.ScrollDirection * DamageWidgetData.ScrollSpeed * InDeltaTime;
 	
 	SetRenderTranslation(renderLocation + ScrollOffset);
+
+
+	if (ElapsedTime > DamageWidgetData.Life)
+	{
+		VInActivate();
+	}
 }
 
 
@@ -52,10 +60,49 @@ void UDamageWidget::SetData(FDamageWidgetData damageWidgetData)
 {
 	DamageWidgetData = damageWidgetData;
 	ScrollOffset = damageWidgetData.TextOffset;
+
+	OnDataUpdated.Broadcast();
 }
 
-bool UDamageWidget::IsLifeOver()
+
+bool UDamageWidget::VIsActive()
 {
-	return ElapsedTime > DamageWidgetData.Life;
+	return _bIsActive;
+}
+
+void UDamageWidget::VActivate()
+{
+	if(!_bIsActive)
+	{
+		_bIsActive = true;
+		AddToViewport(DamageWidgetData.ZOrder);
+	}
+}
+
+void UDamageWidget::VInActivate()
+{
+	if (_bIsActive)
+	{
+		_bIsActive = false;
+		RemoveFromViewport();
+		_onObjectInActive.ExecuteIfBound(_poolId);
+
+		ElapsedTime = 0.0f;
+	}
+}
+
+int UDamageWidget::VGetPoolId()
+{
+	return _poolId;
+}
+
+void UDamageWidget::VSetPoolId(int32 poolId)
+{
+	_poolId = poolId;
+}
+
+FOnObjectInactive& UDamageWidget::VGetObjectInactiveDelegate()
+{
+	return _onObjectInActive;
 }
 
