@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Data/EnumMeshSocketType.h"
+#include "Data/EnumTransformType.h"
 #include "Data/EnumAttributeType.h"
 #include "Data/EnumCharacterState.h"
 #include "Interface/AnimationModelProvider.h"

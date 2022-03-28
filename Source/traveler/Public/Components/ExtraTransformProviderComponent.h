@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Data/EnumMeshSocketType.h"
+#include "Data/EnumTransformType.h"
 #include "ExtraTransformProviderComponent.generated.h"
 
 

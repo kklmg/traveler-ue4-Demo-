@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/PrimitiveComponent.h"
-#include "UI/BillBoardWidget.h"
+#include "UI/ActorWidget.h"
 #include "Data/ActorUIData.h"
 #include "Data/CombatData.h"
 #include "ActorUIComponent.generated.h"
@@ -46,8 +46,8 @@ private:
 	TMap<EActorUI,FActorUIData> _mapWidgetClass;
 
 	UPROPERTY()
-	TMap<EActorUI, UBillBoardWidget*> _mapWidgetInstance;
+	TMap<EActorUI, UActorWidget*> _mapWidgetInstance;
 
 	UPROPERTY()
-	UBillBoardWidget* _widget;
+	UActorWidget* _widget;
 };

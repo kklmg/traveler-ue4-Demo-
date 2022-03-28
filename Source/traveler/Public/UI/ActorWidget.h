@@ -5,24 +5,20 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Data/ActorUIData.h"
-#include "BillBoardWidget.generated.h"
+#include "ActorWidget.generated.h"
 
-
-
+class IExtraTransformProvider;
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UBillBoardWidget : public UUserWidget
+class TRAVELER_API UActorWidget : public UUserWidget
 {
 	GENERATED_BODY()
-public:
-	static UBillBoardWidget* MakeInstance(UObject* outer, AActor* owner,FActorUIData widgetData);
-	static UBillBoardWidget* MakeInstance(UObject* outer,TSubclassOf<UBillBoardWidget> widgetClass,AActor* owner, FVector widgetOffset);
 
 public:
-	void SetData(AActor* widgetOwner,FVector widgetOffset);
+	void SetData(AActor* widgetOwner,ETransform transformType);
 
 	UFUNCTION(BlueprintCallable)
 	AActor* GetWidgetOwner();
@@ -35,5 +31,7 @@ private:
 	AActor* _widgetOwner;
 
 	UPROPERTY()
-	FVector _widgetOffset;
+	ETransform _transformType;
+
+	IExtraTransformProvider* _ExTransformProviderInterface;
 };

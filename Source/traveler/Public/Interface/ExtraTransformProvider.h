@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Data/EnumMeshSocketType.h"
+#include "Data/EnumTransformType.h"
 #include "ExtraTransformProvider.generated.h"
 
 // This class does not need to be modified.

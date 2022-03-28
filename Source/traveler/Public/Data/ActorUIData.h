@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/EnumTransformType.h"
 #include "ActorUIData.generated.h"
 
-class UBillBoardWidget;
+class UActorWidget;
 
 /**
  * 
@@ -25,11 +26,16 @@ struct FActorUIData
 {
 	GENERATED_USTRUCT_BODY()
 public:
+	FActorUIData();
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UBillBoardWidget> WidgetClass;
+	TSubclassOf<UActorWidget> WidgetClass;
+
 	UPROPERTY(EditDefaultsOnly)
-	FVector WidgetOffset;
+	ETransform TransformType;
+
+	UPROPERTY(EditDefaultsOnly)
+	float ZOrder;
 };
 
 

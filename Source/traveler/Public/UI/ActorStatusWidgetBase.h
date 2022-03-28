@@ -7,7 +7,7 @@
 #include "Process/CompositeProcessBase.h"
 #include "UI/FlickeringWidget.h"
 #include "Data/CombatData.h"
-#include "UI/BillBoardWidget.h"
+#include "UI/ActorWidget.h"
 #include "ActorStatusWidgetBase.generated.h"
 
 
@@ -17,7 +17,7 @@ class UPanelWidget;
  * 
  */
 UCLASS()
-class TRAVELER_API UActorStatusWidgetBase : public UBillBoardWidget
+class TRAVELER_API UActorStatusWidgetBase : public UActorWidget
 {
 	GENERATED_BODY()
 	

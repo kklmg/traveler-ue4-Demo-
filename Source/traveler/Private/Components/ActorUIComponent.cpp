@@ -38,8 +38,10 @@ void UActorUIComponent::ShowActorUI(EActorUI widgeType)
 	{
 		if (_mapWidgetClass.Contains(widgeType))
 		{
-			UBillBoardWidget* newWidget = UBillBoardWidget::MakeInstance(this, GetOwner(), _mapWidgetClass[widgeType]);
-			newWidget->AddToViewport(100);
+			UActorWidget* newWidget = NewObject<UActorWidget>(this, _mapWidgetClass[widgeType].WidgetClass);
+			newWidget->SetData(GetOwner(), _mapWidgetClass[widgeType].TransformType);
+			newWidget->AddToViewport(_mapWidgetClass[widgeType].ZOrder);
+
 			_mapWidgetInstance.Add(widgeType, newWidget);
 		}
 	}

@@ -2,4 +2,8 @@
 
 
 #include "Data/ActorUIData.h"
-#include "UI/BillBoardWidget.h"
+
+FActorUIData::FActorUIData()
+{
+	ZOrder = 100;
+}
