@@ -47,7 +47,7 @@ class TRAVELER_API ACreatureCharacter : public ACharacter,
 										public IActionInterface, public IAttributeInterface,public IStateInterface, 
 										public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider,
 										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface,
-										public IActorEffectInterface,
+										public IActorEffectInterface
 {
 	GENERATED_BODY()
 

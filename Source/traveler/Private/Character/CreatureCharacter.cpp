@@ -415,10 +415,10 @@ bool ACreatureCharacter::VTryGetSocketName(ETransform transformType, FName& outS
 
 void ACreatureCharacter::VPlayEffect(EStatusEffect effectType)
 {
-	_effectControllerComponent->VPlayEffect(effectType);
+	_effectControllerComponent->PlayEffect(effectType);
 }
 
 void ACreatureCharacter::VStopEffect(EStatusEffect effectType)
 {
-	_effectControllerComponent->VStopEffect(effectType);
+	_effectControllerComponent->StopEffect(effectType);
 }

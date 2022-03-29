@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#incldue "Data/CombatData.h"
+#include "Data/CombatData.h"
 #include "EffectControllerComponent.generated.h"
 
 
@@ -17,8 +17,8 @@ public:
 	// Sets default values for this component's properties
 	UEffectControllerComponent();
 
-	virtual void VPlayEffect(EStatusEffect effectType) override;
-	virtual void VStopEffect(EStatusEffect effectType) override;
+	void PlayEffect(EStatusEffect effectType);
+	void StopEffect(EStatusEffect effectType);
 
 protected:
 	// Called when the game starts
