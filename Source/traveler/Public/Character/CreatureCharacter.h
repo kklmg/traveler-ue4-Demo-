@@ -14,8 +14,9 @@
 #include "Interface/CharacterCameraInterface.h"
 #include "Interface/WeaponInterface.h"
 #include "Interface/ExtraTransformProvider.h"
-#include "Damage/DamageHandlerInterface.h"
+#include "Interface/ActorEffectInterface.h"
 #include "Interface/ActorUIInterface.h"
+#include "Damage/DamageHandlerInterface.h"
 #include "CreatureCharacter.generated.h"
 
 
@@ -33,7 +34,7 @@ class UWeaponComponent;
 class UExtraTransformProviderComponent;
 class UDamageHandlerComponent;
 class UIKComponent;
-
+class UEffectControllerComponent;
 
 class AWeaponBase;
 class UActionBase;
@@ -42,14 +43,17 @@ class UActionBlackBoard;
 
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IAttributeInterface,public IStateInterface, 
+class TRAVELER_API ACreatureCharacter : public ACharacter, 
+										public IActionInterface, public IAttributeInterface,public IStateInterface, 
 										public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider,
-										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface
+										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface,
+										public IActorEffectInterface,
 {
 	GENERATED_BODY()
 
 public:
 	ACreatureCharacter(const FObjectInitializer& ObjectInitializer);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -158,6 +162,10 @@ public:
 	virtual bool VTryGetSocketName(ETransform transformType, FName& outSocketName);
 
 
+	//ActorEffect Interface Interface implementation --------------------------------------------------
+	virtual void VPlayEffect(EStatusEffect effectType) override;
+	virtual void VStopEffect(EStatusEffect effectType) override;
+
 	UFUNCTION(BlueprintCallable)
 	UActionComponent* GetActionComponent();
 
@@ -203,6 +211,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UIKComponent* _IKComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UEffectControllerComponent* _effectControllerComponent;
 
 	UPROPERTY()
 	UAnimationModelBase* _animationModelIns;

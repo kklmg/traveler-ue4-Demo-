@@ -30,5 +30,8 @@ enum class EStatusEffect : uint8
 	EStatusEffect_Electricity UMETA(DisplayName = "Electricity"),
 	EStatusEffect_Poison UMETA(DisplayName = "Poison"),
 	EStatusEffect_Stun UMETA(DisplayName = "Stun"),
+
+
+	EStatusEffect_Size UMETA(Hidden),
 };
 

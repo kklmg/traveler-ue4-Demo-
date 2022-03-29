@@ -19,6 +19,7 @@
 #include "Components/MyCharacterMovementComponent.h"
 #include "Components/IKComponent.h"
 #include "Components/DamageHandlerComponent.h"
+#include "Components/EffectControllerComponent.h"
 #include "Input/InputHandlerComponent.h"
 #include "Components/DamageHandlerComponent.h"
 
@@ -111,6 +112,14 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 		_IKComponent = CreateDefaultSubobject<UIKComponent>(TEXT("IKComponent"));
 		check(_IKComponent != nullptr);
 	}
+
+	//effect controller
+	if (_effectControllerComponent == nullptr)
+	{
+		_effectControllerComponent = CreateDefaultSubobject<UEffectControllerComponent>(TEXT("EffectControllerComponent"));
+		check(_effectControllerComponent);
+	}
+
 }
 
 // Called when the game starts or when spawned
@@ -402,4 +411,14 @@ bool ACreatureCharacter::VTryGetTransform(ETransform transformType, ERelativeTra
 bool ACreatureCharacter::VTryGetSocketName(ETransform transformType, FName& outSocketName)
 {
 	return _ExTransformProviderComponent->VTryGetSocketName(transformType, outSocketName);
+}
+
+void ACreatureCharacter::VPlayEffect(EStatusEffect effectType)
+{
+	_effectControllerComponent->VPlayEffect(effectType);
+}
+
+void ACreatureCharacter::VStopEffect(EStatusEffect effectType)
+{
+	_effectControllerComponent->VStopEffect(effectType);
 }
