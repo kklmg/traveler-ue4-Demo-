@@ -10,6 +10,7 @@
 
 class IAttributeInterface;
 class IActorUIInterface;
+class IActorEffectInterface;
 
 class IDamageHandlerInterface;
 
@@ -51,12 +52,6 @@ private:
 	EStatusEffect _statusEffectType;
 
 	UPROPERTY()
-	TSubclassOf<AActor> _effectActorClass;
-
-	UPROPERTY()
-	AActor* _effectActorIns;
-
-	UPROPERTY()
 	AActor* _effectReceiver;
 
 	UPROPERTY()
@@ -66,5 +61,6 @@ private:
 	AMyHUD* _hud;
 
 	IDamageHandlerInterface* _damageHandlerInterface;
+	IActorEffectInterface* _actorEffectInterface;
 	IActorUIInterface* _actorUIInterface;
 };

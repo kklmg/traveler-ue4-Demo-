@@ -3,6 +3,7 @@
 
 #include "Components/EffectControllerComponent.h"
 #include "GameFramework/Character.h"
+#include "Effet/EffectPlayerBase.h"
 
 // Sets default values for this component's properties
 UEffectControllerComponent::UEffectControllerComponent()
@@ -22,23 +23,35 @@ void UEffectControllerComponent::BeginPlay()
 
 	// ...
 	SetUpMaterialInsDynamic(0);
+
+	if(_effectPlayerClass)
+	{
+		_effectPlayerIns = NewObject<UEffectPlayerBase>(this, _effectPlayerClass);
+	}
+	else
+	{
+		_effectPlayerIns = NewObject<UEffectPlayerBase>(this);
+	}
+
+	_effectPlayerIns->Initialize(_MID);
+
+	//test
+	PlayEffect(EStatusEffect::EStatusEffect_Fire);
 }
 
 void UEffectControllerComponent::PlayEffect(EStatusEffect effectType)
 {
-	if(_MID)
+	if (_effectPlayerIns)
 	{
-		//test code
-		_MID->SetVectorParameterValue(FName("da"), FLinearColor(1, 1, 1, 1));
+		_effectPlayerIns->PlayEffect(effectType);
 	}
 }
 
 void UEffectControllerComponent::StopEffect(EStatusEffect effectType)
 {
-	if (_MID)
+	if (_effectPlayerIns)
 	{
-		//test code
-		_MID->SetVectorParameterValue(FName("da"), FLinearColor(1, 1, 1, 1));
+		_effectPlayerIns->StopEffect(effectType);
 	}
 }
 

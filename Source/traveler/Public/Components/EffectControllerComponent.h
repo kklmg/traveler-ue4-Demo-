@@ -7,8 +7,11 @@
 #include "Data/CombatData.h"
 #include "EffectControllerComponent.generated.h"
 
+class UEffectPlayerBase;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TRAVELER_API UEffectControllerComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -20,7 +23,6 @@ public:
 	void PlayEffect(EStatusEffect effectType);
 	void StopEffect(EStatusEffect effectType);
 
-protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
@@ -31,6 +33,12 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
+	UPROPERTY()
+	UEffectPlayerBase* _effectPlayerIns;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UEffectPlayerBase> _effectPlayerClass;
+
 	UPROPERTY()
 	UMaterialInstanceDynamic* _MID;
 };

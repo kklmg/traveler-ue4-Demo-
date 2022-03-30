@@ -4,6 +4,7 @@
 #include "Damage/StatusEffectProcessBase.h"
 #include "Components/DamageHandlerComponent.h"
 #include "Interface/ActorUIInterface.h"
+#include "Interface/ActorEffectInterface.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "GameSystem/MyGameplayStatics.h"
 
@@ -13,7 +14,9 @@ void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCau
 {
 	_effectReceiver = effectReceiver;
 	_effectCauser = effectCauser;
+
 	_actorUIInterface = Cast<IActorUIInterface>(effectReceiver);
+	_actorEffectInterface = Cast<IActorEffectInterface>(effectReceiver);
 	_damageHandlerInterface = Cast<IDamageHandlerInterface>(effectReceiver);
 
 	if(effectData)
@@ -23,7 +26,6 @@ void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCau
 		_effectDuration = effectData->EffectDuration;
 		_damageType = UMyGameplayStatics::StatusEffectTypeToDamageType(effectData->StatusEffectType);
 		_statusEffectType = effectData->StatusEffectType;
-		_effectActorClass = effectData->EffectActorClass;
 	}
 }
 
@@ -43,9 +45,6 @@ void UStatusEffectProcessBase::CombineEffectData(UStatusEffectData* statusEffect
 		_damage = FMath::Max(_damage, statusEffectData->Damage);
 		_damageInterval = FMath::Min(_damageInterval, statusEffectData->DamageInterval);
 		_effectDuration = FMath::Max(_effectDuration, statusEffectData->EffectDuration);
-
-		_statusEffectType = statusEffectData->StatusEffectType;
-		_effectActorClass = statusEffectData->EffectActorClass;
 
 		_totalElapsedTime = 0;
 		_ElapsedTimeFromLastDamage = 0;
@@ -73,15 +72,9 @@ void UStatusEffectProcessBase::VTMExecute()
 		_actorUIInterface->VShowActorStatusUI(_statusEffectType, _effectDuration);
 	}
 
-	if(_effectActorClass)
+	if(_actorEffectInterface)
 	{
-		if(_effectActorIns)
-		{
-			_effectActorIns->Destroy();
-			_effectActorIns = nullptr;
-		}
-
-		_effectActorIns = NewObject<AActor>(this, _effectActorClass);
+		_actorEffectInterface->VPlayEffect(_statusEffectType);
 	}
 }
 
@@ -120,10 +113,9 @@ void UStatusEffectProcessBase::VTMOnDead()
 	{
 		_actorUIInterface->VHideActorStatusUI(_statusEffectType);
 	}
-	if(_effectActorIns)
+	if (_actorEffectInterface)
 	{
-		_effectActorIns->Destroy();
-		_effectActorIns = nullptr;
+		_actorEffectInterface->VStopEffect(_statusEffectType);
 	}
 }
 
