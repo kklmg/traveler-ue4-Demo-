@@ -2,6 +2,7 @@
 
 
 #include "Effet/EffectPlayerBase.h"
+#include "Containers/Set.h"
 
 FActorEffectData::FActorEffectData()
 {
@@ -10,12 +11,12 @@ FActorEffectData::FActorEffectData()
 
 FActorEffectData::FActorEffectData(FLinearColor color)
 {
-	BlendColor = FLinearColor(0, 0, 0, 0);
+	BlendColor = color;
 }
 
 UEffectPlayerBase::UEffectPlayerBase()
 {
-	_blendColor = FLinearColor::White;
+	_alpha = 0.2f;
 
 	_matColorParams.Association = EMaterialParameterAssociation::LayerParameter;
 	_matColorParams.Name = FName("Color");
@@ -28,8 +29,9 @@ UEffectPlayerBase::UEffectPlayerBase()
 	_effectData.Add(EStatusEffect::EStatusEffect_Water, FLinearColor::Blue);
 }
 
-void UEffectPlayerBase::Initialize(UMaterialInstanceDynamic* mid)
+void UEffectPlayerBase::Initialize(AActor* owner, UMaterialInstanceDynamic* mid)
 {
+	_owner = owner;
 	_mid = mid;
 }
 
@@ -40,20 +42,25 @@ void UEffectPlayerBase::PlayEffect(EStatusEffect effectType)
 
 	_runningEffect.Add(effectType);
 
-	//Color setting
-	_blendColor = _blendColor * _effectData[effectType].BlendColor;
-	if (_mid)
+	//color setting
+	ApplyBlendedColor();
+
+	//Destroy Effect Actor
+	if(_effectData[effectType].EffectActorIns)
 	{
-		//_mid->SetVectorParameterValueByInfo(_matColorParams, _blendColor);
-
-		FMaterialParameterInfo matTest;
-		matTest.Association = EMaterialParameterAssociation::BlendParameter;
-		matTest.Name = FName("Alpha");
-		matTest.Index = 1;
-
-		_mid->SetScalarParameterValueByInfo(matTest, 0.5);
+		_effectData[effectType].EffectActorIns->Destroy();
+		_effectData[effectType].EffectActorIns = nullptr;
 	}
 
+	//Spawn Effect Actor
+	if (_effectData[effectType].EffectActorClass)
+	{
+		FActorSpawnParameters spawnParams;
+		spawnParams.Owner = _owner;
+
+		_effectData[effectType].EffectActorIns = GetWorld()->SpawnActor<AActor>(_effectData[effectType].EffectActorClass, spawnParams);
+		_effectData[effectType].EffectActorIns->AttachToActor(_owner, FAttachmentTransformRules::KeepWorldTransform);
+	}
 }
 
 void UEffectPlayerBase::StopEffect(EStatusEffect effectType)
@@ -64,14 +71,49 @@ void UEffectPlayerBase::StopEffect(EStatusEffect effectType)
 	_runningEffect.Remove(effectType);
 
 	//Color setting
-	_blendColor = _blendColor / _effectData[effectType].BlendColor;
-	if (_mid)
+	ApplyBlendedColor();
+
+	//Destroy Effect Actor
+	if (_effectData[effectType].EffectActorIns)
 	{
-		_mid->SetVectorParameterValueByInfo(_matColorParams, _blendColor);
+		_effectData[effectType].EffectActorIns->Destroy();
+		_effectData[effectType].EffectActorIns = nullptr;
 	}
 }
 
 UMaterialInstanceDynamic* UEffectPlayerBase::GetMaterial()
 {
 	return _mid;
+}
+
+void UEffectPlayerBase::ApplyBlendedColor()
+{
+	if (_runningEffect.Num() == 0)
+	{
+		_blendedColor.A = 0;
+	}
+	else
+	{
+		auto iter = _runningEffect.begin();
+
+		if (iter && _effectData.Contains(*iter))
+		{
+			_blendedColor = _effectData[*iter].BlendColor;
+			++iter;
+		}
+
+		for (; iter; ++iter)
+		{
+			if (_effectData.Contains(*iter))
+			{
+				_blendedColor = FMath::LerpStable(_blendedColor, _effectData[*iter].BlendColor, 0.5f);
+			}
+		}
+		_blendedColor.A = _alpha;
+	}
+
+	if (_mid)
+	{
+		_mid->SetVectorParameterValueByInfo(_matColorParams, _blendedColor);
+	}
 }

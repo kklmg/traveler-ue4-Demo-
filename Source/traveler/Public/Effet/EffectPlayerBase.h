@@ -16,8 +16,14 @@ public:
 	FActorEffectData();
 	FActorEffectData(FLinearColor color);
 
-	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly)
 	FLinearColor BlendColor;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AActor> EffectActorClass;
+
+	UPROPERTY()
+	AActor* EffectActorIns;
 };
 
 /**
@@ -31,7 +37,7 @@ class TRAVELER_API UEffectPlayerBase : public UObject
 public:
 	UEffectPlayerBase();
 
-	void Initialize(UMaterialInstanceDynamic* mid);
+	void Initialize(AActor* owner,UMaterialInstanceDynamic* mid);
 
 	void PlayEffect(EStatusEffect effectType);
 	void StopEffect(EStatusEffect effectType);
@@ -40,10 +46,14 @@ public:
 	UMaterialInstanceDynamic* GetMaterial();
 
 protected:
+	void ApplyBlendedColor();
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	FLinearColor _blendColor;
+	FLinearColor _blendedColor;
+
+	UPROPERTY(EditDefaultsOnly)
+	float _alpha;
 
 	UPROPERTY(EditDefaultsOnly)
 	FMaterialParameterInfo _matColorParams;
@@ -56,4 +66,7 @@ private:
 
 	UPROPERTY()
 	UMaterialInstanceDynamic* _mid;
+
+	UPROPERTY()
+	AActor* _owner;
 };

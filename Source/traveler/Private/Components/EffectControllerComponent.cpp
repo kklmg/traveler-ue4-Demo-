@@ -33,10 +33,7 @@ void UEffectControllerComponent::BeginPlay()
 		_effectPlayerIns = NewObject<UEffectPlayerBase>(this);
 	}
 
-	_effectPlayerIns->Initialize(_MID);
-
-	//test
-	PlayEffect(EStatusEffect::EStatusEffect_Fire);
+	_effectPlayerIns->Initialize(GetOwner(),_MID);
 }
 
 void UEffectControllerComponent::PlayEffect(EStatusEffect effectType)
