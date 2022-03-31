@@ -14,7 +14,7 @@ FActorEffectData::FActorEffectData(FLinearColor color)
 	BlendColor = color;
 }
 
-UEffectPlayerBase::UEffectPlayerBase()
+UEffectPlayerBase::UEffectPlayerBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	_alpha = 0.2f;
 
@@ -22,6 +22,7 @@ UEffectPlayerBase::UEffectPlayerBase()
 	_matColorParams.Name = FName("Color");
 	_matColorParams.Index = 1;
 
+	_effectData.Empty();
 	_effectData.Add(EStatusEffect::EStatusEffect_Fire, FLinearColor::Red);
 	_effectData.Add(EStatusEffect::EStatusEffect_Ice, FLinearColor(0, 1, 1, 1));
 	_effectData.Add(EStatusEffect::EStatusEffect_Electricity, FLinearColor::Yellow);

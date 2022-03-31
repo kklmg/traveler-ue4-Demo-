@@ -2,12 +2,12 @@
 
 
 #include "Character/CreatureCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Data/CharacterAttribute.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/ActionComponent.h"
-#include "Data/CharacterAttribute.h"
 #include "Components/AttributeComponent.h"
-#include "Actions/ActionData/ActionBlackBoard.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/ActorUIComponent.h"
 #include "Components/AnimationEventComponent.h"
@@ -20,8 +20,9 @@
 #include "Components/IKComponent.h"
 #include "Components/DamageHandlerComponent.h"
 #include "Components/EffectControllerComponent.h"
-#include "Input/InputHandlerComponent.h"
 #include "Components/DamageHandlerComponent.h"
+#include "Components/AnimationCommunicatorComponent.h"
+#include "Input/InputHandlerComponent.h"
 
 
 ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializer) 
@@ -120,6 +121,12 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 		check(_effectControllerComponent);
 	}
 
+	//animation communicator
+	if (_AnimationCommunicatorComponent == nullptr)
+	{
+		_AnimationCommunicatorComponent = CreateDefaultSubobject<UAnimationCommunicatorComponent>(TEXT("AnimationCommunicator"));
+		check(_AnimationCommunicatorComponent);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -421,4 +428,14 @@ void ACreatureCharacter::VPlayEffect(EStatusEffect effectType)
 void ACreatureCharacter::VStopEffect(EStatusEffect effectType)
 {
 	_effectControllerComponent->StopEffect(effectType);
+}
+
+void ACreatureCharacter::VPublishEvent(FName eventName, UEventDataBase* eventData)
+{
+	_AnimationCommunicatorComponent->PublishEvent(eventName, eventData);
+}
+
+bool ACreatureCharacter::VTryGetEventDelegate(FName eventName, FOnEventPublished& outDelegate)
+{
+	return _AnimationCommunicatorComponent->TryGetEventDelegate(eventName, outDelegate);
 }

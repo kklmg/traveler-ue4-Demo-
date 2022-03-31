@@ -16,6 +16,7 @@
 #include "Interface/ExtraTransformProvider.h"
 #include "Interface/ActorEffectInterface.h"
 #include "Interface/ActorUIInterface.h"
+#include "Interface/AnimationCommunicatorInterface.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "CreatureCharacter.generated.h"
 
@@ -35,6 +36,7 @@ class UExtraTransformProviderComponent;
 class UDamageHandlerComponent;
 class UIKComponent;
 class UEffectControllerComponent;
+class UAnimationCommunicatorComponent;
 
 class AWeaponBase;
 class UActionBase;
@@ -47,7 +49,7 @@ class TRAVELER_API ACreatureCharacter : public ACharacter,
 										public IActionInterface, public IAttributeInterface,public IStateInterface, 
 										public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider,
 										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface,
-										public IActorEffectInterface
+										public IActorEffectInterface, public IAnimationCommunicatorInterface
 {
 	GENERATED_BODY()
 
@@ -166,6 +168,10 @@ public:
 	virtual void VPlayEffect(EStatusEffect effectType) override;
 	virtual void VStopEffect(EStatusEffect effectType) override;
 
+	//Animation Communicator Interface implementation --------------------------------------------------
+	virtual void VPublishEvent(FName eventName,UEventDataBase* eventData) override;
+	virtual bool VTryGetEventDelegate(FName eventName, FOnEventPublished& outDelegate) override;
+
 	UFUNCTION(BlueprintCallable)
 	UActionComponent* GetActionComponent();
 
@@ -214,6 +220,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UEffectControllerComponent* _effectControllerComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UAnimationCommunicatorComponent* _AnimationCommunicatorComponent;
 
 	UPROPERTY()
 	UAnimationModelBase* _animationModelIns;

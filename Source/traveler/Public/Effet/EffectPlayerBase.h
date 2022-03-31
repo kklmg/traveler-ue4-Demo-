@@ -35,7 +35,7 @@ class TRAVELER_API UEffectPlayerBase : public UObject
 	GENERATED_BODY()
 	
 public:
-	UEffectPlayerBase();
+	UEffectPlayerBase(const FObjectInitializer& ObjectInitializer);
 
 	void Initialize(AActor* owner,UMaterialInstanceDynamic* mid);
 
