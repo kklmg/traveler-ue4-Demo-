@@ -6,6 +6,7 @@
 #include "Components/ActionComponent.h"
 #include "Interface/StateInterface.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Data/CostData.h"
 #include "Interface/AttributeInterface.h"
@@ -22,7 +23,7 @@ UActionMove::UActionMove()
 
 bool UActionMove::VTMCanExecute()
 {
-	EMovementMode movementMode = _stateInterface->VGetStateData().MovementMode;
+	EMovementMode movementMode = GetActionOwner()->GetCharacterMovement()->MovementMode;
 	//bool bIsWalking = movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking;
 	bool bIsDodging = GetActionComponent()->CheckActionIsInProgress(EActionType::EACT_Dodge);
 

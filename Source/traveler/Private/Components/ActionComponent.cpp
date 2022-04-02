@@ -42,10 +42,10 @@ void UActionComponent::BeginPlay()
 	IStateInterface* stateIntercate = GetOwner<IStateInterface>();
 	if (stateIntercate == nullptr) return;
 	
-	OnCharacterStateChanged(stateIntercate->VGetStateData());
+	//OnCharacterStateChanged(stateIntercate->VGetStateData());
 
 	//bind state changed event
-	stateIntercate->VGetAnyStateChangedDelegate()->AddDynamic(this, &UActionComponent::OnCharacterStateChanged);
+	//stateIntercate->VGetAnyStateChangedDelegate()->AddDynamic(this, &UActionComponent::OnCharacterStateChanged);
 }
 
 

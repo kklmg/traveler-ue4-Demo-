@@ -9,11 +9,12 @@
 #include "Process/ProcessManagerBase.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/CharacterCameraInterface.h"
+#include "Interface/AnimationCommunicatorInterface.h"
 #include "Process/ProcessInterface.h"
 
 
 // Sets default values
-AWeaponBase::AWeaponBase()
+AWeaponBase::AWeaponBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -49,6 +50,7 @@ void AWeaponBase::VInitialize(ACreatureCharacter* weaponOwner)
 	_weaponOwner = weaponOwner;
 	_ownerActionInterface = Cast<IActionInterface>(_weaponOwner);
 	_ownerCameraInterface = Cast<ICharacterCameraInterface>(_weaponOwner);
+	_animationCommunicatorInterface = Cast<IAnimationCommunicatorInterface>(_weaponOwner);
 }
 
 // Called every frame
@@ -57,6 +59,15 @@ void AWeaponBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	_processManager->Tick(DeltaTime);
+}
+
+void AWeaponBase::VOnEquipped()
+{
+}
+
+void AWeaponBase::VOnUnEquipped()
+{
+	StopAllProcesses();
 }
 
 void AWeaponBase::ExecuteProcess(FName processName)
@@ -117,6 +128,11 @@ IActionInterface* AWeaponBase::GetOwnerActionInterface()
 ICharacterCameraInterface* AWeaponBase::GetOwnerCameraInterface()
 {
 	return _ownerCameraInterface;
+}
+
+IAnimationCommunicatorInterface* AWeaponBase::GetAnimationCommunicator()
+{
+	return _animationCommunicatorInterface;
 }
 
 void AWeaponBase::VWeaponControlButtonA()

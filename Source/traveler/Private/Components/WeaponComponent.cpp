@@ -4,9 +4,8 @@
 #include "Weapon/WeaponBase.h"
 #include "Weapon/BowBase.h"
 #include "Character/CreatureCharacter.h"
-#include "Interface/AnimationModelProvider.h"
-#include "Interface/StateInterface.h"
 #include "Interface/ExtraTransformProvider.h"
+#include "Interface/AnimationCommunicatorInterface.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -39,10 +38,10 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	IAnimationModelProvider* animationModelProvider = GetOwner<IAnimationModelProvider>();
-	if(animationModelProvider)
+	IAnimationCommunicatorInterface* animationCommunicator = GetOwner<IAnimationCommunicatorInterface>();
+	if(animationCommunicator)
 	{
-		_animationViewModel = animationModelProvider->VGetAnimationModel();
+		_animationViewModel = animationCommunicator->VGetAnimationModel();
 	}
 
 	if (DefaultWeaponClass)
@@ -53,11 +52,11 @@ void UWeaponComponent::BeginPlay()
 		EquipWeapon(bow);
 	}
 
-	_stateInterface = GetOwner<IStateInterface>();
-	if (_stateInterface)
+	_animationCommunicator = GetOwner<IAnimationCommunicatorInterface>();
+	if (_animationCommunicator)
 	{
-		OnAnimationStateChanged(_stateInterface->VGetAnimationState(), _stateInterface->VGetAnimationState());
-		_stateInterface->VGetAnimationStateChangedDelegate()->AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
+		OnAnimationStateChanged(_animationCommunicator->VGetAnimationState(), _animationCommunicator->VGetAnimationState());
+		_animationCommunicator->VGetAnimationStateChangedDelegate().AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
 	}
 	// ...
 }
@@ -99,10 +98,11 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 	{
 		if (_weaponIns)
 		{
-			_weaponIns->StopAllProcesses();
+			_weaponIns->VOnUnEquipped();
 		}
 
 		_weaponIns = newWeapon;
+		_weaponIns->VOnEquipped();
 
 		OnWeaponChanged.Broadcast(_weaponIns);
 
@@ -110,6 +110,8 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 		{
 			_animationViewModel->SetUObject(AnimationDataKey::objWeapon,_weaponIns);
 		}
+
+		//try attach weapon to hands ------------------------------------------------------------
 
 		//Get Character
 		ACreatureCharacter* character = GetOwner<ACreatureCharacter>();

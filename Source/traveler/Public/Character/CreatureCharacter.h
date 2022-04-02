@@ -7,7 +7,6 @@
 #include "Data/EnumTransformType.h"
 #include "Data/EnumAttributeType.h"
 #include "Data/EnumCharacterState.h"
-#include "Interface/AnimationModelProvider.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/AttributeInterface.h"
 #include "Interface/StateInterface.h"
@@ -47,7 +46,7 @@ class UActionBlackBoard;
 UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter, 
 										public IActionInterface, public IAttributeInterface,public IStateInterface, 
-										public ICharacterCameraInterface,public IWeaponInterface,public IAnimationModelProvider,
+										public ICharacterCameraInterface,public IWeaponInterface,
 										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface,
 										public IActorEffectInterface, public IAnimationCommunicatorInterface
 {
@@ -100,22 +99,16 @@ public:
 	bool VCheckActionIsInProgress(EActionType actionType) override;
 
 	//State Interface implementation---------------------------------------------------
-	FStateData VGetStateData() override;
+	/*FStateData VGetStateData() override;
 
 	virtual void VSetSituationState(ESituationState newState) override;
 	virtual void VSetHealthState(EHealthState newState) override;
 	virtual void VSetPostureState(EPostureState newState) override;
 
-	UFUNCTION(BlueprintCallable)
-	virtual void VSetAnimationState(EAnimationState newState);
-	UFUNCTION(BlueprintCallable)
-	virtual EAnimationState VGetAnimationState();
-
 	virtual FOnSituationStateChanged* VGetSituationStateChangedDelegate() override;
 	virtual FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
 	virtual FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
-	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;
-	virtual FOnAnimationStateChanged* VGetAnimationStateChangedDelegate() override;
+	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;*/
 
 	//Character Camera Interface implementation---------------------------------------------------
 	virtual void VCameraArmPitch(float angle)  override;
@@ -170,7 +163,12 @@ public:
 
 	//Animation Communicator Interface implementation --------------------------------------------------
 	virtual void VPublishEvent(FName eventName,UEventDataBase* eventData) override;
-	virtual bool VTryGetEventDelegate(FName eventName, FOnEventPublished& outDelegate) override;
+	virtual FOnEventPublished& VGetEventDelegate(FName eventName) override;
+
+	virtual void VSetAnimationState(EAnimationState newState) override;
+	virtual EAnimationState VGetAnimationState() override;
+	virtual FOnAnimationStateChanged& VGetAnimationStateChangedDelegate() override;
+
 
 	UFUNCTION(BlueprintCallable)
 	UActionComponent* GetActionComponent();
@@ -223,10 +221,4 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UAnimationCommunicatorComponent* _AnimationCommunicatorComponent;
-
-	UPROPERTY()
-	UAnimationModelBase* _animationModelIns;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UAnimationModelBase> _animationModelClass;
 };

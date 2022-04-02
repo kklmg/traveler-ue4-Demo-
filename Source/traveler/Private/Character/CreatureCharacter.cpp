@@ -137,14 +137,6 @@ void ACreatureCharacter::BeginPlay()
 
 void ACreatureCharacter::PreInitializeComponents()
 {
-	if (_animationModelClass)
-	{
-		_animationModelIns = NewObject<UAnimationModelBase>(this, _animationModelClass);
-	}
-	else
-	{
-		_animationModelIns = NewObject<UAnimationModelBase>(this);
-	}
 }
 
 // Called every frame
@@ -234,61 +226,45 @@ bool ACreatureCharacter::VCheckActionIsInProgress(EActionType actionType)
 	return _actionComponent->CheckActionIsInProgress(actionType);
 }
 
-FStateData ACreatureCharacter::VGetStateData()
-{
-	return _stateComponent->VGetStateData();
-}
-
-void ACreatureCharacter::VSetSituationState(ESituationState newState)
-{
-	_stateComponent->VSetSituationState(newState);
-}
-
-
-void ACreatureCharacter::VSetHealthState(EHealthState newState)
-{
-	_stateComponent->VSetHealthState(newState);
-}
-
-void ACreatureCharacter::VSetPostureState(EPostureState newState)
-{
-	_stateComponent->VSetPostureState(newState);
-}
-
-void ACreatureCharacter::VSetAnimationState(EAnimationState newState)
-{
-	_stateComponent->VSetAnimationState(newState);
-}
-
-EAnimationState ACreatureCharacter::VGetAnimationState()
-{
-	return _stateComponent->VGetAnimationState();
-}
-
-FOnSituationStateChanged* ACreatureCharacter::VGetSituationStateChangedDelegate()
-{
-	return _stateComponent->VGetSituationStateChangedDelegate();
-}
-
-FOnHealthStateChanged* ACreatureCharacter::VGetHealthStateChangedDelegate()
-{
-	return _stateComponent->VGetHealthStateChangedDelegate();
-}
-
-FOnPostureStateChanged* ACreatureCharacter::VGetPostureStateChangedDelegate()
-{
-	return _stateComponent->VGetPostureStateChangedDelegate();
-}
-
-FOnAnyStateChanged* ACreatureCharacter::VGetAnyStateChangedDelegate()
-{
-	return _stateComponent->VGetAnyStateChangedDelegate();
-}
-
-FOnAnimationStateChanged* ACreatureCharacter::VGetAnimationStateChangedDelegate()
-{
-	return _stateComponent->VGetAnimationStateChangedDelegate();
-}
+//FStateData ACreatureCharacter::VGetStateData()
+//{
+//	return _stateComponent->VGetStateData();
+//}
+//
+//void ACreatureCharacter::VSetSituationState(ESituationState newState)
+//{
+//	_stateComponent->VSetSituationState(newState);
+//}
+//
+//void ACreatureCharacter::VSetHealthState(EHealthState newState)
+//{
+//	_stateComponent->VSetHealthState(newState);
+//}
+//
+//void ACreatureCharacter::VSetPostureState(EPostureState newState)
+//{
+//	_stateComponent->VSetPostureState(newState);
+//}
+//
+//FOnSituationStateChanged* ACreatureCharacter::VGetSituationStateChangedDelegate()
+//{
+//	return _stateComponent->VGetSituationStateChangedDelegate();
+//}
+//
+//FOnHealthStateChanged* ACreatureCharacter::VGetHealthStateChangedDelegate()
+//{
+//	return _stateComponent->VGetHealthStateChangedDelegate();
+//}
+//
+//FOnPostureStateChanged* ACreatureCharacter::VGetPostureStateChangedDelegate()
+//{
+//	return _stateComponent->VGetPostureStateChangedDelegate();
+//}
+//
+//FOnAnyStateChanged* ACreatureCharacter::VGetAnyStateChangedDelegate()
+//{
+//	return _stateComponent->VGetAnyStateChangedDelegate();
+//}
 
 void ACreatureCharacter::VCameraArmPitch(float angle)
 {
@@ -370,11 +346,6 @@ void ACreatureCharacter::VStopAllProcess()
 	_weaponComponent->StopAllWeaponProcesses();
 }
 
-UAnimationModelBase* ACreatureCharacter::VGetAnimationModel()
-{
-	return _animationModelIns;
-}
-
 void ACreatureCharacter::VHandleDamage(float basicDamage, EDamageType damageType, FVector impactPoint, AActor* causer)
 {
 	_damageHandlerComponent->HandleDamage(basicDamage, damageType, impactPoint, causer);
@@ -435,7 +406,27 @@ void ACreatureCharacter::VPublishEvent(FName eventName, UEventDataBase* eventDat
 	_AnimationCommunicatorComponent->PublishEvent(eventName, eventData);
 }
 
-bool ACreatureCharacter::VTryGetEventDelegate(FName eventName, FOnEventPublished& outDelegate)
+FOnEventPublished& ACreatureCharacter::VGetEventDelegate(FName eventName)
 {
-	return _AnimationCommunicatorComponent->TryGetEventDelegate(eventName, outDelegate);
+	return _AnimationCommunicatorComponent->GetEventDelegate(eventName);
+}
+
+UAnimationModelBase* ACreatureCharacter::VGetAnimationModel()
+{
+	return _AnimationCommunicatorComponent->GetAnimationModel();
+}
+
+void ACreatureCharacter::VSetAnimationState(EAnimationState newState)
+{
+	_AnimationCommunicatorComponent->SetAnimationState(newState);
+}
+
+EAnimationState ACreatureCharacter::VGetAnimationState()
+{
+	return _AnimationCommunicatorComponent->GetAnimationState();
+}
+
+FOnAnimationStateChanged& ACreatureCharacter::VGetAnimationStateChangedDelegate()
+{
+	return _AnimationCommunicatorComponent->GetAnimationStateChangedDelegate();
 }

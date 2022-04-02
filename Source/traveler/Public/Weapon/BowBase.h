@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "WeaponBase.h"
 #include "Data/BowAnimationModelBase.h"
+#include "Event/EventDataBase.h"
 #include "BowBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
@@ -15,6 +16,14 @@ class UQuiverComponent;
 class ICharacterCameraInterface;
 class UCrosshairWidgetBase;
 
+namespace BowAnimEventName
+{
+	const FName Bow_FullyDrawed = FName(TEXT("Bow_FullyDrawed"));
+	const FName Bow_DrawingBowString = FName(TEXT("Bow_DrawingBowString"));
+	const FName Bow_TakeOutArrows = FName(TEXT("Bow_TakeOutArrows"));
+	const FName Bow_ReleasedBowString = FName(TEXT("Bow_ReleasedBowString"));
+};
+
 /**
  * 
  */
@@ -24,7 +33,7 @@ class TRAVELER_API ABowBase : public AWeaponBase
 	GENERATED_BODY()
 
 public:
-	ABowBase();
+	ABowBase(const FObjectInitializer& ObjectInitializer);
 public:
 	void VInitialize(ACreatureCharacter* weaponOwner) override;
 	void BeginPlay() override;
@@ -32,15 +41,6 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	FBowAnimationModelBase GetAnimationModel();
-
-	UFUNCTION(BlueprintCallable)
-	void OnEnterAnimFrame_StartDrawingBowString();
-	UFUNCTION(BlueprintCallable)
-	void OnEnterAnimFrame_TakeOutArrows();
-	UFUNCTION(BlueprintCallable)
-	virtual void OnEnterAnimFrame_ReleaseBowString();
-	UFUNCTION(BlueprintCallable)
-	void OnEnterAnimFrame_ReloadCompleted();
 
 	UFUNCTION(BlueprintPure)
 	EBowState GetBowState();
@@ -51,13 +51,29 @@ public:
 	void SetStrength(float elapsedTime);
 	bool IsDrawingBow();
 	
-
-	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState) override;
+	virtual void VOnEquipped() override;
+	virtual void VOnUnEquipped() override;
 
 	virtual void VWeaponControlButtonA() override;
 	virtual void VWeaponControlButtonB() override;
 	virtual void VWeaponControlButtonC() override;
 	virtual void VWeaponControlButtonD() override;
+
+	//animation event -------------------------------------------------------------------------
+
+	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState) override;
+
+	FDelegateHandle _delegateHandle_StartDrawingBowString;
+	void OnAnim_StartDrawingBowString(UEventDataBase* eventData);
+
+	FDelegateHandle _delegateHandle_TakeOutArrows;
+	void OnAnim_TakeOutArrows(UEventDataBase* eventData);
+
+	FDelegateHandle _delegateHandle_ReleaseBowString;
+	void OnAnim_ReleaseBowString(UEventDataBase* eventData);
+
+	FDelegateHandle _delegateHandle_ReloadCompleted;
+	void OnAnim_FullyDrawed(UEventDataBase* eventData);
 
 protected:
 	void TakeOutArrows();
@@ -126,11 +142,15 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = bowState)
 	EBowState _bowState;
 
-	float _strength;
-
 	UPROPERTY(VisibleAnywhere, Category = AnimationModel)
 	FBowAnimationModelBase _animationModel;
 
 	UPROPERTY(VisibleAnywhere, Category = Projectile)
 	UQuiverComponent* _quiverComponent;
+
+	UPROPERTY()
+	TArray<FDelegateHandleData> _delegateHandles;
+
+	float _strength;
+
 };

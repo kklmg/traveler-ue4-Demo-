@@ -18,7 +18,7 @@
 #include "Weapon/WeaponProcess/BowProcess/BowProcessFire.h"
 #include "Weapon/WeaponProcess/BowProcess/BowProcessAim.h"
 
-ABowBase::ABowBase()
+ABowBase::ABowBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	//Create quiver component used in projectile management
 	if (_quiverComponent == nullptr)
@@ -157,6 +157,52 @@ bool ABowBase::IsDrawingBow()
 	}
 }
 
+void ABowBase::VOnEquipped()
+{
+	Super::VOnEquipped();
+
+	IAnimationCommunicatorInterface* animationCommunicator = GetAnimationCommunicator();
+
+	if (animationCommunicator)
+	{
+		FDelegateHandle delegateHandle;
+
+		delegateHandle = animationCommunicator->
+				VGetEventDelegate(BowAnimEventName::Bow_DrawingBowString).AddUObject(this, &ABowBase::OnAnim_StartDrawingBowString);
+		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_DrawingBowString,delegateHandle));
+
+		delegateHandle = animationCommunicator->
+			VGetEventDelegate(BowAnimEventName::Bow_TakeOutArrows).AddUObject(this, &ABowBase::OnAnim_TakeOutArrows);
+		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_TakeOutArrows, delegateHandle));
+
+		delegateHandle = animationCommunicator->
+			VGetEventDelegate(BowAnimEventName::Bow_FullyDrawed).AddUObject(this, &ABowBase::OnAnim_FullyDrawed);
+		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_FullyDrawed, delegateHandle));
+
+		delegateHandle = animationCommunicator->
+			VGetEventDelegate(BowAnimEventName::Bow_ReleasedBowString).AddUObject(this, &ABowBase::OnAnim_ReleaseBowString);
+		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_ReleasedBowString, delegateHandle));
+	}
+}
+
+void ABowBase::VOnUnEquipped()
+{
+	Super::VOnUnEquipped();
+
+	IAnimationCommunicatorInterface* animationCommunicator = GetAnimationCommunicator();
+
+	if (animationCommunicator)
+	{
+		FOnEventPublished outEventPublishedDelegate;
+		for (auto delegateHandleData : _delegateHandles)
+		{
+			animationCommunicator->VGetEventDelegate(delegateHandleData.EventName).Remove(delegateHandleData.DelegateHandle);
+		}
+	}
+
+	_delegateHandles.Empty();
+}
+
 void ABowBase::AttachArrowsToHand()
 {
 	ICharacterCameraInterface* cameraInterface = GetOwnerCameraInterface();
@@ -273,36 +319,9 @@ void ABowBase::AttachArrowsToBow()
 	}
 }
 
-void ABowBase::OnEnterAnimFrame_ReleaseBowString()
-{
-	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
-
-	LaunchArrows();	
-	_bowState = EBowState::EBS_ReleaseEnd;
-}
-
-void ABowBase::OnEnterAnimFrame_ReloadCompleted()
-{
-	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
-
-	_bowState = EBowState::EBS_FullyDrawed;
-}
-
 FBowAnimationModelBase ABowBase::GetAnimationModel()
 {
 	return _animationModel;
-}
-
-void ABowBase::OnEnterAnimFrame_StartDrawingBowString()
-{
-	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
-	
-	_bowState = EBowState::EBS_Drawing;
-}
-
-void ABowBase::OnEnterAnimFrame_TakeOutArrows()
-{
-	TakeOutArrows();
 }
 
 void ABowBase::ClearHoldingArrows()
@@ -360,6 +379,32 @@ void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAni
 			StopAllProcesses();
 		}
 	}
+}
+
+void ABowBase::OnAnim_StartDrawingBowString(UEventDataBase* eventData)
+{
+	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
+	_bowState = EBowState::EBS_Drawing;
+}
+
+void ABowBase::OnAnim_TakeOutArrows(UEventDataBase* eventData)
+{
+	TakeOutArrows();
+}
+
+void ABowBase::OnAnim_ReleaseBowString(UEventDataBase* eventData)
+{
+	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
+
+	LaunchArrows();
+	_bowState = EBowState::EBS_ReleaseEnd;
+}
+
+void ABowBase::OnAnim_FullyDrawed(UEventDataBase* eventData)
+{
+	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
+
+	_bowState = EBowState::EBS_FullyDrawed;
 }
 
 void ABowBase::VWeaponControlButtonA()

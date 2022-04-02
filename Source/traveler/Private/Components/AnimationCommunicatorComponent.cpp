@@ -2,6 +2,7 @@
 
 
 #include "Components/AnimationCommunicatorComponent.h"
+#include "Data/AnimationModelBase.h"
 
 // Sets default values for this component's properties
 UAnimationCommunicatorComponent::UAnimationCommunicatorComponent()
@@ -11,8 +12,24 @@ UAnimationCommunicatorComponent::UAnimationCommunicatorComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	bWantsInitializeComponent = true;
+
+	_animationState = EAnimationState::EAnimState_Walk;
 }
 
+void UAnimationCommunicatorComponent::InitializeComponent()
+{
+	_eventBroker = NewObject<UEventBroker>(this);
+
+	if (_animationModelClass)
+	{
+		_animationModelIns = NewObject<UAnimationModelBase>(this, _animationModelClass);
+	}
+	else
+	{
+		_animationModelIns = NewObject<UAnimationModelBase>(this);
+	}
+}
 
 // Called when the game starts
 void UAnimationCommunicatorComponent::BeginPlay()
@@ -20,8 +37,31 @@ void UAnimationCommunicatorComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	_eventBroker = NewObject<UEventBroker>(this);
-	
+}
+
+UAnimationModelBase* UAnimationCommunicatorComponent::GetAnimationModel()
+{
+	return _animationModelIns;
+}
+
+void UAnimationCommunicatorComponent::SetAnimationState(EAnimationState newState)
+{
+	if (_animationState != newState)
+	{
+		EAnimationState prevState = _animationState;
+		_animationState = newState;
+		_animationStateChangedDelegate.Broadcast(prevState, _animationState);
+	}
+}
+
+EAnimationState UAnimationCommunicatorComponent::GetAnimationState()
+{
+	return _animationState;
+}
+
+FOnAnimationStateChanged& UAnimationCommunicatorComponent::GetAnimationStateChangedDelegate()
+{
+	return _animationStateChangedDelegate;
 }
 
 
@@ -35,23 +75,15 @@ void UAnimationCommunicatorComponent::TickComponent(float DeltaTime, ELevelTick 
 
 void UAnimationCommunicatorComponent::PublishEvent(FName eventName, UEventDataBase* eventData)
 {
-	if (_eventBroker) 
-	{
-		_eventBroker->Publish(eventName, eventData);
-	}
+	checkf(_eventBroker != nullptr, TEXT("missing instance of EventBroker"));
+
+	_eventBroker->Publish(eventName, eventData);
 }
 
-bool UAnimationCommunicatorComponent::TryGetEventDelegate(FName eventName, FOnEventPublished& outDelegate)
+FOnEventPublished& UAnimationCommunicatorComponent::GetEventDelegate(FName eventName)
 {
-	if (_eventBroker)
-	{
-		outDelegate = _eventBroker->GetDelegate(eventName);
-		return true;
-	}
-	else
-	{
-		UE_LOG(LogTemp,Warning,TEXT("EventBroker Instance missing"));
-		return false;
-	}
+	checkf(_eventBroker != nullptr, TEXT("missing instance of EventBroker"));
+
+	return _eventBroker->GetDelegate(eventName);
 }
 

@@ -28,3 +28,9 @@ void UDebugMessageHelper::Messsage_Enum(FString Categoty, TCHAR* enumName, int32
 	Categoty.Append( enumPtr ? enumPtr->GetNameStringByIndex(enumValue) : TEXT("UnKnown"));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, Categoty);
 }
+
+void UDebugMessageHelper::Messsage_String(FString Categoty, FString string)
+{
+	Categoty.Append(TEXT(": ") + string);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, Categoty);
+}

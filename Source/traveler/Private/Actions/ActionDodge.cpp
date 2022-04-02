@@ -3,6 +3,7 @@
 
 #include "Actions/ActionDodge.h"
 #include "Character/CreatureCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Interface/StateInterface.h"
 #include "Interface/WeaponInterface.h"
 
@@ -20,8 +21,8 @@ UActionDodge::UActionDodge()
 
 bool UActionDodge::VTMCanExecute()
 {
-	EMovementMode movementMode = _stateInterface->VGetStateData().MovementMode;
-	bool bIsWalking = movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking;
+	EMovementMode movementMode = GetActionOwner()->GetCharacterMovement()->MovementMode;
+	bool bIsWalking = (movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking);
 
 	return bIsWalking;
 }

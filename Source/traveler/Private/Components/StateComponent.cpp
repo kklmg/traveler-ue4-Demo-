@@ -25,8 +25,8 @@ void UStateComponent::BeginPlay()
 	ACharacter* character = GetOwner<ACharacter>();
 	if(character)
 	{
-		_stateData.MovementMode = character->GetCharacterMovement()->MovementMode;
-		character->MovementModeChangedDelegate.AddDynamic(this, &UStateComponent::OnCharacterMovementModeChanged);
+//		_stateData.MovementMode = character->GetCharacterMovement()->MovementMode;
+//		character->MovementModeChangedDelegate.AddDynamic(this, &UStateComponent::OnCharacterMovementModeChanged);
 	}
 }
 
@@ -39,107 +39,87 @@ void UStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
-FStateData UStateComponent::VGetStateData()
-{
-	return _stateData;
-}
+//FStateData UStateComponent::VGetStateData()
+//{
+//	return _stateData;
+//}
+//
+//void UStateComponent::VSetSituationState(ESituationState newState)
+//{
+//	if (_stateData.SituationState != newState)
+//	{
+//		_stateData.SituationState = newState;
+//		_situationStateChangedDelegate.Broadcast(newState);
+//		_anyStateChangedDelegate.Broadcast(_stateData);
+//	}
+//}
+//
+//
+//void UStateComponent::VSetHealthState(EHealthState newState)
+//{
+//	if (_stateData.HealthState != newState)
+//	{
+//		_stateData.HealthState = newState;
+//		_healthStateChangedDelegate.Broadcast(newState);
+//		_anyStateChangedDelegate.Broadcast(_stateData);
+//	}
+//}
+//
+//void UStateComponent::VSetPostureState(EPostureState newState)
+//{
+//	if (_stateData.PostureState != newState)
+//	{
+//		_stateData.PostureState = newState;
+//		_postureStateChangedDelegate.Broadcast(newState);
+//		_anyStateChangedDelegate.Broadcast(_stateData);
+//	}
+//}
 
-void UStateComponent::VSetSituationState(ESituationState newState)
-{
-	if (_stateData.SituationState != newState)
-	{
-		_stateData.SituationState = newState;
-		_situationStateChangedDelegate.Broadcast(newState);
-		_anyStateChangedDelegate.Broadcast(_stateData);
-	}
-}
 
+//FOnSituationStateChanged* UStateComponent::VGetSituationStateChangedDelegate()
+//{
+//	return &_situationStateChangedDelegate;
+//}
+//
+//FOnHealthStateChanged* UStateComponent::VGetHealthStateChangedDelegate()
+//{
+//	return &_healthStateChangedDelegate;
+//}
+//
+//FOnPostureStateChanged* UStateComponent::VGetPostureStateChangedDelegate()
+//{
+//	return &_postureStateChangedDelegate;
+//}
+//
+//FOnAnyStateChanged* UStateComponent::VGetAnyStateChangedDelegate()
+//{
+//	return &_anyStateChangedDelegate;
+//}
 
-void UStateComponent::VSetHealthState(EHealthState newState)
-{
-	if (_stateData.HealthState != newState)
-	{
-		_stateData.HealthState = newState;
-		_healthStateChangedDelegate.Broadcast(newState);
-		_anyStateChangedDelegate.Broadcast(_stateData);
-	}
-}
-
-void UStateComponent::VSetPostureState(EPostureState newState)
-{
-	if (_stateData.PostureState != newState)
-	{
-		_stateData.PostureState = newState;
-		_postureStateChangedDelegate.Broadcast(newState);
-		_anyStateChangedDelegate.Broadcast(_stateData);
-	}
-}
-
-void UStateComponent::VSetAnimationState(EAnimationState newState)
-{
-	if (_stateData.AnimationState != newState)
-	{
-		EAnimationState prevState = _stateData.AnimationState;
-		_stateData.AnimationState = newState;
-		_AnimationStateChangedDelegate.Broadcast(prevState,newState);
-		_anyStateChangedDelegate.Broadcast(_stateData);
-	}
-}	
-
-EAnimationState UStateComponent::VGetAnimationState()
-{
-	return _stateData.AnimationState;
-}
-
-FOnSituationStateChanged* UStateComponent::VGetSituationStateChangedDelegate()
-{
-	return &_situationStateChangedDelegate;
-}
-
-FOnHealthStateChanged* UStateComponent::VGetHealthStateChangedDelegate()
-{
-	return &_healthStateChangedDelegate;
-}
-
-FOnPostureStateChanged* UStateComponent::VGetPostureStateChangedDelegate()
-{
-	return &_postureStateChangedDelegate;
-}
-
-FOnAnyStateChanged* UStateComponent::VGetAnyStateChangedDelegate()
-{
-	return &_anyStateChangedDelegate;
-}
-
-FOnAnimationStateChanged* UStateComponent::VGetAnimationStateChangedDelegate()
-{
-	return &_AnimationStateChangedDelegate;
-}
-
-void UStateComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
-{
-	_stateData.MovementMode = Character->GetCharacterMovement()->MovementMode;
-
-	switch (_stateData.MovementMode)
-	{
-		case MOVE_None:
-			break;
-		case MOVE_Walking: VSetSituationState(ESituationState::ESS_OnGround);
-			break;
-		case MOVE_NavWalking:
-			break;
-		case MOVE_Falling: VSetSituationState(ESituationState::ESS_InAir);
-			break;
-		case MOVE_Swimming:VSetSituationState(ESituationState::ESS_InWater);
-			break;
-		case MOVE_Flying: VSetSituationState(ESituationState::ESS_InAir);
-			break;
-		case MOVE_Custom:
-			break;
-		case MOVE_MAX:
-			break;
-		default:
-			break;
-	}
-}
+//void UStateComponent::OnCharacterMovementModeChanged(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+//{
+//	_stateData.MovementMode = Character->GetCharacterMovement()->MovementMode;
+//
+//	switch (_stateData.MovementMode)
+//	{
+//		case MOVE_None:
+//			break;
+//		case MOVE_Walking: VSetSituationState(ESituationState::ESS_OnGround);
+//			break;
+//		case MOVE_NavWalking:
+//			break;
+//		case MOVE_Falling: VSetSituationState(ESituationState::ESS_InAir);
+//			break;
+//		case MOVE_Swimming:VSetSituationState(ESituationState::ESS_InWater);
+//			break;
+//		case MOVE_Flying: VSetSituationState(ESituationState::ESS_InAir);
+//			break;
+//		case MOVE_Custom:
+//			break;
+//		case MOVE_MAX:
+//			break;
+//		default:
+//			break;
+//	}
+//}
 

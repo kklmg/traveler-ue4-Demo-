@@ -7,8 +7,8 @@
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Interface/StateInterface.h"
 #include "Interface/AttributeInterface.h"
-#include "Interface/AnimationModelProvider.h"
 #include "Data/CostData.h"
+#include "Interface/AnimationCommunicatorInterface.h"
 
 
 DEFINE_LOG_CATEGORY(LogAction);
@@ -17,7 +17,7 @@ UActionBase::UActionBase()
 {
 	_processState = EProcessState::EPS_UnInitialized;
 	_bInstantAction = true;
-	_actionName = TEXT("UnKnown");
+	_actionName = FName(TEXT("UnKnown"));
 	_actionType = EActionType::EACT_None;
 	_costData = CreateDefaultSubobject<UCostData>(TEXT("CostData"));
 }
@@ -36,10 +36,10 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 	_attributeInterface = Cast<IAttributeInterface>(_actionOwner);
 
 	//get animation view model
-	IAnimationModelProvider* animationModelProviderInterface = Cast<IAnimationModelProvider>(_actionOwner);
-	if(animationModelProviderInterface)
+	IAnimationCommunicatorInterface* animationCommunicator = Cast<IAnimationCommunicatorInterface>(_actionOwner);
+	if(animationCommunicator)
 	{
-		_animationViewModel = animationModelProviderInterface->VGetAnimationModel();
+		_animationViewModel = animationCommunicator->VGetAnimationModel();
 	}
 	
 	_processState = EProcessState::EPS_ReadyToExecute;

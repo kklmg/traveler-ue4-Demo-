@@ -7,7 +7,7 @@
 #include "Data/CostData.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/DataTable.h"
-#include "Interface/AnimationModelProvider.h"
+#include "Interface/AnimationCommunicatorInterface.h"
 
 
 
@@ -29,10 +29,10 @@ UAttributeComponent::UAttributeComponent()
 
 void UAttributeComponent::InitializeComponent()
 {
-	IAnimationModelProvider* animationModelProvider = GetOwner<IAnimationModelProvider>();
-	if (animationModelProvider)
+	IAnimationCommunicatorInterface* animationCommunicator = GetOwner<IAnimationCommunicatorInterface>();
+	if (animationCommunicator)
 	{
-		_animationViewModel = animationModelProvider->VGetAnimationModel();
+		_animationViewModel = animationCommunicator->VGetAnimationModel();
 	}
 
 	InitializeAttributes();

@@ -72,8 +72,6 @@ void UAnimationEventComponent::notifyEnd(EAnimNorifyKey notifyKey)
 	{
 		_mapSubscribers[notifyKey]->OnNotifyEnd.Broadcast();
 	}
-
-
 }
 
 

@@ -22,12 +22,11 @@ UEffectPlayerBase::UEffectPlayerBase(const FObjectInitializer& ObjectInitializer
 	_matColorParams.Name = FName("Color");
 	_matColorParams.Index = 1;
 
-	_effectData.Empty();
-	_effectData.Add(EStatusEffect::EStatusEffect_Fire, FLinearColor::Red);
-	_effectData.Add(EStatusEffect::EStatusEffect_Ice, FLinearColor(0, 1, 1, 1));
-	_effectData.Add(EStatusEffect::EStatusEffect_Electricity, FLinearColor::Yellow);
-	_effectData.Add(EStatusEffect::EStatusEffect_Poison, FLinearColor(0.5, 0, 0.5, 1));
-	_effectData.Add(EStatusEffect::EStatusEffect_Water, FLinearColor::Blue);
+	_effectData.Add(EStatusEffect::EStatusEffect_Fire, FActorEffectData(FLinearColor::Red));
+	_effectData.Add(EStatusEffect::EStatusEffect_Ice, FActorEffectData(FLinearColor(0, 1, 1, 1)));
+	_effectData.Add(EStatusEffect::EStatusEffect_Electricity, FActorEffectData(FLinearColor::Yellow));
+	_effectData.Add(EStatusEffect::EStatusEffect_Poison, FActorEffectData(FLinearColor(0.5, 0, 0.5, 1)));
+	_effectData.Add(EStatusEffect::EStatusEffect_Water, FActorEffectData(FLinearColor::Blue));
 }
 
 void UEffectPlayerBase::Initialize(AActor* owner, UMaterialInstanceDynamic* mid)

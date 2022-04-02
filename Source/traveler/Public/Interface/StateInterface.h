@@ -24,14 +24,8 @@ class TRAVELER_API IStateInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	UFUNCTION(BlueprintCallable)
+	/*UFUNCTION(BlueprintCallable)
 	virtual FStateData VGetStateData() PURE_VIRTUAL(IStateInterface::VGetStateData, return FStateData(););
-
-	UFUNCTION(BlueprintCallable)
-	virtual void VSetAnimationState(EAnimationState newState) PURE_VIRTUAL(IStateInterface::VSetAnimationState, );
-	UFUNCTION(BlueprintCallable)
-	virtual EAnimationState VGetAnimationState() PURE_VIRTUAL(IStateInterface::VGetAnimationState, return EAnimationState::EAnimState_None;);
-	
 
 	virtual void VSetSituationState(ESituationState newState) PURE_VIRTUAL (IStateInterface::VSetSituationState,);
 	virtual void VSetHealthState(EHealthState newState) PURE_VIRTUAL (IStateInterface::VSetHealthState,);
@@ -40,6 +34,5 @@ public:
 	virtual FOnSituationStateChanged* VGetSituationStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetSituationStateChangedDelegate, return nullptr;);
 	virtual FOnHealthStateChanged* VGetHealthStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetHealthStateChangedDelegate, return nullptr;);
 	virtual FOnPostureStateChanged* VGetPostureStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetPostureStateChangedDelegate, return nullptr;);
-	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetAnyStateChangedDelegate, return nullptr;);
-	virtual FOnAnimationStateChanged* VGetAnimationStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetAnimationStateChangedDelegate, return nullptr;);
+	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() PURE_VIRTUAL(IStateInterface::VGetAnyStateChangedDelegate, return nullptr;);*/
 };

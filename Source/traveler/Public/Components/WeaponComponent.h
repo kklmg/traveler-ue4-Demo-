@@ -6,13 +6,15 @@
 #include "Components/ActorComponent.h"
 #include "WeaponComponent.generated.h"
 
+
+class UAnimationModelBase;
+
 class AWeaponBase;
 class ACreatureCharacter;
 
 class IAnimationModelProvider;
-class IStateInterface;
+class IAnimationCommunicatorInterface;
 
-class UAnimationModelBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeaponBase*,weapon);
 
@@ -76,5 +78,5 @@ private:
 	UPROPERTY()
 	UAnimationModelBase* _animationViewModel;
 
-	IStateInterface* _stateInterface;
+	IAnimationCommunicatorInterface* _animationCommunicator;
 };

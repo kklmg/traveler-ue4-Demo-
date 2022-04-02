@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GameSystem/EventBroker.h"
+#include "Event/EventBroker.h"
+#include "GameSystem/DebugMessageHelper.h"
 
 FOnEventPublished& UEventBroker::GetDelegate(FName eventName)
 {
@@ -20,6 +21,7 @@ void UEventBroker::Publish(FName eventName, UEventDataBase* eventDataBase)
 {
 	if (_delegateMap.Contains(eventName))
 	{
-		return _delegateMap[eventName].OnEventPublished.Broadcast(eventDataBase);
+		//UDebugMessageHelper::Messsage_String(TEXT("Published Event"), eventName.ToString());
+		_delegateMap[eventName].OnEventPublished.Broadcast(eventDataBase);
 	}
 }

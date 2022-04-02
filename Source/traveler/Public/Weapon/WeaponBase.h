@@ -17,6 +17,9 @@ class UProcessManagerBase;
 class IActionInterface;
 class ICharacterCameraInterface;
 class IProcessInterface;
+class IAnimationCommunicatorInterface;
+
+class UEventDataBase;
 
 namespace WeaponProcessName
 {
@@ -31,7 +34,7 @@ class TRAVELER_API AWeaponBase : public AActor, public IExtraTransformProvider
 	
 public:	
 	// Sets default values for this actor's properties
-	AWeaponBase();
+	AWeaponBase(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts or when spawned
@@ -43,16 +46,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void VOnEquipped();
+	virtual void VOnUnEquipped();
+
+	virtual void VReset();
+
+	//Weapon attribute getter -----------------------------------------------------------------------------
+
 	EAnimationState GetOwnerAnimationState();
 	IActionInterface* GetOwnerActionInterface();
 	ICharacterCameraInterface* GetOwnerCameraInterface();
-
-	virtual void VWeaponControlButtonA();
-	virtual void VWeaponControlButtonB();
-	virtual void VWeaponControlButtonC();
-	virtual void VWeaponControlButtonD();
-
-	virtual void VReset();
+	IAnimationCommunicatorInterface* GetAnimationCommunicator();
 
 	UFUNCTION(BlueprintPure)
 	USkeletalMeshComponent* GetMeshComponent();
@@ -63,6 +67,15 @@ public:
 	UFUNCTION(BlueprintPure)
 	EWeaponType GetWeaponType();
 
+	//Weapon Controls -----------------------------------------------------------------------------
+
+	virtual void VWeaponControlButtonA();
+	virtual void VWeaponControlButtonB();
+	virtual void VWeaponControlButtonC();
+	virtual void VWeaponControlButtonD();
+
+	//Weapon process handling -----------------------------------------------------------------------------
+
 	void ExecuteProcess(FName processName);
 	void StopProcess(FName processName);
 	void StopAllProcesses();
@@ -70,6 +83,7 @@ public:
 	bool IsProcessRunning(FName processName);
 
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
+
 	UFUNCTION(BlueprintCallable)
 	virtual bool VTryGetTransform(ETransform meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
 
@@ -100,4 +114,5 @@ private:
 
 	IActionInterface* _ownerActionInterface;
 	ICharacterCameraInterface* _ownerCameraInterface;
+	IAnimationCommunicatorInterface* _animationCommunicatorInterface;
 };

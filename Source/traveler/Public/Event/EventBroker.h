@@ -4,23 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Data/MyDelegates.h"
+#include "Event/EventDataBase.h"
 #include "EventBroker.generated.h"
 
-USTRUCT()
-struct TRAVELER_API FDelegateWrapper
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	FOnEventPublished OnEventPublished;
-};
 
 
-UCLASS()
-class TRAVELER_API UEventDataBase : public UObject
-{
-	GENERATED_BODY()
-};
 
 /**
  * 

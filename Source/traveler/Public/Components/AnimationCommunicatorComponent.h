@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "GameSystem/EventBroker.h"
+#include "Event/EventBroker.h"
+#include "Data/StateData.h"
 #include "AnimationCommunicatorComponent.generated.h"
 
+class UAnimationModelBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UAnimationCommunicatorComponent : public UActorComponent
@@ -17,10 +19,26 @@ public:
 	// Sets default values for this component's properties
 	UAnimationCommunicatorComponent();
 
+	//animation model -----------------------------------------------------------------
+	UAnimationModelBase* GetAnimationModel();
+
+	//animation State ------------------------------------------------------------------
+
+	UFUNCTION(BlueprintCallable)
+	void SetAnimationState(EAnimationState newState);
+
+	UFUNCTION(BlueprintCallable)
+	EAnimationState GetAnimationState();
+
+	FOnAnimationStateChanged& GetAnimationStateChangedDelegate();
+
 protected:
+	virtual void InitializeComponent() override;
+
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -28,9 +46,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PublishEvent(FName eventName, UEventDataBase* eventData);
 
-	bool TryGetEventDelegate(FName eventName, FOnEventPublished& outDelegate);
+	FOnEventPublished& GetEventDelegate(FName eventName);
 
 private:
 	UPROPERTY()
+	UAnimationModelBase* _animationModelIns;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UAnimationModelBase> _animationModelClass;
+
+	UPROPERTY()
 	UEventBroker* _eventBroker;
+
+	UPROPERTY()
+	EAnimationState _animationState;
+
+	FOnAnimationStateChanged _animationStateChangedDelegate;
 };

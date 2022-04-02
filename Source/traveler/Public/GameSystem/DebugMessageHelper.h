@@ -18,5 +18,6 @@ public:
 	static void Message_Float(FString Categoty, float value);
 	static void Message_Vector(FString Categoty, FVector value);
 	static void Messsage_Enum(FString Categoty, TCHAR* enumName,int32 enumValue);
+	static void Messsage_String(FString Categoty, FString string);
 };
 

@@ -4,7 +4,7 @@
 #include "Components/MyCharacterMovementComponent.h"
 #include "Interface/AttributeInterface.h"
 #include "Interface/ActionInterface.h"
-#include "Interface/AnimationModelProvider.h"
+#include "Interface/AnimationCommunicatorInterface.h"
 
 
 UMyCharacterMovementComponent::UMyCharacterMovementComponent()
@@ -38,10 +38,10 @@ void UMyCharacterMovementComponent::BeginPlay()
 			GetValueChangedDelegate_Bool(EActionDataKey::EACTD_WantToSprint).AddUFunction(this, FName(TEXT("OnCharacterWantToSprint")));
 	}
 
-	IAnimationModelProvider* animationModelProviderInterface = GetOwner<IAnimationModelProvider>();
-	if (animationModelProviderInterface)
+	IAnimationCommunicatorInterface* animationCommunicator = GetOwner<IAnimationCommunicatorInterface>();
+	if (animationCommunicator)
 	{
-		_animationViewModel = animationModelProviderInterface->VGetAnimationModel();
+		_animationViewModel = animationCommunicator->VGetAnimationModel();
 	}
 }
 
