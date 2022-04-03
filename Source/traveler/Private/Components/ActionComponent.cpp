@@ -10,6 +10,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyGameplayStatics.h"
 #include "Interface/StateInterface.h"
+#include "Condition/CompositeCondition.h"
+
 
 // Sets default values for this component's properties
 UActionComponent::UActionComponent()

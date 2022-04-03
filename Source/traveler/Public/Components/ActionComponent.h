@@ -10,6 +10,26 @@
 class UActionBase;
 class UCharacterActionPreset;
 class UActionBlackBoard;
+class UCompositeCondition;
+
+
+USTRUCT(BlueprintType)
+struct FCondition_ActionPreset
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UCompositeCondition> ConditionClass;
+
+	UPROPERTY()
+	UCompositeCondition* ConditionIns;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UCharacterActionPreset> _actionPresetClass;
+
+	UPROPERTY()
+	UCharacterActionPreset* _actionPresetIns;
+};
 
 
 
@@ -65,6 +85,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
 	TMap<TEnumAsByte<enum EMovementMode>, TSubclassOf<UCharacterActionPreset>> _mapActionPreset;
+
+	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
+	TArray<FCondition_ActionPreset> _actionPresetData;
+
 
 	UPROPERTY()
 	UCharacterActionPreset* _pCurrentActionPreset;

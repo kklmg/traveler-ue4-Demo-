@@ -7,11 +7,13 @@
 FActorEffectData::FActorEffectData()
 {
 	BlendColor = FLinearColor::White;
+	EffectActorIns = nullptr;
 }
 
 FActorEffectData::FActorEffectData(FLinearColor color)
 {
 	BlendColor = color;
+	EffectActorIns = nullptr;
 }
 
 UEffectPlayerBase::UEffectPlayerBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -22,11 +24,15 @@ UEffectPlayerBase::UEffectPlayerBase(const FObjectInitializer& ObjectInitializer
 	_matColorParams.Name = FName("Color");
 	_matColorParams.Index = 1;
 
-	_effectData.Add(EStatusEffect::EStatusEffect_Fire, FActorEffectData(FLinearColor::Red));
+	FActorEffectData actorEffectData;
+
+	actorEffectData.BlendColor = FLinearColor::Red;
+	//_effectData.Append(,)
+	//_effectData.Add(EStatusEffect::EStatusEffect_Fire, actorEffectData);
 	_effectData.Add(EStatusEffect::EStatusEffect_Ice, FActorEffectData(FLinearColor(0, 1, 1, 1)));
-	_effectData.Add(EStatusEffect::EStatusEffect_Electricity, FActorEffectData(FLinearColor::Yellow));
-	_effectData.Add(EStatusEffect::EStatusEffect_Poison, FActorEffectData(FLinearColor(0.5, 0, 0.5, 1)));
-	_effectData.Add(EStatusEffect::EStatusEffect_Water, FActorEffectData(FLinearColor::Blue));
+	//_effectData.Add(EStatusEffect::EStatusEffect_Electricity, FActorEffectData(FLinearColor::Yellow));
+	//_effectData.Add(EStatusEffect::EStatusEffect_Poison, FActorEffectData(FLinearColor(0.5, 0, 0.5, 1)));
+	//_effectData.Add(EStatusEffect::EStatusEffect_Water, FActorEffectData(FLinearColor::Blue));
 }
 
 void UEffectPlayerBase::Initialize(AActor* owner, UMaterialInstanceDynamic* mid)
