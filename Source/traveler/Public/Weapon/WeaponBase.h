@@ -17,7 +17,7 @@ class UProcessManagerBase;
 class IActionInterface;
 class ICharacterCameraInterface;
 class IProcessInterface;
-class IAnimationCommunicatorInterface;
+class IEventBrokerInterface;
 
 class UEventDataBase;
 
@@ -56,7 +56,7 @@ public:
 	EAnimationState GetOwnerAnimationState();
 	IActionInterface* GetOwnerActionInterface();
 	ICharacterCameraInterface* GetOwnerCameraInterface();
-	IAnimationCommunicatorInterface* GetAnimationCommunicator();
+	IEventBrokerInterface* GetEventBrokerInterface();
 
 	UFUNCTION(BlueprintPure)
 	USkeletalMeshComponent* GetMeshComponent();
@@ -114,5 +114,5 @@ private:
 
 	IActionInterface* _ownerActionInterface;
 	ICharacterCameraInterface* _ownerCameraInterface;
-	IAnimationCommunicatorInterface* _animationCommunicatorInterface;
+	IEventBrokerInterface* _eventBrokerInterface;
 };

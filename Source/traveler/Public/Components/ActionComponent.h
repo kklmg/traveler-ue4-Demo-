@@ -10,28 +10,8 @@
 class UActionBase;
 class UCharacterActionPreset;
 class UActionBlackBoard;
-class UCompositeCondition;
-
-
-USTRUCT(BlueprintType)
-struct FCondition_ActionPreset
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UCompositeCondition> ConditionClass;
-
-	UPROPERTY()
-	UCompositeCondition* ConditionIns;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UCharacterActionPreset> _actionPresetClass;
-
-	UPROPERTY()
-	UCharacterActionPreset* _actionPresetIns;
-};
-
-
+class IEventBrokerInterface;
+class UActionPresetTrigger;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UActionComponent : public UActorComponent
@@ -59,12 +39,16 @@ public:
 	UFUNCTION()
 	void OnCharacterStateChanged(FStateData newStateData);
 
+	void SwitchActionSet(UCharacterActionPreset* actionSet);
+
 public:
 	UFUNCTION(BlueprintCallable)
 	UActionBase* ExecuteAction(EActionType actionType);
 
 	UFUNCTION(BlueprintCallable)
 	UActionBlackBoard* GetActionBlackBoard();
+
+	IEventBrokerInterface* GetEventBrokerInterface();
 	
 private:
 	void _TickActionProcess(float deltaTime);
@@ -87,11 +71,13 @@ private:
 	TMap<TEnumAsByte<enum EMovementMode>, TSubclassOf<UCharacterActionPreset>> _mapActionPreset;
 
 	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
-	TArray<FCondition_ActionPreset> _actionPresetData;
+	TArray<UActionPresetTrigger*> _actionSetTriggers;
 
 
 	UPROPERTY()
-	UCharacterActionPreset* _pCurrentActionPreset;
+	UCharacterActionPreset* _curActionSet;
+
+	IEventBrokerInterface* _eventBrokerInterface;
 
 	bool _bSprintButtonPress;
 };

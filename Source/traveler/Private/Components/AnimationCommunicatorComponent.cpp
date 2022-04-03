@@ -19,8 +19,6 @@ UAnimationCommunicatorComponent::UAnimationCommunicatorComponent()
 
 void UAnimationCommunicatorComponent::InitializeComponent()
 {
-	_eventBroker = NewObject<UEventBroker>(this);
-
 	if (_animationModelClass)
 	{
 		_animationModelIns = NewObject<UAnimationModelBase>(this, _animationModelClass);
@@ -72,18 +70,3 @@ void UAnimationCommunicatorComponent::TickComponent(float DeltaTime, ELevelTick 
 
 	// ...
 }
-
-void UAnimationCommunicatorComponent::PublishEvent(FName eventName, UEventDataBase* eventData)
-{
-	checkf(_eventBroker != nullptr, TEXT("missing instance of EventBroker"));
-
-	_eventBroker->Publish(eventName, eventData);
-}
-
-FOnEventPublished& UAnimationCommunicatorComponent::GetEventDelegate(FName eventName)
-{
-	checkf(_eventBroker != nullptr, TEXT("missing instance of EventBroker"));
-
-	return _eventBroker->GetDelegate(eventName);
-}
-

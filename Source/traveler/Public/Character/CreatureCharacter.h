@@ -16,6 +16,7 @@
 #include "Interface/ActorEffectInterface.h"
 #include "Interface/ActorUIInterface.h"
 #include "Interface/AnimationCommunicatorInterface.h"
+#include "Interface/EventBrokerInterface.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "CreatureCharacter.generated.h"
 
@@ -36,6 +37,7 @@ class UDamageHandlerComponent;
 class UIKComponent;
 class UEffectControllerComponent;
 class UAnimationCommunicatorComponent;
+class UEventBrokerComponent;
 
 class AWeaponBase;
 class UActionBase;
@@ -45,10 +47,10 @@ class UActionBlackBoard;
 
 UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter, 
-										public IActionInterface, public IAttributeInterface,public IStateInterface, 
-										public ICharacterCameraInterface,public IWeaponInterface,
+										public IActionInterface, public IAttributeInterface, public IStateInterface,
+										public ICharacterCameraInterface, public IWeaponInterface,
 										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface,
-										public IActorEffectInterface, public IAnimationCommunicatorInterface
+										public IActorEffectInterface, public IAnimationCommunicatorInterface, public IEventBrokerInterface
 {
 	GENERATED_BODY()
 
@@ -152,7 +154,6 @@ public:
 	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
 	UFUNCTION(BlueprintCallable)
 	virtual bool VTryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
-
 	UFUNCTION(BlueprintCallable)
 	virtual bool VTryGetSocketName(ETransform transformType, FName& outSocketName);
 
@@ -161,10 +162,13 @@ public:
 	virtual void VPlayEffect(EStatusEffect effectType) override;
 	virtual void VStopEffect(EStatusEffect effectType) override;
 
-	//Animation Communicator Interface implementation --------------------------------------------------
-	virtual void VPublishEvent(FName eventName,UEventDataBase* eventData) override;
+
+
+	//Event Broker Interface implementation -----------------------------------------------------------
+	virtual void VPublishEvent(FName eventName, UEventDataBase* eventData) override;
 	virtual FOnEventPublished& VGetEventDelegate(FName eventName) override;
 
+	//Animation Communicator Interface implementation --------------------------------------------------
 	virtual void VSetAnimationState(EAnimationState newState) override;
 	virtual EAnimationState VGetAnimationState() override;
 	virtual FOnAnimationStateChanged& VGetAnimationStateChangedDelegate() override;
@@ -180,6 +184,9 @@ public:
 	UAnimationEventComponent* GetAnimationEventComponent();
 
 protected:
+	UPROPERTY(VisibleAnywhere)
+	UEventBrokerComponent* _eventBrokerComponent;
+
 	UPROPERTY(VisibleAnywhere)
 	UActionComponent* _actionComponent;
 

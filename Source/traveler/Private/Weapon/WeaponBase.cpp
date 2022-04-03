@@ -10,6 +10,7 @@
 #include "Interface/ActionInterface.h"
 #include "Interface/CharacterCameraInterface.h"
 #include "Interface/AnimationCommunicatorInterface.h"
+#include "Interface/EventBrokerInterface.h"
 #include "Process/ProcessInterface.h"
 
 
@@ -50,7 +51,7 @@ void AWeaponBase::VInitialize(ACreatureCharacter* weaponOwner)
 	_weaponOwner = weaponOwner;
 	_ownerActionInterface = Cast<IActionInterface>(_weaponOwner);
 	_ownerCameraInterface = Cast<ICharacterCameraInterface>(_weaponOwner);
-	_animationCommunicatorInterface = Cast<IAnimationCommunicatorInterface>(_weaponOwner);
+	_eventBrokerInterface = Cast<IEventBrokerInterface>(_weaponOwner);
 }
 
 // Called every frame
@@ -130,9 +131,9 @@ ICharacterCameraInterface* AWeaponBase::GetOwnerCameraInterface()
 	return _ownerCameraInterface;
 }
 
-IAnimationCommunicatorInterface* AWeaponBase::GetAnimationCommunicator()
+IEventBrokerInterface* AWeaponBase::GetEventBrokerInterface()
 {
-	return _animationCommunicatorInterface;
+	return _eventBrokerInterface;
 }
 
 void AWeaponBase::VWeaponControlButtonA()

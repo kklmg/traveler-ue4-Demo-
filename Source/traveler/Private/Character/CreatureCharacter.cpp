@@ -22,6 +22,7 @@
 #include "Components/EffectControllerComponent.h"
 #include "Components/DamageHandlerComponent.h"
 #include "Components/AnimationCommunicatorComponent.h"
+#include "Components/EventBrokerComponent.h"
 #include "Input/InputHandlerComponent.h"
 
 
@@ -34,10 +35,10 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 	bUseControllerRotationYaw = false;
 
 	//Create State component
-	if (_stateComponent == nullptr)
+	if (_eventBrokerComponent == nullptr)
 	{
-		_stateComponent = CreateDefaultSubobject<UStateComponent>(TEXT("StateComponent"));
-		check(_stateComponent != nullptr);
+		_eventBrokerComponent = CreateDefaultSubobject<UEventBrokerComponent>(TEXT("EventBrokerComponent"));
+		check(_eventBrokerComponent != nullptr);
 	}
 
 	//Create Attribute component
@@ -401,16 +402,6 @@ void ACreatureCharacter::VStopEffect(EStatusEffect effectType)
 	_effectControllerComponent->StopEffect(effectType);
 }
 
-void ACreatureCharacter::VPublishEvent(FName eventName, UEventDataBase* eventData)
-{
-	_AnimationCommunicatorComponent->PublishEvent(eventName, eventData);
-}
-
-FOnEventPublished& ACreatureCharacter::VGetEventDelegate(FName eventName)
-{
-	return _AnimationCommunicatorComponent->GetEventDelegate(eventName);
-}
-
 UAnimationModelBase* ACreatureCharacter::VGetAnimationModel()
 {
 	return _AnimationCommunicatorComponent->GetAnimationModel();
@@ -429,4 +420,14 @@ EAnimationState ACreatureCharacter::VGetAnimationState()
 FOnAnimationStateChanged& ACreatureCharacter::VGetAnimationStateChangedDelegate()
 {
 	return _AnimationCommunicatorComponent->GetAnimationStateChangedDelegate();
+}
+
+void ACreatureCharacter::VPublishEvent(FName eventName, UEventDataBase* eventData)
+{
+	_eventBrokerComponent->PublishEvent(eventName, eventData);
+}
+
+FOnEventPublished& ACreatureCharacter::VGetEventDelegate(FName eventName)
+{
+	return _eventBrokerComponent->GetEventDelegate(eventName);
 }

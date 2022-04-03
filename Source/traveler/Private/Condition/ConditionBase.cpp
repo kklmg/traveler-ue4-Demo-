@@ -3,3 +3,11 @@
 
 #include "Condition/ConditionBase.h"
 
+void UConditionBase::VInitialize()
+{
+}
+
+TArray<FName> UConditionBase::VGetReactiveEventNames()
+{
+	return TArray<FName>();
+}

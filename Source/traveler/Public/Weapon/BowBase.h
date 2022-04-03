@@ -18,10 +18,10 @@ class UCrosshairWidgetBase;
 
 namespace BowAnimEventName
 {
-	const FName Bow_FullyDrawed = FName(TEXT("Bow_FullyDrawed"));
-	const FName Bow_DrawingBowString = FName(TEXT("Bow_DrawingBowString"));
-	const FName Bow_TakeOutArrows = FName(TEXT("Bow_TakeOutArrows"));
-	const FName Bow_ReleasedBowString = FName(TEXT("Bow_ReleasedBowString"));
+	const FName Bow_FullyDrawed = FName(TEXT("Anim_Bow_FullyDrawed"));
+	const FName Bow_DrawingBowString = FName(TEXT("Anim_Bow_DrawingBowString"));
+	const FName Bow_TakeOutArrows = FName(TEXT("Anim_Bow_TakeOutArrows"));
+	const FName Bow_ReleasedBowString = FName(TEXT("Anim_Bow_ReleasedBowString"));
 };
 
 /**

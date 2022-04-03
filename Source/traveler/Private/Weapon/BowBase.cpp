@@ -161,25 +161,25 @@ void ABowBase::VOnEquipped()
 {
 	Super::VOnEquipped();
 
-	IAnimationCommunicatorInterface* animationCommunicator = GetAnimationCommunicator();
+	IEventBrokerInterface* eventBrokerInterface = GetEventBrokerInterface();
 
-	if (animationCommunicator)
+	if (eventBrokerInterface)
 	{
 		FDelegateHandle delegateHandle;
 
-		delegateHandle = animationCommunicator->
+		delegateHandle = eventBrokerInterface->
 				VGetEventDelegate(BowAnimEventName::Bow_DrawingBowString).AddUObject(this, &ABowBase::OnAnim_StartDrawingBowString);
 		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_DrawingBowString,delegateHandle));
 
-		delegateHandle = animationCommunicator->
+		delegateHandle = eventBrokerInterface->
 			VGetEventDelegate(BowAnimEventName::Bow_TakeOutArrows).AddUObject(this, &ABowBase::OnAnim_TakeOutArrows);
 		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_TakeOutArrows, delegateHandle));
 
-		delegateHandle = animationCommunicator->
+		delegateHandle = eventBrokerInterface->
 			VGetEventDelegate(BowAnimEventName::Bow_FullyDrawed).AddUObject(this, &ABowBase::OnAnim_FullyDrawed);
 		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_FullyDrawed, delegateHandle));
 
-		delegateHandle = animationCommunicator->
+		delegateHandle = eventBrokerInterface->
 			VGetEventDelegate(BowAnimEventName::Bow_ReleasedBowString).AddUObject(this, &ABowBase::OnAnim_ReleaseBowString);
 		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_ReleasedBowString, delegateHandle));
 	}
@@ -189,14 +189,14 @@ void ABowBase::VOnUnEquipped()
 {
 	Super::VOnUnEquipped();
 
-	IAnimationCommunicatorInterface* animationCommunicator = GetAnimationCommunicator();
+	IEventBrokerInterface* eventBrokerInterface = GetEventBrokerInterface();
 
-	if (animationCommunicator)
+	if (eventBrokerInterface)
 	{
 		FOnEventPublished outEventPublishedDelegate;
 		for (auto delegateHandleData : _delegateHandles)
 		{
-			animationCommunicator->VGetEventDelegate(delegateHandleData.EventName).Remove(delegateHandleData.DelegateHandle);
+			eventBrokerInterface->VGetEventDelegate(delegateHandleData.EventName).Remove(delegateHandleData.DelegateHandle);
 		}
 	}
 

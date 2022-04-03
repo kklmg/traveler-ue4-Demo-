@@ -10,7 +10,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyGameplayStatics.h"
 #include "Interface/StateInterface.h"
-#include "Condition/CompositeCondition.h"
+#include "Interface/EventBrokerInterface.h"
+#include "Actions/ActionPreset/ActionPresetTrigger.h"
 
 
 // Sets default values for this component's properties
@@ -19,9 +20,9 @@ UActionComponent::UActionComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	bWantsInitializeComponent = true;
-
+	
 	// ...
+	bWantsInitializeComponent = true;
 }
 
 
@@ -40,7 +41,8 @@ void UActionComponent::BeginPlay()
 
 	// ...
 
-	//Get Character
+	_eventBrokerInterface = GetOwner<IEventBrokerInterface>();
+
 	IStateInterface* stateIntercate = GetOwner<IStateInterface>();
 	if (stateIntercate == nullptr) return;
 	
@@ -61,7 +63,7 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 {
-	if (_pCurrentActionPreset == nullptr)
+	if (_curActionSet == nullptr)
 	{
 		return nullptr;
 	}
@@ -77,7 +79,7 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 	}
 
 
-	if (_pCurrentActionPreset->TryMakeActionInstance(actionType, &_mapActionProcessPool[index]))
+	if (_curActionSet->TryMakeActionInstance(actionType, &_mapActionProcessPool[index]))
 	{
 		_mapActionProcessPool[index]->Initialize(this, _actionBlackBoard);
 		_mapActionProcessPool[index]->Execute();
@@ -111,6 +113,11 @@ UActionBlackBoard* UActionComponent::GetActionBlackBoard()
 	return _actionBlackBoard;
 }
 
+IEventBrokerInterface* UActionComponent::GetEventBrokerInterface()
+{
+	return _eventBrokerInterface;
+}
+
 void UActionComponent::OnCharacterStateChanged(FStateData newStateData)
 {
 	if (_cachedStateData.MovementMode != newStateData.MovementMode)
@@ -131,15 +138,24 @@ void UActionComponent::OnCharacterStateChanged(FStateData newStateData)
 			actionPresetIns->VEnter();
 
 			//Set Current Action set
-			if (_pCurrentActionPreset != nullptr)
+			if (_curActionSet != nullptr)
 			{
-				_pCurrentActionPreset->VLeave();
-				_pCurrentActionPreset->MarkPendingKill();
+				_curActionSet->VLeave();
+				_curActionSet->MarkPendingKill();
 			}
-			_pCurrentActionPreset = actionPresetIns;
+			_curActionSet = actionPresetIns;
 		}
 	}
 	_cachedStateData = newStateData;
+}
+
+void UActionComponent::SwitchActionSet(UCharacterActionPreset* actionSet)
+{
+	if (_curActionSet == actionSet) return;
+
+	_curActionSet->VLeave();
+	_curActionSet = actionSet;
+	_curActionSet->VEnter();
 }
 
 void UActionComponent::ClearActionProcessPool()

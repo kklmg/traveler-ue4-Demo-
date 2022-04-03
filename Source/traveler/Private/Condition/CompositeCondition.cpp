@@ -13,13 +13,37 @@ bool UCompositeCondition::VValidate()
 	return true;
 }
 
-void UCompositeCondition::Initialize()
+TArray<FName> UCompositeCondition::VGetReactiveEventNames()
+{
+	TSet<FName> ReactiveEventNameSet;
+
+	for (auto condition : _conditions)
+	{
+		if (condition)
+		{
+			TArray<FName> eventNames = condition->VGetReactiveEventNames();
+			for (FName eventName : eventNames)
+			{
+				ReactiveEventNameSet.Add(eventName);
+			}
+		}
+	}
+
+	return ReactiveEventNameSet.Array();
+}
+
+void UCompositeCondition::VInitialize()
 {
 	for (auto conditionClass : _conditionClasses)
 	{
 		if (conditionClass)
 		{
-			_conditions.Add(NewObject<UConditionBase>(this, conditionClass));
+			UConditionBase* conditionIns = NewObject<UConditionBase>(this, conditionClass);
+			if(conditionIns)
+			{
+				conditionIns->VInitialize();
+				_conditions.Add(conditionIns);
+			}
 		}
 	}
 }

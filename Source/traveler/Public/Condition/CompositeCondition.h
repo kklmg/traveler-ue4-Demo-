@@ -16,7 +16,9 @@ class TRAVELER_API UCompositeCondition : public UConditionBase
 public:
 	virtual bool VValidate() override;
 
-	void Initialize();
+	virtual TArray<FName> VGetReactiveEventNames();
+
+	void VInitialize() override;
 	void Add(UConditionBase* condition);
 private:
 	UPROPERTY(EditDefaultsOnly)

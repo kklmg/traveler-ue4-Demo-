@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Event/EventBroker.h"
-#include "Data/StateData.h"
 #include "Data/AnimationModelBase.h"
 #include "AnimationCommunicatorInterface.generated.h"
 
@@ -38,12 +36,7 @@ public:
 	virtual EAnimationState VGetAnimationState() PURE_VIRTUAL(IAnimationCommunicatorInterface::VGetAnimationState, return EAnimationState::EAnimState_None;);
 	virtual FOnAnimationStateChanged& VGetAnimationStateChangedDelegate() PURE_VIRTUAL(IAnimationCommunicatorInterface::VGetAnimationStateChangedDelegate, return _tempAnimationStateChanged;);
 
-	//animation Event
-	UFUNCTION(BlueprintCallable)
-	virtual void VPublishEvent(FName eventName, UEventDataBase* eventData) PURE_VIRTUAL(IAnimationCommunicatorInterface::VPublishEvent, );
-	virtual FOnEventPublished& VGetEventDelegate(FName eventName) PURE_VIRTUAL(IAnimationCommunicatorInterface::VGetEventDelegate, return _tempEventPublished;);
-
 private:
-	FOnEventPublished _tempEventPublished;
+	
 	FOnAnimationStateChanged _tempAnimationStateChanged;
 };

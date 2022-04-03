@@ -43,20 +43,12 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UFUNCTION(BlueprintCallable)
-	void PublishEvent(FName eventName, UEventDataBase* eventData);
-
-	FOnEventPublished& GetEventDelegate(FName eventName);
-
 private:
 	UPROPERTY()
 	UAnimationModelBase* _animationModelIns;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UAnimationModelBase> _animationModelClass;
-
-	UPROPERTY()
-	UEventBroker* _eventBroker;
 
 	UPROPERTY()
 	EAnimationState _animationState;
