@@ -10,6 +10,13 @@
  * 
  */
 
+namespace NEventNames
+{
+	const FName MovementModeChanged = FName(TEXT("MovementModeChanged"));
+
+
+}
+
 USTRUCT()
 struct TRAVELER_API FDelegateWrapper
 {

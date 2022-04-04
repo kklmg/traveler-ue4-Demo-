@@ -25,7 +25,6 @@ void UEventBrokerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
 

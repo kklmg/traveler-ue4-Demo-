@@ -5,7 +5,6 @@
 #include "Components/ActionComponent.h"
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
-#include "Interface/StateInterface.h"
 #include "Interface/AttributeInterface.h"
 #include "Data/CostData.h"
 #include "Interface/AnimationCommunicatorInterface.h"
@@ -32,7 +31,6 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 		UE_LOG(LogTemp, Error, TEXT("no ation owner!"));
 		return;
 	}
-	_stateInterface = Cast<IStateInterface>(_actionOwner);	
 	_attributeInterface = Cast<IAttributeInterface>(_actionOwner);
 
 	//get animation view model

@@ -15,7 +15,7 @@ class UActionComponent;
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType,Blueprintable)
 class TRAVELER_API UActionPresetTrigger : public UObject
 {
 	GENERATED_BODY()

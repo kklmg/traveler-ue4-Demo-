@@ -9,6 +9,7 @@
 class IActionInterface;
 class IAttributeInterface;
 class IAnimationModelProvider;
+class IEventBrokerInterface;
 
 class UAnimationModelBase;
 
@@ -66,6 +67,8 @@ protected:
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
 	virtual void OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity) override;
 
+	void PublishMovementModeChangedEvent();
+
 	UFUNCTION()
 	void OnCharacterWantToSprint(bool wantToSprint);
 
@@ -101,4 +104,5 @@ private:
 	IActionInterface* _actionInterface;
 	IAttributeInterface* _attributeInterface;
 	IAnimationModelProvider* _animationModelProviderInterface;
+	IEventBrokerInterface* _eventBrokerInterface;
 };

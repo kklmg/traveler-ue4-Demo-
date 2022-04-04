@@ -5,7 +5,8 @@
 #include "Interface/AttributeInterface.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/AnimationCommunicatorInterface.h"
-
+#include "Interface/EventBrokerInterface.h"
+#include "Event/ActorEventDataBase.h"
 
 UMyCharacterMovementComponent::UMyCharacterMovementComponent()
 {
@@ -24,7 +25,8 @@ void UMyCharacterMovementComponent::BeginPlay()
 
 	_actionInterface = GetOwner<IActionInterface>();
 	_attributeInterface = GetOwner<IAttributeInterface>();
-	
+	_eventBrokerInterface = GetOwner<IEventBrokerInterface>();
+
 	if(_attributeInterface && _actionInterface)
 	{
 		//set walking speed 
@@ -43,6 +45,8 @@ void UMyCharacterMovementComponent::BeginPlay()
 	{
 		_animationViewModel = animationCommunicator->VGetAnimationModel();
 	}
+
+	PublishMovementModeChangedEvent();
 }
 
 void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -58,6 +62,7 @@ void UMyCharacterMovementComponent::OnMovementModeChanged(EMovementMode Previous
 	{
 		_animationViewModel->SetUInt8(AnimationDataKey::byteMovementMode, MovementMode);
 	}
+	PublishMovementModeChangedEvent();
 }
 
 void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity)
@@ -67,6 +72,16 @@ void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const 
 	if (_animationViewModel)
 	{
 		_animationViewModel->SetVector(AnimationDataKey::vMovingVelocity, Velocity);
+	}
+}
+
+void UMyCharacterMovementComponent::PublishMovementModeChangedEvent()
+{
+	if (_eventBrokerInterface)
+	{
+		UActorEventDataBase* eventData = NewObject<UActorEventDataBase>(this);
+		eventData->SetActor(GetOwner());
+		_eventBrokerInterface->VPublishEvent(NEventNames::MovementModeChanged, eventData);
 	}
 }
 

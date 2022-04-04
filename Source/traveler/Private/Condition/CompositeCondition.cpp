@@ -3,12 +3,12 @@
 
 #include "Condition/CompositeCondition.h"
 
-bool UCompositeCondition::VValidate()
+bool UCompositeCondition::VValidate(UEventDataBase* eventData)
 {
 	for (UConditionBase* condition : _conditions)
 	{
-		if (!condition) return false;
-		if (!condition->VValidate()) return false;
+		if (!condition) continue;
+		if (!condition->VValidate(eventData)) return false;
 	}
 	return true;
 }

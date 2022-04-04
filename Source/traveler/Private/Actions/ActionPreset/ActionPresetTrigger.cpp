@@ -39,7 +39,7 @@ void UActionPresetTrigger::Initiazlie(UActionComponent* actionComponent)
 
 void UActionPresetTrigger::Validate(UEventDataBase* eventData)
 {
-	if (_actionComponent && _actionPresetIns && _conditionIns && _conditionIns->VValidate())
+	if (_actionComponent && _actionPresetIns && _conditionIns && _conditionIns->VValidate(eventData))
 	{
 		_actionComponent->SwitchActionSet(_actionPresetIns);
 	}

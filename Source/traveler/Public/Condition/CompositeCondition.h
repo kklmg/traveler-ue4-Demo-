@@ -14,7 +14,7 @@ class TRAVELER_API UCompositeCondition : public UConditionBase
 {
 	GENERATED_BODY()
 public:
-	virtual bool VValidate() override;
+	virtual bool VValidate(UEventDataBase* eventData) override;
 
 	virtual TArray<FName> VGetReactiveEventNames();
 

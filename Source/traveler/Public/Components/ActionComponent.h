@@ -36,9 +36,6 @@ public:
 
 	bool CheckActionIsInProgress(EActionType actionType);
 
-	UFUNCTION()
-	void OnCharacterStateChanged(FStateData newStateData);
-
 	void SwitchActionSet(UCharacterActionPreset* actionSet);
 
 public:
@@ -51,15 +48,9 @@ public:
 	IEventBrokerInterface* GetEventBrokerInterface();
 	
 private:
-	void _TickActionProcess(float deltaTime);
+	void _tickActionProcess(float deltaTime);
 
 private:
-	FVector _userMovementInput;
-
-	FStateData _cachedStateData;
-
-	//UPROPERTY()
-	//TMap<EActionType, UActionBase*> _mapActionProcessPool;
 
 	UPROPERTY()
 	TArray<UActionBase*> _mapActionProcessPool;
@@ -67,17 +58,14 @@ private:
 	UPROPERTY()
 	UActionBlackBoard* _actionBlackBoard;
 
-	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
-	TMap<TEnumAsByte<enum EMovementMode>, TSubclassOf<UCharacterActionPreset>> _mapActionPreset;
+	UPROPERTY(EditDefaultsOnly, Category = ActionSetTriggerClasses)
+	TArray<TSubclassOf<UActionPresetTrigger>> _actionSetTriggerClasses;
 
-	UPROPERTY(EditDefaultsOnly, Category = ActionSetClasses)
-	TArray<UActionPresetTrigger*> _actionSetTriggers;
-
+	UPROPERTY()
+	TArray<UActionPresetTrigger*> _actionSetTriggerInstances;
 
 	UPROPERTY()
 	UCharacterActionPreset* _curActionSet;
 
 	IEventBrokerInterface* _eventBrokerInterface;
-
-	bool _bSprintButtonPress;
 };

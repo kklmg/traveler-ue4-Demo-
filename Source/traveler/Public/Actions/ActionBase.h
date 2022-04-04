@@ -111,7 +111,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool _bInstantAction;
 
-	IStateInterface* _stateInterface;
 	IAttributeInterface* _attributeInterface;
 
 private:

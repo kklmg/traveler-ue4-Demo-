@@ -9,7 +9,6 @@
 #include "Data/EnumCharacterState.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/AttributeInterface.h"
-#include "Interface/StateInterface.h"
 #include "Interface/CharacterCameraInterface.h"
 #include "Interface/WeaponInterface.h"
 #include "Interface/ExtraTransformProvider.h"
@@ -47,7 +46,7 @@ class UActionBlackBoard;
 
 UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter, 
-										public IActionInterface, public IAttributeInterface, public IStateInterface,
+										public IActionInterface, public IAttributeInterface,
 										public ICharacterCameraInterface, public IWeaponInterface,
 										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface,
 										public IActorEffectInterface, public IAnimationCommunicatorInterface, public IEventBrokerInterface
@@ -189,9 +188,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UActionComponent* _actionComponent;
-
-	UPROPERTY(VisibleAnywhere)
-	UStateComponent* _stateComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* _attributeComponent;

@@ -4,7 +4,6 @@
 #include "Actions/ActionDodge.h"
 #include "Character/CreatureCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Interface/StateInterface.h"
 #include "Interface/WeaponInterface.h"
 
 

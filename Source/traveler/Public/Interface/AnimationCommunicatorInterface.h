@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "Data/AnimationModelBase.h"
+#include "Data/StateData.h"
 #include "AnimationCommunicatorInterface.generated.h"
 
 // This class does not need to be modified.

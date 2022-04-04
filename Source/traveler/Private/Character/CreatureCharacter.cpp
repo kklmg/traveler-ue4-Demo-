@@ -11,7 +11,6 @@
 #include "Components/WidgetComponent.h"
 #include "Components/ActorUIComponent.h"
 #include "Components/AnimationEventComponent.h"
-#include "Components/StateComponent.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/CameraSpringArmComponent.h"
 #include "Components/WeaponComponent.h"

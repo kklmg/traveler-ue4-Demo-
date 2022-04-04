@@ -6,6 +6,8 @@
 #include "UObject/NoExportTypes.h"
 #include "ConditionBase.generated.h"
 
+class UEventDataBase;
+
 /**
  * 
  */
@@ -15,6 +17,6 @@ class TRAVELER_API UConditionBase : public UObject
 	GENERATED_BODY()
 public:
 	virtual void VInitialize();
-	virtual bool VValidate() PURE_VIRTUAL(UConditionBase::VValidate, return false;);
+	virtual bool VValidate(UEventDataBase* eventData) PURE_VIRTUAL(UConditionBase::VValidate, return false;);
 	virtual TArray<FName> VGetReactiveEventNames();
 };

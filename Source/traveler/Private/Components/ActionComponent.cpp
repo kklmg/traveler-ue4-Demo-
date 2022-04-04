@@ -9,7 +9,6 @@
 #include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyGameplayStatics.h"
-#include "Interface/StateInterface.h"
 #include "Interface/EventBrokerInterface.h"
 #include "Actions/ActionPreset/ActionPresetTrigger.h"
 
@@ -32,6 +31,18 @@ void UActionComponent::InitializeComponent()
 
 	_actionBlackBoard = NewObject<UActionBlackBoard>(this);
 	_mapActionProcessPool.SetNum(int32(EActionType::EACT_Max),false);
+
+	_eventBrokerInterface = GetOwner<IEventBrokerInterface>();
+
+	for (auto triggerClass : _actionSetTriggerClasses)
+	{
+		if (triggerClass)
+		{
+			UActionPresetTrigger* trigger = NewObject<UActionPresetTrigger>(this, triggerClass);
+			trigger->Initiazlie(this);
+			_actionSetTriggerInstances.Add(trigger);
+		}
+	}
 }
 
 // Called when the game starts
@@ -40,16 +51,6 @@ void UActionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-
-	_eventBrokerInterface = GetOwner<IEventBrokerInterface>();
-
-	IStateInterface* stateIntercate = GetOwner<IStateInterface>();
-	if (stateIntercate == nullptr) return;
-	
-	//OnCharacterStateChanged(stateIntercate->VGetStateData());
-
-	//bind state changed event
-	//stateIntercate->VGetAnyStateChangedDelegate()->AddDynamic(this, &UActionComponent::OnCharacterStateChanged);
 }
 
 
@@ -58,7 +59,7 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	_TickActionProcess(DeltaTime);
+	_tickActionProcess(DeltaTime);
 }
 
 UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
@@ -67,7 +68,6 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 	{
 		return nullptr;
 	}
-
 
 	int32 index = int32(actionType);
 
@@ -78,7 +78,6 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 		return nullptr;
 	}
 
-
 	if (_curActionSet->TryMakeActionInstance(actionType, &_mapActionProcessPool[index]))
 	{
 		_mapActionProcessPool[index]->Initialize(this, _actionBlackBoard);
@@ -88,7 +87,7 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 }
 
 
-void UActionComponent::_TickActionProcess(float deltaTime)
+void UActionComponent::_tickActionProcess(float deltaTime)
 {
 	TArray<EActionType> finieshedActionKeys;
 
@@ -118,44 +117,22 @@ IEventBrokerInterface* UActionComponent::GetEventBrokerInterface()
 	return _eventBrokerInterface;
 }
 
-void UActionComponent::OnCharacterStateChanged(FStateData newStateData)
-{
-	if (_cachedStateData.MovementMode != newStateData.MovementMode)
-	{
-		//preset 
-		if (_mapActionPreset.Contains(newStateData.MovementMode))
-		{
-			//clear process pool
-			ClearActionProcessPool();
-
-			//Make instance of ActionPresetClass
-			TSubclassOf<UCharacterActionPreset> actionpresetClass = _mapActionPreset[newStateData.MovementMode];
-
-			UCharacterActionPreset* actionPresetIns = actionpresetClass ?
-				NewObject<UCharacterActionPreset>(this, actionpresetClass)
-				: NewObject<UCharacterActionPreset>(this);
-
-			actionPresetIns->VEnter();
-
-			//Set Current Action set
-			if (_curActionSet != nullptr)
-			{
-				_curActionSet->VLeave();
-				_curActionSet->MarkPendingKill();
-			}
-			_curActionSet = actionPresetIns;
-		}
-	}
-	_cachedStateData = newStateData;
-}
 
 void UActionComponent::SwitchActionSet(UCharacterActionPreset* actionSet)
 {
 	if (_curActionSet == actionSet) return;
 
-	_curActionSet->VLeave();
+	ClearActionProcessPool();
+	if(_curActionSet)
+	{
+		_curActionSet->VLeave();
+	}
 	_curActionSet = actionSet;
-	_curActionSet->VEnter();
+
+	if(_curActionSet)
+	{
+		_curActionSet->VEnter();
+	}
 }
 
 void UActionComponent::ClearActionProcessPool()
