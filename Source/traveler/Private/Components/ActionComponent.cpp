@@ -11,6 +11,8 @@
 #include "GameSystem/MyGameplayStatics.h"
 #include "Interface/EventBrokerInterface.h"
 #include "Actions/ActionPreset/ActionPresetTrigger.h"
+#include "GameSystem/DebugMessageHelper.h"
+
 
 
 // Sets default values for this component's properties
@@ -133,6 +135,8 @@ void UActionComponent::SwitchActionSet(UCharacterActionPreset* actionSet)
 	{
 		_curActionSet->VEnter();
 	}
+
+	UDebugMessageHelper::Messsage_String(TEXT("ActionComp"),TEXT("ActionSetChanged"));
 }
 
 void UActionComponent::ClearActionProcessPool()
