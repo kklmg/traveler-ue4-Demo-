@@ -15,6 +15,7 @@ class TRAVELER_API UCharacterActionPreset : public UActionPreset
 	GENERATED_BODY()
 	
 public:
+	void virtual VInitialize() override;
 	void virtual VEnter() override;
 	void virtual VLeave() override;
 

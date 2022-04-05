@@ -71,21 +71,30 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 		return nullptr;
 	}
 
+	//array index(pool slot)
 	int32 index = int32(actionType);
 
-	//the same action is in progress 
+	//Handle case when the same action is in progress 
 	if(_mapActionProcessPool[index] &&
 		_mapActionProcessPool[index]->GetActionProcessState() == EProcessState::EPS_Running)
 	{
+		//todo
 		return nullptr;
 	}
 
-	if (_curActionSet->TryMakeActionInstance(actionType, &_mapActionProcessPool[index]))
+	//make and get Action Instance
+	UActionBase* newActionIns = _curActionSet->GetActionInstance(actionType);
+	if(newActionIns)
 	{
-		_mapActionProcessPool[index]->Initialize(this, _actionBlackBoard);
-		_mapActionProcessPool[index]->Execute();
+		//Execute Action
+		newActionIns->Initialize(this, _actionBlackBoard);
+		newActionIns->Execute();
+
+		//add action Instance to pool for management
+		_mapActionProcessPool[index] = newActionIns;
 	}
-	return _mapActionProcessPool[index];
+
+	return newActionIns;
 }
 
 

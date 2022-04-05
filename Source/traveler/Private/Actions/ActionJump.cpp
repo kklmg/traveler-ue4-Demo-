@@ -11,6 +11,7 @@ UActionJump::UActionJump()
 {
 	_actionName = ActionName::JUMP;
 	_actionType = EActionType::EACT_Jumping;
+	_bInstantAction = false;
 	_delayTime = 0.3f;
 }
 
@@ -29,10 +30,13 @@ void UActionJump::VTMExecute()
 		weaponInterface->VStopWeaponProcess(WeaponProcessName::AIM);
 		weaponInterface->VStopWeaponProcess(WeaponProcessName::FIRE);
 	}
+}
 
-	FTimerHandle jumpTimerHandle;
+void UActionJump::VTMTick(float deltaTime)
+{
+	Super::VTMTick(deltaTime);
 
-	GetWorld()->GetTimerManager().SetTimer(jumpTimerHandle, FTimerDelegate::CreateLambda([&]()
+	if (GetElapsedTime() > _delayTime)
 	{
 		GetActionOwner()->Jump();
 
@@ -41,11 +45,6 @@ void UActionJump::VTMExecute()
 			GetAnimationViewModel()->SetBool(AnimationDataKey::bWantToJump, false);
 		}
 
-		GetWorld()->GetTimerManager().ClearTimer(jumpTimerHandle);
-	}), _delayTime, false);
-}
-
-void UActionJump::VTMTick(float deltaTime)
-{
-	Super::VTMTick(deltaTime);
+		SetActionProcessSucceed();
+	}
 }

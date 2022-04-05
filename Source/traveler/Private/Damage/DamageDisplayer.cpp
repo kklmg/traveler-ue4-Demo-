@@ -60,10 +60,10 @@ void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 
 void UDamageDisplayer::Tick(float DeltaTime)
 {
-	if (_widgetPool) 
+	/*if (_widgetPool) 
 	{
 		_widgetPool->DrawDebugMessage();
-	}
+	}*/
 }
 
 void UDamageDisplayer::GetDamageWidgetData(FDamageDisplayData damageDisplayData, FVector2D offset, FDamageWidgetData& outDamageWidgetData)

@@ -14,10 +14,10 @@ class TRAVELER_API UDebugMessageHelper : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:
-	static void Message_Int(FString Categoty, int32 value);
-	static void Message_Float(FString Categoty, float value);
-	static void Message_Vector(FString Categoty, FVector value);
-	static void Messsage_Enum(FString Categoty, TCHAR* enumName,int32 enumValue);
-	static void Messsage_String(FString Categoty, FString string);
+	static void Message_Int(FString Categoty, int32 value, float timeToDisplay = 5.0f);
+	static void Message_Float(FString Categoty, float value, float timeToDisplay = 5.0f);
+	static void Message_Vector(FString Categoty, FVector valu, float timeToDisplay = 5.0f);
+	static void Messsage_Enum(FString Categoty, TCHAR* enumName,int32 enumValue, float timeToDisplay = 5.0f);
+	static void Messsage_String(FString Categoty, FString string, float timeToDisplay = 5.0f);
 };
 

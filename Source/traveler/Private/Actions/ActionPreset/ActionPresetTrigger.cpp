@@ -6,6 +6,7 @@
 #include "Actions/ActionPreset/CharacterActionPreset.h"
 #include "Components/ActionComponent.h"
 #include "Interface/EventBrokerInterface.h"
+#include "GameSystem/DebugMessageHelper.h"
 
 
 void UActionPresetTrigger::Initiazlie(UActionComponent* actionComponent)
@@ -33,14 +34,21 @@ void UActionPresetTrigger::Initiazlie(UActionComponent* actionComponent)
 	if (_actionPresetClass)
 	{
 		_actionPresetIns = NewObject<UCharacterActionPreset>(this, _actionPresetClass);
+		_actionPresetIns->VInitialize();
 	}
 	
 }
 
 void UActionPresetTrigger::Validate(UEventDataBase* eventData)
 {
+	//UDebugMessageHelper::Messsage_String("try  to", outName);
+
 	if (_actionComponent && _actionPresetIns && _conditionIns && _conditionIns->VValidate(eventData))
 	{
 		_actionComponent->SwitchActionSet(_actionPresetIns);
+		FString outName;
+		_actionPresetIns->GetName(outName);
+
+		UDebugMessageHelper::Messsage_String("Swtich to",outName);
 	}
 }

@@ -26,7 +26,7 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 	_actionBlackBoard = actionBlackBoard;
 	_actionComp = actionComponent;
 	_actionOwner = actionComponent->GetOwner<ACharacter>();
-	if(_actionOwner==false)
+	if (_actionOwner == false)
 	{
 		UE_LOG(LogTemp, Error, TEXT("no ation owner!"));
 		return;
@@ -35,11 +35,11 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 
 	//get animation view model
 	IAnimationCommunicatorInterface* animationCommunicator = Cast<IAnimationCommunicatorInterface>(_actionOwner);
-	if(animationCommunicator)
+	if (animationCommunicator)
 	{
 		_animationViewModel = animationCommunicator->VGetAnimationModel();
 	}
-	
+
 	_processState = EProcessState::EPS_ReadyToExecute;
 	VTMInitialize();
 }
@@ -83,11 +83,11 @@ FORCEINLINE bool UActionBase::CanExecute()
 
 void UActionBase::Tick(float deltaTime)
 {
-	if (_processState != EProcessState::EPS_Running)
+	if (_processState == EProcessState::EPS_Running)
 	{
-		return;
+		_elapsedTime += deltaTime;
+		VTMTick(deltaTime);
 	}
-	VTMTick(deltaTime);
 }
 
 bool UActionBase::VTMCanExecute()
@@ -141,6 +141,11 @@ FORCEINLINE ACharacter* UActionBase::GetActionOwner()
 FORCEINLINE UActionBlackBoard* UActionBase::GetActionBlackBoard()
 {
 	return _actionBlackBoard;
+}
+
+float UActionBase::GetElapsedTime()
+{
+	return _elapsedTime;
 }
 
 void UActionBase::SetActionProcessSucceed()

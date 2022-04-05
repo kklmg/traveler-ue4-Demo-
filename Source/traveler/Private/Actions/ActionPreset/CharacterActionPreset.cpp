@@ -4,15 +4,20 @@
 #include "Actions/ActionPreset/CharacterActionPreset.h"
 
 
+void UCharacterActionPreset::VInitialize()
+{
+	Super::VInitialize();
+
+	AddActionClassToMap(ActionMoveClass);
+	AddActionClassToMap(ActionSprintClass);
+	AddActionClassToMap(ActionJumpClass);
+	AddActionClassToMap(ActionAimClass);
+	AddActionClassToMap(ActionDodgeClass);
+}
+
 void UCharacterActionPreset::VEnter()
 {
 	Super::VEnter();
-
-	AddActionClass(ActionMoveClass);
-	AddActionClass(ActionSprintClass);
-	AddActionClass(ActionJumpClass);
-	AddActionClass(ActionAimClass);
-	AddActionClass(ActionDodgeClass);
 }
 void UCharacterActionPreset::VLeave()
 {

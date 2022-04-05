@@ -13,10 +13,4 @@ UCLASS(BlueprintType, Blueprintable)
 class TRAVELER_API UActorCondition : public UConditionBase
 {
 	GENERATED_BODY()
-public:
-	void SetActor(AActor* actor);
-protected:
-	AActor* GetActor();
-private:
-	AActor* _actor;
 };

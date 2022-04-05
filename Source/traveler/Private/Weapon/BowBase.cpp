@@ -14,6 +14,7 @@
 #include "Interface/ExtraTransformProvider.h"
 #include "Interface/ActionInterface.h"
 #include "UI/CrosshairWidgetBase.h"
+#include "GameSystem/DebugMessageHelper.h"
 
 #include "Weapon/WeaponProcess/BowProcess/BowProcessFire.h"
 #include "Weapon/WeaponProcess/BowProcess/BowProcessAim.h"
@@ -94,7 +95,7 @@ void ABowBase::Tick(float DeltaTime)
 	{
 		_crosshairWidgetIns->Animate(DeltaTime);
 	}
-
+	UDebugMessageHelper::Message_Int("Arrow Spawned", _holdingArrows.Num(), 0.0f);
 	UpdateArrowsTransform();
 }
 

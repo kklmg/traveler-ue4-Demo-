@@ -33,11 +33,18 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 
 	bUseControllerRotationYaw = false;
 
-	//Create State component
+	//Create Event Broker component
 	if (_eventBrokerComponent == nullptr)
 	{
 		_eventBrokerComponent = CreateDefaultSubobject<UEventBrokerComponent>(TEXT("EventBrokerComponent"));
 		check(_eventBrokerComponent != nullptr);
+	}
+
+	//animation communicator
+	if (_AnimationCommunicatorComponent == nullptr)
+	{
+		_AnimationCommunicatorComponent = CreateDefaultSubobject<UAnimationCommunicatorComponent>(TEXT("AnimationCommunicator"));
+		check(_AnimationCommunicatorComponent);
 	}
 
 	//Create Attribute component
@@ -119,13 +126,6 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 	{
 		_effectControllerComponent = CreateDefaultSubobject<UEffectControllerComponent>(TEXT("EffectControllerComponent"));
 		check(_effectControllerComponent);
-	}
-
-	//animation communicator
-	if (_AnimationCommunicatorComponent == nullptr)
-	{
-		_AnimationCommunicatorComponent = CreateDefaultSubobject<UAnimationCommunicatorComponent>(TEXT("AnimationCommunicator"));
-		check(_AnimationCommunicatorComponent);
 	}
 }
 

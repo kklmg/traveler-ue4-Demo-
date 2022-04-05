@@ -87,6 +87,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UActionBlackBoard* GetActionBlackBoard();
 
+	UFUNCTION(BlueprintCallable)
+	float GetElapsedTime();
+
 protected:
 	virtual void VTMInitialize();
 	virtual bool VTMCanExecute();
@@ -131,4 +134,6 @@ private:
 
 	UPROPERTY()
 	UAnimationModelBase* _animationViewModel;
+
+	float _elapsedTime;
 };

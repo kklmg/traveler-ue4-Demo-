@@ -34,5 +34,6 @@ public:
 	FOnEventPublished& GetEventDelegate(FName eventName);
 
 private:
+	UPROPERTY()
 	UEventBroker* _eventBroker;
 };
