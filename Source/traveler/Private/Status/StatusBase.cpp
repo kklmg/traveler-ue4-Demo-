@@ -13,8 +13,10 @@ void UStatusBase::VInitialize(const FStatusTableRow& tableRow, int32 level)
 	//_statusText =	
 	_growth = tableRow.Growth;
 	_primaryValue = tableRow.Value;
-	_basicValue = _primaryValue + (_growth * level);
+	_basicValue = _primaryValue + (_growth * (level - 1));
 	_finalValue = _basicValue;
+
+	VOnLevelUp(level);
 }
 
 float UStatusBase::GetPrimaryValue()
@@ -44,11 +46,21 @@ FText UStatusBase::GetText()
 
 void UStatusBase::VOnLevelUp(int32 level)
 {
+	float cacheValue = _basicValue;
 	_basicValue = _primaryValue + (_growth * level);
+
+	OnBasicValueChanged.Broadcast(cacheValue,_basicValue);
+
+	ComputeFinalValue();
 }
 
 void UStatusBase::ComputeFinalValue()
 {
+	
+	float cacheValue = _finalValue;
+
 	//To do
 	_finalValue = _basicValue;
+
+	OnFinalValueChanged.Broadcast(cacheValue, _finalValue);
 }

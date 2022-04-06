@@ -17,15 +17,19 @@ public:
 
 	virtual void VInitialize(const FStatusTableRow& tableRow, int32 level = 1) override;
 
+	void Tick(float deltaTime);
+
 	UFUNCTION(BlueprintPure)
 	float GetRemainingValue();
 
 	UFUNCTION(BlueprintPure)
 	float GetPercentage();
 
-	void ApplyValueChange(float value);
+	void ApplyValueChange(float deltaValue, bool bResetRecoveryTimer = true);
 
+	virtual void VOnLevelUp(int32 level);
 private:
+
 	UPROPERTY(EditDefaultsOnly)
 	float _remainingValue;
 

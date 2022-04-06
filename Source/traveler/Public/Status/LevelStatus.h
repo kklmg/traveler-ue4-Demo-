@@ -17,6 +17,7 @@ class TRAVELER_API ULevelStatus : public UObject
 	GENERATED_BODY()
 public:
 	void SetLevel(int32 level, int32 exp = 0);
+	UFUNCTION(BlueprintPure)
 	int32 GetLevel();
 
 private:

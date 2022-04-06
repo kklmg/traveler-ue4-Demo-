@@ -9,6 +9,8 @@
 
 class IExtraTransformProvider;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDMD_OnActorChanged,AActor*,actor);
+
 /**
  * 
  */
@@ -20,7 +22,7 @@ class TRAVELER_API UActorWidget : public UUserWidget
 public:
 	void SetData(AActor* widgetOwner,ETransform transformType);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	AActor* GetWidgetOwner();
 
 protected:
@@ -34,4 +36,7 @@ private:
 	ETransform _transformType;
 
 	IExtraTransformProvider* _ExTransformProviderInterface;
+public:
+	UPROPERTY(BlueprintAssignable)
+	FDMD_OnActorChanged OnWidgetOwnerChangedDelegate;
 };

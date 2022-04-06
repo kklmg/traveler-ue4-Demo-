@@ -46,16 +46,10 @@ void UStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-
-	//TO DO
-	// ...
-	//for (auto attribute : _mapAttributes)
-	//{
-	//	if (attribute.Value)
-	//	{
-	//		attribute.Value->Tick(DeltaTime);
-	//	}
-	//}
+	for (auto basicStatus : _basicStatusMap)
+	{
+		basicStatus.Value->Tick(DeltaTime);
+	}
 }
 
 UStatusBase* UStatusComponent::GetStatusIns(EStatusType statusType)
@@ -125,7 +119,7 @@ bool UStatusComponent::IsRemainingValueEnough(UCostData* costData)
 	if (!costData) return true;
 
 	auto costArray = costData->GetCostArray();
-	for(auto costPair : costArray)
+	for (auto costPair : costArray)
 	{
 		if (GetRemainingValue(costPair.Key) < costPair.Value)
 		{
@@ -143,7 +137,7 @@ bool UStatusComponent::ApplyCost(UCostData* costData)
 	auto costArray = costData->GetCostArray();
 	for (auto costPair : costArray)
 	{
-		ApplyRemainingValueChange(costPair.Key, costPair.Value);
+		ApplyRemainingValueChange(costPair.Key, - costPair.Value);
 	}
 	return true;
 }

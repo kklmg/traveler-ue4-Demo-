@@ -12,6 +12,8 @@ void UActorWidget::SetData(AActor* widgetOwner, ETransform transformType)
 	_transformType = transformType;
 
 	_ExTransformProviderInterface = Cast<IExtraTransformProvider>(_widgetOwner);
+
+	OnWidgetOwnerChangedDelegate.Broadcast(_widgetOwner);
 }
 
 void UActorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
