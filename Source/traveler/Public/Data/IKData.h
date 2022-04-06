@@ -21,3 +21,22 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	FRotator rotator;
 };
+
+	
+UCLASS(BlueprintType)
+class TRAVELER_API UIKFootData : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	void SetLeft(FIKData IKData);
+	void SetRight(FIKData IKData);
+
+	UFUNCTION(BlueprintPure)
+	FIKData GetLeft();
+	UFUNCTION(BlueprintPure)
+	FIKData GetRight();
+private:
+	FIKData _leftData;
+	FIKData _rightData;
+};

@@ -23,8 +23,6 @@ namespace AnimationDataKey
 	const FName fCameraPitch = FName(TEXT("fCameraPitch"));
 	const FName fCameraPitchMax = FName(TEXT("fCameraPitchMax"));
 	const FName fCameraPitchMin = FName(TEXT("fCameraPitchMin"));
-	const FName fIKLeftFootHeightOffset = FName(TEXT("fIKLeftFootHeightOffset"));
-	const FName fIKRightFootHeightOffset = FName(TEXT("fIKRightFootHeightOffset"));
 
 	//vector
 	const FName vMovingDirection = FName(TEXT("vMovingDirection"));
@@ -36,6 +34,7 @@ namespace AnimationDataKey
 
 	//object
 	const FName objWeapon = FName(TEXT("objWeapon"));
+	const FName objFootIKData = FName(TEXT("objFootIKData"));
 };
 
 

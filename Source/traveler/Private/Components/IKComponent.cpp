@@ -41,7 +41,8 @@ void UIKComponent::BeginPlay()
 	{
 		_animationViewModel = animationCommunicator->VGetAnimationModel();
 	}
-  
+
+	_footIKData = NewObject<UIKFootData>(this);
 }
 
 
@@ -57,8 +58,12 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 
 		if ((movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking))
 		{ 
-			_IKDataLeftFoot = FootTrace(ETransform::ETransform_LeftFoot);
-			_IKDataRightFoot = FootTrace(ETransform::ETransform_RightFoot);
+			//calculate ik data
+			_footIKData->SetLeft(FootTrace(ETransform::ETransform_LeftFoot));
+			_footIKData->SetRight(FootTrace(ETransform::ETransform_RightFoot));
+
+			//notify ik data
+			_animationViewModel->SetUObject(AnimationDataKey::objFootIKData, _footIKData);
 		}
 	}
 }
@@ -111,15 +116,5 @@ FIKData UIKComponent::FootTrace(ETransform meshSocketType)
 	}
 
 	return result;
-}
-
-FIKData UIKComponent::GetIKData_LeftFoot()
-{
-	return _IKDataLeftFoot;
-}
-
-FIKData UIKComponent::GetIKData_RightFoot()
-{
-	return _IKDataRightFoot;
 }
 

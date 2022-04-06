@@ -77,7 +77,7 @@ uint8 UReactive_UInt8::GetValue()
 
 void UReactive_UObject::SetValue(UObject* value)
 {
-	if (_value == value) return;
+	//if (_value == value) return;
 	_value = value;
 	OnValueChanged.Broadcast(_value);
 }

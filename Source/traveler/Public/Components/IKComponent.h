@@ -34,12 +34,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	FIKData FootTrace(ETransform meshSocketType);
-
-	UFUNCTION(BlueprintCallable)
-	FIKData GetIKData_LeftFoot();
-
-	UFUNCTION(BlueprintCallable)
-	FIKData GetIKData_RightFoot();
 	
 private:
 	UPROPERTY(EditAnywhere)
@@ -56,7 +50,8 @@ private:
 
 	IExtraTransformProvider* _meshSocketProvider;
 
-	FIKData _IKDataLeftFoot;
-	FIKData _IKDataRightFoot;
+	UPROPERTY()
+	UIKFootData* _footIKData;
+
 	float _halfHeight;
 };
