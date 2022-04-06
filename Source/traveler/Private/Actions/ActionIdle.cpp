@@ -2,7 +2,6 @@
 
 
 #include "Actions/ActionIdle.h"
-#include "Components/AttributeComponent.h"
 
 UActionIdle::UActionIdle() 
 {
@@ -13,10 +12,6 @@ UActionIdle::UActionIdle()
 
 void UActionIdle::VTMExecute()
 {
-	//Get Attribute
-	//UAttributeComponent* pAttributeComponent = _actionOwner->GetAttributeComponent();
-	//check(pAttributeComponent != nullptr);
-
 }
 
 void UActionIdle::VTMTick(float deltaTime)

@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Data/EnumTransformType.h"
-#include "Data/EnumAttributeType.h"
-#include "Data/EnumCharacterState.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/StatusInterface.h"
 #include "Interface/CharacterCameraInterface.h"

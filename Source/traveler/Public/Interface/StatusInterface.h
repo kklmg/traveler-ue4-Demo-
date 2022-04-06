@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Data/CharacterAttribute.h"
 #include "Data/CostData.h"
 #include "Status/BasicStatus.h"
 #include "Status/LevelStatus.h"

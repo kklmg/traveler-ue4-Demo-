@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Actions/ActionJump.h"
-#include "Components/AttributeComponent.h"
 #include "Character/CreatureCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Interface/WeaponInterface.h"

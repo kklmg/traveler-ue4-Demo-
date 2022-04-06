@@ -6,7 +6,6 @@
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actions/ActionPreset/CharacterActionPreset.h"
 #include "Components/PawnCameraComponent.h"
-#include "Components/AttributeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyGameplayStatics.h"
 #include "Interface/EventBrokerInterface.h"
