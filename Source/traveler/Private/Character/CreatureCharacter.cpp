@@ -3,11 +3,9 @@
 
 #include "Character/CreatureCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Data/CharacterAttribute.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/ActionComponent.h"
-#include "Components/AttributeComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/ActorUIComponent.h"
 #include "Components/AnimationEventComponent.h"
@@ -22,6 +20,7 @@
 #include "Components/DamageHandlerComponent.h"
 #include "Components/AnimationCommunicatorComponent.h"
 #include "Components/EventBrokerComponent.h"
+#include "Components/StatusComponent.h"
 #include "Input/InputHandlerComponent.h"
 
 
@@ -41,17 +40,17 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 	}
 
 	//animation communicator
-	if (_AnimationCommunicatorComponent == nullptr)
+	if (_animationCommunicatorComponent == nullptr)
 	{
-		_AnimationCommunicatorComponent = CreateDefaultSubobject<UAnimationCommunicatorComponent>(TEXT("AnimationCommunicator"));
-		check(_AnimationCommunicatorComponent);
+		_animationCommunicatorComponent = CreateDefaultSubobject<UAnimationCommunicatorComponent>(TEXT("AnimationCommunicator"));
+		check(_animationCommunicatorComponent);
 	}
 
-	//Create Attribute component
-	if (_attributeComponent == nullptr)
+	//Create Stauts component
+	if (_statusComponent == nullptr)
 	{
-		_attributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
-		check(_attributeComponent != nullptr);
+		_statusComponent = CreateDefaultSubobject<UStatusComponent>(TEXT("StatusComponent"));
+		check(_statusComponent != nullptr);
 	}
 	
 	//Create Extra Transform provider component
@@ -166,39 +165,65 @@ float ACreatureCharacter::TakeDamage(float DamageAmount, struct FDamageEvent con
 	return Super::TakeDamage(DamageAmount,DamageEvent,EventInstigator,DamageCauser);
 }
 
-FORCEINLINE UAttributeComponent* ACreatureCharacter::GetAttributeComponent()
+int32 ACreatureCharacter::VGetLevelValue()
 {
-	return _attributeComponent;
+	return _statusComponent->GetLevelValue();
 }
+
+ULevelStatus* ACreatureCharacter::VGetLevelStatusIns()
+{
+	return _statusComponent->GetLevelStatusIns();
+}
+
+float ACreatureCharacter::VGetPrimaryValue(EStatusType statusType)
+{
+	return _statusComponent->GetPrimaryValue(statusType);
+}
+
+float ACreatureCharacter::VGetBasicValue(EStatusType statusType)
+{
+	return _statusComponent->GetBasicValue(statusType);
+}
+
+float ACreatureCharacter::VGetFinalValue(EStatusType statusType)
+{
+	return _statusComponent->GetFinalValue(statusType);
+}
+
+float ACreatureCharacter::VGetRemainingValue(EStatusType statusType)
+{
+	return _statusComponent->GetRemainingValue(statusType);
+}
+
+UStatusBase* ACreatureCharacter::VGetStatusIns(EStatusType statusType)
+{
+	return _statusComponent->GetStatusIns(statusType);
+}
+
+UBasicStatus* ACreatureCharacter::VGetBasicStatusIns(EStatusType statusType)
+{
+	return _statusComponent->GetBasicStatusIns(statusType);
+}
+
+void ACreatureCharacter::VApplyRemainingValueChange(EStatusType statusType, float value)
+{
+	_statusComponent->ApplyRemainingValueChange(statusType, value);
+}
+
+bool ACreatureCharacter::VIsRemainingValueEnough(UCostData* costData)
+{
+	return _statusComponent->IsRemainingValueEnough(costData);
+}
+
+bool ACreatureCharacter::VApplyCost(UCostData* costData)
+{
+	return _statusComponent->ApplyCost(costData);
+}
+
 
 FORCEINLINE UAnimationEventComponent* ACreatureCharacter::GetAnimationEventComponent()
 {
 	return _animationEventComponent;
-}
-
-FORCEINLINE UCharacterAttribute* ACreatureCharacter::VGetAttribute(EAttributeType attributeType)
-{
-	return _attributeComponent->GetAttribute(attributeType);
-}
-
-bool ACreatureCharacter::VSetAttribute(EAttributeType attributeType, float newValue)
-{
-	return _attributeComponent->SetAttribute(attributeType, newValue);
-}
-
-bool ACreatureCharacter::VSetAttributeChange(EAttributeType attributeType, float deltaValue)
-{
-	return _attributeComponent->SetAttributeChange(attributeType, deltaValue);
-}
-
-bool ACreatureCharacter::VCanConsume(UCostData* cost)
-{
-	return _attributeComponent->CanConsume(cost);
-}
-
-bool ACreatureCharacter::VTryConsume(UCostData* cost)
-{
-	return _attributeComponent->TryConsume(cost);
 }
 
 FORCEINLINE UActionComponent* ACreatureCharacter::GetActionComponent()
@@ -403,22 +428,22 @@ void ACreatureCharacter::VStopEffect(EStatusEffect effectType)
 
 UAnimationModelBase* ACreatureCharacter::VGetAnimationModel()
 {
-	return _AnimationCommunicatorComponent->GetAnimationModel();
+	return _animationCommunicatorComponent->GetAnimationModel();
 }
 
 void ACreatureCharacter::VSetAnimationState(EAnimationState newState)
 {
-	_AnimationCommunicatorComponent->SetAnimationState(newState);
+	_animationCommunicatorComponent->SetAnimationState(newState);
 }
 
 EAnimationState ACreatureCharacter::VGetAnimationState()
 {
-	return _AnimationCommunicatorComponent->GetAnimationState();
+	return _animationCommunicatorComponent->GetAnimationState();
 }
 
 FOnAnimationStateChanged& ACreatureCharacter::VGetAnimationStateChangedDelegate()
 {
-	return _AnimationCommunicatorComponent->GetAnimationStateChangedDelegate();
+	return _animationCommunicatorComponent->GetAnimationStateChangedDelegate();
 }
 
 void ACreatureCharacter::VPublishEvent(FName eventName, UEventDataBase* eventData)
@@ -426,7 +451,7 @@ void ACreatureCharacter::VPublishEvent(FName eventName, UEventDataBase* eventDat
 	_eventBrokerComponent->PublishEvent(eventName, eventData);
 }
 
-FOnEventPublished& ACreatureCharacter::VGetEventDelegate(FName eventName)
+FMD_OnEventPublished& ACreatureCharacter::VGetEventDelegate(FName eventName)
 {
 	return _eventBrokerComponent->GetEventDelegate(eventName);
 }

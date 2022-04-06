@@ -14,7 +14,7 @@ UActionDodge::UActionDodge()
 	_bInstantAction = false;
 	_dodgeSpeed = 250;
 
-	GetCostData()->SetCost(EAttributeType::EATT_Stamina,20);
+	GetCostData()->AddCost(EStatusType::EStatus_Stamina,20);
 	
 }
 

@@ -44,7 +44,7 @@ void UEventBrokerComponent::PublishEvent(FName eventName, UEventDataBase* eventD
 	_eventBroker->Publish(eventName, eventData);
 }
 
-FOnEventPublished& UEventBrokerComponent::GetEventDelegate(FName eventName)
+FMD_OnEventPublished& UEventBrokerComponent::GetEventDelegate(FName eventName)
 {
 	checkf(_eventBroker != nullptr, TEXT("missing instance of EventBroker"));
 

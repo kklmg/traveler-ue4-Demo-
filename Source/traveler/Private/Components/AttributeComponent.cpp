@@ -129,33 +129,33 @@ bool UAttributeComponent::CanConsumeStatus(EAttributeType attributeType, float C
 bool UAttributeComponent::CanConsume(UCostData* costData)
 {
 	if (!costData) return true;
-	TArray<TPair<EAttributeType, float>> costArray = costData->GetCostArray();
+	//TArray<TPair<EAttributeType, float>> costArray = costData->GetCostArray();
 
-	for (TPair<EAttributeType, float> cost : costArray)
-	{
-		if(CanConsumeStatus(cost.Key,cost.Value)==false)
-		{
-			return false;
-		}
-	}
+	//for (TPair<EAttributeType, float> cost : costArray)
+	//{
+	//	if(CanConsumeStatus(cost.Key,cost.Value)==false)
+	//	{
+	//		return false;
+	//	}
+	//}
 	return true;
 }
 
 bool UAttributeComponent::TryConsume(UCostData* costData)
 {
 	if (!costData) return true;
-	if (CanConsume(costData) == false) return false;
+	//if (CanConsume(costData) == false) return false;
 
-	TArray<TPair<EAttributeType, float>> costArray = costData->GetCostArray();
+	//TArray<TPair<EAttributeType, float>> costArray = costData->GetCostArray();
 
-	for (TPair<EAttributeType, float> cost : costArray)
-	{
-		UCharacterAttribute* attribute = GetAttribute(cost.Key);
-		if (attribute)
-		{
-			attribute->ApplyValueChange(-cost.Value);
-		}
-	}
+	//for (TPair<EAttributeType, float> cost : costArray)
+	//{
+	//	UCharacterAttribute* attribute = GetAttribute(cost.Key);
+	//	if (attribute)
+	//	{
+	//		attribute->ApplyValueChange(-cost.Value);
+	//	}
+	//}
 	return true;
 }
 

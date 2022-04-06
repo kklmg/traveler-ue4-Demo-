@@ -8,7 +8,7 @@
 #include "Data/EnumAttributeType.h"
 #include "Data/EnumCharacterState.h"
 #include "Interface/ActionInterface.h"
-#include "Interface/AttributeInterface.h"
+#include "Interface/StatusInterface.h"
 #include "Interface/CharacterCameraInterface.h"
 #include "Interface/WeaponInterface.h"
 #include "Interface/ExtraTransformProvider.h"
@@ -27,7 +27,7 @@ class UBillboardComponent;
 class UActorUIComponent;
 class UAnimationEventComponent;
 class UInputHandlerComponent;
-class UStateComponent;
+class UStatusComponent;
 class UPawnCameraComponent;
 class UCameraSpringArmComponent;
 class UWeaponComponent;
@@ -43,10 +43,12 @@ class UActionBase;
 class AProjectile;
 class UActionBlackBoard;
 
+class FDMD_OnFloatValueChanged;
+
 
 UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter, 
-										public IActionInterface, public IAttributeInterface,
+										public IActionInterface, public IStatusInterface,
 										public ICharacterCameraInterface, public IWeaponInterface,
 										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface,
 										public IActorEffectInterface, public IAnimationCommunicatorInterface, public IEventBrokerInterface
@@ -72,21 +74,21 @@ public:
 public:
 	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	//Attribute Interface implementation---------------------------------------------------
-	UFUNCTION(BlueprintCallable)
-	virtual UCharacterAttribute* VGetAttribute(EAttributeType attributeType) override;
+	//Status Interface implementation---------------------------------------------------
+	virtual int32 VGetLevelValue() override;
+	virtual ULevelStatus* VGetLevelStatusIns() override;
 
-	UFUNCTION(BlueprintCallable)
-	virtual bool VSetAttribute(EAttributeType attributeType, float newValue) override;
+	virtual float VGetPrimaryValue(EStatusType statusType) override;
+	virtual float VGetBasicValue(EStatusType statusType) override;
+	virtual float VGetFinalValue(EStatusType statusType) override;
+	virtual float VGetRemainingValue(EStatusType statusType) override;
 
-	UFUNCTION(BlueprintCallable)
-	virtual bool VSetAttributeChange(EAttributeType attributeType, float deltaValue) override;
+	virtual UStatusBase* VGetStatusIns(EStatusType statusType) override;
+	virtual UBasicStatus* VGetBasicStatusIns(EStatusType statusType) override;
 
-	UFUNCTION(BlueprintCallable)
-	virtual bool VCanConsume(UCostData* cost) override;
-
-	UFUNCTION(BlueprintCallable)
-	virtual bool VTryConsume(UCostData * cost) override;
+	virtual void VApplyRemainingValueChange(EStatusType statusType, float value);
+	virtual bool VIsRemainingValueEnough(UCostData* costData) override;
+	virtual bool VApplyCost(UCostData* costData) override;
 
 	//Action Interface implementation ---------------------------------------------------
 
@@ -98,18 +100,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool VCheckActionIsInProgress(EActionType actionType) override;
-
-	//State Interface implementation---------------------------------------------------
-	/*FStateData VGetStateData() override;
-
-	virtual void VSetSituationState(ESituationState newState) override;
-	virtual void VSetHealthState(EHealthState newState) override;
-	virtual void VSetPostureState(EPostureState newState) override;
-
-	virtual FOnSituationStateChanged* VGetSituationStateChangedDelegate() override;
-	virtual FOnHealthStateChanged* VGetHealthStateChangedDelegate() override;
-	virtual FOnPostureStateChanged* VGetPostureStateChangedDelegate() override;
-	virtual FOnAnyStateChanged* VGetAnyStateChangedDelegate() override;*/
 
 	//Character Camera Interface implementation---------------------------------------------------
 	virtual void VCameraArmPitch(float angle)  override;
@@ -165,7 +155,7 @@ public:
 
 	//Event Broker Interface implementation -----------------------------------------------------------
 	virtual void VPublishEvent(FName eventName, UEventDataBase* eventData) override;
-	virtual FOnEventPublished& VGetEventDelegate(FName eventName) override;
+	virtual FMD_OnEventPublished& VGetEventDelegate(FName eventName) override;
 
 	//Animation Communicator Interface implementation --------------------------------------------------
 	virtual void VSetAnimationState(EAnimationState newState) override;
@@ -177,9 +167,6 @@ public:
 	UActionComponent* GetActionComponent();
 
 	UFUNCTION(BlueprintCallable)
-	UAttributeComponent* GetAttributeComponent();
-
-	UFUNCTION(BlueprintCallable)
 	UAnimationEventComponent* GetAnimationEventComponent();
 
 protected:
@@ -187,10 +174,10 @@ protected:
 	UEventBrokerComponent* _eventBrokerComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UActionComponent* _actionComponent;
+	UStatusComponent* _statusComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UAttributeComponent* _attributeComponent;
+	UActionComponent* _actionComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UActorUIComponent* _actorUIComponent;
@@ -223,5 +210,7 @@ protected:
 	UEffectControllerComponent* _effectControllerComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UAnimationCommunicatorComponent* _AnimationCommunicatorComponent;
+	UAnimationCommunicatorComponent* _animationCommunicatorComponent;
+
+
 };

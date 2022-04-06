@@ -3,7 +3,7 @@
 
 #include "Components/DamageHandlerComponent.h"
 #include "Damage/StatusEffectProcessManager.h"
-#include "Interface/AttributeInterface.h"
+#include "Interface/StatusInterface.h"
 #include "Interface/ActorUIInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Damage/DamageDisplayer.h"
@@ -26,9 +26,9 @@ void UDamageHandlerComponent::HandleDamage(float basicDamage, EDamageType damage
 	float finalDamage = CalculateDamage(basicDamage, damageType, causer, GetOwner());
 
 	//apply damage
-	if (_attributeInterface) 
+	if (_statusInterface) 
 	{
-		_attributeInterface->VSetAttributeChange(EAttributeType::EATT_Health, -finalDamage);
+		_statusInterface->VApplyRemainingValueChange(EStatusType::EStatus_Health, -finalDamage);
 	}
 
 	//show damage om screen
@@ -60,6 +60,12 @@ void UDamageHandlerComponent::HandleDamage(UMyDamageType* damageType, FVector im
 		UStatusEffectData* statusEffectDataIns = NewObject<UStatusEffectData>(this, damageType->StatusEffectDataClass);
 		HandleStatusEffect(statusEffectDataIns, impactPoint, causer);
 	}
+
+	//show status UI
+	if (_actorUIInterface)
+	{
+		_actorUIInterface->VShowActorUI(EActorUI::ActorUI_Status);
+	}
 }
 
 void UDamageHandlerComponent::HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer)
@@ -69,12 +75,7 @@ void UDamageHandlerComponent::HandleStatusEffect(UStatusEffectData* statusEffect
 
 void UDamageHandlerComponent::OnHealthChanged(float preValue, float newValue)
 {
-	if(_actorUIInterface)
-	{
-		_actorUIInterface->VShowActorUI(EActorUI::ActorUI_Status);
-	}
-
-	GetWorld()->GetGameInstance();
+	
 }
 
 // Called when the game starts
@@ -84,20 +85,9 @@ void UDamageHandlerComponent::BeginPlay()
 
 	// ...
 	_StatusEffectProcessManager = NewObject<UStatusEffectProcessManager>(this);
-	_attributeInterface = Cast<IAttributeInterface>(GetOwner());
+	_statusInterface = Cast<IStatusInterface>(GetOwner());
 	_actorUIInterface = Cast<IActorUIInterface>(GetOwner());
-
-	if(_attributeInterface)
-	{
-		UCharacterAttribute* attHealth = _attributeInterface->VGetAttribute(EAttributeType::EATT_Health);
-		if(attHealth)
-		{
-			attHealth->onValueChanged.AddDynamic(this, &UDamageHandlerComponent::OnHealthChanged);
-		}
-	}
-
 	_hud = Cast<AMyHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-
 }
 
 //todo

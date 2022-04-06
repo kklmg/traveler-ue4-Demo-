@@ -4,19 +4,9 @@
 #include "Data/CostData.h"
 
 
-void UCostData::SetCost(EAttributeType attType, float cost)
-{
-	if (_mapCost.Contains(attType))
-	{
-		_mapCost[attType] = cost;
-	}
-	else
-	{
-		_mapCost.Add(attType,cost);
-	}
-}
 
-void UCostData::AddCost(EAttributeType attType, float cost)
+
+void UCostData::AddCost(EStatusType attType, float cost)
 {
 	if (_mapCost.Contains(attType))
 	{
@@ -26,15 +16,13 @@ void UCostData::AddCost(EAttributeType attType, float cost)
 	{
 		_mapCost.Add(attType, cost);
 	}
-
-
 }
 
-TArray<TPair<EAttributeType, float>> UCostData::GetCostArray()
+TArray<TPair<EStatusType, float>> UCostData::GetCostArray()
 {
-	TArray<TPair<EAttributeType, float>> costArray;
+	TArray<TPair<EStatusType, float>> costArray;
 
-	for(TPair<EAttributeType, float> pair : _mapCost)
+	for(TPair<EStatusType, float> pair : _mapCost)
 	{
 		costArray.Add(pair);
 	}

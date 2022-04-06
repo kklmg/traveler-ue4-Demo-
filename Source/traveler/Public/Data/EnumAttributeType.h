@@ -23,10 +23,3 @@ enum class EAttributeType : uint8
 	EATT_FlyingSpeed UMETA(DisplayName = "FlyingSpeed"),
 };
 
-
-class TRAVELER_API EnumAttributeType
-{
-public:
-	EnumAttributeType();
-	~EnumAttributeType();
-};

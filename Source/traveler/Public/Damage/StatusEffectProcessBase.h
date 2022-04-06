@@ -8,7 +8,7 @@
 #include "Data/StatusEffectData.h"
 #include "StatusEffectProcessBase.generated.h"
 
-class IAttributeInterface;
+class IStatusInterface;
 class IActorUIInterface;
 class IActorEffectInterface;
 

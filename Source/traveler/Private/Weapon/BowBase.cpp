@@ -194,7 +194,7 @@ void ABowBase::VOnUnEquipped()
 
 	if (eventBrokerInterface)
 	{
-		FOnEventPublished outEventPublishedDelegate;
+		FMD_OnEventPublished outEventPublishedDelegate;
 		for (auto delegateHandleData : _delegateHandles)
 		{
 			eventBrokerInterface->VGetEventDelegate(delegateHandleData.EventName).Remove(delegateHandleData.DelegateHandle);

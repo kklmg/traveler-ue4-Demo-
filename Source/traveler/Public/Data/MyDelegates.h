@@ -10,4 +10,4 @@
  */
  class UEventDataBase;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnEventPublished, UEventDataBase*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMD_OnEventPublished, UEventDataBase*);

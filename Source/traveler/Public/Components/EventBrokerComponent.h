@@ -31,7 +31,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PublishEvent(FName eventName, UEventDataBase* eventData);
 
-	FOnEventPublished& GetEventDelegate(FName eventName);
+	FMD_OnEventPublished& GetEventDelegate(FName eventName);
 
 private:
 	UPROPERTY()

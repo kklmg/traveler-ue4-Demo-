@@ -8,7 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Data/CostData.h"
-#include "Interface/AttributeInterface.h"
+#include "Interface/StatusInterface.h"
 
 
 UActionMove::UActionMove() 
@@ -17,7 +17,7 @@ UActionMove::UActionMove()
 	_actionType = EActionType::EACT_Moving;
 
 	_sprintCost = CreateDefaultSubobject<UCostData>(TEXT("SprintCost"));
-	_sprintCost->SetCost(EAttributeType::EATT_Stamina, 0.25f);
+	_sprintCost->AddCost(EStatusType::EStatus_Stamina, 0.25f);
 }
 
 bool UActionMove::VTMCanExecute()
@@ -47,9 +47,9 @@ void UActionMove::VTMExecute()
 		}
 
 		GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_WantToSprint, out_bWantToSprint);
-		if(out_bWantToSprint && _attributeInterface)
+		if(out_bWantToSprint && _statusInterface)
 		{
-			if(_attributeInterface->VTryConsume(_sprintCost))
+			if(_statusInterface->VApplyCost(_sprintCost))
 			{
 			}
 			else

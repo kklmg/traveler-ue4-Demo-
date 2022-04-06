@@ -19,7 +19,7 @@ class TRAVELER_API UEventBroker : public UObject
 	GENERATED_BODY()
 
 public:
-	FOnEventPublished& GetDelegate(FName eventName);
+	FMD_OnEventPublished& GetDelegate(FName eventName);
 	void Publish(FName eventName, UEventDataBase* eventDataBase);
 
 private:

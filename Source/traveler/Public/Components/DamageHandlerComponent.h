@@ -9,7 +9,7 @@
 
 class UStatusEffectProcessManager;
 
-class IAttributeInterface;
+class IStatusInterface;
 class IActorUIInterface;
 
 class AMyHUD;
@@ -46,6 +46,6 @@ private:
 	UPROPERTY()
 	AMyHUD* _hud;
 
-	IAttributeInterface* _attributeInterface;
+	IStatusInterface* _statusInterface;
 	IActorUIInterface* _actorUIInterface;
 };

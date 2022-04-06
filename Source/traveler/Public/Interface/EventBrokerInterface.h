@@ -26,7 +26,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void VPublishEvent(FName eventName, UEventDataBase* eventData) PURE_VIRTUAL(IAnimationCommunicatorInterface::VPublishEvent, );
 
-	virtual FOnEventPublished& VGetEventDelegate(FName eventName) PURE_VIRTUAL(IAnimationCommunicatorInterface::VGetEventDelegate, return _tempEventPublished;);
+	virtual FMD_OnEventPublished& VGetEventDelegate(FName eventName) PURE_VIRTUAL(IAnimationCommunicatorInterface::VGetEventDelegate, return _tempEventPublished;);
 private:
-	FOnEventPublished _tempEventPublished;
+	FMD_OnEventPublished _tempEventPublished;
 };

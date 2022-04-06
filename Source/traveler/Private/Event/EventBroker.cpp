@@ -4,7 +4,7 @@
 #include "Event/EventBroker.h"
 #include "GameSystem/DebugMessageHelper.h"
 
-FOnEventPublished& UEventBroker::GetDelegate(FName eventName)
+FMD_OnEventPublished& UEventBroker::GetDelegate(FName eventName)
 {
 	if(_delegateMap.Contains(eventName))
 	{

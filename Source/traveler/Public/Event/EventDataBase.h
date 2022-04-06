@@ -22,7 +22,7 @@ struct TRAVELER_API FDelegateWrapper
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	FOnEventPublished OnEventPublished;
+	FMD_OnEventPublished OnEventPublished;
 };
 
 USTRUCT()

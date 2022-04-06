@@ -13,7 +13,7 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogAction, Log, All);
 
 class IStateInterface;
-class IAttributeInterface;
+class IStatusInterface;
 class IAnimationModelProvider;
 
 class UAnimationModelBase;
@@ -114,7 +114,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool _bInstantAction;
 
-	IAttributeInterface* _attributeInterface;
+	IStatusInterface* _statusInterface;
 
 private:
 	UPROPERTY()

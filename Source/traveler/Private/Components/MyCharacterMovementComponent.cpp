@@ -2,7 +2,7 @@
 
 
 #include "Components/MyCharacterMovementComponent.h"
-#include "Interface/AttributeInterface.h"
+#include "Interface/StatusInterface.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/AnimationCommunicatorInterface.h"
 #include "Interface/EventBrokerInterface.h"
@@ -24,20 +24,16 @@ void UMyCharacterMovementComponent::BeginPlay()
 	Super::BeginPlay();
 
 	_actionInterface = GetOwner<IActionInterface>();
-	_attributeInterface = GetOwner<IAttributeInterface>();
+	_statusInterface = GetOwner<IStatusInterface>();
 	_eventBrokerInterface = GetOwner<IEventBrokerInterface>();
 
-	if(_attributeInterface && _actionInterface)
+	if(_statusInterface && _actionInterface)
 	{
 		//set walking speed 
-		UCharacterAttribute* WalkingSpeed = _attributeInterface->VGetAttribute(EAttributeType::EATT_WalkingSpeed);
-		if (WalkingSpeed)
-		{
-			MaxWalkSpeed = WalkingSpeed->GetValue();
-		}
+		MaxWalkSpeed = _statusInterface->VGetFinalValue(EStatusType::EStatus_WalkingSpeed);
 
 		_actionInterface->VGetActionBlackBoard()->
-			GetValueChangedDelegate_Bool(EActionDataKey::EACTD_WantToSprint).AddUFunction(this, FName(TEXT("OnCharacterWantToSprint")));
+			GetValueChangedDelegate_Bool(EActionDataKey::EACTD_WantToSprint).AddUObject(this, &UMyCharacterMovementComponent::OnCharacterWantToSprint);
 	}
 
 	IAnimationCommunicatorInterface* animationCommunicator = GetOwner<IAnimationCommunicatorInterface>();
@@ -87,25 +83,16 @@ void UMyCharacterMovementComponent::PublishMovementModeChangedEvent()
 
 void UMyCharacterMovementComponent::OnCharacterWantToSprint(bool wantToSprint)
 {
-	if (_attributeInterface)
+	if (_statusInterface)
 	{
 		if (wantToSprint)
 		{
-			//set to Sprint speed 
-			UCharacterAttribute* speed = _attributeInterface->VGetAttribute(EAttributeType::EATT_SprintingSpeed);
-			if (speed)
-			{
-				MaxWalkSpeed = speed->GetValue();
-			}
+			MaxWalkSpeed = _statusInterface->VGetFinalValue(EStatusType::EStatus_SprintingSpeed);
 		}
 		else
 		{
-			//set to walking speed 
-			UCharacterAttribute* speed = _attributeInterface->VGetAttribute(EAttributeType::EATT_WalkingSpeed);
-			if (speed)
-			{
-				MaxWalkSpeed = speed->GetValue();
-			}
+
+			MaxWalkSpeed = _statusInterface->VGetFinalValue(EStatusType::EStatus_WalkingSpeed);
 		}
 	}
 }

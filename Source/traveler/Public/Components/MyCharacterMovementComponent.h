@@ -7,7 +7,7 @@
 #include "MyCharacterMovementComponent.generated.h"
 
 class IActionInterface;
-class IAttributeInterface;
+class IStatusInterface;
 class IAnimationModelProvider;
 class IEventBrokerInterface;
 
@@ -102,7 +102,7 @@ private:
 	UAnimationModelBase* _animationViewModel;
 
 	IActionInterface* _actionInterface;
-	IAttributeInterface* _attributeInterface;
+	IStatusInterface* _statusInterface;
 	IAnimationModelProvider* _animationModelProviderInterface;
 	IEventBrokerInterface* _eventBrokerInterface;
 };

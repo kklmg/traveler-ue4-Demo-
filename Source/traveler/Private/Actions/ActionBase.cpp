@@ -5,7 +5,7 @@
 #include "Components/ActionComponent.h"
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
-#include "Interface/AttributeInterface.h"
+#include "Interface/StatusInterface.h"
 #include "Data/CostData.h"
 #include "Interface/AnimationCommunicatorInterface.h"
 
@@ -31,7 +31,7 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 		UE_LOG(LogTemp, Error, TEXT("no ation owner!"));
 		return;
 	}
-	_attributeInterface = Cast<IAttributeInterface>(_actionOwner);
+	_statusInterface = Cast<IStatusInterface>(_actionOwner);
 
 	//get animation view model
 	IAnimationCommunicatorInterface* animationCommunicator = Cast<IAnimationCommunicatorInterface>(_actionOwner);
@@ -64,9 +64,9 @@ FORCEINLINE void UActionBase::Execute()
 		return;
 	}
 
-	if(_attributeInterface)
+	if(_statusInterface)
 	{
-		_attributeInterface->VTryConsume(_costData);
+		_statusInterface->VApplyCost(_costData);
 	}
 
 	VTMExecute();
@@ -76,7 +76,7 @@ FORCEINLINE void UActionBase::Execute()
 
 FORCEINLINE bool UActionBase::CanExecute()
 {
-	bool bEnoughResources = _attributeInterface && _attributeInterface->VCanConsume(_costData);
+	bool bEnoughResources = _statusInterface && _statusInterface->VIsRemainingValueEnough(_costData);
 
 	return (_processState == EProcessState::EPS_ReadyToExecute && bEnoughResources && VTMCanExecute());
 }

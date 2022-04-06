@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Data/EnumAttributeType.h"
+#include "Status/EnumStatus.h"
 #include "CostData.generated.h"
 
 /**
@@ -15,12 +15,12 @@ class TRAVELER_API UCostData : public UObject
 {
 	GENERATED_BODY()
 public:
-	void SetCost(EAttributeType attType, float cost);
-	void AddCost(EAttributeType attType, float cost);
+	void SetCost(EStatusType attType, float cost);
+	void AddCost(EStatusType attType, float cost);
 
-	TArray<TPair<EAttributeType, float>> GetCostArray();
+	TArray<TPair<EStatusType, float>> GetCostArray();
 
 private:
 	UPROPERTY(EditAnywhere)
-	TMap<EAttributeType,float> _mapCost;
+	TMap<EStatusType,float> _mapCost;
 };
