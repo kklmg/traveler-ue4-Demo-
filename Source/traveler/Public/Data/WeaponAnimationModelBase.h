@@ -15,7 +15,7 @@ namespace WeaponAnimationDataKey
 {
 	const FName bIsFiring = FName(TEXT("bIsFiring"));
 	const FName bIsAiming = FName(TEXT("bIsAiming"));
-	const FName fHandRoll = FName(TEXT("fHandRoll"));
+	const FName fWristRoll = FName(TEXT("fWristRoll"));
 	const FName bArrowsSpawned = FName(TEXT("bArrowsSpawned"));
 	const FName bIsDrawingBow = FName(TEXT("bDrawingBow"));
 	const FName byteBowState = FName(TEXT("byteBowState"));

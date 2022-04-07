@@ -15,6 +15,9 @@ class UQuiverComponent;
 class ICharacterCameraInterface;
 class UCrosshairWidgetBase;
 
+class UIntOption;
+class UFloatOption;
+
 class UBowProcessFire;
 class UBowProcessAim;
 
@@ -36,10 +39,15 @@ class TRAVELER_API ABowBase : public AWeaponBase
 
 public:
 	ABowBase(const FObjectInitializer& ObjectInitializer);
-public:
+
+protected:
+	virtual void PreInitializeComponents() override;
+
 	void VInitialize(ACreatureCharacter* weaponOwner) override;
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
+
+public:
 
 	UFUNCTION(BlueprintPure)
 	EBowState GetBowState();
@@ -47,7 +55,6 @@ public:
 	bool SetBowState(EBowState bowState);
 	void DragCamera(bool bDrag);
 	void AnimateCrosshair(bool bForward);
-	void SetStrength(float elapsedTime);
 	bool IsDrawingBow();
 	
 	virtual void VOnEquipped() override;
@@ -112,23 +119,20 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Projectile)
 	TArray<AArrowActorBase*> _holdingArrows;
 
-	UPROPERTY(EditAnyWhere, Category = Attribute, meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
-	float _drawingVelocity;
+	UPROPERTY(EditDefaultsOnly, Category = BowOptions)
+	TSubclassOf<UIntOption> _arrowCountOptionClass;
+	UPROPERTY()
+	UIntOption* _arrowCountOptionIns;
 
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	TArray<float> _arrowSpawnCountArray;
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	int32  _arrowSpawnCountSelectID;
+	UPROPERTY(EditDefaultsOnly, Category = BowOptions)
+	TSubclassOf<UFloatOption> _arrowIntervalOptionClass;
+	UPROPERTY()
+	UFloatOption* _arrowIntervalOptionIns;
 
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	TArray<float> _arrowIntervalArray;
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	int32 _arrowIntervalSelectID;
-
-	UPROPERTY(EditAnyWhere, Category = Projectile)
-	TArray<float> _handRollArray;
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	int32 _handRollSelectID;
+	UPROPERTY(EditDefaultsOnly, Category = BowOptions)
+	TSubclassOf<UFloatOption> _wristRollOptionClass;
+	UPROPERTY()
+	UFloatOption* _wristRollOptionIns;
 
 	UPROPERTY(EditAnyWhere, Category = Projectile)
 	float _maxDamage;

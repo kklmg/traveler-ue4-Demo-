@@ -16,6 +16,7 @@
 #include "UI/CrosshairWidgetBase.h"
 #include "GameSystem/DebugMessageHelper.h"
 #include "Data/WeaponAnimationModelBase.h"
+#include "GameSystem/OptionBase.h"
 
 #include "Weapon/WeaponProcess/BowProcess/BowProcessFire.h"
 #include "Weapon/WeaponProcess/BowProcess/BowProcessAim.h"
@@ -34,33 +35,14 @@ ABowBase::ABowBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectIn
 
 	_strength = 0.0f;
 	_maxDamage = 0.0f;
-	_drawingVelocity = 0.5f;
 	_baseProjectileVelocity = 1000.0f;
 	_maxProjectileVelocity = 3000.0f;
 	_aimingCameraOffset = FVector(50, 50, 50);
-
-	_arrowSpawnCountArray.Add(1);
-	_arrowSpawnCountArray.Add(3);
-	_arrowSpawnCountArray.Add(5);
-	_arrowSpawnCountArray.Add(7);
-	_arrowSpawnCountArray.Add(9);
-	_arrowSpawnCountArray.Add(11);
-	_arrowSpawnCountSelectID = 0;
-
-	_arrowIntervalArray.Add(2);
-	_arrowIntervalArray.Add(6);
-	_arrowIntervalArray.Add(10);
-	_arrowIntervalSelectID = 0;
-
-	_handRollArray.Add(0);
-	_handRollArray.Add(0.5f);
-	_handRollArray.Add(1.0f);
-	_handRollSelectID = 0;
 }
 
-void ABowBase::VInitialize(ACreatureCharacter* weaponOwner)
+void ABowBase::PreInitializeComponents()
 {
-	Super::VInitialize(weaponOwner);
+	Super::PreInitializeComponents();
 
 	_processFire = NewObject<UBowProcessFire>(this);
 	_processFire->VSetWeapon(this);
@@ -76,6 +58,20 @@ void ABowBase::VInitialize(ACreatureCharacter* weaponOwner)
 	{
 		GetWeaponAnimationModel()->WeaponType = _weaponType;
 	}
+
+	_arrowCountOptionIns = _arrowCountOptionClass ?
+		NewObject<UIntOption>(this, _arrowCountOptionClass) : NewObject<UIntOption>(this);
+
+	_arrowIntervalOptionIns = _arrowIntervalOptionClass ?
+		NewObject<UFloatOption>(this, _arrowIntervalOptionClass) : NewObject<UFloatOption>(this);
+
+	_wristRollOptionIns = _wristRollOptionClass ?
+		NewObject<UFloatOption>(this, _wristRollOptionClass) : NewObject<UFloatOption>(this);
+}
+
+void ABowBase::VInitialize(ACreatureCharacter* weaponOwner)
+{
+	Super::VInitialize(weaponOwner);
 }
 
 void ABowBase::BeginPlay()
@@ -126,11 +122,6 @@ void ABowBase::UpdateArrowsTransform()
 		default:
 			break;
 	}
-}
-
-void ABowBase::SetStrength(float elapsedTime)
-{
-	_strength = FMath::Clamp(elapsedTime * _drawingVelocity, 0.1f, 1.5f);
 }
 
 bool ABowBase::IsDrawingBow()
@@ -188,7 +179,7 @@ void ABowBase::VOnEquipped()
 		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bArrowsSpawned, false);
 		weaponAnimationModel->SetUInt8(WeaponAnimationDataKey::byteBowState, (uint8)_bowState);
 		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsDrawingBow, IsDrawingBow());
-		weaponAnimationModel->SetFloat(WeaponAnimationDataKey::fHandRoll, _handRollArray[_handRollSelectID]);
+		weaponAnimationModel->SetFloat(WeaponAnimationDataKey::fWristRoll, _wristRollOptionIns->GetSelection());
 		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsFiring, IsProcessRunning(WeaponProcessName::FIRE));
 		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsAiming, IsProcessRunning(WeaponProcessName::AIM));
 	}
@@ -279,13 +270,13 @@ void ABowBase::AttachArrowsToHand()
 
 	float curDeltaDegree = 0;
 	FQuat curDeltaQuat;
-
+	
 	for (int i = 0; i < _holdingArrows.Num(); ++i)
 	{
 		//compute quaternion
 		curDeltaDegree = (i % 2) ? 
-			_arrowIntervalArray[_arrowIntervalSelectID] * i 
-				: _arrowIntervalArray[_arrowIntervalSelectID] * i * -1;
+			_arrowIntervalOptionIns->GetSelection() * i
+				: _arrowIntervalOptionIns->GetSelection() * i * -1;
 
 		curDeltaQuat = FQuat(muzzleLeft, FMath::DegreesToRadians(curDeltaDegree));
 		projectileQuat = curDeltaQuat * projectileQuat;
@@ -321,8 +312,8 @@ void ABowBase::AttachArrowsToBow()
 	{
 		//compute quaternion
 		curDeltaDegree = (i % 2) ?
-			_arrowIntervalArray[_arrowIntervalSelectID] * i 
-				: _arrowIntervalArray[_arrowIntervalSelectID] * i * -1;
+			_arrowIntervalOptionIns->GetSelection() * i
+				: _arrowIntervalOptionIns->GetSelection() * i * -1;
 
 		curDeltaQuat = FQuat(bowStringUp, FMath::DegreesToRadians(curDeltaDegree));
 		arrowQuat = curDeltaQuat * arrowQuat;
@@ -382,29 +373,29 @@ void ABowBase::LaunchArrows()
 
 void ABowBase::AdjustHandRotation()
 {
-	_handRollSelectID = (_handRollSelectID + 1) % _handRollArray.Num();
+	_wristRollOptionIns->Scroll(1);
 
 	if (GetWeaponAnimationModel())
 	{
-		GetWeaponAnimationModel()->SetFloat(WeaponAnimationDataKey::fHandRoll, _handRollArray[_handRollSelectID]);
+		GetWeaponAnimationModel()->SetFloat(WeaponAnimationDataKey::fWristRoll, _wristRollOptionIns->GetSelection());
 	}
 }
 
 void ABowBase::AdjustArrowIntervals()
 {
-	_arrowIntervalSelectID = (_arrowIntervalSelectID + 1) % _arrowIntervalArray.Num();
+	_arrowIntervalOptionIns->Scroll(1);
 }
 
 void ABowBase::IncreaseArrows()
 {
-	_arrowSpawnCountSelectID = (_arrowSpawnCountSelectID + 1) % _arrowSpawnCountArray.Num();
+	_arrowCountOptionIns->Scroll(1);
 	ClearHoldingArrows(true);
 	SetBowState(EBowState::EBS_Normal);
 }
 
 void ABowBase::DecreaseArrows()
 {
-	_arrowSpawnCountSelectID = (_arrowSpawnCountArray.Num() + _arrowSpawnCountSelectID - 1) % _arrowSpawnCountArray.Num();
+	_arrowCountOptionIns->Scroll(-1);
 	ClearHoldingArrows(true);
 	SetBowState(EBowState::EBS_Normal);
 }
@@ -521,8 +512,8 @@ void ABowBase::AnimateCrosshair(bool bForward)
 void ABowBase::TakeOutArrows()
 {
 	ClearHoldingArrows(true);
-
-	if(_quiverComponent->SpawnArrows(_arrowSpawnCountArray[_arrowSpawnCountSelectID], GetWeaponOwner(), _holdingArrows))
+	
+	if(_quiverComponent->SpawnArrows(_arrowCountOptionIns->GetSelection(), GetWeaponOwner(), _holdingArrows))
 	{
 		if (GetWeaponAnimationModel())
 		{

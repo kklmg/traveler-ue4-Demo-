@@ -49,7 +49,6 @@ void UBowProcessAim::VTMTick(float deltaTime)
 	Super::VTMTick(deltaTime);
 	if (!_bow) return;
 
-	_bow->SetStrength(GetElapsedTime());
 
 	ICharacterCameraInterface* cameraInterface = _bow->GetOwnerCameraInterface();
 	ACreatureCharacter* weaponOwner = _bow->GetWeaponOwner();
@@ -75,7 +74,6 @@ void UBowProcessAim::VTMOnDead()
 	if (!_bow) return;
 
 	_bow->SetBowState(EBowState::EBS_Normal);
-	_bow->SetStrength(0);
 
 	//Camera
 	_bow->DragCamera(false);
