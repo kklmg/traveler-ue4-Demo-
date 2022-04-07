@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Data/EnumProcessState.h"
 #include "Data/EnumWeaponType.h"
 #include "Data/StateData.h"
 #include "Interface/ExtraTransformProvider.h"
@@ -21,6 +22,9 @@ class IEventBrokerInterface;
 
 class UEventDataBase;
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponSignal, AWeaponBase*, weaponIns);
+
 namespace WeaponProcessName
 {
 	const FName FIRE = FName(TEXT("FIRE"));
@@ -37,11 +41,15 @@ public:
 	AWeaponBase(const FObjectInitializer& ObjectInitializer);
 
 protected:
+	virtual void PreInitializeComponents() override;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
 	virtual void VInitialize(ACreatureCharacter* weaponOwner);
+
+
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -88,10 +96,12 @@ public:
 	virtual bool VTryGetTransform(ETransform meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual bool  VTryGetSocketName(ETransform transformType, FName& outSocketName) override;
+	virtual bool VTryGetSocketName(ETransform transformType, FName& outSocketName) override;
 
 	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState);
 
+	UFUNCTION(BlueprintPure)
+	UWeaponAnimationModelBase* GetWeaponAnimationModel();
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -112,7 +122,16 @@ private:
 	UPROPERTY()
 	UProcessManagerBase* _processManager;
 
+	UPROPERTY()
+	UWeaponAnimationModelBase* _weaponAnimationModel;
+
 	IActionInterface* _ownerActionInterface;
 	ICharacterCameraInterface* _ownerCameraInterface;
 	IEventBrokerInterface* _eventBrokerInterface;
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FWeaponSignal OnWeaponEquipped;
+	UPROPERTY(BlueprintAssignable)
+	FWeaponSignal OnWeaponUnequipped;
 };

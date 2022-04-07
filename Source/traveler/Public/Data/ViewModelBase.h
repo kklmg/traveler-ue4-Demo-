@@ -41,6 +41,7 @@ public:
 	void SetUInt8(FName dataKey, uint8 value);
 	void SetUObject(FName dataKey, UObject* value);
 
+	void ClearData();
 
 private:
 	template<typename TData>
@@ -48,7 +49,7 @@ private:
 
 private:
 	UPROPERTY()
-		TMap<FName, UReactiveDataBase*> _dataMap;
+	TMap<FName, UReactiveDataBase*> _dataMap;
 };
 
 

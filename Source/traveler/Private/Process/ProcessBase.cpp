@@ -5,18 +5,23 @@
 
 void UProcessBase::VInitialize()
 {
-	_processState = EProcessState::EPS_ReadyToExecute;
-	VTMInitialize();
+	if (VSetProcessState(EProcessState::EPS_ReadyToExecute))
+	{
+		VTMInitialize();
+	}
 }
 
 bool UProcessBase::VExecute()
 {
-	if (!VCanExecute()) return false;
-
-	_processState = EProcessState::EPS_Running;
-	VTMExecute();
-
-	return true;
+	if (VCanExecute() && VSetProcessState(EProcessState::EPS_Running))
+	{
+		VTMExecute();
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void UProcessBase::VTick(float deltaTime)
@@ -29,9 +34,8 @@ void UProcessBase::VTick(float deltaTime)
 
 void UProcessBase::VAbort()
 {
-	if (VIsAlive())
+	if (VIsAlive() && VSetProcessState(EProcessState::EPS_Aborted))
 	{
-		_processState = EProcessState::EPS_Aborted;
 		VTMOnDead();
 	}
 }
@@ -39,8 +43,10 @@ void UProcessBase::VAbort()
 
 void UProcessBase::VReset()
 {
-	_processState = EProcessState::EPS_UnInitialized;
-	VTMReset();
+	if(VSetProcessState(EProcessState::EPS_UnInitialized))
+	{
+		VTMReset();
+	}	
 }
 
 void UProcessBase::VTMInitialize()
@@ -88,9 +94,8 @@ void UProcessBase::VTMReset()
 
 void UProcessBase::SetSucceed()
 {
-	if(_processState == EProcessState::EPS_Running)
+	if(_processState == EProcessState::EPS_Running && VSetProcessState(EProcessState::EPS_SUCCEEDED))
 	{
-		_processState = EProcessState::EPS_SUCCEEDED;
 		VTMOnSucceed();
 		VTMOnDead();
 	}
@@ -98,9 +103,8 @@ void UProcessBase::SetSucceed()
 
 void UProcessBase::SetFailed()
 {
-	if (_processState == EProcessState::EPS_Running)
+	if (_processState == EProcessState::EPS_Running && VSetProcessState(EProcessState::EPS_FAILED))
 	{
-		_processState = EProcessState::EPS_FAILED;
 		VTMOnFailed();
 		VTMOnDead();
 	}
@@ -121,9 +125,14 @@ EProcessState UProcessBase::VGetProcessState()
 	return _processState;
 }
 
-void UProcessBase::VSetState(EProcessState newState)
+bool UProcessBase::VSetProcessState(EProcessState newState)
 {
+	if (newState == _processState) return false;
+
 	_processState = newState;
+	OnProcessStateChanged.Broadcast(_processState);
+
+	return true;
 }
 
 bool UProcessBase::VIsInstantProcess()

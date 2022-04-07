@@ -10,7 +10,18 @@
 /**
  * 
  */
-UCLASS()
+
+namespace WeaponAnimationDataKey
+{
+	const FName bIsFiring = FName(TEXT("bIsFiring"));
+	const FName bIsAiming = FName(TEXT("bIsAiming"));
+	const FName fHandRoll = FName(TEXT("fHandRoll"));
+	const FName bArrowsSpawned = FName(TEXT("bArrowsSpawned"));
+	const FName bIsDrawingBow = FName(TEXT("bDrawingBow"));
+	const FName byteBowState = FName(TEXT("byteBowState"));
+}
+
+UCLASS(BlueprintType)
 class TRAVELER_API UWeaponAnimationModelBase : public UAnimationModelBase
 {
 	GENERATED_BODY()

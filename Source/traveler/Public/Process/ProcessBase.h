@@ -7,6 +7,8 @@
 #include "Process/ProcessInterface.h"
 #include "ProcessBase.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnProcessStateChanged, EProcessState);
+
 /**
  * 
  */
@@ -24,7 +26,7 @@ public:
 	virtual bool VIsAlive() final;
 	virtual bool VIsDead() final;
 	virtual EProcessState VGetProcessState() final;
-	virtual void VSetState(EProcessState newState) final;
+	virtual bool VSetProcessState(EProcessState newState) final;
 
 	//virtual FName VGetProcessName();
 	virtual bool VCanExecute() final;
@@ -48,4 +50,7 @@ protected:
 
 private:
 	EProcessState _processState;
+
+public:
+	FOnProcessStateChanged OnProcessStateChanged;
 };

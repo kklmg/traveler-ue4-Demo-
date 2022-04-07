@@ -113,3 +113,16 @@ void UViewModelBase::SetUObject(FName dataKey, UObject* value)
 		data->SetValue(value);
 	}
 }
+
+void UViewModelBase::ClearData()
+{
+	for (auto pair : _dataMap)
+	{
+		if (pair.Value)
+		{
+			pair.Value->VClearData();
+		}
+	}
+
+	_dataMap.Empty();
+}

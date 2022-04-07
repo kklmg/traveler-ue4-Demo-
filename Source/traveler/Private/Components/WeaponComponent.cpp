@@ -104,12 +104,13 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 		_weaponIns = newWeapon;
 		_weaponIns->VOnEquipped();
 
-		OnWeaponChanged.Broadcast(_weaponIns);
-
 		if(_animationViewModel)
 		{
 			_animationViewModel->SetUObject(AnimationDataKey::objWeapon,_weaponIns);
 		}
+
+		OnWeaponChanged.Broadcast(_weaponIns);
+	
 
 		//try attach weapon to hands ------------------------------------------------------------
 

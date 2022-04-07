@@ -15,6 +15,7 @@
 #include "Interface/ActionInterface.h"
 #include "UI/CrosshairWidgetBase.h"
 #include "GameSystem/DebugMessageHelper.h"
+#include "Data/WeaponAnimationModelBase.h"
 
 #include "Weapon/WeaponProcess/BowProcess/BowProcessFire.h"
 #include "Weapon/WeaponProcess/BowProcess/BowProcessAim.h"
@@ -61,13 +62,20 @@ void ABowBase::VInitialize(ACreatureCharacter* weaponOwner)
 {
 	Super::VInitialize(weaponOwner);
 
-	UBowProcessFire* processFire = NewObject<UBowProcessFire>(this);
-	processFire->VSetWeapon(this);
-	AddToProcessStorage(processFire);
+	_processFire = NewObject<UBowProcessFire>(this);
+	_processFire->VSetWeapon(this);
+	_processFire->OnProcessStateChanged.AddUObject(this, &ABowBase::OnFireProcessChanged);
+	AddToProcessStorage(_processFire);
 
-	UBowProcessAim* processAim = NewObject<UBowProcessAim>(this);
-	processAim->VSetWeapon(this);
-	AddToProcessStorage(processAim);
+	_processAim = NewObject<UBowProcessAim>(this);
+	_processAim->VSetWeapon(this);
+	_processAim->OnProcessStateChanged.AddUObject(this, &ABowBase::OnAimProcessChanged);
+	AddToProcessStorage(_processAim);
+
+	if (GetWeaponAnimationModel())
+	{
+		GetWeaponAnimationModel()->WeaponType = _weaponType;
+	}
 }
 
 void ABowBase::BeginPlay()
@@ -84,18 +92,10 @@ void ABowBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	_animationModel.bIsAiming = IsProcessRunning(WeaponProcessName::AIM);
-	_animationModel.bIsFiring = IsProcessRunning(WeaponProcessName::FIRE);
-	_animationModel.BowState = _bowState;
-	_animationModel.bIsArrowsSpawned = _holdingArrows.Num() > 0;
-	_animationModel.bIsDrawingBow = IsDrawingBow();
-	_animationModel.HandRoll = _handRollArray[_handRollSelectID];
-
 	if (_crosshairWidgetIns)
 	{
 		_crosshairWidgetIns->Animate(DeltaTime);
 	}
-	UDebugMessageHelper::Message_Int("Arrow Spawned", _holdingArrows.Num(), 0.0f);
 	UpdateArrowsTransform();
 }
 
@@ -126,9 +126,6 @@ void ABowBase::UpdateArrowsTransform()
 		default:
 			break;
 	}
-
-	const UEnum* CharStateEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EBowState"), true);
-	GEngine->AddOnScreenDebugMessage(1, 0.0f, FColor::Red, CharStateEnum->GetNameStringByValue((int64)_bowState));
 }
 
 void ABowBase::SetStrength(float elapsedTime)
@@ -184,7 +181,19 @@ void ABowBase::VOnEquipped()
 			VGetEventDelegate(BowAnimEventName::Bow_ReleasedBowString).AddUObject(this, &ABowBase::OnAnim_ReleaseBowString);
 		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_ReleasedBowString, delegateHandle));
 	}
+
+	auto weaponAnimationModel = GetWeaponAnimationModel();
+	if(weaponAnimationModel)
+	{
+		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bArrowsSpawned, false);
+		weaponAnimationModel->SetUInt8(WeaponAnimationDataKey::byteBowState, (uint8)_bowState);
+		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsDrawingBow, IsDrawingBow());
+		weaponAnimationModel->SetFloat(WeaponAnimationDataKey::fHandRoll, _handRollArray[_handRollSelectID]);
+		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsFiring, IsProcessRunning(WeaponProcessName::FIRE));
+		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsAiming, IsProcessRunning(WeaponProcessName::AIM));
+	}
 }
+
 
 void ABowBase::VOnUnEquipped()
 {
@@ -199,6 +208,12 @@ void ABowBase::VOnUnEquipped()
 		{
 			eventBrokerInterface->VGetEventDelegate(delegateHandleData.EventName).Remove(delegateHandleData.DelegateHandle);
 		}
+	}
+
+	auto weaponAnimationModel = GetWeaponAnimationModel();
+	if (weaponAnimationModel)
+	{
+		weaponAnimationModel->ClearData();
 	}
 
 	_delegateHandles.Empty();
@@ -320,18 +335,39 @@ void ABowBase::AttachArrowsToBow()
 	}
 }
 
-FBowAnimationModelBase ABowBase::GetAnimationModel()
+void ABowBase::OnFireProcessChanged(EProcessState processState)
 {
-	return _animationModel;
+	if (GetWeaponAnimationModel())
+	{
+		GetWeaponAnimationModel()->SetBool(WeaponAnimationDataKey::bIsFiring, IsProcessRunning(WeaponProcessName::FIRE));
+	}
 }
 
-void ABowBase::ClearHoldingArrows()
+void ABowBase::OnAimProcessChanged(EProcessState processState)
 {
-	for (AArrowActorBase* arrow : _holdingArrows)
+	if (GetWeaponAnimationModel())
 	{
-		arrow->VInActivate();
+		GetWeaponAnimationModel()->SetBool(WeaponAnimationDataKey::bIsAiming, IsProcessRunning(WeaponProcessName::AIM));
+	}
+}
+
+void ABowBase::ClearHoldingArrows(bool bDeactivateArrows)
+{
+	if (_holdingArrows.Num() == 0) return;
+
+	if(bDeactivateArrows)
+	{
+		for (AArrowActorBase* arrow : _holdingArrows)
+		{
+			arrow->VInActivate();
+		}
 	}
 	_holdingArrows.Empty();
+
+	if(GetWeaponAnimationModel())
+	{
+		GetWeaponAnimationModel()->SetBool(WeaponAnimationDataKey::bArrowsSpawned, false);
+	}
 }
 
 void ABowBase::LaunchArrows()
@@ -340,12 +376,18 @@ void ABowBase::LaunchArrows()
 	{
 		arrow->Launch();
 	}
-	_holdingArrows.Empty();
+
+	ClearHoldingArrows(false);
 }
 
 void ABowBase::AdjustHandRotation()
 {
 	_handRollSelectID = (_handRollSelectID + 1) % _handRollArray.Num();
+
+	if (GetWeaponAnimationModel())
+	{
+		GetWeaponAnimationModel()->SetFloat(WeaponAnimationDataKey::fHandRoll, _handRollArray[_handRollSelectID]);
+	}
 }
 
 void ABowBase::AdjustArrowIntervals()
@@ -356,17 +398,15 @@ void ABowBase::AdjustArrowIntervals()
 void ABowBase::IncreaseArrows()
 {
 	_arrowSpawnCountSelectID = (_arrowSpawnCountSelectID + 1) % _arrowSpawnCountArray.Num();
-	ClearHoldingArrows();
-	_bowState = EBowState::EBS_Normal;
-	//TakeOutArrows();
+	ClearHoldingArrows(true);
+	SetBowState(EBowState::EBS_Normal);
 }
 
 void ABowBase::DecreaseArrows()
 {
 	_arrowSpawnCountSelectID = (_arrowSpawnCountArray.Num() + _arrowSpawnCountSelectID - 1) % _arrowSpawnCountArray.Num();
-	ClearHoldingArrows();
-	_bowState = EBowState::EBS_Normal;
-	//TakeOutArrows();
+	ClearHoldingArrows(true);
+	SetBowState(EBowState::EBS_Normal);
 }
 
 void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
@@ -385,7 +425,7 @@ void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAni
 void ABowBase::OnAnim_StartDrawingBowString(UEventDataBase* eventData)
 {
 	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
-	_bowState = EBowState::EBS_Drawing;
+	SetBowState(EBowState::EBS_Drawing);
 }
 
 void ABowBase::OnAnim_TakeOutArrows(UEventDataBase* eventData)
@@ -398,14 +438,13 @@ void ABowBase::OnAnim_ReleaseBowString(UEventDataBase* eventData)
 	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
 
 	LaunchArrows();
-	_bowState = EBowState::EBS_ReleaseEnd;
+	SetBowState(EBowState::EBS_ReleaseEnd);
 }
 
 void ABowBase::OnAnim_FullyDrawed(UEventDataBase* eventData)
 {
 	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
-
-	_bowState = EBowState::EBS_FullyDrawed;
+	SetBowState(EBowState::EBS_FullyDrawed);
 }
 
 void ABowBase::VWeaponControlButtonA()
@@ -428,12 +467,12 @@ void ABowBase::VWeaponControlButtonD()
 	AdjustArrowIntervals();
 }
 
-float ABowBase::_CalculateDamage()
+float ABowBase::CalculateDamage()
 {
 	return _strength * _maxDamage;
 }
 
-float ABowBase::_CalculateProjectileSpeed()
+float ABowBase::CalculateProjectileSpeed()
 {
 	return FMath::Clamp(_strength * _maxProjectileVelocity, _baseProjectileVelocity, _maxProjectileVelocity);
 }
@@ -443,9 +482,17 @@ EBowState ABowBase::GetBowState()
 	return _bowState;
 }
 
-void ABowBase::SetBowState(EBowState bowState)
+bool ABowBase::SetBowState(EBowState bowState)
 {
+	if (_bowState == bowState) return false;
+
 	_bowState = bowState;
+	if(GetWeaponAnimationModel())
+	{
+		GetWeaponAnimationModel()->SetUInt8(WeaponAnimationDataKey::byteBowState, (uint8)_bowState);
+		GetWeaponAnimationModel()->SetBool(WeaponAnimationDataKey::bIsDrawingBow, IsDrawingBow());
+	}
+	return true;
 }
 
 void ABowBase::DragCamera(bool bDrag)
@@ -473,9 +520,13 @@ void ABowBase::AnimateCrosshair(bool bForward)
 
 void ABowBase::TakeOutArrows()
 {
-	ClearHoldingArrows();
-	if (_holdingArrows.Num() == 0) 
+	ClearHoldingArrows(true);
+
+	if(_quiverComponent->SpawnArrows(_arrowSpawnCountArray[_arrowSpawnCountSelectID], GetWeaponOwner(), _holdingArrows))
 	{
-		_quiverComponent->SpawnArrows(_arrowSpawnCountArray[_arrowSpawnCountSelectID], GetWeaponOwner(), _holdingArrows);
+		if (GetWeaponAnimationModel())
+		{
+			GetWeaponAnimationModel()->SetBool(WeaponAnimationDataKey::bArrowsSpawned, true);
+		}
 	}
 }

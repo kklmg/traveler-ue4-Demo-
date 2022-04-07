@@ -41,8 +41,9 @@ void UQuiverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	}*/
 }
 
-void UQuiverComponent::SpawnArrows(int count, APawn* instigator,TArray<AArrowActorBase*>& outArray)
+bool UQuiverComponent::SpawnArrows(int count, APawn* instigator, TArray<AArrowActorBase*>& outArray)
 {
+	int32 num = outArray.Num();
 	for (int i = 0; i < count; ++i)
 	{
 		AArrowActorBase* arrowIns = _arrowPool->SpawnObject<AArrowActorBase>();
@@ -55,4 +56,5 @@ void UQuiverComponent::SpawnArrows(int count, APawn* instigator,TArray<AArrowAct
 			outArray.Add(arrowIns);
 		}
 	}
+	return outArray.Num() > num ? true : false;
 }

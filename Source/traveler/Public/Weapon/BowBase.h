@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "WeaponBase.h"
-#include "Data/BowAnimationModelBase.h"
 #include "Event/EventDataBase.h"
 #include "BowBase.generated.h"
 
@@ -15,6 +14,9 @@ class AArrowActorBase;
 class UQuiverComponent;
 class ICharacterCameraInterface;
 class UCrosshairWidgetBase;
+
+class UBowProcessFire;
+class UBowProcessAim;
 
 namespace BowAnimEventName
 {
@@ -40,12 +42,9 @@ public:
 	void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintPure)
-	FBowAnimationModelBase GetAnimationModel();
-
-	UFUNCTION(BlueprintPure)
 	EBowState GetBowState();
 
-	void SetBowState(EBowState bowState);
+	bool SetBowState(EBowState bowState);
 	void DragCamera(bool bDrag);
 	void AnimateCrosshair(bool bForward);
 	void SetStrength(float elapsedTime);
@@ -77,7 +76,7 @@ public:
 
 protected:
 	void TakeOutArrows();
-	void ClearHoldingArrows();
+	void ClearHoldingArrows(bool bDeactivateArrows);
 	void LaunchArrows();
 
 	void AdjustHandRotation();
@@ -89,12 +88,16 @@ protected:
 	virtual void VReset() override;
 
 private:
-	float _CalculateDamage();
-	float _CalculateProjectileSpeed();
+
+	float CalculateDamage();
+	float CalculateProjectileSpeed();
 
 	void UpdateArrowsTransform();
 	void AttachArrowsToHand();
 	void AttachArrowsToBow();
+
+	void OnFireProcessChanged(EProcessState processState);
+	void OnAimProcessChanged(EProcessState processState);
 
 private:
 
@@ -142,15 +145,17 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = bowState)
 	EBowState _bowState;
 
-	UPROPERTY(VisibleAnywhere, Category = AnimationModel)
-	FBowAnimationModelBase _animationModel;
-
 	UPROPERTY(VisibleAnywhere, Category = Projectile)
 	UQuiverComponent* _quiverComponent;
 
 	UPROPERTY()
 	TArray<FDelegateHandleData> _delegateHandles;
 
-	float _strength;
+	UPROPERTY()
+	UBowProcessFire* _processFire;
 
+	UPROPERTY()
+	UBowProcessAim* _processAim;
+
+	float _strength;
 };

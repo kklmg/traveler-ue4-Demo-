@@ -111,7 +111,8 @@ void UProcessManagerBase::AddToProcessPresets(IProcessInterface* process)
 
 bool UProcessManagerBase::IsProcessRunning(FName processName)
 {
-	return _runningProcesses.Contains(processName);
+	return _processPresets.Contains(processName) ? 
+		_processPresets[processName]->VGetProcessState() == EProcessState::EPS_Running : false;
 }
 
 void UProcessManagerBase::Tick(float deltaTime)

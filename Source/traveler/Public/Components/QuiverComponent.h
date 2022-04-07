@@ -26,7 +26,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SpawnArrows(int count, APawn* instigator,TArray<AArrowActorBase*>& outArray);
+	bool SpawnArrows(int count, APawn* instigator,TArray<AArrowActorBase*>& outArray);
 
 private:
 	UPROPERTY()

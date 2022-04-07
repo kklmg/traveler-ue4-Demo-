@@ -38,12 +38,18 @@ AWeaponBase::AWeaponBase(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	_weaponType = EWeaponType::EWT_None;
 }
 
+void AWeaponBase::PreInitializeComponents()
+{
+	Super::PreInitializeComponents();
+
+	_processManager = NewObject<UProcessManagerBase>(this);
+	_weaponAnimationModel = NewObject<UWeaponAnimationModelBase>(this);
+}
+
 // Called when the game starts or when spawned
 void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	_processManager = NewObject<UProcessManagerBase>(this);
 }
 
 void AWeaponBase::VInitialize(ACreatureCharacter* weaponOwner)
@@ -64,11 +70,15 @@ void AWeaponBase::Tick(float DeltaTime)
 
 void AWeaponBase::VOnEquipped()
 {
+	OnWeaponEquipped.Broadcast(this);
 }
 
 void AWeaponBase::VOnUnEquipped()
 {
+	OnWeaponUnequipped.Broadcast(this);
+
 	StopAllProcesses();
+	_weaponAnimationModel->ClearData();
 }
 
 void AWeaponBase::ExecuteProcess(FName processName)
@@ -165,4 +175,9 @@ bool AWeaponBase::VTryGetTransform(ETransform meshSocketType, ERelativeTransform
 void AWeaponBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
 {
 	_characterAnimationState = newState;
+}
+
+FORCEINLINE UWeaponAnimationModelBase* AWeaponBase::GetWeaponAnimationModel()
+{
+	return _weaponAnimationModel;
 }

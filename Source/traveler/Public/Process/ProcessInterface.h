@@ -36,5 +36,5 @@ public:
 	virtual bool VCanExecute() PURE_VIRTUAL(IProcessInterface::VCanExecute, return true;);
 
 	virtual EProcessState VGetProcessState() PURE_VIRTUAL(IProcessInterface::VGetProcessState, return EProcessState::EPS_None;);
-	virtual void VSetState(EProcessState newState)PURE_VIRTUAL(IProcessInterface::VSetState, );
+	virtual bool VSetProcessState(EProcessState newState) PURE_VIRTUAL(IProcessInterface::VSetProcessState, return false; );
 };

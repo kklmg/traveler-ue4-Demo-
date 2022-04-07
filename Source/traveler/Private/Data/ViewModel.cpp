@@ -15,6 +15,13 @@ bool UReactive_Bool::GetValue()
 	return _value;
 }
 
+void UReactive_Bool::VClearData()
+{
+	OnValueChanged.Clear();
+}
+
+
+
 void UReactive_Int::SetValue(int value)
 {
 	if (_value == value) return;
@@ -26,6 +33,13 @@ int UReactive_Int::GetValue()
 {
 	return _value;
 }
+
+void UReactive_Int::VClearData()
+{
+	OnValueChanged.Clear();
+}
+
+
 
 void UReactive_Float::SetValue(float value)
 {
@@ -39,6 +53,13 @@ float UReactive_Float::GetValue()
 	return _value;
 }
 
+void UReactive_Float::VClearData()
+{
+	OnValueChanged.Clear();
+}
+
+
+
 void UReactive_Quat::SetValue(FQuat value)
 {
 	if (_value == value) return;
@@ -50,6 +71,13 @@ FQuat UReactive_Quat::GetValue()
 {
 	return _value;
 }
+
+void UReactive_Quat::VClearData()
+{
+	OnValueChanged.Clear();
+}
+
+
 
 void UReactive_Vector::SetValue(FVector value)
 {
@@ -63,6 +91,13 @@ FVector UReactive_Vector::GetValue()
 	return _value;
 }
 
+void UReactive_Vector::VClearData()
+{
+	OnValueChanged.Clear();
+}
+
+
+
 void UReactive_UInt8::SetValue(uint8 value)
 {
 	if (_value == value) return;
@@ -75,6 +110,13 @@ uint8 UReactive_UInt8::GetValue()
 	return _value;
 }
 
+void UReactive_UInt8::VClearData()
+{
+	OnValueChanged.Clear();
+}
+
+
+
 void UReactive_UObject::SetValue(UObject* value)
 {
 	//if (_value == value) return;
@@ -85,4 +127,9 @@ void UReactive_UObject::SetValue(UObject* value)
 UObject* UReactive_UObject::GetValue()
 {
 	return _value;
+}
+
+void UReactive_UObject::VClearData()
+{
+	OnValueChanged.Clear();
 }

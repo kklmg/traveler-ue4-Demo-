@@ -21,6 +21,7 @@ class TRAVELER_API UReactiveDataBase : public UObject
 {
 	GENERATED_BODY()
 public:
+	virtual void VClearData() PURE_VIRTUAL(UReactiveDataBase::VClearData, );
 };
 
 
@@ -38,6 +39,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	bool GetValue();
+
+	virtual void VClearData() override;
 private:
 	UPROPERTY()
 	bool _value;
@@ -56,6 +59,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	uint8 GetValue();
+
+	virtual void VClearData() override;
 private:
 	UPROPERTY()
 	uint8 _value;
@@ -75,6 +80,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	int GetValue();
+
+	virtual void VClearData() override;
 private:
 	UPROPERTY()
 	int _value;
@@ -94,6 +101,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	float GetValue();
+
+	virtual void VClearData() override;
 private:
 	UPROPERTY()
 	float _value;
@@ -112,6 +121,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	FVector GetValue();
+
+	virtual void VClearData() override;
 private:
 	UPROPERTY()
 	FVector _value;
@@ -130,6 +141,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	FQuat GetValue();
+
+	virtual void VClearData() override;
 private:
 	UPROPERTY()
 	FQuat _value;
@@ -148,6 +161,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	UObject* GetValue();
+
+	virtual void VClearData() override;
 private:
 	UPROPERTY()
 	UObject* _value;
