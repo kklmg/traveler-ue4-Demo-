@@ -2,7 +2,7 @@
 
 
 #include "Actions/ActionPreset/ActionPresetTrigger.h"
-#include "Condition/CompositeCondition.h"
+#include "Condition/ReactiveCondition.h"
 #include "Actions/ActionPreset/CharacterActionPreset.h"
 #include "Components/ActionComponent.h"
 #include "Interface/EventBrokerInterface.h"
@@ -16,19 +16,15 @@ void UActionPresetTrigger::Initiazlie(UActionComponent* actionComponent)
 
 	if (_conditionClass)
 	{
-		_conditionIns = NewObject<UCompositeCondition>(this, _conditionClass);
+		_conditionIns = NewObject<UReactiveCondition>(this, _conditionClass);
 		_conditionIns->VInitialize();
 	}
 
 	IEventBrokerInterface* eventBroker = actionComponent->GetEventBrokerInterface();
 	if (_conditionIns && eventBroker)
 	{
-		//subscribe
-		TArray<FName> eventNames = _conditionIns->VGetReactiveEventNames();
-		for (FName eventName : eventNames)
-		{
-			eventBroker->VGetEventDelegate(eventName).AddUObject(this, &UActionPresetTrigger::Validate);
-		}
+		_conditionIns->SubscribeEvents(eventBroker);
+		_conditionIns->OnValidate.AddUObject(this, &UActionPresetTrigger::OnValidate);
 	}
 
 	if (_actionPresetClass)
@@ -39,16 +35,10 @@ void UActionPresetTrigger::Initiazlie(UActionComponent* actionComponent)
 	
 }
 
-void UActionPresetTrigger::Validate(UEventDataBase* eventData)
+void UActionPresetTrigger::OnValidate(bool result)
 {
-	//UDebugMessageHelper::Messsage_String("try  to", outName);
-
-	if (_actionComponent && _actionPresetIns && _conditionIns && _conditionIns->VValidate(eventData))
+	if (_actionComponent && _actionPresetIns && _conditionIns && result)
 	{
 		_actionComponent->SwitchActionSet(_actionPresetIns);
-		FString outName;
-		_actionPresetIns->GetName(outName);
-
-		UDebugMessageHelper::Messsage_String("Swtich to",outName);
 	}
 }

@@ -16,8 +16,8 @@ class TRAVELER_API UAC_MovementMode : public UActorCondition
 	
 public:
 	virtual bool VValidate(UEventDataBase* eventData) override;
-	virtual TArray<FName> VGetReactiveEventNames() override;
 	void SetValidateData(EMovementMode movementMode);
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TEnumAsByte<EMovementMode> _movementMode;

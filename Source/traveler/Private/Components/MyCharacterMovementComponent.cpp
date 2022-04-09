@@ -7,6 +7,7 @@
 #include "Interface/AnimationCommunicatorInterface.h"
 #include "Interface/EventBrokerInterface.h"
 #include "Event/ActorEventDataBase.h"
+#include "Event/EventNames.h"
 
 UMyCharacterMovementComponent::UMyCharacterMovementComponent()
 {
@@ -77,7 +78,7 @@ void UMyCharacterMovementComponent::PublishMovementModeChangedEvent()
 	{
 		UActorEventDataBase* eventData = NewObject<UActorEventDataBase>(this);
 		eventData->SetActor(GetOwner());
-		_eventBrokerInterface->VPublishEvent(NEventNames::MovementModeChanged, eventData);
+		_eventBrokerInterface->VPublishEvent(NSEventNames::MovementModeChanged, eventData);
 	}
 }
 

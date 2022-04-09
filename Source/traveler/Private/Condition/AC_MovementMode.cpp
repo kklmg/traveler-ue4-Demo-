@@ -28,13 +28,6 @@ bool UAC_MovementMode::VValidate(UEventDataBase* eventData)
 	return (character->GetCharacterMovement()->MovementMode == _movementMode);
 }
 
-TArray<FName> UAC_MovementMode::VGetReactiveEventNames()
-{
-	TArray<FName> events;
-	events.Add(NEventNames::MovementModeChanged);
-	return events;
-}
-
 void UAC_MovementMode::SetValidateData(EMovementMode movementMode)
 {
 	_movementMode = movementMode;

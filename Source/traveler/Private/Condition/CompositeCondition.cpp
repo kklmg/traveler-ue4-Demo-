@@ -13,24 +13,24 @@ bool UCompositeCondition::VValidate(UEventDataBase* eventData)
 	return true;
 }
 
-TArray<FName> UCompositeCondition::VGetReactiveEventNames()
-{
-	TSet<FName> ReactiveEventNameSet;
-
-	for (auto condition : _conditions)
-	{
-		if (condition)
-		{
-			TArray<FName> eventNames = condition->VGetReactiveEventNames();
-			for (FName eventName : eventNames)
-			{
-				ReactiveEventNameSet.Add(eventName);
-			}
-		}
-	}
-
-	return ReactiveEventNameSet.Array();
-}
+//TArray<FName> UCompositeCondition::VGetReactiveEventNames()
+//{
+//	TSet<FName> ReactiveEventNameSet;
+//
+//	for (auto condition : _conditions)
+//	{
+//		if (condition)
+//		{
+//			TArray<FName> eventNames = condition->VGetReactiveEventNames();
+//			for (FName eventName : eventNames)
+//			{
+//				ReactiveEventNameSet.Add(eventName);
+//			}
+//		}
+//	}
+//
+//	return ReactiveEventNameSet.Array();
+//}
 
 void UCompositeCondition::VInitialize()
 {

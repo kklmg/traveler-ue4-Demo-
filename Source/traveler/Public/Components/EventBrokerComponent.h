@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Data/MyDelegates.h"
+#include "Condition/ConditionBase.h"
 #include "EventBrokerComponent.generated.h"
 
 class UEventBroker;
@@ -36,4 +37,7 @@ public:
 private:
 	UPROPERTY()
 	UEventBroker* _eventBroker;
+
+//	UPROPERTY()
+	
 };

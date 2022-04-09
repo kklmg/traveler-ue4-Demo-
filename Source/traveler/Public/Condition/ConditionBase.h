@@ -15,8 +15,9 @@ UCLASS()
 class TRAVELER_API UConditionBase : public UObject
 {
 	GENERATED_BODY()
+
 public:
 	virtual void VInitialize();
-	virtual bool VValidate(UEventDataBase* eventData) PURE_VIRTUAL(UConditionBase::VValidate, return false;);
-	virtual TArray<FName> VGetReactiveEventNames();
+	virtual bool VValidate(UEventDataBase* eventData);
+
 };

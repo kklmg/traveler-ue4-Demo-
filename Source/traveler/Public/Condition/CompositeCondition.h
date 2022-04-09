@@ -14,12 +14,11 @@ class TRAVELER_API UCompositeCondition : public UConditionBase
 {
 	GENERATED_BODY()
 public:
-	virtual bool VValidate(UEventDataBase* eventData) override;
-
-	virtual TArray<FName> VGetReactiveEventNames();
-
 	void VInitialize() override;
 	void Add(UConditionBase* condition);
+
+	virtual bool VValidate(UEventDataBase* eventData) override;
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<TSubclassOf<UConditionBase>> _conditionClasses;

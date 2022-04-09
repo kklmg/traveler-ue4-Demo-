@@ -8,7 +8,8 @@ void UConditionBase::VInitialize()
 {
 }
 
-TArray<FName> UConditionBase::VGetReactiveEventNames()
+bool UConditionBase::VValidate(UEventDataBase* eventData)
 {
-	return TArray<FName>();
+	return false;
 }
+

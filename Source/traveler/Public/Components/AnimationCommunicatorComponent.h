@@ -47,11 +47,17 @@ private:
 	UPROPERTY()
 	UAnimationModelBase* _animationModelIns;
 
+	UPROPERTY()
+	ACharacter* _character;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UAnimationModelBase> _animationModelClass;
 
 	UPROPERTY()
 	EAnimationState _animationState;
+
+	UPROPERTY(EditDefaultsOnly,Category = animMontage)
+	UAnimMontage* _montage;
 
 	FOnAnimationStateChanged _animationStateChangedDelegate;
 };
