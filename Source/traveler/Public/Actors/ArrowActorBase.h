@@ -7,7 +7,7 @@
 #include "ArrowActorBase.generated.h"
 
 
-class UMyDamageType;
+class UDamageData;
 
 UENUM(BlueprintType)
 enum class EArrowState : uint8
@@ -73,8 +73,8 @@ private:
 	EArrowState _arrowState;
 
 	UPROPERTY()
-	UMyDamageType* _damageType;
+	UDamageData* _damageDataIns;
 
 	UPROPERTY(EditDefaultsOnly, Category = Damage)
-	TSubclassOf<UMyDamageType> _damageTypeClass;
+	TSubclassOf<UDamageData> _damageDataClass;
 };

@@ -20,6 +20,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EStatusEffect StatusEffectType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EElementalType ElementalType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Damage;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float DamageInterval;

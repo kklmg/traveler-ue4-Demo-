@@ -21,7 +21,7 @@ public:
 	UStatusEffectProcessManager();
 
 	UFUNCTION()
-	void ExecuteProcess(AActor* effectReceiver, AActor* effectCauser, UStatusEffectData* effectData);
+	void ExecuteProcess(AActor* effectReceiver, AActor* effectCauser, APawn* effectInstigator, UStatusEffectData* effectData);
 	UStatusEffectProcessBase* StopProcess(EStatusEffect statusEffectType);
 
 	bool IsExistStatusEffect(EStatusEffect statusEffectType);

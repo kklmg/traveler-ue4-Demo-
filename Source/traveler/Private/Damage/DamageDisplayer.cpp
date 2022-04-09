@@ -9,12 +9,12 @@ UDamageDisplayer::UDamageDisplayer()
 	_spawnInCircleRadius = 60.0f;
 	_poolSize = 256;
 
-	_damageDisplaySetting.Add(EDamageType::EDamage_Fire, FColor::Red);
-	_damageDisplaySetting.Add(EDamageType::EDamage_Electricity, FColor::Yellow);
-	_damageDisplaySetting.Add(EDamageType::EDamage_Ice, FColor::Cyan);
-	_damageDisplaySetting.Add(EDamageType::EDamage_Physics, FColor::White);
-	_damageDisplaySetting.Add(EDamageType::EDamage_Poison, FColor::Purple);
-	_damageDisplaySetting.Add(EDamageType::EDamage_Water, FColor::Blue);
+	_damageDisplaySetting.Add(EElementalType::EElemental_Fire, FColor::Red);
+	_damageDisplaySetting.Add(EElementalType::EElemental_Electricity, FColor::Yellow);
+	_damageDisplaySetting.Add(EElementalType::EElemental_Ice, FColor::Cyan);
+	_damageDisplaySetting.Add(EElementalType::EElemental_Physics, FColor::White);
+	_damageDisplaySetting.Add(EElementalType::EElemental_Poison, FColor::Purple);
+	_damageDisplaySetting.Add(EElementalType::EElemental_Water, FColor::Blue);
 }
 
 
@@ -68,9 +68,9 @@ void UDamageDisplayer::Tick(float DeltaTime)
 
 void UDamageDisplayer::GetDamageWidgetData(FDamageDisplayData damageDisplayData, FVector2D offset, FDamageWidgetData& outDamageWidgetData)
 {
-	if (_damageDisplaySetting.Contains(damageDisplayData.DamageType))
+	if (_damageDisplaySetting.Contains(damageDisplayData.ElementalType))
 	{
-		outDamageWidgetData = _damageDisplaySetting[damageDisplayData.DamageType];
+		outDamageWidgetData = _damageDisplaySetting[damageDisplayData.ElementalType];
 	}
 
 	outDamageWidgetData.Damage = damageDisplayData.Damage;

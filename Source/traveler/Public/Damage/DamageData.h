@@ -3,31 +3,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/DamageType.h"
+#include "UObject/NoExportTypes.h"
 #include "Data/CombatData.h"
-#include "Data/StatusEffectData.h"
-#include "MyDamageType.generated.h"
+#include "DamageData.generated.h"
 
+class UStatusEffectData;
 
 /**
  * 
  */
-UCLASS()
-class TRAVELER_API UMyDamageType : public UDamageType
+UCLASS(BlueprintType,Blueprintable)
+class TRAVELER_API UDamageData : public UObject
 {
 	GENERATED_BODY()
 public:
-	UMyDamageType();
-
-	FName GetDamageTypeName();
+	UDamageData();
 
 public:
-	UPROPERTY(EditDefaultsOnly)
-	EDamageType DamageType;
-
 	UPROPERTY(EditDefaultsOnly)
 	float Damage;
 
 	UPROPERTY(EditDefaultsOnly)
+	EElementalType ElementalType;
+
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UStatusEffectData> StatusEffectDataClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageType> DamageTypeClass;
 };

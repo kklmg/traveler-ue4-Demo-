@@ -371,19 +371,19 @@ void ACreatureCharacter::VStopAllProcess()
 	_weaponComponent->StopAllWeaponProcesses();
 }
 
-void ACreatureCharacter::VHandleDamage(float basicDamage, EDamageType damageType, FVector impactPoint, AActor* causer)
+void ACreatureCharacter::VHandleDamage(float basicDamage, EElementalType damageType, FVector impactPoint, AActor* causer, APawn* instigator)
 {
-	_damageHandlerComponent->HandleDamage(basicDamage, damageType, impactPoint, causer);
+	_damageHandlerComponent->HandleDamage(basicDamage, damageType, impactPoint, causer, instigator);
 }
 
-void ACreatureCharacter::VHandleDamage(UMyDamageType* damageType, FVector impactPoint, AActor* causer)
+void ACreatureCharacter::VHandleDamageData(UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator)
 {
-	_damageHandlerComponent->HandleDamage(damageType, impactPoint, causer);
+	_damageHandlerComponent->HandleDamageData(damageData, impactPoint, causer, instigator);
 }
 
-void ACreatureCharacter::VHandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer)
+void ACreatureCharacter::VHandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator)
 {
-	_damageHandlerComponent->HandleStatusEffect(statusEffectData, impactPoint, causer);
+	_damageHandlerComponent->HandleStatusEffect(statusEffectData, impactPoint, causer, instigator);
 }
 
 void ACreatureCharacter::VShowActorUI(EActorUI UIType)

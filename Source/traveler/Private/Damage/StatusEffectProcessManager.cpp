@@ -11,10 +11,10 @@ UStatusEffectProcessManager::UStatusEffectProcessManager()
 {
 }
 
-void UStatusEffectProcessManager::ExecuteProcess(AActor* effectReceiver, AActor* effectCauser, UStatusEffectData* statusEffectData)
+void UStatusEffectProcessManager::ExecuteProcess(AActor* effectReceiver, AActor* effectCauser, APawn* effectInstigator, UStatusEffectData* statusEffectData)
 {
 	if (!statusEffectData) return;
-	
+
 	if (_processMap.Contains(statusEffectData->StatusEffectType))
 	{
 		_processMap[statusEffectData->StatusEffectType]->CombineEffectData(statusEffectData);
@@ -22,7 +22,7 @@ void UStatusEffectProcessManager::ExecuteProcess(AActor* effectReceiver, AActor*
 	else
 	{
 		UStatusEffectProcessBase* newProcess = NewObject<UStatusEffectProcessBase>(this);
-		newProcess->SetData(effectReceiver,effectCauser, statusEffectData);
+		newProcess->SetData(effectReceiver, effectCauser, effectInstigator, statusEffectData);
 		newProcess->VInitialize();
 		newProcess->VExecute();
 		_processMap.Add(statusEffectData->StatusEffectType, newProcess);

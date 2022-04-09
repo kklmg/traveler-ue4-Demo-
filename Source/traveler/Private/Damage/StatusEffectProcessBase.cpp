@@ -10,10 +10,11 @@
 
 
 
-void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCauser, UStatusEffectData* effectData)
+void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCauser, APawn* effectInstigator, UStatusEffectData* effectData)
 {
 	_effectReceiver = effectReceiver;
 	_effectCauser = effectCauser;
+	_effectInstigator = effectInstigator;
 
 	_actorUIInterface = Cast<IActorUIInterface>(effectReceiver);
 	_actorEffectInterface = Cast<IActorEffectInterface>(effectReceiver);
@@ -24,7 +25,7 @@ void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCau
 		_damage = effectData->Damage;
 		_damageInterval = effectData->DamageInterval;
 		_effectDuration = effectData->EffectDuration;
-		_damageType = UMyGameplayStatics::StatusEffectTypeToDamageType(effectData->StatusEffectType);
+		_elementalType = effectData->ElementalType;
 		_statusEffectType = effectData->StatusEffectType;
 	}
 }
@@ -93,7 +94,8 @@ void UStatusEffectProcessBase::VTMTick(float deltaTime)
 	{
 		if (_damage != 0.0f && _damageHandlerInterface)
 		{
-			_damageHandlerInterface->VHandleDamage(_damage, _damageType, _effectReceiver->GetActorLocation(), _effectCauser);
+			_damageHandlerInterface->VHandleDamage(_damage, _elementalType, _effectReceiver->GetActorLocation(), 
+				_effectCauser, _effectInstigator);
 		}
 
 

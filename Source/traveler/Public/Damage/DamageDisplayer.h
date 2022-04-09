@@ -17,7 +17,7 @@ struct FDamageDisplayData
 
 public:
 	UPROPERTY(BlueprintReadWrite)
-	EDamageType DamageType;
+	EElementalType ElementalType;
 
 	UPROPERTY(BlueprintReadWrite)
 	float Damage;
@@ -49,7 +49,7 @@ private:
 	void GetDamageWidgetData(FDamageDisplayData damageDisplayData, FVector2D offset, FDamageWidgetData& outDamageWidgetData);
 
 	UPROPERTY(EditDefaultsOnly)
-	TMap<EDamageType, FDamageWidgetData> _damageDisplaySetting;
+	TMap<EElementalType, FDamageWidgetData> _damageDisplaySetting;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UDamageWidget> _damageWidgetClass;

@@ -126,9 +126,9 @@ public:
 
 
 	//Damage Handler Interface implementation --------------------------------------------------
-	virtual void VHandleDamage(float basicDamage, EDamageType damageType, FVector impactPoint, AActor* causer)  override;
-	virtual void VHandleDamage(UMyDamageType* damageType, FVector impactPoint, AActor* causer)  override;
-	virtual void VHandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer) override;
+	virtual void VHandleDamage(float basicDamage, EElementalType damageType, FVector impactPoint, AActor* causer, APawn* instigator)  override;
+	virtual void VHandleDamageData(UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator)  override;
+	virtual void VHandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator) override;
 
 
 	//Actor UI Interface implementation --------------------------------------------------

@@ -26,7 +26,7 @@ class TRAVELER_API UStatusEffectProcessBase : public UProcessBase
 	GENERATED_BODY()
 
 public:
-	void SetData(AActor* effectReceiver, AActor* effectCauser, UStatusEffectData* effectData);
+	void SetData(AActor* effectReceiver, AActor* effectCauser, APawn* effectInstigator, UStatusEffectData* effectData);
 	void CombineEffectData(UStatusEffectData* effectData);
 
 protected:
@@ -45,8 +45,8 @@ private:
 	float _ElapsedTimeFromLastDamage;
 
 	float _damage;
+	EElementalType _elementalType;
 	float _damageInterval;
-	EDamageType _damageType;
 
 	float _effectDuration;
 	EStatusEffect _statusEffectType;
@@ -56,6 +56,9 @@ private:
 
 	UPROPERTY()
 	AActor* _effectCauser;
+
+	UPROPERTY()
+	APawn* _effectInstigator;
 
 	UPROPERTY()
 	AMyHUD* _hud;

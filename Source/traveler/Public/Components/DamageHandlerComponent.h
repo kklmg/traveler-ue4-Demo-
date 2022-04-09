@@ -4,13 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Damage/MyDamageType.h"
+#include "Data/CombatData.h"
 #include "DamageHandlerComponent.generated.h"
 
 class UStatusEffectProcessManager;
 
 class IStatusInterface;
 class IActorUIInterface;
+class UDamageData;
+class UStatusEffectData;
 
 class AMyHUD;
 
@@ -19,22 +21,22 @@ class TRAVELER_API UDamageHandlerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UDamageHandlerComponent();
 
-	void HandleDamage(float basicDamage, EDamageType damageType, FVector impactPoint, AActor* causer);
-	void HandleDamage(UMyDamageType* damageType, FVector impactPoint, AActor* causer);
-	void HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer);
+	void HandleDamage(float basicDamage, EElementalType elementalType, FVector impactPoint, AActor* causer, APawn* instigator);
+	void HandleDamageData(UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator);
+	void HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator);
 
 	UFUNCTION()
-	void OnHealthChanged(float preValue,float newValue);
+	void OnHealthChanged(float preValue, float newValue);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	float CalculateDamage(float basicDamage, EDamageType damageType, AActor* damageGiver, AActor* damageReceiver);
+	float CalculateDamage(float basicDamage, EElementalType damageType, AActor* damageReceiver, AActor* causer, APawn* instigator);
 
 public:	
 	// Called every frame

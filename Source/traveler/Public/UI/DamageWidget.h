@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Damage/MyDamageType.h"
 #include "Interface/PoolableInterface.h"
 #include "DamageWidget.generated.h"
 

@@ -8,6 +8,7 @@
 #include "MyGameplayStatics.generated.h"
 
 class UCameraComponent;
+class UDamageData;
 
 /**
  * 
@@ -31,7 +32,9 @@ public:
 
 	static float ComputeDistance(FVector from, FVector to, EPlane plane = Plane_None);
 
-	static EDamageType StatusEffectTypeToDamageType(EStatusEffect statusEffectType);
+	//static EElementalType StatusEffectTypeToDamageType(EStatusEffect statusEffectType);
+
+	static bool CauseDamage(AActor* damagedActor, UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator);
 
 	//static float CalculateDamage(float basicDamage, EDamageType damageType, AActor* damageGiver, AActor* damageReceiver);
 

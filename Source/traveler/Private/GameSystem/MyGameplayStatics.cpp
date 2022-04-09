@@ -2,7 +2,11 @@
 
 
 #include "GameSystem/MyGameplayStatics.h"
+#include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
+#include "Damage/DamageHandlerInterface.h"
+#include "Damage/DamageData.h"
+
 
 FVector UMyGameplayStatics::InptAxisToCameraDirection(FVector inputAxis, UCameraComponent* cameraComp)
 {
@@ -50,28 +54,47 @@ float UMyGameplayStatics::ComputeDistance(FVector from, FVector to, EPlane plane
 	
 	return dirFromTo.Size();
 }
+//
+//EElementalType UMyGameplayStatics::StatusEffectTypeToDamageType(EStatusEffect statusEffectType)
+//{
+//	switch (statusEffectType)
+//	{
+//	case EStatusEffect::EElemental_NONE: return EElementalType::EDamage_None;
+//		break;
+//	case EStatusEffect::EElemental_Fire: return EElementalType::EDamage_Fire;
+//		break;
+//	case EStatusEffect::EElemental_Water: return EElementalType::EDamage_Water;
+//		break;
+//	case EStatusEffect::EElemental_Ice: return EElementalType::EDamage_Ice;
+//		break;
+//	case EStatusEffect::EElemental_Electricity: return EElementalType::EDamage_Electricity;
+//		break;
+//	case EStatusEffect::EElemental_Poison: return EElementalType::EDamage_Poison;
+//		break;
+//	case EStatusEffect::EElemental_Stun: return EElementalType::EDamage_None;
+//		break;
+//	default: return EElementalType::EDamage_None;
+//		break;
+//	}
+//}
 
-EDamageType UMyGameplayStatics::StatusEffectTypeToDamageType(EStatusEffect statusEffectType)
+bool UMyGameplayStatics::CauseDamage(AActor* damagedActor, UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator)
 {
-	switch (statusEffectType)
+	if(!damagedActor) return false;
+	if (!damageData) return false;
+
+	IDamageHandlerInterface* damageHandlerInterface = Cast<IDamageHandlerInterface>(damagedActor);
+	if(damageHandlerInterface)
 	{
-	case EStatusEffect::EStatusEffect_NONE: return EDamageType::EDamage_None;
-		break;
-	case EStatusEffect::EStatusEffect_Fire: return EDamageType::EDamage_Fire;
-		break;
-	case EStatusEffect::EStatusEffect_Water: return EDamageType::EDamage_Water;
-		break;
-	case EStatusEffect::EStatusEffect_Ice: return EDamageType::EDamage_Ice;
-		break;
-	case EStatusEffect::EStatusEffect_Electricity: return EDamageType::EDamage_Electricity;
-		break;
-	case EStatusEffect::EStatusEffect_Poison: return EDamageType::EDamage_Poison;
-		break;
-	case EStatusEffect::EStatusEffect_Stun: return EDamageType::EDamage_None;
-		break;
-	default: return EDamageType::EDamage_None;
-		break;
+		damageHandlerInterface->VHandleDamageData(damageData,impactPoint,causer, instigator);
 	}
+
+	else
+	{
+		UGameplayStatics::ApplyDamage(damagedActor, damageData->Damage, instigator ? instigator->GetController() : nullptr, causer, damageData->DamageTypeClass);
+	}
+
+	return true;
 }
 //
 //float UMyGameplayStatics::CalculateDamage(float basicDamage, EDamageType damageType, AActor* damageGiver, AActor* damageReceiver)

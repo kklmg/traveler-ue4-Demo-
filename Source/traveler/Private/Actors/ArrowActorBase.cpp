@@ -5,7 +5,8 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Damage/DamageHandlerInterface.h"
-#include "Damage/MyDamageType.h"
+#include "Damage/DamageData.h"
+#include "GameSystem/MyGameplayStatics.h"
 
 AArrowActorBase::AArrowActorBase()
 {
@@ -30,9 +31,9 @@ void AArrowActorBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (_damageTypeClass)
+	if (_damageDataClass)
 	{
-		_damageType = NewObject<UMyDamageType>(this, _damageTypeClass);
+		_damageDataIns = NewObject<UDamageData>(this, _damageDataClass);
 	}
 
 	if (_meshComp)
@@ -122,13 +123,5 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	AttachToComponent(OtherComponent, FAttachmentTransformRules::KeepWorldTransform, Hit.BoneName);
 
 	//apply damagge
-	IDamageHandlerInterface* damageHandler = Cast<IDamageHandlerInterface>(OtherActor);
-
-	if (OtherActor != GetInstigator() && _damageType && damageHandler)
-	{
-		damageHandler->VHandleDamage(_damageType, Hit.ImpactPoint, GetInstigator());
-		//UGameplayStatics::ApplyDamage(OtherActor, _damage, GetInstigator()->GetController(), this, _damageTypeClass);
-	}
-
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("arrow hitted"));
+	UMyGameplayStatics::CauseDamage(OtherActor, _damageDataIns, Hit.ImpactPoint, this, GetInstigator());
 }
