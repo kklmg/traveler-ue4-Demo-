@@ -103,6 +103,9 @@ void UFlickeringWidget::Reset()
 	_currentTimeIndex = 0;
 	_elapsedTime = 0.0f;
 
+	_compositeProcess->VReset();
+	_flickeringProcess->VReset();
+
 	//_compositeProcess->VAbort();
 	//_compositeProcess->VInitialize();
 }
