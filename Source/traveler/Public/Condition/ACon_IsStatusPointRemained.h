@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Condition/ACon_StatusBase.h"
-#include "ACon_StatusIsEmpty.generated.h"
+#include "ACon_IsStatusPointRemained.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UACon_StatusIsEmpty : public UACon_StatusBase
+class TRAVELER_API UACon_IsStatusPointRemained : public UACon_StatusBase
 {
 	GENERATED_BODY()
 public:

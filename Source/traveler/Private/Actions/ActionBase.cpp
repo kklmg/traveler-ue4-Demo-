@@ -7,7 +7,7 @@
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Interface/StatusInterface.h"
 #include "Data/CostData.h"
-#include "Interface/AnimationCommunicatorInterface.h"
+#include "Interface/AnimControlInterface.h"
 
 
 DEFINE_LOG_CATEGORY(LogAction);
@@ -34,7 +34,7 @@ void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoar
 	_statusInterface = Cast<IStatusInterface>(_actionOwner);
 
 	//get animation view model
-	IAnimationCommunicatorInterface* animationCommunicator = Cast<IAnimationCommunicatorInterface>(_actionOwner);
+	IAnimControlInterface* animationCommunicator = Cast<IAnimControlInterface>(_actionOwner);
 	if (animationCommunicator)
 	{
 		_animationViewModel = animationCommunicator->VGetAnimationModel();

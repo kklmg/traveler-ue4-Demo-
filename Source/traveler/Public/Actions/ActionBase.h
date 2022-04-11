@@ -14,7 +14,6 @@ DECLARE_LOG_CATEGORY_EXTERN(LogAction, Log, All);
 
 class IStateInterface;
 class IStatusInterface;
-class IAnimationModelProvider;
 
 class UAnimationModelBase;
 class UCostData;

@@ -12,7 +12,7 @@
 #include "Interface/ExtraTransformProvider.h"
 #include "Interface/ActorEffectInterface.h"
 #include "Interface/ActorUIInterface.h"
-#include "Interface/AnimationCommunicatorInterface.h"
+#include "Interface/AnimControlInterface.h"
 #include "Interface/EventBrokerInterface.h"
 #include "Interface/LifeControlInterface.h"
 #include "Damage/DamageHandlerInterface.h"
@@ -34,7 +34,7 @@ class UExtraTransformProviderComponent;
 class UDamageHandlerComponent;
 class UIKComponent;
 class UEffectControllerComponent;
-class UAnimationCommunicatorComponent;
+class UAnimControlComponent;
 class UEventBrokerComponent;
 class ULifeControlComponent;
 
@@ -50,7 +50,7 @@ UCLASS()
 class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IStatusInterface, public ILifeControlInterface,
 										public ICharacterCameraInterface, public IWeaponInterface,
 										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface,
-										public IActorEffectInterface, public IAnimationCommunicatorInterface, public IEventBrokerInterface
+										public IActorEffectInterface, public IAnimControlInterface, public IEventBrokerInterface
 {
 	GENERATED_BODY()
 
@@ -128,7 +128,7 @@ public:
 	virtual void VStopAllProcess() override;
 
 
-	//AnimationModel Provider Interface implementation --------------------------------------------------
+	//Animation Control Interface implementation --------------------------------------------------
 	virtual UAnimationModelBase* VGetAnimationModel() override;
 
 
@@ -218,5 +218,5 @@ protected:
 	UEffectControllerComponent* _effectControllerComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UAnimationCommunicatorComponent* _animationCommunicatorComponent;
+	UAnimControlComponent* _animControlComponent;
 };

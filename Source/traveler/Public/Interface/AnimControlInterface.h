@@ -6,11 +6,11 @@
 #include "UObject/Interface.h"
 #include "Data/AnimationModelBase.h"
 #include "Data/StateData.h"
-#include "AnimationCommunicatorInterface.generated.h"
+#include "AnimControlInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, BlueprintType, meta = (CannotImplementInterfaceInBlueprint))
-class UAnimationCommunicatorInterface : public UInterface
+class UAnimControlInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -19,7 +19,7 @@ class UAnimationCommunicatorInterface : public UInterface
 /**
  * 
  */
-class TRAVELER_API IAnimationCommunicatorInterface
+class TRAVELER_API IAnimControlInterface
 {
 	GENERATED_BODY()
 
@@ -32,10 +32,10 @@ public:
 
 	//animation State
 	UFUNCTION(BlueprintCallable)
-	virtual void VSetAnimationState(EAnimationState newState) PURE_VIRTUAL(IAnimationCommunicatorInterface::VSetAnimationState, );
+	virtual void VSetAnimationState(EAnimationState newState) PURE_VIRTUAL(IAnimControlInterface::VSetAnimationState, );
 	UFUNCTION(BlueprintCallable)
-	virtual EAnimationState VGetAnimationState() PURE_VIRTUAL(IAnimationCommunicatorInterface::VGetAnimationState, return EAnimationState::EAnimState_None;);
-	virtual FOnAnimationStateChanged& VGetAnimationStateChangedDelegate() PURE_VIRTUAL(IAnimationCommunicatorInterface::VGetAnimationStateChangedDelegate, return _tempAnimationStateChanged;);
+	virtual EAnimationState VGetAnimationState() PURE_VIRTUAL(IAnimControlInterface::VGetAnimationState, return EAnimationState::EAnimState_None;);
+	virtual FOnAnimationStateChanged& VGetAnimationStateChangedDelegate() PURE_VIRTUAL(IAnimControlInterface::VGetAnimationStateChangedDelegate, return _tempAnimationStateChanged;);
 
 private:
 	

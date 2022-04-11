@@ -2,7 +2,7 @@
 
 
 #include "Components/IKComponent.h"
-#include "Interface/AnimationCommunicatorInterface.h"
+#include "Interface/AnimControlInterface.h"
 #include "Interface/ExtraTransformProvider.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "DrawDebugHelpers.h"
@@ -36,7 +36,7 @@ void UIKComponent::BeginPlay()
 
 	_meshSocketProvider = GetOwner<IExtraTransformProvider>();
 
-	IAnimationCommunicatorInterface* animationCommunicator = GetOwner<IAnimationCommunicatorInterface>();
+	IAnimControlInterface* animationCommunicator = GetOwner<IAnimControlInterface>();
 	if(animationCommunicator)
 	{
 		_animationViewModel = animationCommunicator->VGetAnimationModel();

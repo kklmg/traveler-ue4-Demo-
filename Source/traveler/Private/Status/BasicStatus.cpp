@@ -53,7 +53,7 @@ void UBasicStatus::ApplyValueChange(float deltaValue, bool bResetRecoveryTimer)
 {
 	float cacheValue = _remainingValue;
 
-	_remainingValue = FMath::Clamp(_remainingValue + deltaValue, -0.0f, GetFinalValue());
+	_remainingValue = FMath::Clamp(_remainingValue + deltaValue, 0.0f, GetFinalValue());
 
 	if (_remainingValue != cacheValue)
 	{

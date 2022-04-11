@@ -4,7 +4,7 @@
 #include "Components/StatusComponent.h"
 #include "Status/BasicStatus.h"
 #include "Data/CostData.h"
-#include "Interface/AnimationCommunicatorInterface.h"
+#include "Interface/AnimControlInterface.h"
 #include "Status/StatusTableRow.h"
 #include "Status/LevelStatus.h"
 
@@ -23,7 +23,7 @@ UStatusComponent::UStatusComponent()
 
 void UStatusComponent::InitializeComponent()
 {
-	IAnimationCommunicatorInterface* animationCommunicator = GetOwner<IAnimationCommunicatorInterface>();
+	IAnimControlInterface* animationCommunicator = GetOwner<IAnimControlInterface>();
 	if (animationCommunicator)
 	{
 		_animationViewModel = animationCommunicator->VGetAnimationModel();

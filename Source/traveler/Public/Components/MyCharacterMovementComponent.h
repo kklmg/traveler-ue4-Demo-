@@ -8,7 +8,6 @@
 
 class IActionInterface;
 class IStatusInterface;
-class IAnimationModelProvider;
 class IEventBrokerInterface;
 
 class UAnimationModelBase;
@@ -103,6 +102,5 @@ private:
 
 	IActionInterface* _actionInterface;
 	IStatusInterface* _statusInterface;
-	IAnimationModelProvider* _animationModelProviderInterface;
 	IEventBrokerInterface* _eventBrokerInterface;
 };

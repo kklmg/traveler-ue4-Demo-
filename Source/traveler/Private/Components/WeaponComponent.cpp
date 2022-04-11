@@ -5,7 +5,7 @@
 #include "Weapon/BowBase.h"
 #include "Character/CreatureCharacter.h"
 #include "Interface/ExtraTransformProvider.h"
-#include "Interface/AnimationCommunicatorInterface.h"
+#include "Interface/AnimControlInterface.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -38,7 +38,7 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	IAnimationCommunicatorInterface* animationCommunicator = GetOwner<IAnimationCommunicatorInterface>();
+	IAnimControlInterface* animationCommunicator = GetOwner<IAnimControlInterface>();
 	if(animationCommunicator)
 	{
 		_animationViewModel = animationCommunicator->VGetAnimationModel();
@@ -52,7 +52,7 @@ void UWeaponComponent::BeginPlay()
 		EquipWeapon(bow);
 	}
 
-	_animationCommunicator = GetOwner<IAnimationCommunicatorInterface>();
+	_animationCommunicator = GetOwner<IAnimControlInterface>();
 	if (_animationCommunicator)
 	{
 		OnAnimationStateChanged(_animationCommunicator->VGetAnimationState(), _animationCommunicator->VGetAnimationState());

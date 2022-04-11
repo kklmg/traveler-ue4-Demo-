@@ -8,7 +8,6 @@
 #include "Data/IKData.h"
 #include "IKComponent.generated.h"
 
-class IAnimationModelProvider;
 class IExtraTransformProvider;
 
 class UAnimationModelBase;

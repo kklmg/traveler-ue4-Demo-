@@ -9,7 +9,7 @@
 #include "Process/ProcessManagerBase.h"
 #include "Interface/ActionInterface.h"
 #include "Interface/CharacterCameraInterface.h"
-#include "Interface/AnimationCommunicatorInterface.h"
+#include "Interface/AnimControlInterface.h"
 #include "Interface/EventBrokerInterface.h"
 #include "Process/ProcessInterface.h"
 

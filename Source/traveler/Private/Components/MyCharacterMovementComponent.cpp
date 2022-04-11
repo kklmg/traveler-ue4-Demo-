@@ -4,7 +4,7 @@
 #include "Components/MyCharacterMovementComponent.h"
 #include "Interface/StatusInterface.h"
 #include "Interface/ActionInterface.h"
-#include "Interface/AnimationCommunicatorInterface.h"
+#include "Interface/AnimControlInterface.h"
 #include "Interface/EventBrokerInterface.h"
 #include "Event/ActorEventDataBase.h"
 #include "Event/EventNames.h"
@@ -37,7 +37,7 @@ void UMyCharacterMovementComponent::BeginPlay()
 			GetValueChangedDelegate_Bool(EActionDataKey::EACTD_WantToSprint).AddUObject(this, &UMyCharacterMovementComponent::OnCharacterWantToSprint);
 	}
 
-	IAnimationCommunicatorInterface* animationCommunicator = GetOwner<IAnimationCommunicatorInterface>();
+	IAnimControlInterface* animationCommunicator = GetOwner<IAnimControlInterface>();
 	if (animationCommunicator)
 	{
 		_animationViewModel = animationCommunicator->VGetAnimationModel();

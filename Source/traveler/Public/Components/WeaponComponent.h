@@ -12,8 +12,7 @@ class UAnimationModelBase;
 class AWeaponBase;
 class ACreatureCharacter;
 
-class IAnimationModelProvider;
-class IAnimationCommunicatorInterface;
+class IAnimControlInterface;
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeaponBase*,weapon);
@@ -78,5 +77,5 @@ private:
 	UPROPERTY()
 	UAnimationModelBase* _animationViewModel;
 
-	IAnimationCommunicatorInterface* _animationCommunicator;
+	IAnimControlInterface* _animationCommunicator;
 };

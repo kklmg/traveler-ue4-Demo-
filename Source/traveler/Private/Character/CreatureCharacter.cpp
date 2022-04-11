@@ -18,7 +18,7 @@
 #include "Components/DamageHandlerComponent.h"
 #include "Components/EffectControllerComponent.h"
 #include "Components/DamageHandlerComponent.h"
-#include "Components/AnimationCommunicatorComponent.h"
+#include "Components/AnimControlComponent.h"
 #include "Components/EventBrokerComponent.h"
 #include "Components/StatusComponent.h"
 #include "Components/LifeControlComponent.h"
@@ -47,11 +47,11 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 		check(_lifeControlComponent != nullptr);
 	}
 
-	//animation communicator
-	if (_animationCommunicatorComponent == nullptr)
+	//AnimControlComponent
+	if (_animControlComponent == nullptr)
 	{
-		_animationCommunicatorComponent = CreateDefaultSubobject<UAnimationCommunicatorComponent>(TEXT("AnimationCommunicator"));
-		check(_animationCommunicatorComponent);
+		_animControlComponent = CreateDefaultSubobject<UAnimControlComponent>(TEXT("AnimControlComponent"));
+		check(_animControlComponent);
 	}
 
 	//Create Stauts component
@@ -446,22 +446,22 @@ void ACreatureCharacter::VStopEffect(EStatusEffect effectType)
 
 UAnimationModelBase* ACreatureCharacter::VGetAnimationModel()
 {
-	return _animationCommunicatorComponent->GetAnimationModel();
+	return _animControlComponent->GetAnimationModel();
 }
 
 void ACreatureCharacter::VSetAnimationState(EAnimationState newState)
 {
-	_animationCommunicatorComponent->SetAnimationState(newState);
+	_animControlComponent->SetAnimationState(newState);
 }
 
 EAnimationState ACreatureCharacter::VGetAnimationState()
 {
-	return _animationCommunicatorComponent->GetAnimationState();
+	return _animControlComponent->GetAnimationState();
 }
 
 FOnAnimationStateChanged& ACreatureCharacter::VGetAnimationStateChangedDelegate()
 {
-	return _animationCommunicatorComponent->GetAnimationStateChangedDelegate();
+	return _animControlComponent->GetAnimationStateChangedDelegate();
 }
 
 void ACreatureCharacter::VPublishEvent(FName eventName, UEventDataBase* eventData)

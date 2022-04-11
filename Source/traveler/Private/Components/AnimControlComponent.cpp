@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Components/AnimationCommunicatorComponent.h"
+#include "Components/AnimControlComponent.h"
 #include "Data/AnimationModelBase.h"
 #include "GameFramework/Character.h"
 
 // Sets default values for this component's properties
-UAnimationCommunicatorComponent::UAnimationCommunicatorComponent()
+UAnimControlComponent::UAnimControlComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -18,7 +18,7 @@ UAnimationCommunicatorComponent::UAnimationCommunicatorComponent()
 	_animationState = EAnimationState::EAnimState_Walk;
 }
 
-void UAnimationCommunicatorComponent::InitializeComponent()
+void UAnimControlComponent::InitializeComponent()
 {
 	_animationModelIns = _animationModelClass ?
 			NewObject<UAnimationModelBase>(this, _animationModelClass) : NewObject<UAnimationModelBase>(this);
@@ -27,7 +27,7 @@ void UAnimationCommunicatorComponent::InitializeComponent()
 }
 
 // Called when the game starts
-void UAnimationCommunicatorComponent::BeginPlay()
+void UAnimControlComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -35,12 +35,12 @@ void UAnimationCommunicatorComponent::BeginPlay()
 	_character->PlayAnimMontage(_montage);
 }
 
-UAnimationModelBase* UAnimationCommunicatorComponent::GetAnimationModel()
+UAnimationModelBase* UAnimControlComponent::GetAnimationModel()
 {
 	return _animationModelIns;
 }
 
-void UAnimationCommunicatorComponent::SetAnimationState(EAnimationState newState)
+void UAnimControlComponent::SetAnimationState(EAnimationState newState)
 {
 	if (_animationState != newState)
 	{
@@ -50,19 +50,19 @@ void UAnimationCommunicatorComponent::SetAnimationState(EAnimationState newState
 	}
 }
 
-EAnimationState UAnimationCommunicatorComponent::GetAnimationState()
+EAnimationState UAnimControlComponent::GetAnimationState()
 {
 	return _animationState;
 }
 
-FOnAnimationStateChanged& UAnimationCommunicatorComponent::GetAnimationStateChangedDelegate()
+FOnAnimationStateChanged& UAnimControlComponent::GetAnimationStateChangedDelegate()
 {
 	return _animationStateChangedDelegate;
 }
 
 
 // Called every frame
-void UAnimationCommunicatorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UAnimControlComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 

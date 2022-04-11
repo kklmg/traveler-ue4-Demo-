@@ -24,9 +24,9 @@ class TRAVELER_API IEventBrokerInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintCallable)
-	virtual void VPublishEvent(FName eventName, UEventDataBase* eventData) PURE_VIRTUAL(IAnimationCommunicatorInterface::VPublishEvent, );
+	virtual void VPublishEvent(FName eventName, UEventDataBase* eventData) PURE_VIRTUAL(IAnimControlInterface::VPublishEvent, );
 
-	virtual FMD_OnEventPublished& VGetEventDelegate(FName eventName) PURE_VIRTUAL(IAnimationCommunicatorInterface::VGetEventDelegate, return _tempEventPublished;);
+	virtual FMD_OnEventPublished& VGetEventDelegate(FName eventName) PURE_VIRTUAL(IAnimControlInterface::VGetEventDelegate, return _tempEventPublished;);
 private:
 	FMD_OnEventPublished _tempEventPublished;
 };

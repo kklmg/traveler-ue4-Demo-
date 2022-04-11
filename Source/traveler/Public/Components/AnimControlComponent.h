@@ -6,18 +6,18 @@
 #include "Components/ActorComponent.h"
 #include "Event/EventBroker.h"
 #include "Data/StateData.h"
-#include "AnimationCommunicatorComponent.generated.h"
+#include "AnimControlComponent.generated.h"
 
 class UAnimationModelBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TRAVELER_API UAnimationCommunicatorComponent : public UActorComponent
+class TRAVELER_API UAnimControlComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UAnimationCommunicatorComponent();
+	UAnimControlComponent();
 
 	//animation model -----------------------------------------------------------------
 	UAnimationModelBase* GetAnimationModel();
