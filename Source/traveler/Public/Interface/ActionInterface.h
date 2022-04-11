@@ -18,6 +18,7 @@ class UActionInterface : public UInterface
 /**
  * 
  */
+
 class TRAVELER_API IActionInterface
 {
 	GENERATED_BODY()

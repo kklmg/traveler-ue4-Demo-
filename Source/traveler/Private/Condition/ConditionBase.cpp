@@ -8,8 +8,21 @@ void UConditionBase::VInitialize()
 {
 }
 
-bool UConditionBase::VValidate(UEventDataBase* eventData)
+bool UConditionBase::GetResult()
 {
-	return false;
+	return _result;
 }
+
+bool UConditionBase::Validate()
+{
+	_result = VTMValidate();
+	OnValidate.Broadcast(_result);
+	return _result;
+}
+
+bool UConditionBase::VTMValidate()
+{
+	return true;
+}
+
 

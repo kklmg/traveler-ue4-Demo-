@@ -9,6 +9,9 @@
 #include "Data/MyDelegates.h"
 #include "StatusBase.generated.h"
 
+
+class IEventBrokerInterface;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDMD_OnFloatValueChanged, float, PreviousValue, float, NewValue);
 
 /**
@@ -21,7 +24,7 @@ class TRAVELER_API UStatusBase : public UObject
 public:
 	UStatusBase();
 
-	virtual void VInitialize(const FStatusTableRow& tableRow,int32 level = 1);
+	virtual void VInitialize(const FStatusTableRow& tableRow, int32 level = 1);
 	
 	UFUNCTION(BlueprintPure)
 	float GetPrimaryValue();

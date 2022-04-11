@@ -144,9 +144,12 @@ bool UStatusComponent::ApplyCost(UCostData* costData)
 
 void UStatusComponent::InitializeStatusData()
 {
+
+	//Initialize level status
 	_levelStatusIns = NewObject<ULevelStatus>(this);
 	_levelStatusIns->SetLevel(_defaultLevel);
 
+	//Initialize status
 	if (_statusTable)
 	{
 		FString contextString;

@@ -56,7 +56,7 @@ void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 }
 
 
-void UDamageWidget::SetData(FDamageWidgetData damageWidgetData)
+void UDamageWidget::SetData(FDamageWidgetData& damageWidgetData)
 {
 	DamageWidgetData = damageWidgetData;
 	ScrollOffset = damageWidgetData.TextOffset;

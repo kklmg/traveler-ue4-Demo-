@@ -37,3 +37,34 @@ class TRAVELER_API UEventDataBase : public UObject
 	GENERATED_BODY()
 };
 
+UCLASS()
+class TRAVELER_API UEventDataBool : public UEventDataBase
+{
+	GENERATED_BODY()
+public:
+	bool Value;
+};
+
+UCLASS()
+class TRAVELER_API UEventDataInt32 : public UEventDataBase
+{
+	GENERATED_BODY()
+public:
+	int32 Value;
+};
+
+UCLASS()
+class TRAVELER_API UEventDataUInt8 : public UEventDataBase
+{
+	GENERATED_BODY()
+public:
+	uint8 Value;
+};
+
+UCLASS()
+class TRAVELER_API UEventDataFloat : public UEventDataBase
+{
+	GENERATED_BODY()
+public:
+	float Value;
+};

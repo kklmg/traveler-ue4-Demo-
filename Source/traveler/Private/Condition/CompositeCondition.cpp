@@ -3,52 +3,42 @@
 
 #include "Condition/CompositeCondition.h"
 
-bool UCompositeCondition::VValidate(UEventDataBase* eventData)
+bool UCompositeCondition::VTMValidate()
 {
+	if (!Super::VTMValidate()) return false;
+
 	for (UConditionBase* condition : _conditions)
 	{
-		if (!condition) continue;
-		if (!condition->VValidate(eventData)) return false;
+		if (!condition) return false;
+		if (!condition->GetResult()) return false;
 	}
 	return true;
 }
 
-//TArray<FName> UCompositeCondition::VGetReactiveEventNames()
-//{
-//	TSet<FName> ReactiveEventNameSet;
-//
-//	for (auto condition : _conditions)
-//	{
-//		if (condition)
-//		{
-//			TArray<FName> eventNames = condition->VGetReactiveEventNames();
-//			for (FName eventName : eventNames)
-//			{
-//				ReactiveEventNameSet.Add(eventName);
-//			}
-//		}
-//	}
-//
-//	return ReactiveEventNameSet.Array();
-//}
 
 void UCompositeCondition::VInitialize()
 {
+	Super::VInitialize();
+
 	for (auto conditionClass : _conditionClasses)
 	{
-		if (conditionClass)
-		{
-			UConditionBase* conditionIns = NewObject<UConditionBase>(this, conditionClass);
-			if(conditionIns)
-			{
-				conditionIns->VInitialize();
-				_conditions.Add(conditionIns);
-			}
-		}
+		if (!conditionClass) continue;
+
+		UConditionBase* conditionIns = NewObject<UConditionBase>(this, conditionClass);
+		if (!conditionIns) continue;
+
+		conditionIns->VInitialize();
+		conditionIns->OnValidate.AddUObject(this, &UCompositeCondition::OnSubConditionChanged);
+		_conditions.Add(conditionIns);
 	}
 }
 
 void UCompositeCondition::Add(UConditionBase* condition)
 {
 	_conditions.Add(condition);
+}
+
+void UCompositeCondition::OnSubConditionChanged(bool result)
+{
+	this->OnValidate.Broadcast(this->Validate());
 }

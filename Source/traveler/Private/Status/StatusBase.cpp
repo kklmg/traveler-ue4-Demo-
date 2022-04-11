@@ -2,6 +2,7 @@
 
 
 #include "Status/StatusBase.h"
+#include "Interface/EventBrokerInterface.h"
 
 UStatusBase::UStatusBase()
 {
@@ -48,8 +49,6 @@ void UStatusBase::VOnLevelUp(int32 level)
 {
 	float cacheValue = _basicValue;
 	_basicValue = _primaryValue + (_growth * level);
-
-	OnBasicValueChanged.Broadcast(cacheValue,_basicValue);
 
 	ComputeFinalValue();
 }

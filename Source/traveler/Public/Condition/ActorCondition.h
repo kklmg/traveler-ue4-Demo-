@@ -13,4 +13,9 @@ UCLASS(BlueprintType, Blueprintable)
 class TRAVELER_API UActorCondition : public UConditionBase
 {
 	GENERATED_BODY()
+public:
+	virtual void VSetActor(AActor* actor);
+
+private:
+	AActor* _actor;
 };

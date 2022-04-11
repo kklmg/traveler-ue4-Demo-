@@ -6,6 +6,8 @@
 #include "UObject/NoExportTypes.h"
 #include "ConditionBase.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnValidateCondition, bool);
+
 class UEventDataBase;
 
 /**
@@ -18,6 +20,17 @@ class TRAVELER_API UConditionBase : public UObject
 
 public:
 	virtual void VInitialize();
-	virtual bool VValidate(UEventDataBase* eventData);
+	bool Validate();
+	bool GetResult();
+protected:
+	virtual bool VTMValidate();
 
+private:
+	bool _result;
+
+public:
+	FOnValidateCondition OnValidate;
 };
+
+
+

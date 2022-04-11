@@ -4,21 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "Condition/ActorCondition.h"
-#include "AC_MovementMode.generated.h"
+#include "ACon_MovementMode.generated.h"
 
 /**
  * 
  */
 UCLASS(BlueprintType, Blueprintable)
-class TRAVELER_API UAC_MovementMode : public UActorCondition
+class TRAVELER_API UACon_MovementMode : public UActorCondition
 {
 	GENERATED_BODY()
 	
 public:
-	virtual bool VValidate(UEventDataBase* eventData) override;
+	virtual void VSetActor(AActor* actor);
 	void SetValidateData(EMovementMode movementMode);
+protected:
+	virtual bool VTMValidate() override;
+
+	UFUNCTION()
+	void OnMovementModeChanged(ACharacter* character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TEnumAsByte<EMovementMode> _movementMode;
+
+	UPROPERTY()
+	ACharacter* _character;
 };

@@ -57,7 +57,7 @@ class TRAVELER_API UDamageWidget : public UUserWidget, public IPoolableInterface
 public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-	void SetData(FDamageWidgetData damageWidgetData);
+	void SetData(FDamageWidgetData& damageWidgetData);
 	
 	//PoolObject Interface implementation---------------------------------
 

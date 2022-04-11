@@ -9,15 +9,18 @@
 /**
  * 
  */
-UCLASS(BlueprintType,Blueprintable)
+
+UCLASS()
 class TRAVELER_API UCompositeCondition : public UConditionBase
 {
 	GENERATED_BODY()
 public:
 	void VInitialize() override;
 	void Add(UConditionBase* condition);
-
-	virtual bool VValidate(UEventDataBase* eventData) override;
+	void OnSubConditionChanged(bool result);
+protected:
+	virtual bool VTMValidate() override;
+	
 
 private:
 	UPROPERTY(EditDefaultsOnly)

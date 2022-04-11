@@ -2,7 +2,7 @@
 
 
 #include "Actions/ActionPreset/ActionPresetTrigger.h"
-#include "Condition/ReactiveCondition.h"
+#include "Condition/CompositeActorCondition.h"
 #include "Actions/ActionPreset/CharacterActionPreset.h"
 #include "Components/ActionComponent.h"
 #include "Interface/EventBrokerInterface.h"
@@ -16,14 +16,9 @@ void UActionPresetTrigger::Initiazlie(UActionComponent* actionComponent)
 
 	if (_conditionClass)
 	{
-		_conditionIns = NewObject<UReactiveCondition>(this, _conditionClass);
+		_conditionIns = NewObject<UCompositeActorCondition>(this, _conditionClass);
+		_conditionIns->SetActor(_actionComponent->GetOwner());
 		_conditionIns->VInitialize();
-	}
-
-	IEventBrokerInterface* eventBroker = actionComponent->GetEventBrokerInterface();
-	if (_conditionIns && eventBroker)
-	{
-		_conditionIns->SubscribeEvents(eventBroker);
 		_conditionIns->OnValidate.AddUObject(this, &UActionPresetTrigger::OnValidate);
 	}
 

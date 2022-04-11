@@ -37,7 +37,4 @@ public:
 private:
 	UPROPERTY()
 	UEventBroker* _eventBroker;
-
-//	UPROPERTY()
-	
 };

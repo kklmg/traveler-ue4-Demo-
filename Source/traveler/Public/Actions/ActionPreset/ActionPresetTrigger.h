@@ -8,7 +8,7 @@
 #include "ActionPresetTrigger.generated.h"
 
 
-class UReactiveCondition;
+class UCompositeActorCondition;
 class UCharacterActionPreset;
 class UActionComponent;
 
@@ -28,10 +28,10 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UReactiveCondition> _conditionClass;
+	TSubclassOf<UCompositeActorCondition> _conditionClass;
 
 	UPROPERTY()
-	UReactiveCondition* _conditionIns;
+	UCompositeActorCondition* _conditionIns;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UCharacterActionPreset> _actionPresetClass;
