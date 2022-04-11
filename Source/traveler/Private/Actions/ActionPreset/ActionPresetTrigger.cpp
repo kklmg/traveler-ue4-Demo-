@@ -18,8 +18,8 @@ void UActionPresetTrigger::Initiazlie(UActionComponent* actionComponent)
 	{
 		_conditionIns = NewObject<UCompositeActorCondition>(this, _conditionClass);
 		_conditionIns->SetActor(_actionComponent->GetOwner());
-		_conditionIns->VInitialize();
-		_conditionIns->OnValidate.AddUObject(this, &UActionPresetTrigger::OnValidate);
+		_conditionIns->Initialize();
+		_conditionIns->OnValidated.AddUObject(this, &UActionPresetTrigger::OnValidate);
 	}
 
 	if (_actionPresetClass)

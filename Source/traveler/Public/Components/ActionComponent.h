@@ -10,8 +10,10 @@
 class UActionBase;
 class UCharacterActionPreset;
 class UActionBlackBoard;
-class IEventBrokerInterface;
 class UActionPresetTrigger;
+
+class IEventBrokerInterface;
+class ILifeControlInterface;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UActionComponent : public UActorComponent
@@ -28,11 +30,13 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void OnLifeChanged(bool isAlive);
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ClearActionProcessPool();
+	void AbortAllProcesses();
 
 	bool CheckActionIsInProgress(EActionType actionType);
 
@@ -68,4 +72,5 @@ private:
 	UCharacterActionPreset* _curActionSet;
 
 	IEventBrokerInterface* _eventBrokerInterface;
+	ILifeControlInterface* _lifeControlInterface;
 };

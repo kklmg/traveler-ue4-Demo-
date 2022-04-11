@@ -8,14 +8,18 @@ void UACon_StatusIsEmpty::VSetActor(AActor* actor)
 	Super::VSetActor(actor);
 
 	auto statusIns = _statusInterface->VGetBasicStatusIns(_statusType);
-	statusIns->OnRemainingValueChanged.AddDynamic(this, &UACon_StatusIsEmpty::OnRemainingValueChanged);
+	if (statusIns)
+	{
+		statusIns->OnRemainingValueChanged.AddDynamic(this, &UACon_StatusIsEmpty::OnRemainingValueChanged);
+	}
 }
 
 bool UACon_StatusIsEmpty::VTMValidate()
 {
 	if (!Super::VTMValidate()) return false;
+	float value = _statusInterface->VGetRemainingValue(_statusType);
 
-	return _statusInterface->VGetRemainingValue(_statusType) <= 0.0f;
+	return value > 0.0f;
 }
 
 void UACon_StatusIsEmpty::OnRemainingValueChanged(float prevValue, float newValue)

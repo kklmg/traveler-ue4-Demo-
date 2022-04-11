@@ -15,10 +15,11 @@ class TRAVELER_API UCompositeCondition : public UConditionBase
 {
 	GENERATED_BODY()
 public:
-	void VInitialize() override;
 	void Add(UConditionBase* condition);
 	void OnSubConditionChanged(bool result);
+
 protected:
+	void VTMInitialize() override;
 	virtual bool VTMValidate() override;
 	
 

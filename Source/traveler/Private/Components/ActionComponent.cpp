@@ -9,8 +9,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyGameplayStatics.h"
 #include "Interface/EventBrokerInterface.h"
+#include "Interface/LifeControlInterface.h"
 #include "Actions/ActionPreset/ActionPresetTrigger.h"
 #include "GameSystem/DebugMessageHelper.h"
+#include "Data/MyDelegates.h"
 
 
 
@@ -34,6 +36,7 @@ void UActionComponent::InitializeComponent()
 	_mapActionProcessPool.SetNum(int32(EActionType::EACT_Max),false);
 
 	_eventBrokerInterface = GetOwner<IEventBrokerInterface>();
+	_lifeControlInterface = GetOwner<ILifeControlInterface>();
 
 	for (auto triggerClass : _actionSetTriggerClasses)
 	{
@@ -52,6 +55,20 @@ void UActionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	if (_lifeControlInterface && _lifeControlInterface->VGetLifeChangedDelegate())
+	{
+		_lifeControlInterface->VGetLifeChangedDelegate()->AddUObject(this, &UActionComponent::OnLifeChanged);
+	}
+}
+
+void UActionComponent::OnLifeChanged(bool isAlive)
+{
+	if (!isAlive)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
+
+		AbortAllProcesses();
+	}
 }
 
 
@@ -65,6 +82,11 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 {
+	if (_lifeControlInterface && _lifeControlInterface->VIsAlive() == false)
+	{
+		return nullptr;
+	}
+
 	if (_curActionSet == nullptr)
 	{
 		return nullptr;
@@ -132,7 +154,7 @@ void UActionComponent::SwitchActionSet(UCharacterActionPreset* actionSet)
 {
 	if (_curActionSet == actionSet) return;
 
-	ClearActionProcessPool();
+	AbortAllProcesses();
 	if(_curActionSet)
 	{
 		_curActionSet->VLeave();
@@ -147,7 +169,7 @@ void UActionComponent::SwitchActionSet(UCharacterActionPreset* actionSet)
 	UDebugMessageHelper::Messsage_String(TEXT("ActionComp"),TEXT("ActionSetChanged"));
 }
 
-void UActionComponent::ClearActionProcessPool()
+void UActionComponent::AbortAllProcesses()
 {
 	for (int32 i = 0; i < _mapActionProcessPool.Num(); ++i)
 	{

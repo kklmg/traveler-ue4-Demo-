@@ -21,6 +21,7 @@
 #include "Components/AnimationCommunicatorComponent.h"
 #include "Components/EventBrokerComponent.h"
 #include "Components/StatusComponent.h"
+#include "Components/LifeControlComponent.h"
 #include "Input/InputHandlerComponent.h"
 
 
@@ -37,6 +38,13 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 	{
 		_eventBrokerComponent = CreateDefaultSubobject<UEventBrokerComponent>(TEXT("EventBrokerComponent"));
 		check(_eventBrokerComponent != nullptr);
+	}
+
+	//life Control component
+	if (_lifeControlComponent == nullptr)
+	{
+		_lifeControlComponent = CreateDefaultSubobject<ULifeControlComponent>(TEXT("LifeControlComponent"));
+		check(_lifeControlComponent != nullptr);
 	}
 
 	//animation communicator
@@ -218,6 +226,16 @@ bool ACreatureCharacter::VIsRemainingValueEnough(UCostData* costData)
 bool ACreatureCharacter::VApplyCost(UCostData* costData)
 {
 	return _statusComponent->ApplyCost(costData);
+}
+
+bool ACreatureCharacter::VIsAlive()
+{
+	return _lifeControlComponent->IsAlive();
+}
+
+FMD_BoolValueChangeSignature* ACreatureCharacter::VGetLifeChangedDelegate()
+{
+	return _lifeControlComponent->GetLifeChangedDelegate();
 }
 
 

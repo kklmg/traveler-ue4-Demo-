@@ -55,7 +55,10 @@ void UBasicStatus::ApplyValueChange(float deltaValue, bool bResetRecoveryTimer)
 
 	_remainingValue = FMath::Clamp(_remainingValue + deltaValue, -0.0f, GetFinalValue());
 
-	OnRemainingValueChanged.Broadcast(cacheValue, _remainingValue);
+	if (_remainingValue != cacheValue)
+	{
+		OnRemainingValueChanged.Broadcast(cacheValue, _remainingValue);
+	}
 
 	if(bResetRecoveryTimer)
 	{

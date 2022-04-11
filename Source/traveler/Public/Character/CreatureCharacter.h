@@ -14,6 +14,7 @@
 #include "Interface/ActorUIInterface.h"
 #include "Interface/AnimationCommunicatorInterface.h"
 #include "Interface/EventBrokerInterface.h"
+#include "Interface/LifeControlInterface.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "CreatureCharacter.generated.h"
 
@@ -35,6 +36,7 @@ class UIKComponent;
 class UEffectControllerComponent;
 class UAnimationCommunicatorComponent;
 class UEventBrokerComponent;
+class ULifeControlComponent;
 
 class AWeaponBase;
 class UActionBase;
@@ -45,8 +47,7 @@ class FDMD_OnFloatValueChanged;
 
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter, 
-										public IActionInterface, public IStatusInterface,
+class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IStatusInterface, public ILifeControlInterface,
 										public ICharacterCameraInterface, public IWeaponInterface,
 										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface,
 										public IActorEffectInterface, public IAnimationCommunicatorInterface, public IEventBrokerInterface
@@ -87,6 +88,12 @@ public:
 	virtual void VApplyRemainingValueChange(EStatusType statusType, float value);
 	virtual bool VIsRemainingValueEnough(UCostData* costData) override;
 	virtual bool VApplyCost(UCostData* costData) override;
+
+	//Life Control Interface implementation---------------------------------------------------
+	bool VIsAlive() override;
+	FMD_BoolValueChangeSignature* VGetLifeChangedDelegate() override;
+
+
 
 	//Action Interface implementation ---------------------------------------------------
 
@@ -175,6 +182,9 @@ protected:
 	UStatusComponent* _statusComponent;
 
 	UPROPERTY(VisibleAnywhere)
+	ULifeControlComponent* _lifeControlComponent;
+
+	UPROPERTY(VisibleAnywhere)
 	UActionComponent* _actionComponent;
 
 	UPROPERTY(VisibleAnywhere)
@@ -209,6 +219,4 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UAnimationCommunicatorComponent* _animationCommunicatorComponent;
-
-
 };

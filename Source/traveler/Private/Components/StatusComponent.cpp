@@ -103,7 +103,7 @@ float UStatusComponent::GetFinalValue(EStatusType statusType)
 
 float UStatusComponent::GetRemainingValue(EStatusType statusType)
 {
-	return _basicStatusMap.Contains(statusType) ? _basicStatusMap[statusType]->GetFinalValue() : 0.0f;
+	return _basicStatusMap.Contains(statusType) ? _basicStatusMap[statusType]->GetRemainingValue() : 0.0f;
 }
 
 void UStatusComponent::ApplyRemainingValueChange(EStatusType statusType, float value)

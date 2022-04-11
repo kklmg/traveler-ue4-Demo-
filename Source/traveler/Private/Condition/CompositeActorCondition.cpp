@@ -10,9 +10,9 @@ void UCompositeActorCondition::SetActor(AActor* actor)
 	_actor = actor;
 }
 
-void UCompositeActorCondition::VInitialize()
+void UCompositeActorCondition::VTMInitialize()
 {
-	Super::VInitialize();
+	Super::VTMInitialize();
 
 	for (auto conditionClass : _actorConditionClasses)
 	{
@@ -22,8 +22,8 @@ void UCompositeActorCondition::VInitialize()
 		if (!conditionIns) continue;
 
 		conditionIns->VSetActor(_actor);
-		conditionIns->VInitialize();
-		conditionIns->OnValidate.AddUObject(this, &UCompositeCondition::OnSubConditionChanged);
+		conditionIns->Initialize();
+		conditionIns->OnValidated.AddUObject(this, &UCompositeCondition::OnSubConditionChanged);
 		this->Add(conditionIns);
 	}
 }

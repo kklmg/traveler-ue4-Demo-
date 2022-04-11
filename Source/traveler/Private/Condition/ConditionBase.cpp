@@ -4,20 +4,26 @@
 #include "Condition/ConditionBase.h"
 #include "Event/EventDataBase.h"
 
-void UConditionBase::VInitialize()
+void UConditionBase::Initialize()
+{
+	VTMInitialize();
+	_cachedResult = Validate();
+}
+
+void UConditionBase::VTMInitialize()
 {
 }
 
 bool UConditionBase::GetResult()
 {
-	return _result;
+	return _cachedResult;
 }
 
 bool UConditionBase::Validate()
 {
-	_result = VTMValidate();
-	OnValidate.Broadcast(_result);
-	return _result;
+	_cachedResult = VTMValidate();
+	OnValidated.Broadcast(_cachedResult);
+	return _cachedResult;
 }
 
 bool UConditionBase::VTMValidate()

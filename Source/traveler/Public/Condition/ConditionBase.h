@@ -4,9 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Data/MyDelegates.h"
 #include "ConditionBase.generated.h"
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnValidateCondition, bool);
 
 class UEventDataBase;
 
@@ -19,17 +18,18 @@ class TRAVELER_API UConditionBase : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void VInitialize();
+	void Initialize();
 	bool Validate();
 	bool GetResult();
 protected:
+	virtual void VTMInitialize();
 	virtual bool VTMValidate();
 
 private:
-	bool _result;
+	bool _cachedResult;
 
 public:
-	FOnValidateCondition OnValidate;
+	FMD_BoolValueChangeSignature OnValidated;
 };
 
 

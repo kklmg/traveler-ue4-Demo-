@@ -12,13 +12,14 @@ bool UCompositeCondition::VTMValidate()
 		if (!condition) return false;
 		if (!condition->GetResult()) return false;
 	}
+
 	return true;
 }
 
 
-void UCompositeCondition::VInitialize()
+void UCompositeCondition::VTMInitialize()
 {
-	Super::VInitialize();
+	Super::VTMInitialize();
 
 	for (auto conditionClass : _conditionClasses)
 	{
@@ -27,8 +28,8 @@ void UCompositeCondition::VInitialize()
 		UConditionBase* conditionIns = NewObject<UConditionBase>(this, conditionClass);
 		if (!conditionIns) continue;
 
-		conditionIns->VInitialize();
-		conditionIns->OnValidate.AddUObject(this, &UCompositeCondition::OnSubConditionChanged);
+		conditionIns->Initialize();
+		conditionIns->OnValidated.AddUObject(this, &UCompositeCondition::OnSubConditionChanged);
 		_conditions.Add(conditionIns);
 	}
 }
@@ -40,5 +41,5 @@ void UCompositeCondition::Add(UConditionBase* condition)
 
 void UCompositeCondition::OnSubConditionChanged(bool result)
 {
-	this->OnValidate.Broadcast(this->Validate());
+	this->OnValidated.Broadcast(this->Validate());
 }
