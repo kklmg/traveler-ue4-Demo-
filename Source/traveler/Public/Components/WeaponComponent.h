@@ -13,6 +13,7 @@ class AWeaponBase;
 class ACreatureCharacter;
 
 class IAnimControlInterface;
+class ILifeControlInterface;
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeaponBase*,weapon);
@@ -32,6 +33,8 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	virtual void InitializeComponent() override;
+
+	void OnLifeChanged(bool isAlive);
 
 public:	
 	// Called every frame
@@ -78,4 +81,5 @@ private:
 	UAnimationModelBase* _animationViewModel;
 
 	IAnimControlInterface* _animationCommunicator;
+	ILifeControlInterface* _lifeControlInterface;
 };

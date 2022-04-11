@@ -19,7 +19,7 @@ void UActionJump::VTMExecute()
 	Super::VTMExecute();
 	if (GetAnimationViewModel())
 	{
-		GetAnimationViewModel()->SetBool(AnimationDataKey::bWantToJump, true);
+		GetAnimationViewModel()->SetBool(NSAnimationDataKey::bWantToJump, true);
 	}
 
 	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(GetActionOwner());
@@ -41,7 +41,7 @@ void UActionJump::VTMTick(float deltaTime)
 
 		if (GetAnimationViewModel())
 		{
-			GetAnimationViewModel()->SetBool(AnimationDataKey::bWantToJump, false);
+			GetAnimationViewModel()->SetBool(NSAnimationDataKey::bWantToJump, false);
 		}
 
 		SetActionProcessSucceed();

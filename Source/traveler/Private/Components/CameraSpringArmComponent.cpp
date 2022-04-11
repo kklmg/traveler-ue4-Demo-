@@ -54,7 +54,7 @@ void UCameraSpringArmComponent::Pitch(float AxisValue)
 
 	if (_animationViewModel)
 	{
-		_animationViewModel->SetFloat(AnimationDataKey::fCameraPitch, rotation.Pitch);
+		_animationViewModel->SetFloat(NSAnimationDataKey::fCameraPitch, rotation.Pitch);
 	}
 }
 void UCameraSpringArmComponent::Yaw(float AxisValue)
@@ -76,8 +76,8 @@ void UCameraSpringArmComponent::SetPitchLimit(float pitchMin, float pitchMax)
 
 	if(_animationViewModel)
 	{
-		_animationViewModel->SetFloat(AnimationDataKey::fCameraPitchMin, _pitchMin);
-		_animationViewModel->SetFloat(AnimationDataKey::fCameraPitchMax, _pitchMax);
+		_animationViewModel->SetFloat(NSAnimationDataKey::fCameraPitchMin, _pitchMin);
+		_animationViewModel->SetFloat(NSAnimationDataKey::fCameraPitchMax, _pitchMax);
 	}
 }
 
@@ -88,7 +88,7 @@ void UCameraSpringArmComponent::ResetPitchLimit()
 
 	if (_animationViewModel)
 	{
-		_animationViewModel->SetFloat(AnimationDataKey::fCameraPitchMin, _pitchMin);
-		_animationViewModel->SetFloat(AnimationDataKey::fCameraPitchMax, _pitchMax);
+		_animationViewModel->SetFloat(NSAnimationDataKey::fCameraPitchMin, _pitchMin);
+		_animationViewModel->SetFloat(NSAnimationDataKey::fCameraPitchMax, _pitchMax);
 	}
 }

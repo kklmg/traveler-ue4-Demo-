@@ -200,12 +200,12 @@ void UStatusComponent::InitializeStatusData()
 	{
 		if (_statusMap.Contains(EStatusType::EStatus_WalkingSpeed))
 		{
-			_animationViewModel->SetFloat(AnimationDataKey::fWalkingSpeed, _statusMap[EStatusType::EStatus_WalkingSpeed]->GetFinalValue());
+			_animationViewModel->SetFloat(NSAnimationDataKey::fWalkingSpeed, _statusMap[EStatusType::EStatus_WalkingSpeed]->GetFinalValue());
 		}
 
 		if (_statusMap.Contains(EStatusType::EStatus_SprintingSpeed))
 		{
-			_animationViewModel->SetFloat(AnimationDataKey::fSprintingSpeed, _statusMap[EStatusType::EStatus_SprintingSpeed]->GetFinalValue());
+			_animationViewModel->SetFloat(NSAnimationDataKey::fSprintingSpeed, _statusMap[EStatusType::EStatus_SprintingSpeed]->GetFinalValue());
 		}
 	}
 }

@@ -11,11 +11,12 @@
  * 
  */
 
-namespace AnimationDataKey
+namespace NSAnimationDataKey
 {	
 	//bool
 	const FName bIsSprinting = FName(TEXT("bIsSprinting"));
 	const FName bWantToJump = FName(TEXT("bWantToJump"));
+	const FName bIsAlive = FName(TEXT("bIsAlive"));
 
 	//float
 	const FName fWalkingSpeed = FName(TEXT("fWalkingSpeed"));

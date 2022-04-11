@@ -7,6 +7,7 @@
 #include "Data/MyDelegates.h"
 #include "LifeControlComponent.generated.h"
 
+class UAnimationModelBase;
 class UCompositeActorCondition;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -24,6 +25,8 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void OnLifeStateChanged(bool isAlive);
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -37,4 +40,7 @@ private:
 
 	UPROPERTY()
 	UCompositeActorCondition* _lifeConditionIns;
+
+	UPROPERTY()
+	UAnimationModelBase* _animViewModel;
 };

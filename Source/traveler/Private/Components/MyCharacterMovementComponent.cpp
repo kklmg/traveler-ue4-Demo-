@@ -57,7 +57,7 @@ void UMyCharacterMovementComponent::OnMovementModeChanged(EMovementMode Previous
 
 	if(_animationViewModel)
 	{
-		_animationViewModel->SetUInt8(AnimationDataKey::byteMovementMode, MovementMode);
+		_animationViewModel->SetUInt8(NSAnimationDataKey::byteMovementMode, MovementMode);
 	}
 	PublishMovementModeChangedEvent();
 }
@@ -68,7 +68,7 @@ void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const 
 
 	if (_animationViewModel)
 	{
-		_animationViewModel->SetVector(AnimationDataKey::vMovingVelocity, Velocity);
+		_animationViewModel->SetVector(NSAnimationDataKey::vMovingVelocity, Velocity);
 	}
 }
 

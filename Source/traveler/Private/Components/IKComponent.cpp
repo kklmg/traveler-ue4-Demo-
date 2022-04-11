@@ -63,7 +63,7 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 			_footIKData->SetRight(FootTrace(ETransform::ETransform_RightFoot));
 
 			//notify ik data
-			_animationViewModel->SetUObject(AnimationDataKey::objFootIKData, _footIKData);
+			_animationViewModel->SetUObject(NSAnimationDataKey::objFootIKData, _footIKData);
 		}
 	}
 }

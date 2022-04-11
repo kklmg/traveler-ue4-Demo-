@@ -6,6 +6,7 @@
 #include "Character/CreatureCharacter.h"
 #include "Interface/ExtraTransformProvider.h"
 #include "Interface/AnimControlInterface.h"
+#include "Interface/LifeControlInterface.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -23,6 +24,16 @@ UWeaponComponent::UWeaponComponent()
 void UWeaponComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
+
+	_lifeControlInterface = GetOwner<ILifeControlInterface>();
+}
+
+void UWeaponComponent::OnLifeChanged(bool isAlive)
+{
+	if (!isAlive)
+	{
+		StopAllWeaponProcesses();
+	}
 }
 
 void UWeaponComponent::BindInputs(UInputComponent* PlayerInputComponent)
@@ -38,6 +49,7 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// ...
 	IAnimControlInterface* animationCommunicator = GetOwner<IAnimControlInterface>();
 	if(animationCommunicator)
 	{
@@ -58,7 +70,11 @@ void UWeaponComponent::BeginPlay()
 		OnAnimationStateChanged(_animationCommunicator->VGetAnimationState(), _animationCommunicator->VGetAnimationState());
 		_animationCommunicator->VGetAnimationStateChangedDelegate().AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
 	}
-	// ...
+
+	if (_lifeControlInterface && _lifeControlInterface->VGetLifeChangedDelegate())
+	{
+		_lifeControlInterface->VGetLifeChangedDelegate()->AddUObject(this, &UWeaponComponent::OnLifeChanged);
+	}
 }
 
 
@@ -106,7 +122,7 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 
 		if(_animationViewModel)
 		{
-			_animationViewModel->SetUObject(AnimationDataKey::objWeapon,_weaponIns);
+			_animationViewModel->SetUObject(NSAnimationDataKey::objWeapon,_weaponIns);
 		}
 
 		OnWeaponChanged.Broadcast(_weaponIns);
