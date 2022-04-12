@@ -6,13 +6,17 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Interface/ExtraTransformProvider.h"
 
+UActorWidget::UActorWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+	_timeCollapse = 5.0f;
+}
+
 void UActorWidget::SetData(AActor* widgetOwner, ETransform transformType)
 {
 	_widgetOwner = widgetOwner;
 	_transformType = transformType;
 
 	_ExTransformProviderInterface = Cast<IExtraTransformProvider>(_widgetOwner);
-
 	OnWidgetOwnerChangedDelegate.Broadcast(_widgetOwner);
 }
 
@@ -45,6 +49,7 @@ void UActorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	if (isOnScreen)
 	{
+		_elapsedTime_LeaveScreen = 0;
 		float scale = UWidgetLayoutLibrary::GetViewportScale(this);
 		screenPosition /= scale;
 
@@ -53,7 +58,11 @@ void UActorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	}
 	else
 	{
-		SetVisibility(ESlateVisibility::Collapsed);
+		_elapsedTime_LeaveScreen += InDeltaTime;;
+		if (_elapsedTime_LeaveScreen > _timeCollapse)
+		{
+			SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 	
 }

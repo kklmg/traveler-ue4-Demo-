@@ -416,12 +416,12 @@ void ACreatureCharacter::VHideActorUI(EActorUI UIType)
 
 void ACreatureCharacter::VShowActorStatusUI(EStatusEffect StatusUIType, float duration)
 {
-	_actorUIComponent->ShowActorStatusUI(StatusUIType, duration);
+	_actorUIComponent->ShowActorStatusEffectUI(StatusUIType, duration);
 }
 
 void ACreatureCharacter::VHideActorStatusUI(EStatusEffect StatusUIType)
 {
-	_actorUIComponent->HideActorStatusUI(StatusUIType);
+	_actorUIComponent->HideActorStatusEffectUI(StatusUIType);
 }
 
 bool ACreatureCharacter::VTryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform)

@@ -34,8 +34,8 @@ public:
 
 	void ShowActorUI(EActorUI widgeType);
 	void HideActorUI(EActorUI widgeType);
-	void ShowActorStatusUI(EStatusEffect StatusType, float duration);
-	void HideActorStatusUI(EStatusEffect StatusType);
+	void ShowActorStatusEffectUI(EStatusEffect StatusType, float duration);
+	void HideActorStatusEffectUI(EStatusEffect StatusType);
 
 private:
 

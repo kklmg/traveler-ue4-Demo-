@@ -20,6 +20,8 @@ class TRAVELER_API UActorWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UActorWidget(const FObjectInitializer& ObjectInitializer);
+
 	void SetData(AActor* widgetOwner,ETransform transformType);
 
 	UFUNCTION(BlueprintPure)
@@ -34,6 +36,10 @@ private:
 
 	UPROPERTY()
 	ETransform _transformType;
+
+	UPROPERTY(EditDefaultsOnly)
+	float _timeCollapse;
+	float _elapsedTime_LeaveScreen;
 
 	IExtraTransformProvider* _ExTransformProviderInterface;
 public:

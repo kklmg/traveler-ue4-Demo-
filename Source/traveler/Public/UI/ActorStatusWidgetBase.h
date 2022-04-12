@@ -50,10 +50,7 @@ private:
 	UFlickeringWidget* statusStun;
 
 	UPROPERTY(EditAnywhere)
-	UCurveFloat* _opacityCurve;
-
-	UPROPERTY(EditAnywhere)
-	TArray<FTimeFrameFlickeringData> _flickeringTimeLineData;
+	FFlickeringWidgetData _flickeringWidgetData;
 
 	UPROPERTY()
 	TMap<EStatusEffect, UFlickeringWidget*> _widgetInsMap; 

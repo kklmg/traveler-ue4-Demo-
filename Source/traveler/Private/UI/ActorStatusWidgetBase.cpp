@@ -11,9 +11,8 @@ void UActorStatusWidgetBase::ShowStatus(EStatusEffect statusEffectType, float du
 	if (_widgetInsMap.Contains(statusEffectType))
 	{
 		_widgetInsMap[statusEffectType]->Reset();
-		_widgetInsMap[statusEffectType]->SetOpacityCurve(_opacityCurve);
+		_widgetInsMap[statusEffectType]->SetData(_flickeringWidgetData);
 		_widgetInsMap[statusEffectType]->SetDuration(duration);
-		_widgetInsMap[statusEffectType]->SetTimeLineData(_flickeringTimeLineData);
 		_widgetInsMap[statusEffectType]->SetVisibility(ESlateVisibility::Visible);
 		_widgetInsMap[statusEffectType]->ExecuteFlickeringProcess();
 	}

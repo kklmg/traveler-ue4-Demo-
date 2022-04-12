@@ -9,37 +9,30 @@
 
 UFlickeringWidget::UFlickeringWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	_duration = 15;
+	_totalDuration = 15;
 }
 
 bool UFlickeringWidget::Initialize()
 {
-	if (!Super::Initialize()) return false;
-
-	if (!_compositeProcess)
-	{
-		_compositeProcess = NewObject<UCompositeProcessBase>(this);
-
-		//setup flickering process
-		_flickeringProcess = NewObject<UFlickeringUIProcess>(this);
-		
-
-		//setup cooling process
-		_coolingProcess = NewObject<UProcessSectionBase>(this);
-
-		_compositeProcess->AddProcess(_flickeringProcess);
-		_compositeProcess->AddProcess(_coolingProcess);
-	}
-
-	_compositeProcess->setIsLoop(true);
-	_flickeringProcess->SetWidget(this);
-
-	return true;
+	return Super::Initialize();
 }
 
 void UFlickeringWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	_compositeProcess = NewObject<UCompositeProcessBase>(this);
+	_compositeProcess->setIsLoop(true);
+
+	//setup flickering process
+	_flickeringProcess = NewObject<UFlickeringUIProcess>(this);
+	_flickeringProcess->SetWidget(this);
+
+	//setup cooling process
+	_coolingProcess = NewObject<UProcessSectionBase>(this);
+
+	_compositeProcess->AddProcess(_flickeringProcess);
+	_compositeProcess->AddProcess(_coolingProcess);
 }
 
 
@@ -47,51 +40,44 @@ void UFlickeringWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
+	if (_elapsedTime > _totalDuration) return;
+
 	_elapsedTime += InDeltaTime;
-	float remainingTime = _duration - _elapsedTime;
+	float remainingTime = _totalDuration - _elapsedTime;
 
 	//change flickering rate by remaining time
-	while (_currentTimeIndex < _flickeringTimeLineData.Num() 
-		&& remainingTime < _flickeringTimeLineData[_currentTimeIndex].onRemainingTime)
-		{
-			_flickeringProcess->SetDuration(_flickeringTimeLineData[_currentTimeIndex].FlickeringDuration);
-			_coolingProcess->SetDuration(_flickeringTimeLineData[_currentTimeIndex].CoolingDuration);
+	while (_curTimeNodeID < _widgetData.FlickeringTimeLineData.Num()
+		&& remainingTime < _widgetData.FlickeringTimeLineData[_curTimeNodeID].TimePoint)
+	{
+		_flickeringProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].FlickeringDuration);
+		_coolingProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].CoolingDuration);
 
-			++_currentTimeIndex;
-		}
+		++_curTimeNodeID;
+	}
 
-	if (!_compositeProcess) return;
-
+	//Run processes
 	_compositeProcess->VTick(InDeltaTime);
+}
+
+void UFlickeringWidget::SetData(FFlickeringWidgetData& widgetData)
+{
+	_widgetData = widgetData;
 }
 
 void UFlickeringWidget::SetDuration(float duration)
 {
-	_duration = duration;
+	_totalDuration = duration;
 }
 
-void UFlickeringWidget::SetOpacityCurve(UCurveFloat* curve)
-{
-	_opacityCurve = curve;
-}
-
-void UFlickeringWidget::SetTimeLineData(TArray<FTimeFrameFlickeringData> timeLineData)
-{
-	_flickeringTimeLineData = timeLineData;
-}
 
 void UFlickeringWidget::ExecuteFlickeringProcess()
 {
-	if (!_flickeringProcess) return;
-	if (!_coolingProcess) return;
-	if (!_compositeProcess) return;
-
-	if (_currentTimeIndex < _flickeringTimeLineData.Num())
+	if (_curTimeNodeID < _widgetData.FlickeringTimeLineData.Num())
 	{
-		_flickeringProcess->SetDuration(_flickeringTimeLineData[_currentTimeIndex].FlickeringDuration);
-		_flickeringProcess->SetOpacityCurve(_opacityCurve);
+		_flickeringProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].FlickeringDuration);
+		_flickeringProcess->SetOpacityCurve(_widgetData.OpacityCurve);
 
-		_coolingProcess->SetDuration(_flickeringTimeLineData[_currentTimeIndex].CoolingDuration);
+		_coolingProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].CoolingDuration);
 
 		_compositeProcess->VInitialize();
 		_compositeProcess->VExecute();
@@ -100,12 +86,8 @@ void UFlickeringWidget::ExecuteFlickeringProcess()
 
 void UFlickeringWidget::Reset()
 {
-	_currentTimeIndex = 0;
+	_curTimeNodeID = 0;
 	_elapsedTime = 0.0f;
 
 	_compositeProcess->VReset();
-	_flickeringProcess->VReset();
-
-	//_compositeProcess->VAbort();
-	//_compositeProcess->VInitialize();
 }

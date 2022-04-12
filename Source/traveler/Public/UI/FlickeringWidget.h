@@ -17,12 +17,12 @@ class UProcessSectionBase;
  */
 
 USTRUCT(BlueprintType)
-struct FTimeFrameFlickeringData
+struct FTimeNodeData_Flickering
 {
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
-	float  onRemainingTime;
+	float TimePoint;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	float FlickeringDuration;
@@ -30,6 +30,21 @@ public:
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	float CoolingDuration;
 };
+
+USTRUCT(BlueprintType)
+struct FFlickeringWidgetData
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
+	UCurveFloat* OpacityCurve;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
+	TArray<FTimeNodeData_Flickering> FlickeringTimeLineData;
+};
+
+
+
 
 UCLASS()
 class TRAVELER_API UFlickeringWidget : public UUserWidget
@@ -39,9 +54,8 @@ class TRAVELER_API UFlickeringWidget : public UUserWidget
 public:
 	UFlickeringWidget(const FObjectInitializer& ObjectInitializer);
 	
+	void SetData(FFlickeringWidgetData& widgetData);
 	void SetDuration(float duration);
-	void SetOpacityCurve(UCurveFloat* curve);
-	void SetTimeLineData(TArray<FTimeFrameFlickeringData> timeLineData); 
 	void ExecuteFlickeringProcess();
 	void Reset();
 
@@ -53,12 +67,6 @@ protected:
 
 private:
 	UPROPERTY()
-	UCurveFloat* _opacityCurve;
-
-	UPROPERTY()
-	TArray<FTimeFrameFlickeringData> _flickeringTimeLineData;
-
-	UPROPERTY()
 	UFlickeringUIProcess* _flickeringProcess;
 
 	UPROPERTY()
@@ -67,9 +75,12 @@ private:
 	UPROPERTY()
 	UCompositeProcessBase* _compositeProcess;
 
-	int32 _currentTimeIndex;
+	UPROPERTY()
+	FFlickeringWidgetData _widgetData;
+
+	int32 _curTimeNodeID;
 
 	float _elapsedTime;
 
-	float _duration;
+	float _totalDuration;
 };

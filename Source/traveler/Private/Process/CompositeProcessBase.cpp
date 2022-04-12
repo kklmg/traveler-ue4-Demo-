@@ -93,10 +93,17 @@ void UCompositeProcessBase::VTMOnAborted()
 			process->VAbort();
         }
     }
-
 }
 
 void UCompositeProcessBase::VTMReset()
 {
-    Super::VTMOnDead();
+    Super::VTMReset();
+
+    for (UProcessBase* process : _procesPool)
+    {
+        if (process)
+        {
+            process->VReset();
+        }
+    }
 }
