@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "Data/CombatData.h"
+#include "Effet/EnumEffect.h"
 #include "ActorEffectInterface.generated.h"
+
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
@@ -23,6 +25,6 @@ class TRAVELER_API IActorEffectInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void VPlayEffect(EStatusEffect effectType) PURE_VIRTUAL(IActorEffectInterface::VPlayEffect, );
-	virtual void VStopEffect(EStatusEffect effectType) PURE_VIRTUAL(IActorEffectInterface::VStopEffect, );
+	virtual void VPlayEffect(EEffectType effectType, uint8 effectOption) PURE_VIRTUAL(IActorEffectInterface::VPlayEffect, );
+	virtual void VStopEffect(EEffectType effectType, uint8 effectOption) PURE_VIRTUAL(IActorEffectInterface::VStopEffect, );
 };

@@ -153,8 +153,8 @@ public:
 
 
 	//ActorEffect Interface Interface implementation --------------------------------------------------
-	virtual void VPlayEffect(EStatusEffect effectType) override;
-	virtual void VStopEffect(EStatusEffect effectType) override;
+	virtual void VPlayEffect(EEffectType effectType, uint8 effectOption) override;
+	virtual void VStopEffect(EEffectType effectType, uint8 effectOption) override;
 
 
 

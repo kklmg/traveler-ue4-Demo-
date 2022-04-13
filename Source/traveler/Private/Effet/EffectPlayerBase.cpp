@@ -4,35 +4,10 @@
 #include "Effet/EffectPlayerBase.h"
 #include "Containers/Set.h"
 
-FActorEffectData::FActorEffectData()
-{
-	BlendColor = FLinearColor::White;
-	EffectActorIns = nullptr;
-}
 
-FActorEffectData::FActorEffectData(FLinearColor color)
-{
-	BlendColor = color;
-	EffectActorIns = nullptr;
-}
 
 UEffectPlayerBase::UEffectPlayerBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	_alpha = 0.2f;
-
-	_matColorParams.Association = EMaterialParameterAssociation::LayerParameter;
-	_matColorParams.Name = FName("Color");
-	_matColorParams.Index = 1;
-
-	FActorEffectData actorEffectData;
-
-	actorEffectData.BlendColor = FLinearColor::Red;
-	//_effectData.Append(,)
-	//_effectData.Add(EStatusEffect::EStatusEffect_Fire, actorEffectData);
-	_effectData.Add(EStatusEffect::EStatusEffect_Ice, FActorEffectData(FLinearColor(0, 1, 1, 1)));
-	//_effectData.Add(EStatusEffect::EStatusEffect_Electricity, FActorEffectData(FLinearColor::Yellow));
-	//_effectData.Add(EStatusEffect::EStatusEffect_Poison, FActorEffectData(FLinearColor(0.5, 0, 0.5, 1)));
-	//_effectData.Add(EStatusEffect::EStatusEffect_Water, FActorEffectData(FLinearColor::Blue));
 }
 
 void UEffectPlayerBase::Initialize(AActor* owner, UMaterialInstanceDynamic* mid)
@@ -41,85 +16,24 @@ void UEffectPlayerBase::Initialize(AActor* owner, UMaterialInstanceDynamic* mid)
 	_mid = mid;
 }
 
-void UEffectPlayerBase::PlayEffect(EStatusEffect effectType)
+void UEffectPlayerBase::VPlayEffect(uint8 effectOption)
 {
-	if (_runningEffect.Contains(effectType)) return;
-	if (!_effectData.Contains(effectType)) return;
-
-	_runningEffect.Add(effectType);
-
-	//color setting
-	ApplyBlendedColor();
-
-	//Destroy Effect Actor
-	if(_effectData[effectType].EffectActorIns)
-	{
-		_effectData[effectType].EffectActorIns->Destroy();
-		_effectData[effectType].EffectActorIns = nullptr;
-	}
-
-	//Spawn Effect Actor
-	if (_effectData[effectType].EffectActorClass)
-	{
-		FActorSpawnParameters spawnParams;
-		spawnParams.Owner = _owner;
-
-		_effectData[effectType].EffectActorIns = GetWorld()->SpawnActor<AActor>(_effectData[effectType].EffectActorClass, spawnParams);
-		_effectData[effectType].EffectActorIns->AttachToActor(_owner, FAttachmentTransformRules::KeepWorldTransform);
-	}
 }
 
-void UEffectPlayerBase::StopEffect(EStatusEffect effectType)
+void UEffectPlayerBase::VStopEffect(uint8 effectOption)
 {
-	if (!_runningEffect.Contains(effectType)) return;
-	if (!_effectData.Contains(effectType)) return;
-
-	_runningEffect.Remove(effectType);
-
-	//Color setting
-	ApplyBlendedColor();
-
-	//Destroy Effect Actor
-	if (_effectData[effectType].EffectActorIns)
-	{
-		_effectData[effectType].EffectActorIns->Destroy();
-		_effectData[effectType].EffectActorIns = nullptr;
-	}
 }
 
-UMaterialInstanceDynamic* UEffectPlayerBase::GetMaterial()
+FORCEINLINE UMaterialInstanceDynamic* UEffectPlayerBase::GetMaterial()
 {
 	return _mid;
 }
 
-void UEffectPlayerBase::ApplyBlendedColor()
+void UEffectPlayerBase::VTick(float deltaTime)
 {
-	if (_runningEffect.Num() == 0)
-	{
-		_blendedColor.A = 0;
-	}
-	else
-	{
-		auto iter = _runningEffect.begin();
+}
 
-		if (iter && _effectData.Contains(*iter))
-		{
-			_blendedColor = _effectData[*iter].BlendColor;
-			++iter;
-		}
-
-		for (; iter; ++iter)
-		{
-			if (_effectData.Contains(*iter))
-			{
-				_blendedColor = FMath::LerpStable(_blendedColor, _effectData[*iter].BlendColor, 0.5f);
-			}
-		}
-		_blendedColor.A = _alpha;
-	}
-
-	if (_mid)
-	{
-		_mid->SetVectorParameterValueByInfo(_matColorParams, _blendedColor);
-	}
+FORCEINLINE AActor* UEffectPlayerBase::GetOwner()
+{
+	return _owner;
 }

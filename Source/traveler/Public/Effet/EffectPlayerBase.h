@@ -7,63 +7,30 @@
 #include "Data/CombatData.h"
 #include "EffectPlayerBase.generated.h"
 
-
-USTRUCT(BlueprintType)
-struct FActorEffectData
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	FActorEffectData();
-	FActorEffectData(FLinearColor color);
-
-	UPROPERTY(EditDefaultsOnly)
-	FLinearColor BlendColor;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AActor> EffectActorClass;
-
-	UPROPERTY()
-	AActor* EffectActorIns;
-};
-
 /**
- * 
+ *
  */
 UCLASS(Blueprintable, BlueprintType)
 class TRAVELER_API UEffectPlayerBase : public UObject
 {
 	GENERATED_BODY()
-	
+
 public:
 	UEffectPlayerBase(const FObjectInitializer& ObjectInitializer);
 
-	void Initialize(AActor* owner,UMaterialInstanceDynamic* mid);
+	void Initialize(AActor* owner, UMaterialInstanceDynamic* mid);
 
-	void PlayEffect(EStatusEffect effectType);
-	void StopEffect(EStatusEffect effectType);
+	virtual void VPlayEffect(uint8 effectOption);
+	virtual void VStopEffect(uint8 effectOption);
+	virtual void VTick(float deltaTime);
 
 	UFUNCTION(BlueprintPure)
 	UMaterialInstanceDynamic* GetMaterial();
 
-protected:
-	void ApplyBlendedColor();
+	UFUNCTION(BlueprintPure)
+	AActor* GetOwner();
 
 private:
-	UPROPERTY(EditDefaultsOnly)
-	FLinearColor _blendedColor;
-
-	UPROPERTY(EditDefaultsOnly)
-	float _alpha;
-
-	UPROPERTY(EditDefaultsOnly)
-	FMaterialParameterInfo _matColorParams;
-
-	UPROPERTY(EditDefaultsOnly)
-	TMap<EStatusEffect, FActorEffectData> _effectData;
-
-	UPROPERTY()
-	TSet<EStatusEffect> _runningEffect;
-
 	UPROPERTY()
 	UMaterialInstanceDynamic* _mid;
 

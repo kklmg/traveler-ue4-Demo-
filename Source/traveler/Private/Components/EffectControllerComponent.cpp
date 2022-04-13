@@ -22,37 +22,42 @@ void UEffectControllerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	SetUpMaterialInsDynamic(0);
+	SetupDynamicMaterial(0);
 
-	if(_effectPlayerClass)
+
+	//Dossolve test code
+	PlayEffect(EEffectType::EEffectType_Dissolve, 0);
+}
+
+void UEffectControllerComponent::PlayEffect(EEffectType effectType, uint8 effectOption)
+{
+	if (_effectPlayerInsMap.Contains(effectType))
 	{
-		_effectPlayerIns = NewObject<UEffectPlayerBase>(this, _effectPlayerClass);
+		_effectPlayerInsMap[effectType]->VPlayEffect(effectOption);
+	}
+	else if (_effectPlayerClassMap.Contains(effectType))
+	{
+		UEffectPlayerBase* effectPlayerIns = NewObject<UEffectPlayerBase>(this,_effectPlayerClassMap[effectType]);
+		effectPlayerIns->Initialize(GetOwner(), _MID);
+		effectPlayerIns->VPlayEffect(effectOption);
+
+		_effectPlayerInsMap.Add(effectType, effectPlayerIns);
 	}
 	else
 	{
-		_effectPlayerIns = NewObject<UEffectPlayerBase>(this);
+		UE_LOG(LogTemp,Warning,TEXT("no effect class"));
 	}
-
-	_effectPlayerIns->Initialize(GetOwner(),_MID);
 }
 
-void UEffectControllerComponent::PlayEffect(EStatusEffect effectType)
+void UEffectControllerComponent::StopEffect(EEffectType effectType, uint8 effectOption)
 {
-	if (_effectPlayerIns)
+	if (_effectPlayerInsMap.Contains(effectType))
 	{
-		_effectPlayerIns->PlayEffect(effectType);
+		_effectPlayerInsMap[effectType]->VStopEffect(effectOption);
 	}
 }
 
-void UEffectControllerComponent::StopEffect(EStatusEffect effectType)
-{
-	if (_effectPlayerIns)
-	{
-		_effectPlayerIns->StopEffect(effectType);
-	}
-}
-
-void UEffectControllerComponent::SetUpMaterialInsDynamic(int32 elementIndex)
+void UEffectControllerComponent::SetupDynamicMaterial(int32 elementIndex)
 {
 	ACharacter* character = GetOwner<ACharacter>();
 	if (!character) return;
@@ -68,12 +73,19 @@ void UEffectControllerComponent::SetUpMaterialInsDynamic(int32 elementIndex)
 	meshComp->SetMaterial(elementIndex,_MID);
 }
 
-
 // Called every frame
 void UEffectControllerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+
+	for (auto& efffectPlayerIns : _effectPlayerInsMap)
+	{
+		if (efffectPlayerIns.Value)
+		{
+			efffectPlayerIns.Value->VTick(DeltaTime);
+		}
+	}
 }
 

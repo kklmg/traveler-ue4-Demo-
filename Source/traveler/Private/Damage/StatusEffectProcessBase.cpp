@@ -75,7 +75,7 @@ void UStatusEffectProcessBase::VTMExecute()
 
 	if(_actorEffectInterface)
 	{
-		_actorEffectInterface->VPlayEffect(_statusEffectType);
+		_actorEffectInterface->VPlayEffect(EEffectType::EEffectType_StatusEffect, (uint8)_statusEffectType);
 	}
 }
 
@@ -117,7 +117,7 @@ void UStatusEffectProcessBase::VTMOnDead()
 	}
 	if (_actorEffectInterface)
 	{
-		_actorEffectInterface->VStopEffect(_statusEffectType);
+		_actorEffectInterface->VStopEffect(EEffectType::EEffectType_StatusEffect, (uint8)_statusEffectType);
 	}
 }
 

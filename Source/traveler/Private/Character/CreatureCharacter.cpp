@@ -434,14 +434,14 @@ bool ACreatureCharacter::VTryGetSocketName(ETransform transformType, FName& outS
 	return _ExTransformProviderComponent->VTryGetSocketName(transformType, outSocketName);
 }
 
-void ACreatureCharacter::VPlayEffect(EStatusEffect effectType)
+void ACreatureCharacter::VPlayEffect(EEffectType effectType, uint8 effectOption)
 {
-	_effectControllerComponent->PlayEffect(effectType);
+	_effectControllerComponent->PlayEffect(effectType, effectOption);
 }
 
-void ACreatureCharacter::VStopEffect(EStatusEffect effectType)
+void ACreatureCharacter::VStopEffect(EEffectType effectType, uint8 effectOption)
 {
-	_effectControllerComponent->StopEffect(effectType);
+	_effectControllerComponent->StopEffect(effectType, effectOption);
 }
 
 UAnimationModelBase* ACreatureCharacter::VGetAnimationModel()

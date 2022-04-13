@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Data/CombatData.h"
+#include "Effet/EnumEffect.h"
 #include "EffectControllerComponent.generated.h"
+
+
 
 class UEffectPlayerBase;
 
@@ -20,13 +23,13 @@ public:
 	// Sets default values for this component's properties
 	UEffectControllerComponent();
 
-	void PlayEffect(EStatusEffect effectType);
-	void StopEffect(EStatusEffect effectType);
+	void PlayEffect(EEffectType effectType, uint8 effectOption);
+	void StopEffect(EEffectType effectType, uint8 effectOption);
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void SetUpMaterialInsDynamic(int32 elementIndex);
+	void SetupDynamicMaterial(int32 elementIndex);
 
 public:	
 	// Called every frame
@@ -34,11 +37,11 @@ public:
 
 private:
 	UPROPERTY()
-	UEffectPlayerBase* _effectPlayerIns;
+	UMaterialInstanceDynamic* _MID;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UEffectPlayerBase> _effectPlayerClass;
+	TMap<EEffectType, TSubclassOf<UEffectPlayerBase>> _effectPlayerClassMap;
 
 	UPROPERTY()
-	UMaterialInstanceDynamic* _MID;
+	TMap<EEffectType, UEffectPlayerBase*> _effectPlayerInsMap;
 };
