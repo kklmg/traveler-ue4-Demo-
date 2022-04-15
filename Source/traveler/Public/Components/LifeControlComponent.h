@@ -10,6 +10,8 @@
 class UAnimationModelBase;
 class UCompositeActorCondition;
 
+class IActorEffectInterface;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API ULifeControlComponent : public UActorComponent
 {
@@ -43,4 +45,6 @@ private:
 
 	UPROPERTY()
 	UAnimationModelBase* _animViewModel;
+
+	IActorEffectInterface* _actorEffectInterface;
 };

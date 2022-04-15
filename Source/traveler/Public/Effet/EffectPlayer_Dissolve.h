@@ -29,6 +29,8 @@ class TRAVELER_API UEffectPlayer_Dissolve : public UEffectPlayerBase
 public:
 	UEffectPlayer_Dissolve(const FObjectInitializer& ObjectInitializer);
 
+	virtual void VInitialize(AActor* owner, UMaterialInstanceDynamic* mid) override;
+
 	virtual void VPlayEffect(uint8 effectOption);
 	virtual void VStopEffect(uint8 effectOption);
 	virtual void VTick(float deltaTime);

@@ -14,6 +14,7 @@ class UEffectPlayerBase;
 
 
 
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TRAVELER_API UEffectControllerComponent : public UActorComponent
 {
@@ -22,6 +23,8 @@ class TRAVELER_API UEffectControllerComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UEffectControllerComponent();
+
+	virtual void InitializeComponent() override;
 
 	void PlayEffect(EEffectType effectType, uint8 effectOption);
 	void StopEffect(EEffectType effectType, uint8 effectOption);

@@ -4,6 +4,7 @@
 #include "Components/EffectControllerComponent.h"
 #include "GameFramework/Character.h"
 #include "Effet/EffectPlayerBase.h"
+#include "Interface/ActorEffectInterface.h"
 
 // Sets default values for this component's properties
 UEffectControllerComponent::UEffectControllerComponent()
@@ -13,8 +14,23 @@ UEffectControllerComponent::UEffectControllerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	bWantsInitializeComponent = true;
 }
 
+void UEffectControllerComponent::InitializeComponent()
+{
+	SetupDynamicMaterial(0);
+
+	for (auto& efffectPlayerclass : _effectPlayerClassMap)
+	{
+		if (efffectPlayerclass.Value)
+		{
+			UEffectPlayerBase* effectPlayerIns = NewObject<UEffectPlayerBase>(this, efffectPlayerclass.Value);
+			effectPlayerIns->VInitialize(GetOwner(), _MID);
+			_effectPlayerInsMap.Add(efffectPlayerclass.Key, effectPlayerIns);
+		}
+	}
+}
 
 // Called when the game starts
 void UEffectControllerComponent::BeginPlay()
@@ -22,11 +38,6 @@ void UEffectControllerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	SetupDynamicMaterial(0);
-
-
-	//Dossolve test code
-	PlayEffect(EEffectType::EEffectType_Dissolve, 0);
 }
 
 void UEffectControllerComponent::PlayEffect(EEffectType effectType, uint8 effectOption)
@@ -35,14 +46,7 @@ void UEffectControllerComponent::PlayEffect(EEffectType effectType, uint8 effect
 	{
 		_effectPlayerInsMap[effectType]->VPlayEffect(effectOption);
 	}
-	else if (_effectPlayerClassMap.Contains(effectType))
-	{
-		UEffectPlayerBase* effectPlayerIns = NewObject<UEffectPlayerBase>(this,_effectPlayerClassMap[effectType]);
-		effectPlayerIns->Initialize(GetOwner(), _MID);
-		effectPlayerIns->VPlayEffect(effectOption);
 
-		_effectPlayerInsMap.Add(effectType, effectPlayerIns);
-	}
 	else
 	{
 		UE_LOG(LogTemp,Warning,TEXT("no effect class"));

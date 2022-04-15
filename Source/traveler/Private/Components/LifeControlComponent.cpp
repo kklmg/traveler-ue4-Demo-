@@ -4,6 +4,8 @@
 #include "Components/LifeControlComponent.h"
 #include "Condition/CompositeActorCondition.h"
 #include "Interface/AnimControlInterface.h"
+#include "Interface/ActorEffectInterface.h"
+
 
 // Sets default values for this component's properties
 ULifeControlComponent::ULifeControlComponent()
@@ -34,6 +36,9 @@ void ULifeControlComponent::BeginPlay()
 	_lifeConditionIns->SetActor(GetOwner());
 	_lifeConditionIns->Initialize();
 
+	_actorEffectInterface = GetOwner<IActorEffectInterface>();
+
+
 	if(_lifeConditionIns)
 	{
 		_lifeConditionIns->OnValidated.AddUObject(this, &ULifeControlComponent::OnLifeStateChanged);
@@ -55,6 +60,19 @@ void ULifeControlComponent::OnLifeStateChanged(bool isAlive)
 	if(_animViewModel)
 	{
 		_animViewModel->SetBool(NSAnimationDataKey::bIsAlive,isAlive);
+	}
+
+	if (_actorEffectInterface) 
+	{
+		if(isAlive)
+		{
+			_actorEffectInterface->VStopEffect(EEffectType::EEffectType_Dissolve, 0);
+		}
+		else
+		{
+			_actorEffectInterface->VPlayEffect(EEffectType::EEffectType_Dissolve, 0);
+		}
+
 	}
 }
 

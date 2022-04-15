@@ -18,7 +18,7 @@ class TRAVELER_API UEffectPlayerBase : public UObject
 public:
 	UEffectPlayerBase(const FObjectInitializer& ObjectInitializer);
 
-	void Initialize(AActor* owner, UMaterialInstanceDynamic* mid);
+	virtual void VInitialize(AActor* owner, UMaterialInstanceDynamic* mid);
 
 	virtual void VPlayEffect(uint8 effectOption);
 	virtual void VStopEffect(uint8 effectOption);

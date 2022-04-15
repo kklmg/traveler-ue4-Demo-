@@ -10,7 +10,16 @@ UEffectPlayer_Dissolve::UEffectPlayer_Dissolve(const FObjectInitializer& ObjectI
 	_matParamInfo_DissolveAmount.Index = 2;
 
 	_dissolveAmount = 0;
-	_duration = 5;
+	_duration = 4.0f;
+}
+
+void UEffectPlayer_Dissolve::VInitialize(AActor * owner, UMaterialInstanceDynamic * mid)
+{
+	Super::VInitialize(owner,mid);
+	if(mid)
+	{
+		mid->SetScalarParameterValue(FName("Dissolve Amount"), 0);
+	}
 }
 
 void UEffectPlayer_Dissolve::VPlayEffect(uint8 effectOption)

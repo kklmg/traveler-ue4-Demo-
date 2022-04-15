@@ -10,7 +10,7 @@ UEffectPlayerBase::UEffectPlayerBase(const FObjectInitializer& ObjectInitializer
 {
 }
 
-void UEffectPlayerBase::Initialize(AActor* owner, UMaterialInstanceDynamic* mid)
+void UEffectPlayerBase::VInitialize(AActor* owner, UMaterialInstanceDynamic* mid)
 {
 	_owner = owner;
 	_mid = mid;
