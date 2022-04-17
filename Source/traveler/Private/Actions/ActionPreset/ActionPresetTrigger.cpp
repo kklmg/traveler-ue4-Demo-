@@ -20,6 +20,7 @@ void UActionPresetTrigger::Initiazlie(UActionComponent* actionComponent)
 		_conditionIns->SetActor(_actionComponent->GetOwner());
 		_conditionIns->Initialize();
 		_conditionIns->OnValidated.AddUObject(this, &UActionPresetTrigger::OnValidate);
+		_conditionIns->Validate();
 	}
 
 	if (_actionPresetClass)
