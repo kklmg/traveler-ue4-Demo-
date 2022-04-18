@@ -93,6 +93,11 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 	//array index(pool slot)
 	int32 index = int32(actionType);
 
+	if (index >= _mapActionProcessPool.Num())
+	{
+		return nullptr;
+	}
+
 	//Handle case when the same action is in progress 
 	if(_mapActionProcessPool[index] &&
 		_mapActionProcessPool[index]->GetActionProcessState() == EProcessState::EPS_Running)

@@ -160,26 +160,32 @@ void UActionBase::SetActionProcessFailed()
 	VOnActionCompleted();
 }
 
-FORCEINLINE UActionComponent* UActionBase::GetActionComponent()
+FORCEINLINE_DEBUGGABLE UActionComponent* UActionBase::GetActionComponent()
 {
 	return _actionComp;
 }
 
-FORCEINLINE UCostData* UActionBase::GetCostData()
+FORCEINLINE_DEBUGGABLE UCostData* UActionBase::GetCostData()
 {
 	return _costData;
 }
 
-FORCEINLINE UAnimationModelBase* UActionBase::GetAnimationViewModel()
+FORCEINLINE_DEBUGGABLE UAnimationModelBase* UActionBase::GetAnimationViewModel()
 {
 	return _animationViewModel;
+}
+
+FORCEINLINE_DEBUGGABLE IStatusInterface* UActionBase::GetStatusInterface()
+{
+	return _statusInterface;
+}
+
+FORCEINLINE_DEBUGGABLE bool UActionBase::IsInstantAction()
+{
+	return _bInstantAction;
 }
 
 void UActionBase::VOnActionCompleted()
 {
 }
 
-FORCEINLINE bool UActionBase::IsInstantAction()
-{
-	return _bInstantAction;
-}

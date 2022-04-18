@@ -46,9 +46,9 @@ void UActionMove::VTMExecute()
 		}
 
 		GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_WantToSprint, out_bWantToSprint);
-		if(out_bWantToSprint && _statusInterface)
+		if(out_bWantToSprint && GetStatusInterface())
 		{
-			if(_statusInterface->VApplyCost(_sprintCost))
+			if(GetStatusInterface()->VApplyCost(_sprintCost))
 			{
 			}
 			else

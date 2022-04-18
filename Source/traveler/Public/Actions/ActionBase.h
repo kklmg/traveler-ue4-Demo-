@@ -102,6 +102,7 @@ protected:
 	UActionComponent* GetActionComponent();
 	UCostData* GetCostData();
 	UAnimationModelBase* GetAnimationViewModel();
+	IStatusInterface* GetStatusInterface();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
@@ -113,7 +114,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool _bInstantAction;
 
-	IStatusInterface* _statusInterface;
+	
 
 private:
 	UPROPERTY()
@@ -133,6 +134,8 @@ private:
 
 	UPROPERTY()
 	UAnimationModelBase* _animationViewModel;
+
+	IStatusInterface* _statusInterface;
 
 	float _elapsedTime;
 };

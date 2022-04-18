@@ -51,7 +51,9 @@ private:
 	float _resetFactorSpeed;
 
 
-	float _YawTurnning(float flyingSpeed,FVector dirToDestination, FVector dirForward, float deltaTime);
+	float ComputeDeltaYaw(float flyingSpeed,FVector dirToDestination, FVector dirForward, float deltaTime);
+
+	float ComputeVerticalSpeed();
 
 	float ComputePitch();
 
