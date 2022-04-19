@@ -12,4 +12,4 @@
 
  DECLARE_MULTICAST_DELEGATE_OneParam(FMD_BoolValueChangeSignature, bool);
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FMD_OnEventPublished, UEventDataBase*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMD_OnEventPublished, UObject*);

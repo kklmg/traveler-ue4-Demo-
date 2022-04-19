@@ -159,7 +159,7 @@ public:
 
 
 	//Event Broker Interface implementation -----------------------------------------------------------
-	virtual void VPublishEvent(FName eventName, UEventDataBase* eventData) override;
+	virtual void VPublishEvent(FName eventName, UObject* data) override;
 	virtual FMD_OnEventPublished& VGetEventDelegate(FName eventName) override;
 
 	//Animation Communicator Interface implementation --------------------------------------------------

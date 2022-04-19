@@ -68,23 +68,15 @@ void UActionThrow::OnAttackNotifyBegin(float durationTime)
 	//spawn actor
 	_throwerIns = GetWorld()->SpawnActor<AThrowerActorBase>(_throwerClass, outTransform, spawnParameters);
 
+	_throwerIns->VSetSpawningLocation(outTransform.GetLocation());
 
-	//Initialize Actor
-	if (_throwerIns)
-	{
-		_throwerIns->VSetSpawningLocation(outTransform.GetLocation());
+	FVector outDirection = GetActionOwner()->GetActorForwardVector();
+	GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_Peojectile_FlyingDirection, outDirection);
 
-		FVector outDirection= GetActionOwner()->GetActorForwardVector();
-		GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_Peojectile_FlyingDirection, outDirection);
+	GetActionBlackBoard()->TryGetData_Float(EActionDataKey::EACTD_Peojectile_FlyingSpeed, _throwingSpeed);
+	_throwerIns->VSetSpeed(_throwingSpeed + GetActionOwner()->GetVelocity().Size());
+	_throwerIns->VSetThrowingDirection(outTransform.GetRotation().Vector());
 
-		GetActionBlackBoard()->TryGetData_Float(EActionDataKey::EACTD_Peojectile_FlyingSpeed, _throwingSpeed);
-		_throwerIns->VSetSpeed(_throwingSpeed + GetActionOwner()->GetVelocity().Size());
-		_throwerIns->VSetThrowingDirection(outTransform.GetRotation().Vector());
-	}
-	else
-	{
-		UE_LOG(LogTemp,Error,TEXT("make throwable actor instance failed"));
-	}
 }
 
 void UActionThrow::OnAttackNotifyTick(float frameDeltaTime)

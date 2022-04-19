@@ -2,7 +2,6 @@
 
 
 #include "Condition/ConditionBase.h"
-#include "Event/EventDataBase.h"
 
 void UConditionBase::Initialize()
 {

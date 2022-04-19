@@ -413,18 +413,18 @@ void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAni
 	}
 }
 
-void ABowBase::OnAnim_StartDrawingBowString(UEventDataBase* eventData)
+void ABowBase::OnAnim_StartDrawingBowString(UObject* data)
 {
 	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
 	SetBowState(EBowState::EBS_Drawing);
 }
 
-void ABowBase::OnAnim_TakeOutArrows(UEventDataBase* eventData)
+void ABowBase::OnAnim_TakeOutArrows(UObject* data)
 {
 	TakeOutArrows();
 }
 
-void ABowBase::OnAnim_ReleaseBowString(UEventDataBase* eventData)
+void ABowBase::OnAnim_ReleaseBowString(UObject* data)
 {
 	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
 
@@ -432,7 +432,7 @@ void ABowBase::OnAnim_ReleaseBowString(UEventDataBase* eventData)
 	SetBowState(EBowState::EBS_ReleaseEnd);
 }
 
-void ABowBase::OnAnim_FullyDrawed(UEventDataBase* eventData)
+void ABowBase::OnAnim_FullyDrawed(UObject* data)
 {
 	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
 	SetBowState(EBowState::EBS_FullyDrawed);

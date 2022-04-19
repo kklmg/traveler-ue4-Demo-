@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Event/EventDataBase.h"
 #include "ActionPresetTrigger.generated.h"
 
 

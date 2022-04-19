@@ -30,7 +30,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
-	void PublishEvent(FName eventName, UEventDataBase* eventData);
+	void PublishEvent(FName eventName, UObject* data);
 
 	FMD_OnEventPublished& GetEventDelegate(FName eventName);
 

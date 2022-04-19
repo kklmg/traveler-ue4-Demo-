@@ -4,11 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Event/EventDataBase.h"
+#include "Data/MyDelegates.h"
 #include "EventBroker.generated.h"
 
+USTRUCT()
+struct TRAVELER_API FDelegateWrapper
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FMD_OnEventPublished OnEventPublished;
 
+	UPROPERTY()
+	UObject* CachedData;
+};
 
+USTRUCT()
+struct TRAVELER_API FDelegateHandleData
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FDelegateHandleData();
+	FDelegateHandleData(FName eventName, FDelegateHandle delegateHandle);
+
+	FName EventName;
+	FDelegateHandle DelegateHandle;
+};
 
 /**
  * 
@@ -20,7 +40,7 @@ class TRAVELER_API UEventBroker : public UObject
 
 public:
 	FMD_OnEventPublished& GetDelegate(FName eventName);
-	void Publish(FName eventName, UEventDataBase* eventDataBase);
+	void Publish(FName eventName, UObject* data);
 
 private:
 	UPROPERTY()

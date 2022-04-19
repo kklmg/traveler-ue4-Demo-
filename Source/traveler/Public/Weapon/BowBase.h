@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WeaponBase.h"
-#include "Event/EventDataBase.h"
+#include "Event/EventBroker.h"
 #include "BowBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
@@ -70,16 +70,16 @@ public:
 	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState) override;
 
 	FDelegateHandle _delegateHandle_StartDrawingBowString;
-	void OnAnim_StartDrawingBowString(UEventDataBase* eventData);
+	void OnAnim_StartDrawingBowString(UObject* data);
 
 	FDelegateHandle _delegateHandle_TakeOutArrows;
-	void OnAnim_TakeOutArrows(UEventDataBase* eventData);
+	void OnAnim_TakeOutArrows(UObject* data);
 
 	FDelegateHandle _delegateHandle_ReleaseBowString;
-	void OnAnim_ReleaseBowString(UEventDataBase* eventData);
+	void OnAnim_ReleaseBowString(UObject* data);
 
 	FDelegateHandle _delegateHandle_ReloadCompleted;
-	void OnAnim_FullyDrawed(UEventDataBase* eventData);
+	void OnAnim_FullyDrawed(UObject* data);
 
 protected:
 	void TakeOutArrows();

@@ -37,11 +37,11 @@ void UEventBrokerComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	// ...
 }
 
-void UEventBrokerComponent::PublishEvent(FName eventName, UEventDataBase* eventData)
+void UEventBrokerComponent::PublishEvent(FName eventName, UObject* data)
 {
 	checkf(_eventBroker != nullptr, TEXT("missing instance of EventBroker"));
 
-	_eventBroker->Publish(eventName, eventData);
+	_eventBroker->Publish(eventName, data);
 }
 
 FMD_OnEventPublished& UEventBrokerComponent::GetEventDelegate(FName eventName)

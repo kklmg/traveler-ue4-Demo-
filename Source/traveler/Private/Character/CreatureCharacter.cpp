@@ -464,9 +464,9 @@ FOnAnimationStateChanged& ACreatureCharacter::VGetAnimationStateChangedDelegate(
 	return _animControlComponent->GetAnimationStateChangedDelegate();
 }
 
-void ACreatureCharacter::VPublishEvent(FName eventName, UEventDataBase* eventData)
+void ACreatureCharacter::VPublishEvent(FName eventName, UObject* data)
 {
-	_eventBrokerComponent->PublishEvent(eventName, eventData);
+	_eventBrokerComponent->PublishEvent(eventName, data);
 }
 
 FMD_OnEventPublished& ACreatureCharacter::VGetEventDelegate(FName eventName)

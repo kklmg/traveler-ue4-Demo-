@@ -4,6 +4,16 @@
 #include "Event/EventBroker.h"
 #include "GameSystem/DebugMessageHelper.h"
 
+FDelegateHandleData::FDelegateHandleData()
+{
+}
+
+FDelegateHandleData::FDelegateHandleData(FName eventName, FDelegateHandle delegateHandle)
+{
+	EventName = eventName;
+	DelegateHandle = delegateHandle;
+}
+
 FMD_OnEventPublished& UEventBroker::GetDelegate(FName eventName)
 {
 	if(_delegateMap.Contains(eventName))
@@ -17,11 +27,13 @@ FMD_OnEventPublished& UEventBroker::GetDelegate(FName eventName)
 	}
 }
 
-void UEventBroker::Publish(FName eventName, UEventDataBase* eventDataBase)
+void UEventBroker::Publish(FName eventName, UObject* data)
 {
 	if (_delegateMap.Contains(eventName))
 	{
+		_delegateMap[eventName].CachedData = data;
+		_delegateMap[eventName].OnEventPublished.Broadcast(data);
+
 		//UDebugMessageHelper::Messsage_String(TEXT("Published Event"), eventName.ToString());
-		_delegateMap[eventName].OnEventPublished.Broadcast(eventDataBase);
 	}
 }
