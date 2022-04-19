@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Actions/ActionBase.h"
+#include "Data/FlyingAbilityData.h"
 #include "ActionFlyTo.generated.h"
+
+class UMyCharacterMovementComponent;
 
 /**
  * 
@@ -22,40 +25,15 @@ public:
 private:
 	bool _GetDestination(FVector& outVector);
 
+	UPROPERTY()
+	UMyCharacterMovementComponent* _myMovementComp;
+
 	UPROPERTY(EditDefaultsOnly, Category = speed)
 	bool _bUpdateDestination;
 
-	UPROPERTY(EditDefaultsOnly, Category = speed)
-	float _turnningSpeed;
-
-	UPROPERTY(EditDefaultsOnly, Category = speed)
-	float _limitedRollDegree;
-
-	UPROPERTY(EditDefaultsOnly, Category = speed)
-	float _limitedPitchDegree;
-
-	UPROPERTY(EditDefaultsOnly, Category = speed)
-	float _rollDegreePerSecond;
-
-	UPROPERTY(EditDefaultsOnly, Category = speed)
-	float _yawDegreePerSecond;
-
-	UPROPERTY(EditDefaultsOnly, Category = speed)
-	float _pitchDegreePerSecond;
-
 	FVector _destination;
-
-	float _preRoll;
-
-	float _resetFactor;
-	float _resetFactorSpeed;
-
-
-	float ComputeDeltaYaw(float flyingSpeed,FVector dirToDestination, FVector dirForward, float deltaTime);
-
-	float ComputeVerticalSpeed();
-
-	float ComputePitch();
-
-	float GetBreakingDistance_Z(float offset, float curPitch, float pitchRate);
+	
+	float ComputeDeltaYaw(float curflyingSpeedXY, FFlyingAbilityData& flyingAbility, float deltaAngleDegreeXY_Forward_ToDest, float deltaTime);
+	float ComputeSpeedXY(float curflyingSpeedXY, FFlyingAbilityData& flyingAbility, float deltaAngleDegreeXY_Forward_ToDest, float distXY, float deltaTime);
+	float ComputeSpeedZ(FVector& curVelocity, FFlyingAbilityData& flyingAbility, float curAltitude, float deltaTime);
 };

@@ -11,13 +11,11 @@
 
 UMyCharacterMovementComponent::UMyCharacterMovementComponent()
 {
-	_rollLimit = 60.0f;
-	_rollRate = 10.0f;
+}
 
-	_pitchLimit = 60.0f;
-	_pitchRate = 10.0f;
-
-	_yawRate = 10.0f;
+FFlyingAbilityData& UMyCharacterMovementComponent::getFlyingAbilityData()
+{
+	return _FlyingAbilityData;
 }
 
 void UMyCharacterMovementComponent::BeginPlay()
@@ -95,19 +93,5 @@ void UMyCharacterMovementComponent::OnCharacterWantToSprint(bool wantToSprint)
 
 			MaxWalkSpeed = _statusInterface->VGetFinalValue(EStatusType::EStatus_WalkingSpeed);
 		}
-	}
-}
-
-void UMyCharacterMovementComponent::StartSimulationFlyingUp(float targetAltitude)
-{
-	//_simulationData = GenerateFlyingUpSimulationData(targetAltitude);
-	_simulationData.bIsSimulating = true;
-}
-
-void UMyCharacterMovementComponent::SimulationTick(float deltaTime)
-{
-	if (_simulationData.bIsSimulating)
-	{
-		_simulationData.ElapsedTime += deltaTime;
 	}
 }
