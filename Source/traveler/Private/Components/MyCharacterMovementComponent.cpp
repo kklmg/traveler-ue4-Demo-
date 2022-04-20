@@ -28,8 +28,6 @@ void UMyCharacterMovementComponent::BeginPlay()
 	_statusComp = Cast<UStatusComponent>(GetOwner()->GetComponentByClass(UStatusComponent::StaticClass()));
 	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 
-
-
 	if(_statusComp && _actionComp)
 	{
 		//set walking speed 
@@ -39,7 +37,7 @@ void UMyCharacterMovementComponent::BeginPlay()
 			GetValueChangedDelegate_Bool(EActionDataKey::EACTD_WantToSprint).AddUObject(this, &UMyCharacterMovementComponent::OnCharacterWantToSprint);
 	}
 
-	UAnimControlComponent* animControlComp = GetOwner<UAnimControlComponent>();
+	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
 	if (animControlComp)
 	{
 		_animationViewModel = animControlComp->GetAnimationModel();

@@ -5,6 +5,8 @@
 #include "Character/CreatureCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Data/CostData.h"
+#include "Weapon/WeaponBase.h"
+#include "Components/WeaponComponent.h"
 
 
 UActionDodge::UActionDodge()
@@ -34,6 +36,13 @@ bool UActionDodge::VTMCanExecute()
 void UActionDodge::VTMExecute()
 {
 	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
+
+	if (GetWeaponComp())
+	{
+		GetWeaponComp()->StopWeaponProcess(NSNameWeaponProcess::AIM);
+		GetWeaponComp()->StopWeaponProcess(NSNameWeaponProcess::FIRE);
+	}
+
 
 	if (_aniMontage && animInstance)
 	{

@@ -24,7 +24,7 @@ UStatusComponent::UStatusComponent()
 
 void UStatusComponent::InitializeComponent()
 {
-	UAnimControlComponent* animControlComp = GetOwner<UAnimControlComponent>();
+	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
 	if (animControlComp)
 	{
 		_animationViewModel = animControlComp->GetAnimationModel();

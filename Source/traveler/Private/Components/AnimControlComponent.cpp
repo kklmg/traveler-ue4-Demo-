@@ -16,7 +16,7 @@ UAnimControlComponent::UAnimControlComponent()
 	// ...
 	bWantsInitializeComponent = true;
 
-	_animationState = EAnimationState::EAnimState_Walk;
+	_animationState = EAnimationState::EAnimState_None;
 }
 
 void UAnimControlComponent::InitializeComponent()

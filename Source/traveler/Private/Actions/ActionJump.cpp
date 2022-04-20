@@ -4,6 +4,8 @@
 #include "Character/CreatureCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Data/AnimationModelBase.h"
+#include "Components/WeaponComponent.h"
+#include "Weapon/WeaponBase.h"
 
 
 UActionJump::UActionJump()
@@ -20,6 +22,12 @@ void UActionJump::VTMExecute()
 	if (GetAnimationViewModel())
 	{
 		GetAnimationViewModel()->SetBool(NSAnimationDataKey::bWantToJump, true);
+	}
+
+	if (GetWeaponComp())
+	{
+		GetWeaponComp()->StopWeaponProcess(NSNameWeaponProcess::AIM);
+		GetWeaponComp()->StopWeaponProcess(NSNameWeaponProcess::FIRE);
 	}
 }
 

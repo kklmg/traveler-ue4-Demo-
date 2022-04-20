@@ -140,9 +140,6 @@ private:
 	UCostData* _costData;
 
 	UPROPERTY()
-	UAnimationModelBase* _animationViewModel;
-
-	UPROPERTY()
 	UStatusComponent* _statusComp;
 	UPROPERTY()
 	UAnimControlComponent* _animControlComp;

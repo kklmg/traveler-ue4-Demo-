@@ -34,9 +34,9 @@ void UActionBase::VInitialize(ACharacter* character, UActionComponent* actionCom
 	_actionBlackBoard = actionBlackBoard;
 
 	_statusComp = Cast<UStatusComponent>(_actionOwner->GetComponentByClass(UStatusComponent::StaticClass()));
-	_animControlComp = Cast<UAnimControlComponent>(_actionOwner->GetComponentByClass(UAnimControlComponent::StaticClass()));
 	_weaponComp = Cast<UWeaponComponent>(_actionOwner->GetComponentByClass(UWeaponComponent::StaticClass()));
 	_exTransformProviderComp = Cast<UExtraTransformProviderComponent>(_actionOwner->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
+	_animControlComp = Cast<UAnimControlComponent>(_actionOwner->GetComponentByClass(UAnimControlComponent::StaticClass()));
 
 	_processState = EProcessState::EPS_ReadyToExecute;
 }
@@ -165,7 +165,7 @@ FORCEINLINE_DEBUGGABLE UCostData* UActionBase::GetCostData()
 
 FORCEINLINE_DEBUGGABLE UAnimationModelBase* UActionBase::GetAnimationViewModel()
 {
-	return _animationViewModel;
+	return _animControlComp ? _animControlComp->GetAnimationModel() : nullptr;
 }
 
 FORCEINLINE_DEBUGGABLE UWeaponComponent* UActionBase::GetWeaponComp()

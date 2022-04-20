@@ -49,12 +49,12 @@ void UWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	_ownerExTransformProviderComp = Cast<UExtraTransformProviderComponent>(GetOwner()->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
+
 	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
-	if(animControlComp)
+	if (animControlComp)
 	{
 		_animationViewModel = animControlComp->GetAnimationModel();
-		OnAnimationStateChanged(animControlComp->GetAnimationState(), animControlComp->GetAnimationState());
-		animControlComp->GetAnimationStateChangedDelegate().AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
 	}
 
 	if (DefaultWeaponClass)
@@ -65,13 +65,17 @@ void UWeaponComponent::BeginPlay()
 		EquipWeapon(bow);
 	}
 
+	if (animControlComp)
+	{
+		OnAnimationStateChanged(animControlComp->GetAnimationState(), animControlComp->GetAnimationState());
+		animControlComp->GetAnimationStateChangedDelegate().AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
+	}
+
 	_lifeControlComp = Cast<ULifeControlComponent>(GetOwner()->GetComponentByClass(ULifeControlComponent::StaticClass()));
 	if (_lifeControlComp && _lifeControlComp->GetLifeChangedDelegate())
 	{
 		_lifeControlComp->GetLifeChangedDelegate()->AddUObject(this, &UWeaponComponent::OnLifeChanged);
 	}
-
-	_ownerExTransformProviderComp = Cast<UExtraTransformProviderComponent>(GetOwner()->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
 }
 
 
@@ -127,10 +131,6 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 
 		//try attach weapon to hands ------------------------------------------------------------
 
-		//Get Character
-		ACreatureCharacter* character = GetOwner<ACreatureCharacter>();
-		check(character != nullptr);
-
 		//get left hand socket name
 		FName outLeftHandSocketName;
 		if(_ownerExTransformProviderComp)
@@ -138,7 +138,11 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 			_ownerExTransformProviderComp->TryGetSocketName(ETransform::ETransform_LeftHand, outLeftHandSocketName);
 		}
 
-		//Attach Weapon 
+		//Get Character
+		ACreatureCharacter* character = GetOwner<ACreatureCharacter>();
+		check(character != nullptr);
+
+		//Attach Weapon to character
 		_weaponIns->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, outLeftHandSocketName);
 	}
 }
