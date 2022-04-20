@@ -2,7 +2,8 @@
 
 
 #include "Actions/ActionWeaponStopFire.h"
-#include "Interface/WeaponInterface.h"
+#include "Weapon/WeaponBase.h"
+#include "Components/WeaponComponent.h"
 #include "GameFramework/Character.h"
 
 UActionWeaponStopFire::UActionWeaponStopFire()
@@ -13,9 +14,8 @@ UActionWeaponStopFire::UActionWeaponStopFire()
 
 void UActionWeaponStopFire::VTMExecute()
 {
-	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(GetActionOwner());
-	if (weaponInterface)
+	if (GetWeaponComp())
 	{
-		weaponInterface->VStopWeaponProcess(WeaponProcessName::FIRE);
+		GetWeaponComp()->StopWeaponProcess(NSNameWeaponProcess::FIRE);
 	}
 }

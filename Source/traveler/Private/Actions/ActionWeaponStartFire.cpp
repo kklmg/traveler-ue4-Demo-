@@ -2,7 +2,8 @@
 
 
 #include "Actions/ActionWeaponStartFire.h"
-#include "Interface/WeaponInterface.h"
+#include "Weapon/WeaponBase.h"
+#include "Components/WeaponComponent.h"
 #include "GameFramework/Character.h"
 
 UActionWeaponStartFire::UActionWeaponStartFire()
@@ -13,9 +14,8 @@ UActionWeaponStartFire::UActionWeaponStartFire()
 
 void UActionWeaponStartFire::VTMExecute()
 {
-	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(GetActionOwner());
-	if (weaponInterface)
+	if (GetWeaponComp())
 	{
-		weaponInterface->VExecuteWeaponProcess(WeaponProcessName::FIRE);
+		GetWeaponComp()->ExecuteWeaponProcess(NSNameWeaponProcess::FIRE);
 	}
 }

@@ -12,6 +12,9 @@ class IStatusInterface;
 class IEventBrokerInterface;
 
 class UAnimationModelBase;
+class UActionComponent;
+class UStatusComponent;
+class UEventBrokerComponent;
 
 /**
  * 
@@ -46,7 +49,12 @@ private:
 	UPROPERTY()
 	UAnimationModelBase* _animationViewModel;
 
-	IActionInterface* _actionInterface;
-	IStatusInterface* _statusInterface;
-	IEventBrokerInterface* _eventBrokerInterface;
+	UPROPERTY()
+	UActionComponent* _actionComp;
+
+	UPROPERTY()
+	UStatusComponent* _statusComp;
+
+	UPROPERTY()
+	UEventBrokerComponent* _eventBrokerComp;
 };

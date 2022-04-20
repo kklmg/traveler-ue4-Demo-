@@ -44,10 +44,3 @@ enum class EActionDataKey : uint8
 	EACTD_TurnToMovingDirection UMETA(DisplayName = "TurnToMovingDirection "),
 };
 
-
-class TRAVELER_API EnumActionType
-{
-public:
-	EnumActionType();
-	~EnumActionType();
-};

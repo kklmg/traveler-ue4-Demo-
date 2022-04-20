@@ -2,11 +2,3 @@
 
 
 #include "Data/EnumActionType.h"
-
-EnumActionType::EnumActionType()
-{
-}
-
-EnumActionType::~EnumActionType()
-{
-}

@@ -2,12 +2,14 @@
 
 
 #include "Components/MyCharacterMovementComponent.h"
-#include "Interface/StatusInterface.h"
-#include "Interface/ActionInterface.h"
-#include "Interface/AnimControlInterface.h"
-#include "Interface/EventBrokerInterface.h"
+#include "Components/StatusComponent.h"
+#include "Components/ActionComponent.h"
+#include "Components/AnimControlComponent.h"
+#include "Components/EventBrokerComponent.h"
 #include "Data/ObjectData.h"
 #include "Event/EventNames.h"
+#include "Data/AnimationModelBase.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 
 UMyCharacterMovementComponent::UMyCharacterMovementComponent()
 {
@@ -22,23 +24,25 @@ void UMyCharacterMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_actionInterface = GetOwner<IActionInterface>();
-	_statusInterface = GetOwner<IStatusInterface>();
-	_eventBrokerInterface = GetOwner<IEventBrokerInterface>();
+	_actionComp = Cast<UActionComponent>(GetOwner()->GetComponentByClass(UActionComponent::StaticClass()));
+	_statusComp = Cast<UStatusComponent>(GetOwner()->GetComponentByClass(UStatusComponent::StaticClass()));
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 
-	if(_statusInterface && _actionInterface)
+
+
+	if(_statusComp && _actionComp)
 	{
 		//set walking speed 
-		MaxWalkSpeed = _statusInterface->VGetFinalValue(EStatusType::EStatus_WalkingSpeed);
+		MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_WalkingSpeed);
 
-		_actionInterface->VGetActionBlackBoard()->
+		_actionComp->GetActionBlackBoard()->
 			GetValueChangedDelegate_Bool(EActionDataKey::EACTD_WantToSprint).AddUObject(this, &UMyCharacterMovementComponent::OnCharacterWantToSprint);
 	}
 
-	IAnimControlInterface* animationCommunicator = GetOwner<IAnimControlInterface>();
-	if (animationCommunicator)
+	UAnimControlComponent* animControlComp = GetOwner<UAnimControlComponent>();
+	if (animControlComp)
 	{
-		_animationViewModel = animationCommunicator->VGetAnimationModel();
+		_animationViewModel = animControlComp->GetAnimationModel();
 	}
 
 	PublishMovementModeChangedEvent();
@@ -72,26 +76,26 @@ void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const 
 
 void UMyCharacterMovementComponent::PublishMovementModeChangedEvent()
 {
-	if (_eventBrokerInterface)
+	if (_eventBrokerComp)
 	{
 		UDataInt32* eventData = NewObject<UDataInt32>(this);
 		eventData->Value = MovementMode;
-		_eventBrokerInterface->VPublishEvent(NSEventNames::MovementModeChanged, eventData);
+		_eventBrokerComp->PublishEvent(NSEventNames::MovementModeChanged, eventData);
 	}
 }
 
 void UMyCharacterMovementComponent::OnCharacterWantToSprint(bool wantToSprint)
 {
-	if (_statusInterface)
+	if (_statusComp)
 	{
 		if (wantToSprint)
 		{
-			MaxWalkSpeed = _statusInterface->VGetFinalValue(EStatusType::EStatus_SprintingSpeed);
+			MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_SprintingSpeed);
 		}
 		else
 		{
 
-			MaxWalkSpeed = _statusInterface->VGetFinalValue(EStatusType::EStatus_WalkingSpeed);
+			MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_WalkingSpeed);
 		}
 	}
 }

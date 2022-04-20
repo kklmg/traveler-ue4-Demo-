@@ -2,13 +2,14 @@
 
 
 #include "Components/IKComponent.h"
-#include "Interface/AnimControlInterface.h"
-#include "Interface/ExtraTransformProvider.h"
+#include "Components/AnimControlComponent.h"
+#include "Components/ExtraTransformProviderComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Data/AnimationModelBase.h"
 
 // Sets default values for this component's properties
 UIKComponent::UIKComponent()
@@ -34,12 +35,14 @@ void UIKComponent::BeginPlay()
 		_halfHeight = _character->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
 	}
 
-	_meshSocketProvider = GetOwner<IExtraTransformProvider>();
+	_exTransformProviderComp =
+		Cast<UExtraTransformProviderComponent>(GetOwner()->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
 
-	IAnimControlInterface* animationCommunicator = GetOwner<IAnimControlInterface>();
-	if(animationCommunicator)
+	UAnimControlComponent* animControlComp = 
+		Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
+	if(animControlComp)
 	{
-		_animationViewModel = animationCommunicator->VGetAnimationModel();
+		_animationViewModel = animControlComp->GetAnimationModel();
 	}
 
 	_footIKData = NewObject<UIKFootData>(this);
@@ -70,14 +73,14 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 
 FIKData UIKComponent::FootTrace(ETransform meshSocketType)
 {
-	if (!_meshSocketProvider) return FIKData();
+	if (!_exTransformProviderComp) return FIKData();
 	if (!_animationViewModel) return FIKData();
 
 	FIKData result;
 
 	//get Foot Transform
 	FTransform out_FootTransform; 
-    _meshSocketProvider->VTryGetTransform(meshSocketType,ERelativeTransformSpace::RTS_World, out_FootTransform);
+	_exTransformProviderComp->TryGetTransform(meshSocketType,ERelativeTransformSpace::RTS_World, out_FootTransform);
 	FVector footLocation = out_FootTransform.GetLocation();
 	
 	//Line Tracting parameters

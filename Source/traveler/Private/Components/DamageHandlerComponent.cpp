@@ -3,8 +3,8 @@
 
 #include "Components/DamageHandlerComponent.h"
 #include "Damage/StatusEffectProcessManager.h"
-#include "Interface/StatusInterface.h"
-#include "Interface/ActorUIInterface.h"
+#include "Components/StatusComponent.h"
+#include "Components/ActorUIComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Damage/DamageDisplayer.h"
 #include "Damage/DamageData.h"
@@ -21,20 +21,32 @@ UDamageHandlerComponent::UDamageHandlerComponent()
 	// ...
 }
 
+// Called when the game starts
+void UDamageHandlerComponent::BeginPlay()
+{
+	Super::BeginPlay();
 
+	// ...
+	_StatusEffectProcessManager = NewObject<UStatusEffectProcessManager>(this);
+	check(_StatusEffectProcessManager);
+
+	_actorUIComp = Cast<UActorUIComponent>(GetOwner()->GetComponentByClass(UActorUIComponent::StaticClass()));
+	_statusComp = Cast<UStatusComponent>(GetOwner()->GetComponentByClass(UStatusComponent::StaticClass()));
+	_hud = Cast<AMyHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+}
 
 void UDamageHandlerComponent::HandleDamage(float basicDamage, EElementalType elementalType, FVector impactPoint, AActor* causer, APawn* instigator)
 {
 	float finalDamage = CalculateDamage(basicDamage, elementalType, GetOwner(), causer, instigator);
 
 	//apply damage
-	if (_statusInterface)
+	if (_statusComp)
 	{
-		_statusInterface->VApplyRemainingValueChange(EStatusType::EStatus_Health, -finalDamage);
+		_statusComp->ApplyRemainingValueChange(EStatusType::EStatus_Health, -finalDamage);
 	}
 
 	//show damage om screen
-	if(_hud)
+	if (_hud)
 	{
 		FDamageDisplayData damageDisplayData;
 		damageDisplayData.Damage = finalDamage;
@@ -51,7 +63,7 @@ void UDamageHandlerComponent::HandleDamageData(UDamageData* damageData, FVector 
 
 	//handle basic damage
 	HandleDamage(damageData->Damage, damageData->ElementalType, impactPoint, causer, instigator);
- 
+
 	//handle status effect
 	if (damageData->StatusEffectDataClass)
 	{
@@ -60,18 +72,18 @@ void UDamageHandlerComponent::HandleDamageData(UDamageData* damageData, FVector 
 	}
 
 	//show status UI
-	if (_actorUIInterface)
+	if (_actorUIComp)
 	{
-		_actorUIInterface->VShowActorUI(EActorUI::ActorUI_Status);
+		_actorUIComp->ShowActorUI(EActorUI::ActorUI_Status);
 	}
 
 	UGameplayStatics::ApplyDamage(GetOwner(), damageData->Damage, instigator ? instigator->GetController() : nullptr,
-								causer, damageData->DamageTypeClass);
+		causer, damageData->DamageTypeClass);
 }
 
 void UDamageHandlerComponent::HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator)
 {
-	if(_StatusEffectProcessManager)
+	if (_StatusEffectProcessManager)
 	{
 		_StatusEffectProcessManager->ExecuteProcess(GetOwner(), causer, instigator, statusEffectData);
 	}
@@ -79,19 +91,7 @@ void UDamageHandlerComponent::HandleStatusEffect(UStatusEffectData* statusEffect
 
 void UDamageHandlerComponent::OnHealthChanged(float preValue, float newValue)
 {
-	
-}
 
-// Called when the game starts
-void UDamageHandlerComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	_StatusEffectProcessManager = NewObject<UStatusEffectProcessManager>(this);
-	_statusInterface = Cast<IStatusInterface>(GetOwner());
-	_actorUIInterface = Cast<IActorUIInterface>(GetOwner());
-	_hud = Cast<AMyHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 }
 
 //todo

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Condition/ACon_StatusBase.h"
+#include "Status/EnumStatus.h"
 #include "ACon_IsStatusPointRemained.generated.h"
 
 /**
@@ -24,4 +25,7 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly)
 	EStatusType _statusType;
+
+	UPROPERTY()
+	UStatusComponent* _statusComp;
 };

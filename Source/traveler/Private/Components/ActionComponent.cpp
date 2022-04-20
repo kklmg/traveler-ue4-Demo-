@@ -6,13 +6,13 @@
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actions/ActionPreset/CharacterActionPreset.h"
 #include "Components/PawnCameraComponent.h"
+#include "Components/LifeControlComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyGameplayStatics.h"
-#include "Interface/EventBrokerInterface.h"
-#include "Interface/LifeControlInterface.h"
 #include "Actions/ActionPreset/ActionPresetTrigger.h"
 #include "GameSystem/DebugMessageHelper.h"
 #include "Data/MyDelegates.h"
+#include "GameFramework/Character.h"
 
 
 
@@ -22,7 +22,7 @@ UActionComponent::UActionComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	
+
 	// ...
 	bWantsInitializeComponent = true;
 }
@@ -31,12 +31,16 @@ UActionComponent::UActionComponent()
 void UActionComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
+	
+	_character = GetOwner<ACharacter>();
+	check(_character);
 
 	_actionBlackBoard = NewObject<UActionBlackBoard>(this);
-	_mapActionProcessPool.SetNum(int32(EActionType::EACT_Max),false);
+	check(_actionBlackBoard);
 
-	_eventBrokerInterface = GetOwner<IEventBrokerInterface>();
-	_lifeControlInterface = GetOwner<ILifeControlInterface>();
+	_mapActionProcessPool.SetNum(int32(EActionType::EACT_Max), false);
+
+	_lifeControlComp = Cast<ULifeControlComponent>(GetOwner()->GetComponentByClass(ULifeControlComponent::StaticClass()));
 
 	for (auto triggerClass : _actionSetTriggerClasses)
 	{
@@ -55,9 +59,9 @@ void UActionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	if (_lifeControlInterface && _lifeControlInterface->VGetLifeChangedDelegate())
+	if (_lifeControlComp && _lifeControlComp->GetLifeChangedDelegate())
 	{
-		_lifeControlInterface->VGetLifeChangedDelegate()->AddUObject(this, &UActionComponent::OnLifeChanged);
+		_lifeControlComp->GetLifeChangedDelegate()->AddUObject(this, &UActionComponent::OnLifeChanged);
 	}
 }
 
@@ -80,7 +84,7 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 {
-	if (_lifeControlInterface && _lifeControlInterface->VIsAlive() == false)
+	if (_lifeControlComp && _lifeControlComp->IsAlive() == false)
 	{
 		return nullptr;
 	}
@@ -99,7 +103,7 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 	}
 
 	//Handle case when the same action is in progress 
-	if(_mapActionProcessPool[index] &&
+	if (_mapActionProcessPool[index] &&
 		_mapActionProcessPool[index]->GetActionProcessState() == EProcessState::EPS_Running)
 	{
 		//todo
@@ -108,10 +112,10 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 
 	//make and get Action Instance
 	UActionBase* newActionIns = _curActionSet->GetActionInstance(actionType);
-	if(newActionIns)
+	if (newActionIns)
 	{
 		//Execute Action
-		newActionIns->Initialize(this, _actionBlackBoard);
+		newActionIns->VInitialize(_character, this, _actionBlackBoard);
 		newActionIns->Execute();
 
 		//add action Instance to pool for management
@@ -130,7 +134,7 @@ void UActionComponent::_tickActionProcess(float deltaTime)
 	{
 		if (_mapActionProcessPool[i])
 		{
-			if(_mapActionProcessPool[i]->IsCompleted())
+			if (_mapActionProcessPool[i]->IsCompleted())
 			{
 				_mapActionProcessPool[i] = nullptr;
 			}
@@ -147,29 +151,23 @@ UActionBlackBoard* UActionComponent::GetActionBlackBoard()
 	return _actionBlackBoard;
 }
 
-IEventBrokerInterface* UActionComponent::GetEventBrokerInterface()
-{
-	return _eventBrokerInterface;
-}
-
-
 void UActionComponent::SwitchActionSet(UCharacterActionPreset* actionSet)
 {
 	if (_curActionSet == actionSet) return;
 
 	AbortAllProcesses();
-	if(_curActionSet)
+	if (_curActionSet)
 	{
 		_curActionSet->VLeave();
 	}
 	_curActionSet = actionSet;
 
-	if(_curActionSet)
+	if (_curActionSet)
 	{
 		_curActionSet->VEnter();
 	}
 
-	UDebugMessageHelper::Messsage_String(TEXT("ActionComp"),TEXT("ActionSetChanged"));
+	UDebugMessageHelper::Messsage_String(TEXT("ActionComp"), TEXT("ActionSetChanged"));
 }
 
 void UActionComponent::AbortAllProcesses()
@@ -187,8 +185,8 @@ void UActionComponent::AbortAllProcesses()
 bool UActionComponent::CheckActionIsInProgress(EActionType actionType)
 {
 	int32 index = int32(actionType);
-	return _mapActionProcessPool[index] 
-			&& _mapActionProcessPool[index]->GetActionProcessState() == EProcessState::EPS_Running;
+	return _mapActionProcessPool[index]
+		&& _mapActionProcessPool[index]->GetActionProcessState() == EProcessState::EPS_Running;
 }
 
 

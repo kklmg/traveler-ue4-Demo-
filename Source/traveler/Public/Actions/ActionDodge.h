@@ -16,6 +16,7 @@ class TRAVELER_API UActionDodge : public UActionBase
 public:
 	UActionDodge();
 
+	virtual void VInitialize(ACharacter* owner, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard) override;
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
@@ -23,6 +24,7 @@ public:
 	UFUNCTION()
 	void OnAnimMontageFinished(UAnimMontage* montage, bool interrupted);
 private:
+
 	UPROPERTY(EditDefaultsOnly, Category = speed)
 	float _dodgeSpeed;
 

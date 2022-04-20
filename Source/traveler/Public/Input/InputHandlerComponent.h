@@ -14,9 +14,8 @@ DECLARE_DELEGATE_OneParam(FButtonSignature, bool);
 DECLARE_DELEGATE_OneParam(FButtonNameSignarue, FName);
 
 class UButtonInputActionBase;
+class UActionComponent;
 
-
-class IActionInterface;
 class ICharacterCameraInterface;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -66,8 +65,9 @@ private:
 	UPROPERTY()
 	TMap<FName,UButtonInputActionBase*> _mapButtons;
 
-	IActionInterface* _actionInterface;
-	ICharacterCameraInterface* _cameraInterface;
+	UPROPERTY()
+	UActionComponent* _actionComp;
 
+	ICharacterCameraInterface* _cameraInterface;
 	FVector _movementInput;
 };

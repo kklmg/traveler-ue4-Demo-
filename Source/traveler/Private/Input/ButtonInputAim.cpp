@@ -2,6 +2,7 @@
 
 
 #include "Input/ButtonInputAim.h"
+#include "Components/ActionComponent.h"
 
 UButtonInputAim::UButtonInputAim()
 {
@@ -11,24 +12,24 @@ UButtonInputAim::UButtonInputAim()
 
 void UButtonInputAim::VTMPress()
 {
-	if (_actionInterface)
+	if (GetActionComp())
 	{
-		_actionInterface->VExecuteAction(EActionType::EACT_WeaponStartAim);
+		GetActionComp()->ExecuteAction(EActionType::EACT_WeaponStartAim);
 	}
 }
 
 void UButtonInputAim::VTMPressing(float deltaTime)
 {
-	if (_actionInterface)
+	if (GetActionComp())
 	{
-		_actionInterface->VExecuteAction(EActionType::EACT_WeaponStartAim);
+		GetActionComp()->ExecuteAction(EActionType::EACT_WeaponStartAim);
 	}
 }
 
 void UButtonInputAim::VTMRelease()
 {
-	if (_actionInterface)
+	if (GetActionComp())
 	{
-		_actionInterface->VExecuteAction(EActionType::EACT_WeaponStopAim);
+		GetActionComp()->ExecuteAction(EActionType::EACT_WeaponStopAim);
 	}
 }

@@ -20,6 +20,7 @@ public:
 	virtual void VTMTick(float deltaTime) override;
 
 private:
+
 	UPROPERTY(EditDefaultsOnly)
 	float _delayTime;
 };

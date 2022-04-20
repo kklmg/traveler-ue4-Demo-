@@ -3,8 +3,8 @@
 
 #include "Damage/StatusEffectProcessBase.h"
 #include "Components/DamageHandlerComponent.h"
-#include "Interface/ActorUIInterface.h"
-#include "Interface/ActorEffectInterface.h"
+#include "Components/ActorUIComponent.h"
+#include "Components/EffectControllerComponent.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "GameSystem/MyGameplayStatics.h"
 
@@ -12,12 +12,14 @@
 
 void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCauser, APawn* effectInstigator, UStatusEffectData* effectData)
 {
+	check(effectReceiver);
+
 	_effectReceiver = effectReceiver;
 	_effectCauser = effectCauser;
 	_effectInstigator = effectInstigator;
 
-	_actorUIInterface = Cast<IActorUIInterface>(effectReceiver);
-	_actorEffectInterface = Cast<IActorEffectInterface>(effectReceiver);
+	_actorUIComp = Cast<UActorUIComponent>(effectReceiver->GetComponentByClass(UActorUIComponent::StaticClass()));
+	_effectControlComp = Cast<UEffectControllerComponent>(effectReceiver->GetComponentByClass(UEffectControllerComponent::StaticClass()));
 	_damageHandlerInterface = Cast<IDamageHandlerInterface>(effectReceiver);
 
 	if(effectData)
@@ -51,9 +53,9 @@ void UStatusEffectProcessBase::CombineEffectData(UStatusEffectData* statusEffect
 		_ElapsedTimeFromLastDamage = 0;
 	}
 
-	if (_actorUIInterface)
+	if (_actorUIComp)
 	{
-		_actorUIInterface->VShowActorStatusUI(_statusEffectType, _effectDuration);
+		_actorUIComp->ShowActorStatusEffectUI(_statusEffectType, _effectDuration);
 	}
 }
 
@@ -68,14 +70,14 @@ bool UStatusEffectProcessBase::VTMCanExecute()
 
 void UStatusEffectProcessBase::VTMExecute()
 {
-	if (_actorUIInterface)
+	if (_actorUIComp)
 	{
-		_actorUIInterface->VShowActorStatusUI(_statusEffectType, _effectDuration);
+		_actorUIComp->ShowActorStatusEffectUI(_statusEffectType, _effectDuration);
 	}
 
-	if(_actorEffectInterface)
+	if(_effectControlComp)
 	{
-		_actorEffectInterface->VPlayEffect(EEffectType::EEffectType_StatusEffect, (uint8)_statusEffectType);
+		_effectControlComp->PlayEffect(EEffectType::EEffectType_StatusEffect, (uint8)_statusEffectType);
 	}
 }
 
@@ -111,13 +113,13 @@ void UStatusEffectProcessBase::VTMTick(float deltaTime)
 
 void UStatusEffectProcessBase::VTMOnDead()
 {
-	if(_actorUIInterface)
+	if(_actorUIComp)
 	{
-		_actorUIInterface->VHideActorStatusUI(_statusEffectType);
+		_actorUIComp->HideActorStatusEffectUI(_statusEffectType);
 	}
-	if (_actorEffectInterface)
+	if (_effectControlComp)
 	{
-		_actorEffectInterface->VStopEffect(EEffectType::EEffectType_StatusEffect, (uint8)_statusEffectType);
+		_effectControlComp->StopEffect(EEffectType::EEffectType_StatusEffect, (uint8)_statusEffectType);
 	}
 }
 

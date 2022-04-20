@@ -2,7 +2,8 @@
 
 
 #include "Actions/ActionWeaponStartAim.h"
-#include "Interface/WeaponInterface.h"
+#include "Weapon/WeaponBase.h"
+#include "Components/WeaponComponent.h"
 #include "Components/ActionComponent.h"
 #include "GameFramework/Character.h"
 
@@ -13,11 +14,15 @@ UActionWeaponStartAim::UActionWeaponStartAim()
 	_bInstantAction = true;
 }
 
+void UActionWeaponStartAim::VInitialize(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard)
+{
+	Super::VInitialize(character, actionComp, actionBlackBoard);
+}
+
 void UActionWeaponStartAim::VTMExecute()
 {
-	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(GetActionOwner());
-	if(weaponInterface)
+	if(GetWeaponComp())
 	{
-		weaponInterface->VExecuteWeaponProcess(WeaponProcessName::AIM);
+		GetWeaponComp()->ExecuteWeaponProcess(NSNameWeaponProcess::AIM);
 	}
 }

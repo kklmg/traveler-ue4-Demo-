@@ -7,15 +7,17 @@
 #include "Data/EnumProcessState.h"
 #include "Data/EnumWeaponType.h"
 #include "Data/StateData.h"
-#include "Interface/ExtraTransformProvider.h"
 #include "WeaponBase.generated.h"
 
 class ACreatureCharacter;
+
 class UPoseableMeshComponent;
 class UExtraTransformProviderComponent;
+class UActionComponent;
+class UEventBrokerComponent;
+
 class UWeaponAnimationModelBase;
 class UProcessManagerBase;
-class IActionInterface;
 class ICharacterCameraInterface;
 class IProcessInterface;
 class IEventBrokerInterface;
@@ -25,14 +27,14 @@ class UEventDataBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponSignal, AWeaponBase*, weaponIns);
 
-namespace WeaponProcessName
+namespace NSNameWeaponProcess
 {
 	const FName FIRE = FName(TEXT("FIRE"));
 	const FName AIM = FName(TEXT("AIM"));
 }
 
 UCLASS()
-class TRAVELER_API AWeaponBase : public AActor, public IExtraTransformProvider
+class TRAVELER_API AWeaponBase : public AActor
 {
 	GENERATED_BODY()
 	
@@ -60,20 +62,24 @@ public:
 	virtual void VReset();
 
 	//Weapon attribute getter -----------------------------------------------------------------------------
-
+	UFUNCTION(BlueprintPure)
 	EAnimationState GetOwnerAnimationState();
-	IActionInterface* GetOwnerActionInterface();
-	ICharacterCameraInterface* GetOwnerCameraInterface();
-	IEventBrokerInterface* GetEventBrokerInterface();
-
+	UFUNCTION(BlueprintPure)
+	UActionComponent* GetOwnerActionComp();
+	UFUNCTION(BlueprintPure)
+	UExtraTransformProviderComponent* GetExTransformProviderComp();
+	UFUNCTION(BlueprintPure)
+	UExtraTransformProviderComponent* GetOwnerExTransformProviderComp();
+	UFUNCTION(BlueprintPure)
+	UEventBrokerComponent* GetOwnerEventBrokerComp();
 	UFUNCTION(BlueprintPure)
 	USkeletalMeshComponent* GetMeshComponent();
-
 	UFUNCTION(BlueprintPure)
 	ACreatureCharacter* GetWeaponOwner();
-
 	UFUNCTION(BlueprintPure)
 	EWeaponType GetWeaponType();
+
+	ICharacterCameraInterface* GetOwnerCameraInterface();
 
 	//Weapon Controls -----------------------------------------------------------------------------
 
@@ -89,14 +95,6 @@ public:
 	void StopAllProcesses();
 	void AddToProcessStorage(IProcessInterface* process);
 	bool IsProcessRunning(FName processName);
-
-	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
-
-	UFUNCTION(BlueprintCallable)
-	virtual bool VTryGetTransform(ETransform meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
-
-	UFUNCTION(BlueprintCallable)
-	virtual bool VTryGetSocketName(ETransform transformType, FName& outSocketName) override;
 
 	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState);
 
@@ -114,7 +112,10 @@ private:
 	USkeletalMeshComponent* _skeletalMeshComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UExtraTransformProviderComponent* _ExtraTransformProviderComponent;
+	UExtraTransformProviderComponent* _extraTransformProviderComp;
+
+	UPROPERTY(VisibleAnywhere)
+	UExtraTransformProviderComponent* _ownerExtraTransformProviderComp;
 
 	UPROPERTY(VisibleAnywhere)
 	ACreatureCharacter* _weaponOwner;
@@ -125,9 +126,13 @@ private:
 	UPROPERTY()
 	UWeaponAnimationModelBase* _weaponAnimationModel;
 
-	IActionInterface* _ownerActionInterface;
+	UPROPERTY()
+	UActionComponent* _ownerActionComp;
+
+	UPROPERTY()
+	UEventBrokerComponent* _ownerEventBrokerComp;
+
 	ICharacterCameraInterface* _ownerCameraInterface;
-	IEventBrokerInterface* _eventBrokerInterface;
 
 public:
 	UPROPERTY(BlueprintAssignable)

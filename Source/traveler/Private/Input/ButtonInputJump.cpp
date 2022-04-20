@@ -2,6 +2,7 @@
 
 
 #include "Input/ButtonInputJump.h"
+#include "Components/ActionComponent.h"
 
 UButtonInputJump::UButtonInputJump()
 {
@@ -11,10 +12,8 @@ UButtonInputJump::UButtonInputJump()
 
 void UButtonInputJump::VTMPress()
 {
-	if (_actionInterface)
-	{
-		_actionInterface->VExecuteAction(EActionType::EACT_Jumping);
-	}
+	check(GetActionComp())
+	GetActionComp()->ExecuteAction(EActionType::EACT_Jumping);
 }
 
 void UButtonInputJump::VTMPressing(float deltaTime)

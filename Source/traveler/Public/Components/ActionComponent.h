@@ -11,9 +11,10 @@ class UActionBase;
 class UCharacterActionPreset;
 class UActionBlackBoard;
 class UActionPresetTrigger;
+class ULifeControlComponent;
 
-class IEventBrokerInterface;
-class ILifeControlInterface;
+class ACharacter;
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UActionComponent : public UActorComponent
@@ -48,13 +49,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UActionBlackBoard* GetActionBlackBoard();
-
-	IEventBrokerInterface* GetEventBrokerInterface();
 	
 private:
 	void _tickActionProcess(float deltaTime);
 
 private:
+
+	UPROPERTY()
+	ACharacter* _character;
 
 	UPROPERTY()
 	TArray<UActionBase*> _mapActionProcessPool;
@@ -71,6 +73,6 @@ private:
 	UPROPERTY()
 	UCharacterActionPreset* _curActionSet;
 
-	IEventBrokerInterface* _eventBrokerInterface;
-	ILifeControlInterface* _lifeControlInterface;
+	UPROPERTY()
+	ULifeControlComponent* _lifeControlComp;
 };

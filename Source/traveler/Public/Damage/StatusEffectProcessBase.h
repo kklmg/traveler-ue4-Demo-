@@ -8,9 +8,9 @@
 #include "Data/StatusEffectData.h"
 #include "StatusEffectProcessBase.generated.h"
 
-class IStatusInterface;
-class IActorUIInterface;
-class IActorEffectInterface;
+
+class UActorUIComponent;
+class UEffectControllerComponent;
 
 class IDamageHandlerInterface;
 
@@ -63,7 +63,10 @@ private:
 	UPROPERTY()
 	AMyHUD* _hud;
 
+
 	IDamageHandlerInterface* _damageHandlerInterface;
-	IActorEffectInterface* _actorEffectInterface;
-	IActorUIInterface* _actorUIInterface;
+	UPROPERTY()
+	UEffectControllerComponent* _effectControlComp;
+	UPROPERTY()
+	UActorUIComponent* _actorUIComp;
 };

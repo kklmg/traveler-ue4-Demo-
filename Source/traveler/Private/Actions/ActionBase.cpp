@@ -3,11 +3,13 @@
 
 #include "Actions/ActionBase.h"
 #include "Components/ActionComponent.h"
+#include "Components/StatusComponent.h"
+#include "Components/AnimControlComponent.h"
+#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/WeaponComponent.h"
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
-#include "Interface/StatusInterface.h"
 #include "Data/CostData.h"
-#include "Interface/AnimControlInterface.h"
 
 
 DEFINE_LOG_CATEGORY(LogAction);
@@ -21,32 +23,24 @@ UActionBase::UActionBase()
 	_costData = CreateDefaultSubobject<UCostData>(TEXT("CostData"));
 }
 
-void UActionBase::Initialize(UActionComponent* actionComponent, UActionBlackBoard* actionBlackBoard)
+void UActionBase::VInitialize(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard)
 {
-	_actionBlackBoard = actionBlackBoard;
-	_actionComp = actionComponent;
-	_actionOwner = actionComponent->GetOwner<ACharacter>();
-	if (_actionOwner == false)
-	{
-		UE_LOG(LogTemp, Error, TEXT("no ation owner!"));
-		return;
-	}
-	_statusInterface = Cast<IStatusInterface>(_actionOwner);
+	check(character);
+	check(actionComp);
+	check(actionBlackBoard);
 
-	//get animation view model
-	IAnimControlInterface* animationCommunicator = Cast<IAnimControlInterface>(_actionOwner);
-	if (animationCommunicator)
-	{
-		_animationViewModel = animationCommunicator->VGetAnimationModel();
-	}
+	_actionOwner = character;
+	_actionComp = actionComp;
+	_actionBlackBoard = actionBlackBoard;
+
+	_statusComp = Cast<UStatusComponent>(_actionOwner->GetComponentByClass(UStatusComponent::StaticClass()));
+	_animControlComp = Cast<UAnimControlComponent>(_actionOwner->GetComponentByClass(UAnimControlComponent::StaticClass()));
+	_weaponComp = Cast<UWeaponComponent>(_actionOwner->GetComponentByClass(UWeaponComponent::StaticClass()));
+	_exTransformProviderComp = Cast<UExtraTransformProviderComponent>(_actionOwner->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
 
 	_processState = EProcessState::EPS_ReadyToExecute;
-	VTMInitialize();
 }
 
-void UActionBase::VTMInitialize()
-{
-}
 
 
 void UActionBase::Pause()
@@ -59,14 +53,13 @@ FORCEINLINE void UActionBase::Execute()
 	if (CanExecute() == false)
 	{
 		UE_LOG(LogAction, Warning, TEXT("Can't execute Action"));
-
 		_processState = EProcessState::EPS_FAILED;
 		return;
 	}
 
-	if(_statusInterface)
+	if(_statusComp)
 	{
-		_statusInterface->VApplyCost(_costData);
+		_statusComp->ApplyCost(_costData);
 	}
 
 	VTMExecute();
@@ -76,10 +69,7 @@ FORCEINLINE void UActionBase::Execute()
 
 FORCEINLINE bool UActionBase::CanExecute()
 {
-
-
-
-	bool bEnoughResources = _statusInterface && _statusInterface->VIsRemainingValueEnough(_costData);
+	bool bEnoughResources = _statusComp && _statusComp->IsRemainingValueEnough(_costData);
 
 	return (_processState == EProcessState::EPS_ReadyToExecute && bEnoughResources && VTMCanExecute());
 }
@@ -163,7 +153,7 @@ void UActionBase::SetActionProcessFailed()
 	VOnActionCompleted();
 }
 
-FORCEINLINE_DEBUGGABLE UActionComponent* UActionBase::GetActionComponent()
+FORCEINLINE_DEBUGGABLE UActionComponent* UActionBase::GetActionComp()
 {
 	return _actionComp;
 }
@@ -178,9 +168,24 @@ FORCEINLINE_DEBUGGABLE UAnimationModelBase* UActionBase::GetAnimationViewModel()
 	return _animationViewModel;
 }
 
-FORCEINLINE_DEBUGGABLE IStatusInterface* UActionBase::GetStatusInterface()
+FORCEINLINE_DEBUGGABLE UWeaponComponent* UActionBase::GetWeaponComp()
 {
-	return _statusInterface;
+	return _weaponComp;
+}
+
+FORCEINLINE_DEBUGGABLE UAnimControlComponent* UActionBase::GetAnimControlComp()
+{
+	return _animControlComp;
+}
+
+FORCEINLINE_DEBUGGABLE UStatusComponent* UActionBase::GetStatusComp()
+{
+	return _statusComp;
+}
+
+FORCEINLINE_DEBUGGABLE UExtraTransformProviderComponent* UActionBase::GetExTransformProviderComp()
+{
+	return _exTransformProviderComp;
 }
 
 FORCEINLINE_DEBUGGABLE bool UActionBase::IsInstantAction()

@@ -6,13 +6,13 @@
 #include "Character/CreatureCharacter.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/QuiverComponent.h"
+#include "Components/EventBrokerComponent.h"
+#include "Components/ExtraTransformProviderComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Command/CommandActor.h"
 #include "Interface/CharacterCameraInterface.h"
-#include "Interface/ExtraTransformProvider.h"
-#include "Interface/ActionInterface.h"
 #include "UI/CrosshairWidgetBase.h"
 #include "GameSystem/DebugMessageHelper.h"
 #include "Data/WeaponAnimationModelBase.h"
@@ -150,26 +150,26 @@ void ABowBase::VOnEquipped()
 {
 	Super::VOnEquipped();
 
-	IEventBrokerInterface* eventBrokerInterface = GetEventBrokerInterface();
+	UEventBrokerComponent* eventBrokerComp = GetOwnerEventBrokerComp();
 
-	if (eventBrokerInterface)
+	if (eventBrokerComp)
 	{
 		FDelegateHandle delegateHandle;
 
-		delegateHandle = eventBrokerInterface->
-				VGetEventDelegate(BowAnimEventName::Bow_DrawingBowString).AddUObject(this, &ABowBase::OnAnim_StartDrawingBowString);
+		delegateHandle = eventBrokerComp->
+				GetEventDelegate(BowAnimEventName::Bow_DrawingBowString).AddUObject(this, &ABowBase::OnAnim_StartDrawingBowString);
 		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_DrawingBowString,delegateHandle));
 
-		delegateHandle = eventBrokerInterface->
-			VGetEventDelegate(BowAnimEventName::Bow_TakeOutArrows).AddUObject(this, &ABowBase::OnAnim_TakeOutArrows);
+		delegateHandle = eventBrokerComp->
+			GetEventDelegate(BowAnimEventName::Bow_TakeOutArrows).AddUObject(this, &ABowBase::OnAnim_TakeOutArrows);
 		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_TakeOutArrows, delegateHandle));
 
-		delegateHandle = eventBrokerInterface->
-			VGetEventDelegate(BowAnimEventName::Bow_FullyDrawed).AddUObject(this, &ABowBase::OnAnim_FullyDrawed);
+		delegateHandle = eventBrokerComp->
+			GetEventDelegate(BowAnimEventName::Bow_FullyDrawed).AddUObject(this, &ABowBase::OnAnim_FullyDrawed);
 		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_FullyDrawed, delegateHandle));
 
-		delegateHandle = eventBrokerInterface->
-			VGetEventDelegate(BowAnimEventName::Bow_ReleasedBowString).AddUObject(this, &ABowBase::OnAnim_ReleaseBowString);
+		delegateHandle = eventBrokerComp->
+			GetEventDelegate(BowAnimEventName::Bow_ReleasedBowString).AddUObject(this, &ABowBase::OnAnim_ReleaseBowString);
 		_delegateHandles.Add(FDelegateHandleData(BowAnimEventName::Bow_ReleasedBowString, delegateHandle));
 	}
 
@@ -180,8 +180,8 @@ void ABowBase::VOnEquipped()
 		weaponAnimationModel->SetUInt8(WeaponAnimationDataKey::byteBowState, (uint8)_bowState);
 		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsDrawingBow, IsDrawingBow());
 		weaponAnimationModel->SetFloat(WeaponAnimationDataKey::fWristRoll, _wristRollOptionIns->GetSelection());
-		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsFiring, IsProcessRunning(WeaponProcessName::FIRE));
-		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsAiming, IsProcessRunning(WeaponProcessName::AIM));
+		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsFiring, IsProcessRunning(NSNameWeaponProcess::FIRE));
+		weaponAnimationModel->SetBool(WeaponAnimationDataKey::bIsAiming, IsProcessRunning(NSNameWeaponProcess::AIM));
 	}
 }
 
@@ -190,14 +190,14 @@ void ABowBase::VOnUnEquipped()
 {
 	Super::VOnUnEquipped();
 
-	IEventBrokerInterface* eventBrokerInterface = GetEventBrokerInterface();
+	UEventBrokerComponent* eventBrokerComp = GetOwnerEventBrokerComp();
 
-	if (eventBrokerInterface)
+	if (eventBrokerComp)
 	{
 		FMD_OnEventPublished outEventPublishedDelegate;
 		for (auto delegateHandleData : _delegateHandles)
 		{
-			eventBrokerInterface->VGetEventDelegate(delegateHandleData.EventName).Remove(delegateHandleData.DelegateHandle);
+			eventBrokerComp->GetEventDelegate(delegateHandleData.EventName).Remove(delegateHandleData.DelegateHandle);
 		}
 	}
 
@@ -248,15 +248,13 @@ void ABowBase::AttachArrowsToHand()
 
 	//get hand transform
 	FTransform rightHandTransform;
-	IExtraTransformProvider* transformProvider = Cast<IExtraTransformProvider>(GetWeaponOwner());
-	if(transformProvider)
+	if(GetOwnerExTransformProviderComp())
 	{
-		transformProvider->VTryGetTransform(ETransform::ETransform_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
+		GetOwnerExTransformProviderComp()->TryGetTransform(ETransform::ETransform_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
 	}
 	//get muzzle transform
 	FTransform muzzleTransform;
-	 VTryGetTransform(ETransform::ETransform_Muzzle,RTS_World, muzzleTransform);
-
+	GetExTransformProviderComp()->TryGetTransform(ETransform::ETransform_Muzzle, RTS_World, muzzleTransform);
 
 	//compute Projectile Transform
 	FVector projectileForward = muzzleTransform.GetLocation() - rightHandTransform.GetLocation();
@@ -297,8 +295,8 @@ void ABowBase::AttachArrowsToBow()
 	FTransform muzzleTransform;
 	FTransform bowStringTransform;
 
-	VTryGetTransform(ETransform::ETransform_Muzzle, RTS_World, muzzleTransform);
-	VTryGetTransform(ETransform::ETransform_BowString, RTS_World, bowStringTransform);
+	GetExTransformProviderComp()->TryGetTransform(ETransform::ETransform_Muzzle, RTS_World, muzzleTransform);
+	GetExTransformProviderComp()->TryGetTransform(ETransform::ETransform_BowString, RTS_World, bowStringTransform);
 
 	FVector arrowForward = (muzzleTransform.GetLocation() - bowStringTransform.GetLocation()).GetSafeNormal();
 	FQuat arrowQuat = arrowForward.ToOrientationQuat();
@@ -330,7 +328,7 @@ void ABowBase::OnFireProcessChanged(EProcessState processState)
 {
 	if (GetWeaponAnimationModel())
 	{
-		GetWeaponAnimationModel()->SetBool(WeaponAnimationDataKey::bIsFiring, IsProcessRunning(WeaponProcessName::FIRE));
+		GetWeaponAnimationModel()->SetBool(WeaponAnimationDataKey::bIsFiring, IsProcessRunning(NSNameWeaponProcess::FIRE));
 	}
 }
 
@@ -338,7 +336,7 @@ void ABowBase::OnAimProcessChanged(EProcessState processState)
 {
 	if (GetWeaponAnimationModel())
 	{
-		GetWeaponAnimationModel()->SetBool(WeaponAnimationDataKey::bIsAiming, IsProcessRunning(WeaponProcessName::AIM));
+		GetWeaponAnimationModel()->SetBool(WeaponAnimationDataKey::bIsAiming, IsProcessRunning(NSNameWeaponProcess::AIM));
 	}
 }
 
@@ -415,7 +413,7 @@ void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAni
 
 void ABowBase::OnAnim_StartDrawingBowString(UObject* data)
 {
-	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
+	if (IsProcessRunning(NSNameWeaponProcess::AIM) == false) return;
 	SetBowState(EBowState::EBS_Drawing);
 }
 
@@ -426,7 +424,7 @@ void ABowBase::OnAnim_TakeOutArrows(UObject* data)
 
 void ABowBase::OnAnim_ReleaseBowString(UObject* data)
 {
-	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
+	if (IsProcessRunning(NSNameWeaponProcess::AIM) == false) return;
 
 	LaunchArrows();
 	SetBowState(EBowState::EBS_ReleaseEnd);
@@ -434,7 +432,7 @@ void ABowBase::OnAnim_ReleaseBowString(UObject* data)
 
 void ABowBase::OnAnim_FullyDrawed(UObject* data)
 {
-	if (IsProcessRunning(WeaponProcessName::AIM) == false) return;
+	if (IsProcessRunning(NSNameWeaponProcess::AIM) == false) return;
 	SetBowState(EBowState::EBS_FullyDrawed);
 }
 

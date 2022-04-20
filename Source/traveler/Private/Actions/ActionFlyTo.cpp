@@ -2,12 +2,14 @@
 
 
 #include "Actions/ActionFlyTo.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Character/CreatureCharacter.h"
 #include "DrawDebugHelpers.h"
 #include "GameSystem/MyGameplayStatics.h"
 #include "DrawDebugHelpers.h"
 #include "Components/MyCharacterMovementComponent.h"
+#include "Components/StatusComponent.h"
 #include "AIController.h"
 
 
@@ -30,20 +32,21 @@ void UActionFlyTo::VTMExecute()
 		UE_LOG(LogAction, Warning, TEXT("Fly to: No Destination Data"))
 	}
 
-	_myMovementComp = Cast<UMyCharacterMovementComponent>(GetActionOwner()->GetMovementComponent());
-	if (_myMovementComp == false)
+	_myMovementComp = Cast<UMyCharacterMovementComponent>
+		(GetActionOwner()->GetComponentByClass(UMyCharacterMovementComponent::StaticClass()));
+	if (_myMovementComp == nullptr)
 	{
 		SetActionProcessFailed();
 		UE_LOG(LogAction, Warning, TEXT("Fly to: No Movement component"))
 	}
 
-	if (GetStatusInterface() == false)
+	if (GetStatusComp() == nullptr)
 	{
 		SetActionProcessFailed();
-		UE_LOG(LogAction, Warning, TEXT("Fly to: No Destination Data"))
+		UE_LOG(LogAction, Warning, TEXT("Fly to: no Status Component"))
 	}
 
-	if (GetStatusInterface()->VGetFinalValue(EStatusType::EStatus_FlyingSpeed) == 0.0f)
+	if (GetStatusComp()->GetFinalValue(EStatusType::EStatus_FlyingSpeed) == 0.0f)
 	{
 		SetActionProcessFailed();
 		UE_LOG(LogAction, Warning, TEXT("Fly to: Flying speed is zero"))
@@ -115,7 +118,7 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	//-------------------------------------------------------------------------------------------------------------
 
 	GetActionOwner()->SetActorRotation(newRotation);
-	GetActionOwner()->GetMovementComponent()->Velocity = newVelocity;
+	_myMovementComp->Velocity = newVelocity;
 
 
 	//debug message

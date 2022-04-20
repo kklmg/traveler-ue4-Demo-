@@ -3,11 +3,11 @@
 
 #include "Actions/ActionMove.h"
 #include "Components/ActionComponent.h"
+#include "Components/StatusComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Data/CostData.h"
-#include "Interface/StatusInterface.h"
 
 
 UActionMove::UActionMove() 
@@ -23,7 +23,7 @@ bool UActionMove::VTMCanExecute()
 {
 	EMovementMode movementMode = GetActionOwner()->GetCharacterMovement()->MovementMode;
 	//bool bIsWalking = movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking;
-	bool bIsDodging = GetActionComponent()->CheckActionIsInProgress(EActionType::EACT_Dodge);
+	bool bIsDodging = GetActionComp()->CheckActionIsInProgress(EActionType::EACT_Dodge);
 
 	return/* bIsWalking && */(!bIsDodging);
 }
@@ -46,9 +46,9 @@ void UActionMove::VTMExecute()
 		}
 
 		GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_WantToSprint, out_bWantToSprint);
-		if(out_bWantToSprint && GetStatusInterface())
+		if(out_bWantToSprint && GetStatusComp())
 		{
-			if(GetStatusInterface()->VApplyCost(_sprintCost))
+			if(GetStatusComp()->ApplyCost(_sprintCost))
 			{
 			}
 			else

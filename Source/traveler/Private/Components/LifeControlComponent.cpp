@@ -3,8 +3,9 @@
 
 #include "Components/LifeControlComponent.h"
 #include "Condition/CompositeActorCondition.h"
-#include "Interface/AnimControlInterface.h"
-#include "Interface/ActorEffectInterface.h"
+#include "Components/AnimControlComponent.h"
+#include "Components/EffectControllerComponent.h"
+#include "Data/AnimationModelBase.h"
 
 
 // Sets default values for this component's properties
@@ -33,21 +34,19 @@ void ULifeControlComponent::BeginPlay()
 
 	_lifeConditionIns = _lifeConditionClass ?
 		NewObject<UCompositeActorCondition>(this, _lifeConditionClass) : NewObject<UCompositeActorCondition>(this);
+
+	check(_lifeConditionIns);
+
 	_lifeConditionIns->SetActor(GetOwner());
 	_lifeConditionIns->Initialize();
+	_lifeConditionIns->OnValidated.AddUObject(this, &ULifeControlComponent::OnLifeStateChanged);
+	
+	_effectControlComp = Cast<UEffectControllerComponent>(GetOwner()->GetComponentByClass(UEffectControllerComponent::StaticClass()));
 
-	_actorEffectInterface = GetOwner<IActorEffectInterface>();
-
-
-	if(_lifeConditionIns)
+	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
+	if (animControlComp)
 	{
-		_lifeConditionIns->OnValidated.AddUObject(this, &ULifeControlComponent::OnLifeStateChanged);
-	}
-
-	IAnimControlInterface* animControlInterface = GetOwner<IAnimControlInterface>();
-	if (animControlInterface)
-	{
-		_animViewModel = animControlInterface->VGetAnimationModel();
+		_animViewModel = animControlComp->GetAnimationModel();
 	}
 	if (_animViewModel && _lifeConditionIns)
 	{
@@ -62,17 +61,16 @@ void ULifeControlComponent::OnLifeStateChanged(bool isAlive)
 		_animViewModel->SetBool(NSAnimationDataKey::bIsAlive,isAlive);
 	}
 
-	if (_actorEffectInterface) 
+	if (_effectControlComp)
 	{
 		if(isAlive)
 		{
-			_actorEffectInterface->VStopEffect(EEffectType::EEffectType_Dissolve, 0);
+			_effectControlComp->StopEffect(EEffectType::EEffectType_Dissolve, 0);
 		}
 		else
 		{
-			_actorEffectInterface->VPlayEffect(EEffectType::EEffectType_Dissolve, 0);
+			_effectControlComp->PlayEffect(EEffectType::EEffectType_Dissolve, 0);
 		}
-
 	}
 }
 

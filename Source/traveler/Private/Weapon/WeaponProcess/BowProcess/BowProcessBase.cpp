@@ -12,10 +12,11 @@ void UBowProcessBase::VSetWeapon(AWeaponBase* weapon)
 	if(weapon->GetWeaponType() == EWeaponType::EWT_Bow)
 	{
 		_bow = Cast<ABowBase>(weapon);
+		check(_bow);
 	}
+}
 
-	if (_bow == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Initialize bow process failed"));
-	}
+FORCEINLINE_DEBUGGABLE ABowBase* UBowProcessBase::GetBow()
+{
+	return _bow;
 }

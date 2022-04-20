@@ -3,14 +3,13 @@
 
 #include "Weapon/WeaponBase.h"
 #include "Character/CreatureCharacter.h"
-#include "Components/PoseableMeshComponent.h"
 #include "Data/WeaponAnimationModelBase.h"
+#include "Components/PoseableMeshComponent.h"
+#include "Components/EventBrokerComponent.h"
 #include "Components/ExtraTransformProviderComponent.h"
+#include "Components/ActionComponent.h"
 #include "Process/ProcessManagerBase.h"
-#include "Interface/ActionInterface.h"
 #include "Interface/CharacterCameraInterface.h"
-#include "Interface/AnimControlInterface.h"
-#include "Interface/EventBrokerInterface.h"
 #include "Process/ProcessInterface.h"
 
 
@@ -24,16 +23,16 @@ AWeaponBase::AWeaponBase(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	if (_skeletalMeshComponent == nullptr)
 	{
 		_skeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
-		check(_skeletalMeshComponent != nullptr);
+		check(_skeletalMeshComponent);
 		SetRootComponent(_skeletalMeshComponent);
 	}
 
 	//Create mesh component
-	if (_ExtraTransformProviderComponent == nullptr)
+	if (_extraTransformProviderComp == nullptr)
 	{
-		_ExtraTransformProviderComponent = CreateDefaultSubobject<UExtraTransformProviderComponent>(TEXT("ExTransformProviderComponent"));
-		check(_ExtraTransformProviderComponent != nullptr);
-		_ExtraTransformProviderComponent->Initialize(_skeletalMeshComponent);
+		_extraTransformProviderComp = CreateDefaultSubobject<UExtraTransformProviderComponent>(TEXT("ExTransformProviderComponent"));
+		check(_extraTransformProviderComp);
+		_extraTransformProviderComp->Initialize(_skeletalMeshComponent);
 	}
 	_weaponType = EWeaponType::EWT_None;
 }
@@ -55,9 +54,18 @@ void AWeaponBase::BeginPlay()
 void AWeaponBase::VInitialize(ACreatureCharacter* weaponOwner)
 {
 	_weaponOwner = weaponOwner;
-	_ownerActionInterface = Cast<IActionInterface>(_weaponOwner);
+	check(_weaponOwner);
+	
+	_ownerActionComp = Cast<UActionComponent>(_weaponOwner->GetComponentByClass(UActionComponent::StaticClass()));
+	check(weaponOwner);
+
+	_ownerEventBrokerComp = Cast<UEventBrokerComponent>(_weaponOwner->GetComponentByClass(UEventBrokerComponent::StaticClass()));
+	check(_ownerEventBrokerComp);
+
+	_ownerExtraTransformProviderComp = Cast<UExtraTransformProviderComponent>(_weaponOwner->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
+	check(_ownerExtraTransformProviderComp);
+
 	_ownerCameraInterface = Cast<ICharacterCameraInterface>(_weaponOwner);
-	_eventBrokerInterface = Cast<IEventBrokerInterface>(_weaponOwner);
 }
 
 // Called every frame
@@ -106,17 +114,17 @@ bool AWeaponBase::IsProcessRunning(FName processName)
 	return _processManager->IsProcessRunning(processName);
 }
 
-USkeletalMeshComponent* AWeaponBase::GetMeshComponent()
+FORCEINLINE_DEBUGGABLE USkeletalMeshComponent* AWeaponBase::GetMeshComponent()
 {
 	return _skeletalMeshComponent;
 }
 
-ACreatureCharacter* AWeaponBase::GetWeaponOwner()
+FORCEINLINE_DEBUGGABLE ACreatureCharacter* AWeaponBase::GetWeaponOwner()
 {
 	return _weaponOwner;
 }
 
-EWeaponType AWeaponBase::GetWeaponType()
+FORCEINLINE_DEBUGGABLE EWeaponType AWeaponBase::GetWeaponType()
 {
 	return _weaponType;
 }
@@ -126,24 +134,34 @@ void AWeaponBase::VReset()
 {
 }
 
-EAnimationState AWeaponBase::GetOwnerAnimationState()
+FORCEINLINE_DEBUGGABLE EAnimationState AWeaponBase::GetOwnerAnimationState()
 {
 	return _characterAnimationState;
 }
 
-IActionInterface* AWeaponBase::GetOwnerActionInterface()
+FORCEINLINE_DEBUGGABLE UActionComponent* AWeaponBase::GetOwnerActionComp()
 {
-	return _ownerActionInterface;
+	return _ownerActionComp;
 }
 
-ICharacterCameraInterface* AWeaponBase::GetOwnerCameraInterface()
+FORCEINLINE_DEBUGGABLE UExtraTransformProviderComponent* AWeaponBase::GetExTransformProviderComp()
+{
+	return _extraTransformProviderComp;
+}
+
+FORCEINLINE_DEBUGGABLE UExtraTransformProviderComponent* AWeaponBase::GetOwnerExTransformProviderComp()
+{
+	return _ownerExtraTransformProviderComp;
+}
+
+FORCEINLINE_DEBUGGABLE ICharacterCameraInterface* AWeaponBase::GetOwnerCameraInterface()
 {
 	return _ownerCameraInterface;
 }
 
-IEventBrokerInterface* AWeaponBase::GetEventBrokerInterface()
+FORCEINLINE_DEBUGGABLE UEventBrokerComponent* AWeaponBase::GetOwnerEventBrokerComp()
 {
-	return _eventBrokerInterface;
+	return _ownerEventBrokerComp;
 }
 
 void AWeaponBase::VWeaponControlButtonA()
@@ -160,16 +178,6 @@ void AWeaponBase::VWeaponControlButtonC()
 
 void AWeaponBase::VWeaponControlButtonD()
 {
-}
-
-bool AWeaponBase::VTryGetSocketName(ETransform transformType, FName& outSocketName)
-{
-	return _ExtraTransformProviderComponent->VTryGetSocketName(transformType, outSocketName);
-}
-
-bool AWeaponBase::VTryGetTransform(ETransform meshSocketType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
-{
-	return _ExtraTransformProviderComponent->TryGetTransform(meshSocketType, transformSpace, outTransform);
 }
 
 void AWeaponBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)

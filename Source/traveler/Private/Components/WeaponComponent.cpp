@@ -1,12 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/WeaponComponent.h"
+#include "Components/AnimControlComponent.h"
+#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/LifeControlComponent.h"
+#include "Data/AnimationModelBase.h"
 #include "Weapon/WeaponBase.h"
 #include "Weapon/BowBase.h"
 #include "Character/CreatureCharacter.h"
-#include "Interface/ExtraTransformProvider.h"
-#include "Interface/AnimControlInterface.h"
-#include "Interface/LifeControlInterface.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -24,8 +25,6 @@ UWeaponComponent::UWeaponComponent()
 void UWeaponComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
-
-	_lifeControlInterface = GetOwner<ILifeControlInterface>();
 }
 
 void UWeaponComponent::OnLifeChanged(bool isAlive)
@@ -50,10 +49,12 @@ void UWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	IAnimControlInterface* animationCommunicator = GetOwner<IAnimControlInterface>();
-	if(animationCommunicator)
+	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
+	if(animControlComp)
 	{
-		_animationViewModel = animationCommunicator->VGetAnimationModel();
+		_animationViewModel = animControlComp->GetAnimationModel();
+		OnAnimationStateChanged(animControlComp->GetAnimationState(), animControlComp->GetAnimationState());
+		animControlComp->GetAnimationStateChangedDelegate().AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
 	}
 
 	if (DefaultWeaponClass)
@@ -64,17 +65,13 @@ void UWeaponComponent::BeginPlay()
 		EquipWeapon(bow);
 	}
 
-	_animationCommunicator = GetOwner<IAnimControlInterface>();
-	if (_animationCommunicator)
+	_lifeControlComp = Cast<ULifeControlComponent>(GetOwner()->GetComponentByClass(ULifeControlComponent::StaticClass()));
+	if (_lifeControlComp && _lifeControlComp->GetLifeChangedDelegate())
 	{
-		OnAnimationStateChanged(_animationCommunicator->VGetAnimationState(), _animationCommunicator->VGetAnimationState());
-		_animationCommunicator->VGetAnimationStateChangedDelegate().AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
+		_lifeControlComp->GetLifeChangedDelegate()->AddUObject(this, &UWeaponComponent::OnLifeChanged);
 	}
 
-	if (_lifeControlInterface && _lifeControlInterface->VGetLifeChangedDelegate())
-	{
-		_lifeControlInterface->VGetLifeChangedDelegate()->AddUObject(this, &UWeaponComponent::OnLifeChanged);
-	}
+	_ownerExTransformProviderComp = Cast<UExtraTransformProviderComponent>(GetOwner()->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
 }
 
 
@@ -135,11 +132,14 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 		check(character != nullptr);
 
 		//get left hand socket name
-		FName leftHandSocketName;
-		character->VTryGetSocketName(ETransform::ETransform_LeftHand, leftHandSocketName);
+		FName outLeftHandSocketName;
+		if(_ownerExTransformProviderComp)
+		{
+			_ownerExTransformProviderComp->TryGetSocketName(ETransform::ETransform_LeftHand, outLeftHandSocketName);
+		}
 
 		//Attach Weapon 
-		_weaponIns->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, leftHandSocketName);
+		_weaponIns->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, outLeftHandSocketName);
 	}
 }
 
@@ -191,12 +191,12 @@ AWeaponBase* UWeaponComponent::GetEquipedWeapon()
 
 bool UWeaponComponent::IsFiring()
 {
-	return _weaponIns ? _weaponIns->IsProcessRunning(WeaponProcessName::FIRE) : false;
+	return _weaponIns ? _weaponIns->IsProcessRunning(NSNameWeaponProcess::FIRE) : false;
 }
 
 bool UWeaponComponent::IsAiming()
 {
-	return _weaponIns ? _weaponIns->IsProcessRunning(WeaponProcessName::AIM) : false;
+	return _weaponIns ? _weaponIns->IsProcessRunning(NSNameWeaponProcess::AIM) : false;
 }
 
 void UWeaponComponent::OnAnimationStateChanged(EAnimationState prevState, EAnimationState newState)

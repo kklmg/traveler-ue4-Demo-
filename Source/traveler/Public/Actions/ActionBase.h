@@ -5,18 +5,18 @@
 #include "CoreMinimal.h"
 #include "Data/EnumActionType.h"
 #include "Data/EnumProcessState.h"
-
 #include "ActionBase.generated.h"
-
-
 
 DECLARE_LOG_CATEGORY_EXTERN(LogAction, Log, All);
 
-class IStateInterface;
-class IStatusInterface;
-
-class UAnimationModelBase;
 class UCostData;
+class UActionComponent;
+class UStatusComponent;
+class UWeaponComponent;
+class UActionBlackBoard;
+class UAnimationModelBase;
+class UAnimControlComponent;
+class UExtraTransformProviderComponent;
 
 
 namespace ActionName
@@ -37,9 +37,6 @@ namespace ActionName
 	const FName WeaponAim = FName(TEXT("WeaponAim"));
 }
 
-class UActionComponent;
-class UActionBlackBoard;
-
 /**
  *
  */
@@ -50,7 +47,7 @@ class TRAVELER_API UActionBase : public UObject
 public:
 	UActionBase();
 
-	void Initialize(UActionComponent* actionComponent, UActionBlackBoard* actionBlackBoard);
+	virtual void VInitialize(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard);
 
 	UFUNCTION(BlueprintCallable)
 	void Execute();
@@ -90,7 +87,7 @@ public:
 	float GetElapsedTime();
 
 protected:
-	virtual void VTMInitialize();
+
 	virtual bool VTMCanExecute();
 	virtual void VTMExecute();
 	virtual void VTMTick(float deltaTime);
@@ -99,10 +96,14 @@ protected:
 protected:
 	void SetActionProcessSucceed();
 	void SetActionProcessFailed();
-	UActionComponent* GetActionComponent();
+
+	UActionComponent* GetActionComp();
+	UAnimControlComponent* GetAnimControlComp();
 	UCostData* GetCostData();
 	UAnimationModelBase* GetAnimationViewModel();
-	IStatusInterface* GetStatusInterface();
+	UWeaponComponent* GetWeaponComp();
+	UStatusComponent* GetStatusComp();
+	UExtraTransformProviderComponent* GetExTransformProviderComp();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
@@ -121,10 +122,16 @@ private:
 	ACharacter* _actionOwner;
 
 	UPROPERTY()
-	UActionBlackBoard* _actionBlackBoard;
+	UActionComponent* _actionComp;
 
 	UPROPERTY()
-	UActionComponent* _actionComp;
+	UExtraTransformProviderComponent* _exTransformProviderComp;
+
+	UPROPERTY()
+	UWeaponComponent* _weaponComp;
+
+	UPROPERTY()
+	UActionBlackBoard* _actionBlackBoard;
 
 	UPROPERTY(VisibleAnywhere, Category = "Action")
 	EProcessState _processState;
@@ -135,7 +142,10 @@ private:
 	UPROPERTY()
 	UAnimationModelBase* _animationViewModel;
 
-	IStatusInterface* _statusInterface;
+	UPROPERTY()
+	UStatusComponent* _statusComp;
+	UPROPERTY()
+	UAnimControlComponent* _animControlComp;
 
 	float _elapsedTime;
 };

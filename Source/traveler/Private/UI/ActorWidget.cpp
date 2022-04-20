@@ -4,7 +4,7 @@
 #include "UI/ActorWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
-#include "Interface/ExtraTransformProvider.h"
+#include "Components/ExtraTransformProviderComponent.h"
 
 UActorWidget::UActorWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -13,10 +13,11 @@ UActorWidget::UActorWidget(const FObjectInitializer& ObjectInitializer) : Super(
 
 void UActorWidget::SetData(AActor* widgetOwner, ETransform transformType)
 {
+	check(widgetOwner);
 	_widgetOwner = widgetOwner;
 	_transformType = transformType;
 
-	_ExTransformProviderInterface = Cast<IExtraTransformProvider>(_widgetOwner);
+	_exTransformProviderComp = Cast<UExtraTransformProviderComponent>(_widgetOwner->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
 	OnWidgetOwnerChangedDelegate.Broadcast(_widgetOwner);
 }
 
@@ -26,16 +27,13 @@ void UActorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	if (!_widgetOwner) return;
 
-	UWorld* world = GetWorld();
-	if (!world) return;
-
-	APlayerController* controller = UGameplayStatics::GetPlayerController(world, 0);
+	APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (!controller) return;
 
 	//Get Drawing Transform
 	FTransform drawingTransform;
-	if(_ExTransformProviderInterface
-		&& _ExTransformProviderInterface->VTryGetTransform(_transformType,ERelativeTransformSpace::RTS_World,drawingTransform))
+	if(_exTransformProviderComp
+		&& _exTransformProviderComp->TryGetTransform(_transformType,ERelativeTransformSpace::RTS_World,drawingTransform))
 	{
 	}
 	else

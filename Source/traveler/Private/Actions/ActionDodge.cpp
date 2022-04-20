@@ -4,7 +4,7 @@
 #include "Actions/ActionDodge.h"
 #include "Character/CreatureCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Interface/WeaponInterface.h"
+#include "Data/CostData.h"
 
 
 UActionDodge::UActionDodge()
@@ -18,6 +18,11 @@ UActionDodge::UActionDodge()
 	
 }
 
+void UActionDodge::VInitialize(ACharacter* owner, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard)
+{
+	Super::VInitialize(owner, actionComp, actionBlackBoard);
+}
+
 bool UActionDodge::VTMCanExecute()
 {
 	EMovementMode movementMode = GetActionOwner()->GetCharacterMovement()->MovementMode;
@@ -28,29 +33,21 @@ bool UActionDodge::VTMCanExecute()
 
 void UActionDodge::VTMExecute()
 {
-	ACharacter* actionOwner = GetActionOwner();
-	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(actionOwner);
+	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
 
-	if(weaponInterface)
-	{
-		weaponInterface->VStopWeaponProcess(WeaponProcessName::AIM);
-		weaponInterface->VStopWeaponProcess(WeaponProcessName::FIRE);
-	}
-
-	UAnimInstance* animInstance = actionOwner->GetMesh()->GetAnimInstance();
 	if (_aniMontage && animInstance)
 	{
 		//bind 
 		animInstance->OnMontageEnded.AddDynamic(this, &UActionDodge::OnAnimMontageFinished);
 
 		//play montage
-		actionOwner->PlayAnimMontage(_aniMontage);
+		GetActionOwner()->PlayAnimMontage(_aniMontage);
 	}
 
-	_shiftDirection = actionOwner->GetVelocity().IsNearlyZero() ? 
-						actionOwner->GetActorForwardVector() :  actionOwner->GetVelocity().GetSafeNormal();
+	_shiftDirection = GetActionOwner()->GetVelocity().IsNearlyZero() ?
+		GetActionOwner()->GetActorForwardVector() : GetActionOwner()->GetVelocity().GetSafeNormal();
 
-	actionOwner->SetActorRotation(_shiftDirection.Rotation());
+	GetActionOwner()->SetActorRotation(_shiftDirection.Rotation());
 }
 
 void UActionDodge::VTMTick(float deltaTime)
@@ -64,17 +61,8 @@ void UActionDodge::VTMTick(float deltaTime)
 void UActionDodge::OnAnimMontageFinished(UAnimMontage* montage,bool interrupted)
 {
 	if(montage != _aniMontage)return;
-	if(GetActionOwner() == nullptr) return;
 
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(GetActionOwner());
-	if (character == nullptr) return;
-
-	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
-	if (animInstance == nullptr) return;
-
-	animInstance->OnMontageEnded.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
-	
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("End Dodge animation"));
+	GetActionOwner()->GetMesh()->GetAnimInstance()->OnMontageEnded.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
 
 	SetActionProcessSucceed();
 }

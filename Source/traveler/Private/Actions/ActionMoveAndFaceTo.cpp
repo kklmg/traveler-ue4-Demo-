@@ -5,7 +5,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
-#include "Interface/StatusInterface.h"
 
 UActionMoveAndFaceTo::UActionMoveAndFaceTo()
 {

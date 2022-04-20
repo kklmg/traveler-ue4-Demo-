@@ -15,7 +15,6 @@ class TRAVELER_API UCostData : public UObject
 {
 	GENERATED_BODY()
 public:
-	void SetCost(EStatusType attType, float cost);
 	void AddCost(EStatusType attType, float cost);
 
 	TArray<TPair<EStatusType, float>> GetCostArray();

@@ -6,10 +6,10 @@
 #include "Character/CreatureCharacter.h"
 #include "AnimNotify/AnimNotifier.h"
 #include "Components/AnimControlComponent.h"
+#include "Components/ExtraTransformProviderComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actors/ThrowerActorBase.h"
 #include "DrawDebugHelpers.h"
-#include "Interface/ExtraTransformProvider.h"
 
 UActionThrow::UActionThrow()
 {
@@ -23,15 +23,13 @@ void UActionThrow::VTMExecute()
 {
 	Super::VTMExecute();
 
-	if (GetActionOwner() == nullptr) return;
-
-	UAnimControlComponent* _animControlComp = 
-		Cast<UAnimControlComponent>(GetActionOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
-
-	UAnimNotifier* notifier = _animControlComp->GetOrCreateNotifer(EAnimNotifyKey::ANK_SpreadAttack);
-	notifier->NotifyBeginDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyBegin);
-	notifier->NotifyTickDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyTick);
-	notifier->NotifyEndDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyEnd);
+	if (GetAnimControlComp())
+	{
+		UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKey::ANK_SpreadAttack);
+		notifier->NotifyBeginDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyBegin);
+		notifier->NotifyTickDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyTick);
+		notifier->NotifyEndDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyEnd);
+	}
 }
 
 void UActionThrow::VTMTick(float deltaTime)
@@ -43,24 +41,19 @@ void UActionThrow::OnAttackNotifyBegin(float durationTime)
 {
 	if (_throwerClass == nullptr) return;
 
-	AActor* actionOwner = GetActionOwner();
-	if (actionOwner == nullptr) return;
-
-	APawn* pawn = Cast<APawn>(actionOwner);
-	if (pawn == nullptr) return;
-
-	IExtraTransformProvider* extraTransformProvider = Cast<IExtraTransformProvider>(actionOwner);
-	if (extraTransformProvider == nullptr) return;
-
 	//set spawn options
 	FActorSpawnParameters spawnParameters;
-	spawnParameters.Instigator = pawn;
-	spawnParameters.Owner = pawn;
-	
+	spawnParameters.Instigator = GetActionOwner();
+	spawnParameters.Owner = GetActionOwner();
+
 	FTransform outTransform;
 	FName outSocketName;
-	extraTransformProvider->VTryGetTransform(_transformType, ERelativeTransformSpace::RTS_World, outTransform);
-	extraTransformProvider->VTryGetSocketName(_transformType, outSocketName);
+
+	if (GetExTransformProviderComp())
+	{
+		GetExTransformProviderComp()->TryGetTransform(_transformType, ERelativeTransformSpace::RTS_World, outTransform);
+		GetExTransformProviderComp()->TryGetSocketName(_transformType, outSocketName);
+	}
 
 	//spawn actor
 	_throwerIns = GetWorld()->SpawnActor<AThrowerActorBase>(_throwerClass, outTransform, spawnParameters);
@@ -89,7 +82,7 @@ void UActionThrow::OnAttackNotifyEnd()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("attack notify End"));
 
-	if(_throwerIns)
+	if (_throwerIns)
 	{
 		_throwerIns->VAutoDestroy();
 		_throwerIns = nullptr;
@@ -101,15 +94,12 @@ void UActionThrow::VOnAnimMontageFinished(UAnimMontage* montage, bool interrupte
 {
 	Super::VOnAnimMontageFinished(montage, interrupted);
 
-	if (GetActionOwner() == nullptr) return;
+	if (GetAnimControlComp())
+	{
+		UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKey::ANK_SpreadAttack);
 
-	UAnimControlComponent* _animControlComp =
-		Cast<UAnimControlComponent>(GetActionOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
-
-	UAnimNotifier* notifier = _animControlComp->GetOrCreateNotifer(EAnimNotifyKey::ANK_SpreadAttack);
-
-	notifier->NotifyBeginDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyBegin);
-	notifier->NotifyTickDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyTick);
-	notifier->NotifyEndDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyEnd);
+		notifier->NotifyBeginDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyBegin);
+		notifier->NotifyTickDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyTick);
+		notifier->NotifyEndDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyEnd);
+	}
 }
-

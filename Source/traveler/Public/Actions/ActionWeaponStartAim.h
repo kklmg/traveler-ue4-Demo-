@@ -15,6 +15,8 @@ class TRAVELER_API UActionWeaponStartAim : public UActionBase
 	GENERATED_BODY()
 public:
 	UActionWeaponStartAim();
+
+	virtual void VInitialize(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard);
 protected:
 	virtual void VTMExecute() override;	
 };

@@ -2,22 +2,29 @@
 
 
 #include "Condition/ACon_IsStatusPointRemained.h"
+#include "Components/StatusComponent.h"
+#include "Data/MyDelegates.h"
+#include "Status/BasicStatus.h"
 
 void UACon_IsStatusPointRemained::VSetActor(AActor* actor)
 {
 	Super::VSetActor(actor);
 
-	auto statusIns = _statusInterface->VGetBasicStatusIns(_statusType);
+	_statusComp = Cast<UStatusComponent>(actor->GetComponentByClass(UStatusComponent::StaticClass()));
+	check(_statusComp);
+
+	UBasicStatus* statusIns = _statusComp->GetBasicStatusIns(_statusType);
 	if (statusIns)
 	{
 		statusIns->OnRemainingValueChanged.AddDynamic(this, &UACon_IsStatusPointRemained::OnRemainingValueChanged);
 	}
+
 }
 
 bool UACon_IsStatusPointRemained::VTMValidate()
 {
 	if (!Super::VTMValidate()) return false;
-	float value = _statusInterface->VGetRemainingValue(_statusType);
+	float value = _statusComp->GetRemainingValue(_statusType);
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Health Point: %f"), value));
 
 	return value > 0.0f;

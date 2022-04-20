@@ -2,6 +2,8 @@
 
 
 #include "Input/ButtonInputSprint.h"
+#include "Components/ActionComponent.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 
 UButtonInputSprint::UButtonInputSprint()
 {
@@ -11,10 +13,8 @@ UButtonInputSprint::UButtonInputSprint()
 
 void UButtonInputSprint::VTMPress()
 {
-	if (_actionInterface)
-	{
-		_actionInterface->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, true);
-	}
+	check(GetActionComp())
+	GetActionComp()->GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, true);	
 }
 
 void UButtonInputSprint::VTMPressing(float deltaTime)
@@ -23,8 +23,6 @@ void UButtonInputSprint::VTMPressing(float deltaTime)
 
 void UButtonInputSprint::VTMRelease()
 {
-	if (_actionInterface)
-	{
-		_actionInterface->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, false);
-	}
+	check(GetActionComp())
+	GetActionComp()->GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, false);
 }

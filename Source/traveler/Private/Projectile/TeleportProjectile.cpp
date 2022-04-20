@@ -3,6 +3,7 @@
 
 #include "Projectile/TeleportProjectile.h"
 #include "Character/CreatureCharacter.h"
+#include "Components/ActionComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 
 
@@ -14,13 +15,17 @@ ATeleportProjectile::ATeleportProjectile()
 
 void ATeleportProjectile::VExecuteSpecialAction() 
 {
-	ACreatureCharacter* creatureCharacter = GetInstigator<ACreatureCharacter>();
-	if (creatureCharacter != nullptr) 
+	if (!GetInstigator()) return;
+
+	UActionComponent* actionComp = 
+		Cast<UActionComponent>(GetInstigator()->GetComponentByClass(UActionComponent::StaticClass()));
+
+	if (actionComp)
 	{
 		FVector TeleportLocation = GetActorLocation() + GetActorForwardVector() * _TeleportOffset.X + FVector(0, 0, _TeleportOffset.Z);
 
-		creatureCharacter->VGetActionBlackBoard()->WriteData_FVector(EActionDataKey::EACTD_TeleportLocation, TeleportLocation);
-		creatureCharacter->VExecuteAction(EActionType::EACT_Teleport);
+		actionComp->GetActionBlackBoard()->WriteData_FVector(EActionDataKey::EACTD_TeleportLocation, TeleportLocation);
+		actionComp->ExecuteAction(EActionType::EACT_Teleport);
 		//creatureCharacter->LaunchCharacter(GetVelocity(), true, true);
 		Destroy();
 	}

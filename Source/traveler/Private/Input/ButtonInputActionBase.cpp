@@ -2,13 +2,20 @@
 
 
 #include "Input/ButtonInputActionBase.h"
+#include "Components/ActionComponent.h"
 
-void UButtonInputActionBase::Initialize(IActionInterface* actionInterface)
+void UButtonInputActionBase::Initialize(UActionComponent* actionComp)
 {
-	_actionInterface = actionInterface;
+	check(actionComp);
+	_actionComp = actionComp;
 }
 
 EActionType UButtonInputActionBase::GetActionType()
 {
 	return _actionType;
+}
+
+FORCEINLINE_DEBUGGABLE UActionComponent* UButtonInputActionBase::GetActionComp()
+{
+	return _actionComp;
 }

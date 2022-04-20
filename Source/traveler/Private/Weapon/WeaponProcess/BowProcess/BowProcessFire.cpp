@@ -6,19 +6,19 @@
 
 FName UBowProcessFire::VGetProcessName()
 {
-	return WeaponProcessName::FIRE;
+	return NSNameWeaponProcess::FIRE;
 }
 
 bool UBowProcessFire::VTMCanExecute()
 {
 	if (!Super::VTMCanExecute()) return false;
-	if (!_bow) return false;
+	if (!GetBow()) return false;
 	
-	EAnimationState animationState = _bow->GetOwnerAnimationState();
-	EBowState bowState = _bow->GetBowState();
+	EAnimationState animationState = GetBow()->GetOwnerAnimationState();
+	EBowState bowState = GetBow()->GetBowState();
 	
 	bool bCharacterCanFire = animationState == EAnimationState::EAnimState_Walk || animationState == EAnimationState::EAnimState_Fall;
-	bool bIsAimingMode = _bow->IsProcessRunning(WeaponProcessName::AIM);
+	bool bIsAimingMode = GetBow()->IsProcessRunning(NSNameWeaponProcess::AIM);
 	bool bBowCanFire = bowState == EBowState::EBS_FullyDrawed || bowState == EBowState::EBS_OverDrawing;
 
 	//todo: firing in normal mode
@@ -28,13 +28,13 @@ bool UBowProcessFire::VTMCanExecute()
 void UBowProcessFire::VTMExecute()
 {
 	Super::VTMExecute();
-	if (!_bow) return;
+	if (!GetBow()) return;
 
-	bool bIsAimingMode = _bow->IsProcessRunning(WeaponProcessName::AIM);
+	bool bIsAimingMode = GetBow()->IsProcessRunning(NSNameWeaponProcess::AIM);
 
 	if(bIsAimingMode)
 	{
-		_bow->SetBowState(EBowState::EBS_ReleaseStart);
+		GetBow()->SetBowState(EBowState::EBS_ReleaseStart);
 	}
 	//todo: firing in normal mode
 	else

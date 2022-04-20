@@ -5,16 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Data/EnumTransformType.h"
-#include "Interface/ActionInterface.h"
-#include "Interface/StatusInterface.h"
 #include "Interface/CharacterCameraInterface.h"
-#include "Interface/WeaponInterface.h"
-#include "Interface/ExtraTransformProvider.h"
-#include "Interface/ActorEffectInterface.h"
-#include "Interface/ActorUIInterface.h"
-#include "Interface/AnimControlInterface.h"
-#include "Interface/EventBrokerInterface.h"
-#include "Interface/LifeControlInterface.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "CreatureCharacter.generated.h"
 
@@ -46,10 +37,7 @@ class FDMD_OnFloatValueChanged;
 
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter, public IActionInterface, public IStatusInterface, public ILifeControlInterface,
-										public ICharacterCameraInterface, public IWeaponInterface,
-										public IExtraTransformProvider, public IDamageHandlerInterface, public IActorUIInterface,
-										public IActorEffectInterface, public IAnimControlInterface, public IEventBrokerInterface
+class TRAVELER_API ACreatureCharacter : public ACharacter , public ICharacterCameraInterface, public IDamageHandlerInterface
 {
 	GENERATED_BODY()
 
@@ -72,38 +60,6 @@ public:
 public:
 	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	//Status Interface implementation---------------------------------------------------
-	virtual int32 VGetLevelValue() override;
-	virtual ULevelStatus* VGetLevelStatusIns() override;
-
-	virtual float VGetPrimaryValue(EStatusType statusType) override;
-	virtual float VGetBasicValue(EStatusType statusType) override;
-	virtual float VGetFinalValue(EStatusType statusType) override;
-	virtual float VGetRemainingValue(EStatusType statusType) override;
-
-	virtual UStatusBase* VGetStatusIns(EStatusType statusType) override;
-	virtual UBasicStatus* VGetBasicStatusIns(EStatusType statusType) override;
-
-	virtual void VApplyRemainingValueChange(EStatusType statusType, float value);
-	virtual bool VIsRemainingValueEnough(UCostData* costData) override;
-	virtual bool VApplyCost(UCostData* costData) override;
-
-	//Life Control Interface implementation---------------------------------------------------
-	bool VIsAlive() override;
-	FMD_BoolValueChangeSignature* VGetLifeChangedDelegate() override;
-
-
-
-	//Action Interface implementation ---------------------------------------------------
-
-	UFUNCTION(BlueprintCallable)
-	virtual UActionBase* VExecuteAction(EActionType actionType) override;
-
-	UFUNCTION(BlueprintCallable)
-	virtual UActionBlackBoard* VGetActionBlackBoard() override;
-
-	UFUNCTION(BlueprintCallable)
-	bool VCheckActionIsInProgress(EActionType actionType) override;
 
 	//Character Camera Interface implementation---------------------------------------------------
 	virtual void VCameraArmPitch(float angle)  override;
@@ -119,53 +75,10 @@ public:
 	virtual UCameraComponent* VGetCameraComponent() override;
 
 
-	//Weapon Interface implementation---------------------------------------------------
-	virtual void VEquipWeapon(AWeaponBase* weapon) override;
-	virtual AWeaponBase* VGetEquipedWeapon() override;
-	virtual void VExecuteWeaponProcess(FName weaponProcessName) override;
-	virtual void VStopWeaponProcess(FName weaponProcessName) override;
-	virtual void VStopAllProcess() override;
-
-
-	//Animation Control Interface implementation --------------------------------------------------
-	virtual UAnimationModelBase* VGetAnimationModel() override;
-
-
 	//Damage Handler Interface implementation --------------------------------------------------
 	virtual void VHandleDamage(float basicDamage, EElementalType damageType, FVector impactPoint, AActor* causer, APawn* instigator)  override;
 	virtual void VHandleDamageData(UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator)  override;
 	virtual void VHandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator) override;
-
-
-	//Actor UI Interface implementation --------------------------------------------------
-	virtual void VShowActorUI(EActorUI UIType) override;
-	virtual void VHideActorUI(EActorUI UIType) override;
-	virtual void VShowActorStatusUI(EStatusEffect StatusType, float duration) override;
-	virtual void VHideActorStatusUI(EStatusEffect StatusType) override;
-
-
-	//MeshSocketTransform Provider Interface implementation --------------------------------------------------
-	UFUNCTION(BlueprintCallable)
-	virtual bool VTryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform) override;
-	UFUNCTION(BlueprintCallable)
-	virtual bool VTryGetSocketName(ETransform transformType, FName& outSocketName);
-
-
-	//ActorEffect Interface Interface implementation --------------------------------------------------
-	virtual void VPlayEffect(EEffectType effectType, uint8 effectOption) override;
-	virtual void VStopEffect(EEffectType effectType, uint8 effectOption) override;
-
-
-
-	//Event Broker Interface implementation -----------------------------------------------------------
-	virtual void VPublishEvent(FName eventName, UObject* data) override;
-	virtual FMD_OnEventPublished& VGetEventDelegate(FName eventName) override;
-
-	//Animation Communicator Interface implementation --------------------------------------------------
-	virtual void VSetAnimationState(EAnimationState newState) override;
-	virtual EAnimationState VGetAnimationState() override;
-	virtual FOnAnimationStateChanged& VGetAnimationStateChangedDelegate() override;
-
 
 protected:
 	UPROPERTY(VisibleAnywhere)

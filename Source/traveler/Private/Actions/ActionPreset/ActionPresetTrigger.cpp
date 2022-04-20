@@ -5,7 +5,6 @@
 #include "Condition/CompositeActorCondition.h"
 #include "Actions/ActionPreset/CharacterActionPreset.h"
 #include "Components/ActionComponent.h"
-#include "Interface/EventBrokerInterface.h"
 #include "GameSystem/DebugMessageHelper.h"
 
 

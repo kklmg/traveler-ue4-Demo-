@@ -2,6 +2,7 @@
 
 
 #include "Input/ButtonInputDodge.h"
+#include "Components/ActionComponent.h"
 
 UButtonInputDodge::UButtonInputDodge()
 {
@@ -11,10 +12,8 @@ UButtonInputDodge::UButtonInputDodge()
 
 void UButtonInputDodge::VTMPress()
 {
-	if (_actionInterface)
-	{
-		_actionInterface->VExecuteAction(EActionType::EACT_Dodge);
-	}
+	check(GetActionComp())
+	GetActionComp()->ExecuteAction(EActionType::EACT_Dodge);
 }
 
 void UButtonInputDodge::VTMPressing(float deltaTime)

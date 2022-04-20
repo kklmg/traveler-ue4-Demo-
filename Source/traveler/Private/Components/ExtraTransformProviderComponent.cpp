@@ -38,7 +38,7 @@ void UExtraTransformProviderComponent::TickComponent(float DeltaTime, ELevelTick
 	// ...
 }
 
-bool UExtraTransformProviderComponent::VTryGetSocketName(ETransform transformType, FName& outSocketName)
+bool UExtraTransformProviderComponent::TryGetSocketName(ETransform transformType, FName& outSocketName)
 {
 	if (_boneNameMap.Contains(transformType))
 	{

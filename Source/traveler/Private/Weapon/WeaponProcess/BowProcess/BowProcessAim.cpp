@@ -2,63 +2,61 @@
 
 
 #include "Weapon/WeaponProcess/BowProcess/BowProcessAim.h"
-#include "Interface/ActionInterface.h"
+#include "Components/ActionComponent.h"
+#include "Data/EnumActionType.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 #include "Character/CreatureCharacter.h"
 
-FName UBowProcessAim::VGetProcessName() 
+FName UBowProcessAim::VGetProcessName()
 {
-	return WeaponProcessName::AIM;
+	return NSNameWeaponProcess::AIM;
 }
 
 bool UBowProcessAim::VTMCanExecute()
 {
 	if (!Super::VTMCanExecute()) return false;
-	if (!_bow) return false;
-	
-	IActionInterface* actionInterface = _bow->GetOwnerActionInterface();
-	if (!actionInterface) return false;
+	if (!GetBow()) return false;
 
-	EAnimationState animationState = _bow->GetOwnerAnimationState();
-
+	EAnimationState animationState = GetBow()->GetOwnerAnimationState();
 
 	return (animationState == EAnimationState::EAnimState_Walk || animationState == EAnimationState::EAnimState_Fall)
-		&& (actionInterface->VCheckActionIsInProgress(EActionType::EACT_Dodge) == false);
+		&& (GetBow()->GetOwnerActionComp()->CheckActionIsInProgress(EActionType::EACT_Dodge) == false);
 }
 
 void UBowProcessAim::VTMExecute()
 {
 	Super::VTMExecute();
-	if (!_bow) return;
+
+	check(GetBow());
 
 	//Camera
-	_bow->DragCamera(true);
+	GetBow()->DragCamera(true);
 
 	//Crosshair
-	_bow->AnimateCrosshair(true);
+	GetBow()->AnimateCrosshair(true);
 
 	//Movement
-	IActionInterface* actionInterface = _bow->GetOwnerActionInterface();
-	if(actionInterface)
+	if (GetBow()->GetOwnerActionComp())
 	{
-		actionInterface->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, false);
-	}	
+		GetBow()->GetOwnerActionComp()->GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, false);
+	}
 }
 
 void UBowProcessAim::VTMTick(float deltaTime)
 {
 	Super::VTMTick(deltaTime);
-	if (!_bow) return;
+	if (!GetBow()) return;
 
 
-	ICharacterCameraInterface* cameraInterface = _bow->GetOwnerCameraInterface();
-	ACreatureCharacter* weaponOwner = _bow->GetWeaponOwner();
+	ICharacterCameraInterface* cameraInterface = GetBow()->GetOwnerCameraInterface();
+	ACreatureCharacter* weaponOwner = GetBow()->GetWeaponOwner();
 	//make actor face to camera forward
-	if(weaponOwner && cameraInterface)
+	if (weaponOwner && cameraInterface)
 	{
 		FRotator cameraRotator = cameraInterface->VGetCameraRotation();
 		cameraRotator.Pitch = 0;
 		cameraRotator.Roll = 0;
-	
+
 		weaponOwner->SetActorRotation(cameraRotator);
 	}
 }
@@ -71,20 +69,19 @@ void UBowProcessAim::VTMReset()
 void UBowProcessAim::VTMOnDead()
 {
 	Super::VTMOnDead();
-	if (!_bow) return;
+	if (!GetBow()) return;
 
-	_bow->SetBowState(EBowState::EBS_Normal);
+	GetBow()->SetBowState(EBowState::EBS_Normal);
 
 	//Camera
-	_bow->DragCamera(false);
+	GetBow()->DragCamera(false);
 
 	//Crosshair
-	_bow->AnimateCrosshair(false);
+	GetBow()->AnimateCrosshair(false);
 
 	//Movement
-	IActionInterface* actionInterface = _bow->GetOwnerActionInterface();
-	if (actionInterface)
+	if (GetBow()->GetOwnerActionComp())
 	{
-		actionInterface->VGetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, true);
+		GetBow()->GetOwnerActionComp()->GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, true);
 	}
 }

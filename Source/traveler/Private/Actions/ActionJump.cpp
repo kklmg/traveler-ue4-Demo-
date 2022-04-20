@@ -3,7 +3,7 @@
 #include "Actions/ActionJump.h"
 #include "Character/CreatureCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Interface/WeaponInterface.h"
+#include "Data/AnimationModelBase.h"
 
 
 UActionJump::UActionJump()
@@ -21,14 +21,6 @@ void UActionJump::VTMExecute()
 	{
 		GetAnimationViewModel()->SetBool(NSAnimationDataKey::bWantToJump, true);
 	}
-
-	IWeaponInterface* weaponInterface = Cast<IWeaponInterface>(GetActionOwner());
-
-	if (weaponInterface)
-	{
-		weaponInterface->VStopWeaponProcess(WeaponProcessName::AIM);
-		weaponInterface->VStopWeaponProcess(WeaponProcessName::FIRE);
-	}
 }
 
 void UActionJump::VTMTick(float deltaTime)
@@ -38,7 +30,7 @@ void UActionJump::VTMTick(float deltaTime)
 	if (GetElapsedTime() > _delayTime)
 	{
 		GetActionOwner()->Jump();
-
+		
 		if (GetAnimationViewModel())
 		{
 			GetAnimationViewModel()->SetBool(NSAnimationDataKey::bWantToJump, false);

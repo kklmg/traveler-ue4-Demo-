@@ -2,7 +2,8 @@
 
 
 #include "Components/CameraSpringArmComponent.h"
-#include "Interface/AnimControlInterface.h"
+#include "Components/AnimControlComponent.h"
+#include "Data/AnimationModelBase.h"
 
 UCameraSpringArmComponent::UCameraSpringArmComponent()
 {
@@ -32,10 +33,10 @@ void UCameraSpringArmComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	IAnimControlInterface* animationCommunicator = GetOwner<IAnimControlInterface>();
-	if(animationCommunicator)
+	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
+	if(animControlComp)
 	{
-		_animationViewModel = animationCommunicator->VGetAnimationModel();
+		_animationViewModel = animControlComp->GetAnimationModel();
 	}
 }
 

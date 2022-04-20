@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Condition/ActorCondition.h"
-#include "Interface/StatusInterface.h"
 #include "ACon_StatusBase.generated.h"
+
+class UStatusComponent;
 
 /**
  * 
@@ -21,5 +22,5 @@ protected:
 	virtual bool VTMValidate() override;
 
 protected:
-	IStatusInterface* _statusInterface;
+	UStatusComponent* _statusComp;
 };

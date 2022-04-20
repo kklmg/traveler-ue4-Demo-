@@ -19,6 +19,9 @@ public:
 	virtual void VSetWeapon(AWeaponBase* weapon) override;
 
 protected:
+	ABowBase* GetBow();
+
+private:
 	UPROPERTY()
 	 ABowBase* _bow;
 };

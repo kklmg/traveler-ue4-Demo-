@@ -2,15 +2,16 @@
 
 
 #include "Condition/ACon_StatusBase.h"
+#include "Components/StatusComponent.h"
 
 void UACon_StatusBase::VSetActor(AActor* actor)
 {
-	_statusInterface = Cast<IStatusInterface>(actor);
+	_statusComp = Cast<UStatusComponent>(actor->GetComponentByClass(UStatusComponent::StaticClass()));
 }
 
 bool UACon_StatusBase::VTMValidate()
 {
 	if (!Super::VTMValidate()) return false;
 
-	return _statusInterface != nullptr;
+	return _statusComp != nullptr;
 }

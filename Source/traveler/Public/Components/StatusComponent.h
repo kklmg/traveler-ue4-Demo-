@@ -36,12 +36,18 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable)
 	int32 GetLevelValue();
+	UFUNCTION(BlueprintCallable)
 	ULevelStatus* GetLevelStatusIns();
 
+	UFUNCTION(BlueprintCallable)
 	float GetPrimaryValue(EStatusType statusType);
+	UFUNCTION(BlueprintCallable)
 	float GetBasicValue(EStatusType statusType);
+	UFUNCTION(BlueprintCallable)
 	float GetFinalValue(EStatusType statusType);
+	UFUNCTION(BlueprintCallable)
 	float GetRemainingValue(EStatusType statusType);
 
 	UFUNCTION(BlueprintCallable)

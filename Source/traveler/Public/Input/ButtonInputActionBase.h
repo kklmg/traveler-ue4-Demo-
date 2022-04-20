@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Input/ButtonInputBase.h"
-#include "Interface/ActionInterface.h"
+#include "Data/EnumActionType.h"
 #include "ButtonInputActionBase.generated.h"
+
+class UActionComponent;
 
 /**
  * 
@@ -15,13 +17,15 @@ class TRAVELER_API UButtonInputActionBase : public UButtonInputBase
 {
 	GENERATED_BODY()
 public:
-	void Initialize(IActionInterface* actionInterface);
+	void Initialize(UActionComponent* actionComp);
 
 	EActionType GetActionType();
-
+	UActionComponent* GetActionComp();
 protected:
-	IActionInterface* _actionInterface;
-
 	UPROPERTY(EditDefaultsOnly)
 	EActionType _actionType;
+
+private:
+	UPROPERTY()
+	UActionComponent* _actionComp;
 };

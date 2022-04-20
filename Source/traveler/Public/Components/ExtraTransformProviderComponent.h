@@ -28,7 +28,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual bool VTryGetSocketName(ETransform transfomType, FName& outSocketName);
+	virtual bool TryGetSocketName(ETransform transfomType, FName& outSocketName);
 
 	UFUNCTION(BlueprintCallable)
 	bool TryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform);

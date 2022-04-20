@@ -2,11 +2,10 @@
 
 
 #include "Input/ButtonInputActionSimple.h"
+#include "Components/ActionComponent.h"
 
 void UButtonInputActionSimple::VTMPress()
 {
-	if (_actionInterface)
-	{
-		_actionInterface->VExecuteAction(_actionType);
-	}
+	check(GetActionComp())
+	GetActionComp()->ExecuteAction(_actionType);
 }

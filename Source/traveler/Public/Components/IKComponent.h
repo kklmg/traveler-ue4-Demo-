@@ -47,7 +47,8 @@ private:
 	UPROPERTY()
 	class UAnimationModelBase* _animationViewModel;
 
-	IExtraTransformProvider* _meshSocketProvider;
+	UPROPERTY()
+	class UExtraTransformProviderComponent* _exTransformProviderComp;
 
 	UPROPERTY()
 	UIKFootData* _footIKData;

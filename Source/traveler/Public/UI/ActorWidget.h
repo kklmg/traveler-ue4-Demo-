@@ -7,7 +7,7 @@
 #include "Data/ActorUIData.h"
 #include "ActorWidget.generated.h"
 
-class IExtraTransformProvider;
+class UExtraTransformProviderComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDMD_OnActorChanged,AActor*,actor);
 
@@ -41,7 +41,8 @@ private:
 	float _timeCollapse;
 	float _elapsedTime_LeaveScreen;
 
-	IExtraTransformProvider* _ExTransformProviderInterface;
+	UPROPERTY()
+	UExtraTransformProviderComponent* _exTransformProviderComp;
 public:
 	UPROPERTY(BlueprintAssignable)
 	FDMD_OnActorChanged OnWidgetOwnerChangedDelegate;

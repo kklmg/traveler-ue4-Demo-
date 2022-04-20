@@ -9,6 +9,8 @@
 
 class UAnimationModelBase;
 class UCompositeActorCondition;
+class UEffectControllerComponent;
+
 
 class IActorEffectInterface;
 
@@ -46,5 +48,6 @@ private:
 	UPROPERTY()
 	UAnimationModelBase* _animViewModel;
 
-	IActorEffectInterface* _actorEffectInterface;
+	UPROPERTY()
+	UEffectControllerComponent* _effectControlComp;
 };

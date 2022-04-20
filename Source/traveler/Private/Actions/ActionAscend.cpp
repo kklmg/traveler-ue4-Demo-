@@ -13,7 +13,7 @@ UActionAscend::UActionAscend()
 
 void UActionAscend::VTMExecute()
 {
-	GetActionOwner()->AddMovementInput(FVector(0,0,1));
+	GetActionOwner()->AddMovementInput(FVector(0, 0, 1));
 }
 
 void UActionAscend::VTMTick(float deltaTime)

@@ -21,12 +21,9 @@ void UWeaponProcessBase::VTMOnDead()
 
 void UWeaponProcessBase::VSetWeapon(AWeaponBase* weapon)
 {
-	_weapon = weapon;
+	check(weapon);
 
-	if (_weapon == nullptr) 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("set weapon failed"));
-	}
+	_weapon = weapon;
 }
 
 float UWeaponProcessBase::GetElapsedTime()

@@ -3,7 +3,8 @@
 
 #include "Input/InputHandlerComponent.h"
 #include "Input/ButtonInputActionBase.h"
-#include "Interface/ActionInterface.h"
+#include "Components/ActionComponent.h"
+#include "Actions/ActionData/ActionBlackBoard.h"
 #include "Interface/CharacterCameraInterface.h"
 
 // Sets default values for this component's properties
@@ -22,11 +23,8 @@ void UInputHandlerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_actionInterface = GetOwner<IActionInterface>();
-	if(!_actionInterface)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("get actionInterface failed!"));
-	}
+	_actionComp = Cast<UActionComponent>(GetOwner()->GetComponentByClass(UActionComponent::StaticClass()));
+	check(_actionComp);
 
 	_cameraInterface = GetOwner<ICharacterCameraInterface>();
 	if (!_cameraInterface)
@@ -137,15 +135,15 @@ void UInputHandlerComponent::HandleButtonsPressing(float deltaTime)
 
 void UInputHandlerComponent::ConsumeMovementInput()
 {
-	if(!_movementInput.IsZero() && _actionInterface && _cameraInterface)
+	if(!_movementInput.IsZero() && _actionComp && _cameraInterface)
 	{
 		//map input direction to camera direction
 		FRotator cameraRotator = _cameraInterface->VGetCameraRotation();
 		FVector movement = cameraRotator.RotateVector(_movementInput);
 		movement.Z = 0;
 
-		_actionInterface->VGetActionBlackBoard()->WriteData_FVector(EActionDataKey::EACTD_MovementInput, movement);
-		_actionInterface->VExecuteAction(EActionType::EACT_Moving);
+		_actionComp->GetActionBlackBoard()->WriteData_FVector(EActionDataKey::EACTD_MovementInput, movement);
+		_actionComp->ExecuteAction(EActionType::EACT_Moving);
 
 		_movementInput = FVector::ZeroVector;
 	}
@@ -163,7 +161,7 @@ void UInputHandlerComponent::InitializeButtons()
 		else
 		{
 			UButtonInputActionBase* buttonIns = NewObject<UButtonInputActionBase>(this, buttonClass);
-			buttonIns->Initialize(_actionInterface);
+			buttonIns->Initialize(_actionComp);
 			_mapButtons.Add(buttonIns->GetInputMappingName(),buttonIns);
 		}
 	}

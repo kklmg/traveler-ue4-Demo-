@@ -2,6 +2,7 @@
 
 
 #include "Input/ButtonInputFire.h"
+#include "Components/ActionComponent.h"
 
 UButtonInputFire::UButtonInputFire()
 {
@@ -12,10 +13,8 @@ UButtonInputFire::UButtonInputFire()
 
 void UButtonInputFire::VTMPress()
 {
-	if (_actionInterface)
-	{
-		_actionInterface->VExecuteAction(EActionType::EACT_WeaponStartFire);
-	}
+	check(GetActionComp())
+	GetActionComp()->ExecuteAction(EActionType::EACT_WeaponStartFire);
 }
 
 void UButtonInputFire::VTMPressing(float deltaTime)
@@ -24,8 +23,6 @@ void UButtonInputFire::VTMPressing(float deltaTime)
 
 void UButtonInputFire::VTMRelease()
 {
-	if (_actionInterface)
-	{
-		_actionInterface->VExecuteAction(EActionType::EACT_WeaponStopFire);
-	}
+	check(GetActionComp())
+	GetActionComp()->ExecuteAction(EActionType::EACT_WeaponStopFire);
 }
