@@ -9,7 +9,7 @@
  */
 
 UENUM(BlueprintType)
-enum class EAnimNorifyKey : uint8
+enum class EAnimNotifyKey : uint8
 {
 	ANK_SpreadAttack UMETA(DisplayName = "SpreadAttack"),
 	ANK_MeleeAttack UMETA(DisplayName = "MeleeAttack"),

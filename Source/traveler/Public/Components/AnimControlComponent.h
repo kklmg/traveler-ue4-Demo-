@@ -6,9 +6,11 @@
 #include "Components/ActorComponent.h"
 #include "Event/EventBroker.h"
 #include "Data/StateData.h"
+#include "AnimNotify/EnumAnimNotify.h"
 #include "AnimControlComponent.generated.h"
 
 class UAnimationModelBase;
+class UAnimNotifier;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UAnimControlComponent : public UActorComponent
@@ -19,7 +21,18 @@ public:
 	// Sets default values for this component's properties
 	UAnimControlComponent();
 
+protected:
+	virtual void InitializeComponent() override;
+
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	//animation model -----------------------------------------------------------------
+
 	UAnimationModelBase* GetAnimationModel();
 
 	//animation State ------------------------------------------------------------------
@@ -32,16 +45,14 @@ public:
 
 	FOnAnimationStateChanged& GetAnimationStateChangedDelegate();
 
-protected:
-	virtual void InitializeComponent() override;
+	//animation Notify ------------------------------------------------------------------
 
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	void NotifyAnimStateBegin(EAnimNotifyKey notifyKey, float totalTime);
+	void NotifyAnimStateTick(EAnimNotifyKey notifyKey, float frameDeltaTime);
+	void NotifyAnimStateEnd(EAnimNotifyKey notifyKey);
 
-	
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UAnimNotifier* GetNotifer(EAnimNotifyKey notifyKey);
+	UAnimNotifier* GetOrCreateNotifer(EAnimNotifyKey notifyKey);
 
 private:
 	UPROPERTY()
@@ -59,5 +70,10 @@ private:
 	UPROPERTY(EditDefaultsOnly,Category = animMontage)
 	UAnimMontage* _montage;
 
+	UPROPERTY()
+	TMap<EAnimNotifyKey, UAnimNotifier*> _mapNotifiers;
+
 	FOnAnimationStateChanged _animationStateChangedDelegate;
 };
+
+

@@ -4,6 +4,7 @@
 #include "Components/AnimControlComponent.h"
 #include "Data/AnimationModelBase.h"
 #include "GameFramework/Character.h"
+#include "AnimNotify/AnimNotifier.h"
 
 // Sets default values for this component's properties
 UAnimControlComponent::UAnimControlComponent()
@@ -67,4 +68,47 @@ void UAnimControlComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UAnimControlComponent::NotifyAnimStateBegin(EAnimNotifyKey notifyKey, float totalTime)
+{
+	if (_mapNotifiers.Contains(notifyKey))
+	{
+		_mapNotifiers[notifyKey]->NotifyBeginDelegate.Broadcast(totalTime);
+	}
+}
+
+void UAnimControlComponent::NotifyAnimStateTick(EAnimNotifyKey notifyKey, float frameDeltaTime)
+{
+	if (_mapNotifiers.Contains(notifyKey))
+	{
+		_mapNotifiers[notifyKey]->NotifyTickDelegate.Broadcast(frameDeltaTime);
+	}
+}
+
+void UAnimControlComponent::NotifyAnimStateEnd(EAnimNotifyKey notifyKey)
+{
+	if (_mapNotifiers.Contains(notifyKey))
+	{
+		_mapNotifiers[notifyKey]->NotifyEndDelegate.Broadcast();
+	}
+}
+
+UAnimNotifier* UAnimControlComponent::GetNotifer(EAnimNotifyKey notifyKey)
+{
+	return _mapNotifiers.Contains(notifyKey) ? _mapNotifiers[notifyKey] : nullptr;
+}
+
+UAnimNotifier* UAnimControlComponent::GetOrCreateNotifer(EAnimNotifyKey notifyKey)
+{
+	if (_mapNotifiers.Contains(notifyKey))
+	{
+		return _mapNotifiers[notifyKey];
+	}
+	else
+	{
+		UAnimNotifier* notifier = NewObject<UAnimNotifier>(this);
+		_mapNotifiers.Add(notifyKey, notifier);
+		return notifier;
+	}
 }

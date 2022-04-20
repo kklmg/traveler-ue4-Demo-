@@ -76,6 +76,9 @@ FORCEINLINE void UActionBase::Execute()
 
 FORCEINLINE bool UActionBase::CanExecute()
 {
+
+
+
 	bool bEnoughResources = _statusInterface && _statusInterface->VIsRemainingValueEnough(_costData);
 
 	return (_processState == EProcessState::EPS_ReadyToExecute && bEnoughResources && VTMCanExecute());

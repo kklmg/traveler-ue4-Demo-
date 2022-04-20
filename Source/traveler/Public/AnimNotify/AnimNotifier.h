@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "AnimNotifyHandler.generated.h"
+#include "AnimNotifier.generated.h"
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAnimNotifyBegin, float ,TotalDuration);
@@ -15,11 +15,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAnimNotifyEnd);
  * 
  */
 UCLASS()
-class TRAVELER_API UAnimNotifyHandler : public UObject
+class TRAVELER_API UAnimNotifier : public UObject
 {
 	GENERATED_BODY()
 public:
-	FOnAnimNotifyBegin OnNotifyBegin;
-	FOnAnimNotifyTick OnNotifyTick;
-	FOnAnimNotifyEnd OnNotifyEnd;
+	FOnAnimNotifyBegin NotifyBeginDelegate;
+	FOnAnimNotifyTick NotifyTickDelegate;
+	FOnAnimNotifyEnd NotifyEndDelegate;
 };

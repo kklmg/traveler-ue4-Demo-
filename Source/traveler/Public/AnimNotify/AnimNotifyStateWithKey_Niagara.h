@@ -7,6 +7,8 @@
 #include "AnimNotify/EnumAnimNotify.h"
 #include "AnimNotifyStateWithKey_Niagara.generated.h"
 
+class UAnimControlComponent;
+
 /**
  * 
  */
@@ -21,6 +23,9 @@ class TRAVELER_API UAnimNotifyStateWithKey_Niagara : public UAnimNotifyState_Tim
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "key")
-	EAnimNorifyKey NotifyKey;
-	
+	EAnimNotifyKey NotifyKey;
+
+private:
+	UPROPERTY()
+	UAnimControlComponent* _animControlComp;
 };

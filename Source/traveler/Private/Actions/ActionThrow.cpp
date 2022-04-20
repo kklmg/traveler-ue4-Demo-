@@ -4,8 +4,8 @@
 #include "Actions/ActionThrow.h"
 #include "GameFramework/Character.h"
 #include "Character/CreatureCharacter.h"
-#include "AnimNotify/AnimNotifyHandler.h"
-#include "Components/AnimationEventComponent.h"
+#include "AnimNotify/AnimNotifier.h"
+#include "Components/AnimControlComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actors/ThrowerActorBase.h"
 #include "DrawDebugHelpers.h"
@@ -25,27 +25,22 @@ void UActionThrow::VTMExecute()
 
 	if (GetActionOwner() == nullptr) return;
 
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(GetActionOwner());
-	if (character == nullptr) return;
+	UAnimControlComponent* _animControlComp = 
+		Cast<UAnimControlComponent>(GetActionOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
 
-
-	UAnimationEventComponent* animEventComp = character->GetAnimationEventComponent();
-
-	UAnimNotifyHandler* handler = animEventComp->GetHNotifyHandler(EAnimNorifyKey::ANK_SpreadAttack);
-	handler->OnNotifyBegin.AddDynamic(this, &UActionThrow::OnAttackNotifyBegin);
-	handler->OnNotifyTick.AddDynamic(this, &UActionThrow::OnAttackNotifyTick);
-	handler->OnNotifyEnd.AddDynamic(this, &UActionThrow::OnAttackNotifyEnd);
+	UAnimNotifier* notifier = _animControlComp->GetOrCreateNotifer(EAnimNotifyKey::ANK_SpreadAttack);
+	notifier->NotifyBeginDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyBegin);
+	notifier->NotifyTickDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyTick);
+	notifier->NotifyEndDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyEnd);
 }
 
 void UActionThrow::VTMTick(float deltaTime)
 {
 	Super::VTMTick(deltaTime);
-
 }
 
 void UActionThrow::OnAttackNotifyBegin(float durationTime)
 {
-	if (GetWorld() == nullptr)	return;
 	if (_throwerClass == nullptr) return;
 
 	AActor* actionOwner = GetActionOwner();
@@ -54,8 +49,8 @@ void UActionThrow::OnAttackNotifyBegin(float durationTime)
 	APawn* pawn = Cast<APawn>(actionOwner);
 	if (pawn == nullptr) return;
 
-	IExtraTransformProvider* ExtraTransformProvider = Cast<IExtraTransformProvider>(actionOwner);
-	if (ExtraTransformProvider == nullptr) return;
+	IExtraTransformProvider* extraTransformProvider = Cast<IExtraTransformProvider>(actionOwner);
+	if (extraTransformProvider == nullptr) return;
 
 	//set spawn options
 	FActorSpawnParameters spawnParameters;
@@ -63,38 +58,31 @@ void UActionThrow::OnAttackNotifyBegin(float durationTime)
 	spawnParameters.Owner = pawn;
 	
 	FTransform outTransform;
-	ExtraTransformProvider->VTryGetTransform(_transformType, ERelativeTransformSpace::RTS_World, outTransform);
+	FName outSocketName;
+	extraTransformProvider->VTryGetTransform(_transformType, ERelativeTransformSpace::RTS_World, outTransform);
+	extraTransformProvider->VTryGetSocketName(_transformType, outSocketName);
 
 	//spawn actor
 	_throwerIns = GetWorld()->SpawnActor<AThrowerActorBase>(_throwerClass, outTransform, spawnParameters);
-
-	_throwerIns->VSetSpawningLocation(outTransform.GetLocation());
-
-	FVector outDirection = GetActionOwner()->GetActorForwardVector();
-	GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_Peojectile_FlyingDirection, outDirection);
-
-	GetActionBlackBoard()->TryGetData_Float(EActionDataKey::EACTD_Peojectile_FlyingSpeed, _throwingSpeed);
-	_throwerIns->VSetSpeed(_throwingSpeed + GetActionOwner()->GetVelocity().Size());
-	_throwerIns->VSetThrowingDirection(outTransform.GetRotation().Vector());
-
+	_throwerIns->AttachToComponent(GetActionOwner()->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, outSocketName);
 }
 
 void UActionThrow::OnAttackNotifyTick(float frameDeltaTime)
 {
 	if (GetActionOwner() == nullptr) return;
 
-	IExtraTransformProvider* meshSocketTransformProvider = Cast<IExtraTransformProvider>(GetActionOwner());
-	if (meshSocketTransformProvider == nullptr) return;
+	//IExtraTransformProvider* meshSocketTransformProvider = Cast<IExtraTransformProvider>(GetActionOwner());
+	//if (meshSocketTransformProvider == nullptr) return;
 
-	FTransform outTransform;
-	if (meshSocketTransformProvider->VTryGetTransform(_transformType, ERelativeTransformSpace::RTS_World, outTransform))
+	//FTransform outTransform;
+	/*if (meshSocketTransformProvider->VTryGetTransform(_transformType, ERelativeTransformSpace::RTS_World, outTransform))
 	{
 		if(_throwerIns)
 		{
 			_throwerIns->VSetSpawningLocation(outTransform.GetLocation());
 			_throwerIns->VSetThrowingDirection(outTransform.GetRotation().Vector());
 		}
-	}
+	}*/
 }
 
 void UActionThrow::OnAttackNotifyEnd()
@@ -115,15 +103,13 @@ void UActionThrow::VOnAnimMontageFinished(UAnimMontage* montage, bool interrupte
 
 	if (GetActionOwner() == nullptr) return;
 
-	ACreatureCharacter* character = Cast<ACreatureCharacter>(GetActionOwner());
-	if (character == nullptr) return;
+	UAnimControlComponent* _animControlComp =
+		Cast<UAnimControlComponent>(GetActionOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
 
-	UAnimationEventComponent* animEventComp = character->GetAnimationEventComponent();
+	UAnimNotifier* notifier = _animControlComp->GetOrCreateNotifer(EAnimNotifyKey::ANK_SpreadAttack);
 
-	UAnimNotifyHandler* handler = animEventComp->GetHNotifyHandler(EAnimNorifyKey::ANK_SpreadAttack);
-
-	handler->OnNotifyBegin.RemoveDynamic(this, &UActionThrow::OnAttackNotifyBegin);
-	handler->OnNotifyTick.RemoveDynamic(this, &UActionThrow::OnAttackNotifyTick);
-	handler->OnNotifyEnd.RemoveDynamic(this, &UActionThrow::OnAttackNotifyEnd);
+	notifier->NotifyBeginDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyBegin);
+	notifier->NotifyTickDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyTick);
+	notifier->NotifyEndDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyEnd);
 }
 

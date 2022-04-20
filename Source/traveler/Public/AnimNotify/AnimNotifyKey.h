@@ -7,7 +7,7 @@
 #include "AnimNotify/EnumAnimNotify.h"
 #include "AnimNotifyKey.generated.h"
 
-
+class UAnimControlComponent;
 
 /**
  * 
@@ -21,5 +21,8 @@ public:
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "key")
-	EAnimNorifyKey NotifyKey;
+	EAnimNotifyKey NotifyKey;
+private:
+	UPROPERTY()
+	UAnimControlComponent* _animControlComp;
 };

@@ -24,7 +24,6 @@ class UAttributeComponent;
 class UWidgetComponent;
 class UBillboardComponent;
 class UActorUIComponent;
-class UAnimationEventComponent;
 class UInputHandlerComponent;
 class UStatusComponent;
 class UPawnCameraComponent;
@@ -168,12 +167,6 @@ public:
 	virtual FOnAnimationStateChanged& VGetAnimationStateChangedDelegate() override;
 
 
-	UFUNCTION(BlueprintCallable)
-	UActionComponent* GetActionComponent();
-
-	UFUNCTION(BlueprintCallable)
-	UAnimationEventComponent* GetAnimationEventComponent();
-
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UEventBrokerComponent* _eventBrokerComponent;
@@ -189,9 +182,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UActorUIComponent* _actorUIComponent;
-
-	UPROPERTY(VisibleAnywhere)
-	UAnimationEventComponent* _animationEventComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UInputHandlerComponent* _inputHandlerComponent;

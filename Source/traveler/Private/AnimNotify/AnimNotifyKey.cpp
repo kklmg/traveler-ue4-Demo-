@@ -3,17 +3,18 @@
 
 #include "AnimNotify/AnimNotifyKey.h"
 #include "Character/CreatureCharacter.h"
-#include "Components/AnimationEventComponent.h"
+#include "Components/AnimControlComponent.h"
 
 void UAnimNotifyKey::Notify(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation)
 {
 	Super::Notify(MeshComp, Animation);
 
-	ACreatureCharacter* character = MeshComp->GetOwner<ACreatureCharacter>();
-	if (character == nullptr) return;
+	AActor* actor = MeshComp->GetOwner();
+	if (!actor) return;
 
-	UAnimationEventComponent* animEventComp= character->GetAnimationEventComponent();
-	if(animEventComp == nullptr) return;
-
-	animEventComp->notifyBegin(NotifyKey,0);
+	_animControlComp = Cast<UAnimControlComponent>(actor->GetComponentByClass(UAnimControlComponent::StaticClass()));
+	if (_animControlComp)
+	{
+		_animControlComp->NotifyAnimStateBegin(NotifyKey, 0);
+	}
 }

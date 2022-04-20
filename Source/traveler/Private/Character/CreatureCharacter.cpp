@@ -8,7 +8,6 @@
 #include "Components/ActionComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/ActorUIComponent.h"
-#include "Components/AnimationEventComponent.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/CameraSpringArmComponent.h"
 #include "Components/WeaponComponent.h"
@@ -101,12 +100,7 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 		_actorUIComponent = CreateDefaultSubobject<UActorUIComponent>(TEXT("ActorUIComponent"));
 		check(_actorUIComponent != nullptr);
 	}
-	//Create Animation Event component
-	if (_animationEventComponent == nullptr)
-	{
-		_animationEventComponent = CreateDefaultSubobject<UAnimationEventComponent>(TEXT("AnimationEventComponent"));
-		check(_actorUIComponent != nullptr);
-	}
+
 	//Create InputHandler component
 	if (_inputHandlerComponent == nullptr)
 	{
@@ -239,16 +233,6 @@ FMD_BoolValueChangeSignature* ACreatureCharacter::VGetLifeChangedDelegate()
 }
 
 
-FORCEINLINE UAnimationEventComponent* ACreatureCharacter::GetAnimationEventComponent()
-{
-	return _animationEventComponent;
-}
-
-FORCEINLINE UActionComponent* ACreatureCharacter::GetActionComponent()
-{
-	return _actionComponent;
-}
-
 UActionBase* ACreatureCharacter::VExecuteAction(EActionType actionType)
 {
 	if (_actionComponent) 
@@ -257,7 +241,6 @@ UActionBase* ACreatureCharacter::VExecuteAction(EActionType actionType)
 	}
 	return nullptr;
 }
-
 
 FORCEINLINE UActionBlackBoard* ACreatureCharacter::VGetActionBlackBoard()
 {
