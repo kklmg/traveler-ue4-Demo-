@@ -3,9 +3,9 @@
 
 #include "UI/UIProcess/FlickeringUIProcess.h"
 
-void UFlickeringUIProcess::VTMInitialize()
+void UFlickeringUIProcess::VTMInit()
 {
-	Super::VTMInitialize();
+	Super::VTMInit();
 	_elapsedTime = 0.0f;
 }
 

@@ -30,10 +30,9 @@ public:
 	void CombineEffectData(UStatusEffectData* effectData);
 
 protected:
-	virtual void VTMInitialize() override;
+	virtual void VTMInit() override;
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
-	virtual bool VIsInstantProcess() override;
 	virtual void VTMTick(float deltaTime) override;
 	virtual void VTMOnDead() override;
 	virtual void VTMReset() override;

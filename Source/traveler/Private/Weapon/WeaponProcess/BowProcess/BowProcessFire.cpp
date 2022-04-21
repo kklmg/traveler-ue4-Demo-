@@ -2,11 +2,11 @@
 
 
 #include "Weapon/WeaponProcess/BowProcess/BowProcessFire.h"
+#include "Enums/EnumAnimation.h"
 
-
-FName UBowProcessFire::VGetProcessName()
+UBowProcessFire::UBowProcessFire()
 {
-	return NSNameWeaponProcess::FIRE;
+	_processName = NSNameWeaponProcess::FIRE;
 }
 
 bool UBowProcessFire::VTMCanExecute()

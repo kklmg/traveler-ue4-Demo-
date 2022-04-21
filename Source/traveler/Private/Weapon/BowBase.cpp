@@ -47,12 +47,12 @@ void ABowBase::PreInitializeComponents()
 
 	_processFire = NewObject<UBowProcessFire>(this);
 	_processFire->VSetWeapon(this);
-	_processFire->OnProcessStateChanged.AddUObject(this, &ABowBase::OnFireProcessChanged);
+	_processFire->ProcessStateChangedDelegate.AddUObject(this, &ABowBase::OnFireProcessChanged);
 	AddToProcessStorage(_processFire);
 
 	_processAim = NewObject<UBowProcessAim>(this);
 	_processAim->VSetWeapon(this);
-	_processAim->OnProcessStateChanged.AddUObject(this, &ABowBase::OnAimProcessChanged);
+	_processAim->ProcessStateChangedDelegate.AddUObject(this, &ABowBase::OnAimProcessChanged);
 	AddToProcessStorage(_processAim);
 
 	if (GetWeaponAnimationModel())

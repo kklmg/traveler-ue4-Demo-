@@ -15,7 +15,7 @@ class TRAVELER_API UBowProcessFire : public UBowProcessBase
 	GENERATED_BODY()
 
 public:
-	virtual FName VGetProcessName() override;
+	UBowProcessFire();
 
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;

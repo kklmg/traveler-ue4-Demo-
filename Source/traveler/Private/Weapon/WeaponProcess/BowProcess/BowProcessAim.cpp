@@ -4,12 +4,13 @@
 #include "Weapon/WeaponProcess/BowProcess/BowProcessAim.h"
 #include "Components/ActionComponent.h"
 #include "Enums/EnumActionType.h"
+#include "Enums/EnumAnimation.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Character/CreatureCharacter.h"
 
-FName UBowProcessAim::VGetProcessName()
+UBowProcessAim::UBowProcessAim()
 {
-	return NSNameWeaponProcess::AIM;
+	_processName = NSNameWeaponProcess::AIM;
 }
 
 bool UBowProcessAim::VTMCanExecute()

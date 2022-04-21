@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Process/ProcessInterface.h"
 #include "ProcessManagerBase.generated.h"
+
+class UProcessBase;
 
 /**
  * 
@@ -15,13 +16,13 @@ class TRAVELER_API UProcessManagerBase : public UObject
 {
 	GENERATED_BODY()
 public:
-	void ExecuteProcess(IProcessInterface* process);
+	void ExecuteProcess(UProcessBase* process);
 
 	void ExecutePresetedProcess(FName processName);
 	void StopProcess(FName processName);
 	void StopAllProcess();
 
-	void AddToProcessPresets(IProcessInterface* process);
+	void AddToProcessPresets(UProcessBase* process);
 
 
 	bool IsProcessRunning(FName processName);
@@ -30,7 +31,7 @@ public:
 
 private:
 	UPROPERTY()
-	TMap<FName, TScriptInterface<IProcessInterface>> _runningProcesses;
+	TMap<FName, UProcessBase*> _runningProcesses;
 	UPROPERTY()
-	TMap<FName, TScriptInterface<IProcessInterface>> _processPresets;
+	TMap<FName, UProcessBase*> _processPresets;
 };

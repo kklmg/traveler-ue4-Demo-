@@ -134,7 +134,7 @@ void UActionComponent::_tickActionProcess(float deltaTime)
 	{
 		if (_mapActionProcessPool[i])
 		{
-			if (_mapActionProcessPool[i]->IsCompleted())
+			if (_mapActionProcessPool[i]->IsDead())
 			{
 				_mapActionProcessPool[i] = nullptr;
 			}

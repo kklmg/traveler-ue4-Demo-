@@ -32,9 +32,9 @@ void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCau
 	}
 }
 
-void UStatusEffectProcessBase::VTMInitialize()
+void UStatusEffectProcessBase::VTMInit()
 {
-	Super::VTMInitialize();
+	Super::VTMInit();
 
 	_totalElapsedTime = 0;
 	_ElapsedTimeFromLastDamage = 0;
@@ -79,11 +79,6 @@ void UStatusEffectProcessBase::VTMExecute()
 	{
 		_effectControlComp->PlayEffect(EEffectType::EEffectType_StatusEffect, (uint8)_statusEffectType);
 	}
-}
-
-bool UStatusEffectProcessBase::VIsInstantProcess()
-{
-    return false;
 }
 
 void UStatusEffectProcessBase::VTMTick(float deltaTime)

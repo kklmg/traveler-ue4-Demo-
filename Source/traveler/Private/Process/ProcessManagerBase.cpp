@@ -2,58 +2,51 @@
 
 
 #include "Process/ProcessManagerBase.h"
+#include "Process/ProcessBase.h"
 
 
-void UProcessManagerBase::ExecuteProcess(IProcessInterface* process)
+void UProcessManagerBase::ExecuteProcess(UProcessBase* process)
 {
 	if (!process) return;
 
-	if (_runningProcesses.Contains(process->VGetProcessName()))
+	if (_runningProcesses.Contains(process->GetProcessName()))
 	{
-		UE_LOG(LogTemp, Log, TEXT("the same process is running: %s"), *process->VGetProcessName().ToString());
+		UE_LOG(LogTemp, Log, TEXT("the same process is running: %s"), *process->GetProcessName().ToString());
 	}
-	else 
+	else
 	{
-		process->VInitialize();
-		if (process->VCanExecute())
+		process->Init();
+		if (process->CanExecute())
 		{
-			process->VExecute();
+			process->Execute();
 
-			if (process->VIsInstantProcess() == false)
+			if (process->IsInstantProcess() == false)
 			{
-				TScriptInterface<IProcessInterface> processInterface;
-				processInterface.SetInterface(process);
-				processInterface.SetObject(Cast<UObject>(process));
-
-				_runningProcesses.Add(process->VGetProcessName(), processInterface);
+				_runningProcesses.Add(process->GetProcessName(), process);
 			}
 		}
 	}
 }
 
 void UProcessManagerBase::ExecutePresetedProcess(FName processName)
-{	
-	if(_runningProcesses.Contains(processName))
+{
+	if (_runningProcesses.Contains(processName))
 	{
-		UE_LOG(LogTemp, Log, TEXT("the same process is running: %s"),*processName.ToString());
+		UE_LOG(LogTemp, Log, TEXT("the same process is running: %s"), *processName.ToString());
 	}
 	else if (_processPresets.Contains(processName))
 	{
-		TScriptInterface<IProcessInterface> process = _processPresets[processName];
-		process->VInitialize();
+		UProcessBase* process = _processPresets[processName];
+		process->Init();
 
-		if(process->VCanExecute())
+		if (process->CanExecute())
 		{
-			process->VExecute();
+			process->Execute();
 
-			if (process->VIsInstantProcess() == false)
+			if (process->IsInstantProcess() == false)
 			{
-				_runningProcesses.Add(process->VGetProcessName(), process);
+				_runningProcesses.Add(process->GetProcessName(), process);
 			}
-
-			FString logString(TEXT("Execute Process: "));
-			logString.Append(processName.ToString());
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, logString);
 		}
 		else
 		{
@@ -70,7 +63,7 @@ void UProcessManagerBase::StopProcess(FName processName)
 {
 	if (_runningProcesses.Contains(processName))
 	{
-		_runningProcesses[processName]->VAbort();
+		_runningProcesses[processName]->Abort();
 		_runningProcesses.Remove(processName);
 
 		FString logString(TEXT("Stop Process: "));
@@ -81,38 +74,33 @@ void UProcessManagerBase::StopProcess(FName processName)
 
 void UProcessManagerBase::StopAllProcess()
 {
-	for (TPair<FName, TScriptInterface<IProcessInterface>> processElement : _runningProcesses)
+	for (TPair<FName, UProcessBase*> processElement : _runningProcesses)
 	{
-		processElement.Value->VAbort();
+		processElement.Value->Abort();
 	}
 
 	_runningProcesses.Empty();
 }
 
-void UProcessManagerBase::AddToProcessPresets(IProcessInterface* process)
+void UProcessManagerBase::AddToProcessPresets(UProcessBase* process)
 {
 	if (!process) return;
 
-	if (_processPresets.Contains(process->VGetProcessName()))
+	if (_processPresets.Contains(process->GetProcessName()))
 	{
 		//_processesStorage[processName] = process;
 		UE_LOG(LogTemp, Warning, TEXT("Try to add duplicated process!"));
 	}
 	else
 	{
-		TScriptInterface<IProcessInterface> processInterface;
-		processInterface.SetInterface(process);
-		processInterface.SetObject(Cast<UObject>(process));
-
-		_processPresets.Add(process->VGetProcessName(), processInterface);
+		_processPresets.Add(process->GetProcessName(), process);
 	}
-
 }
 
 bool UProcessManagerBase::IsProcessRunning(FName processName)
 {
-	return _processPresets.Contains(processName) ? 
-		_processPresets[processName]->VGetProcessState() == EProcessState::EPS_Running : false;
+	return _processPresets.Contains(processName) ?
+		_processPresets[processName]->GetProcessState() == EProcessState::EPS_Running : false;
 }
 
 void UProcessManagerBase::Tick(float deltaTime)
@@ -120,17 +108,17 @@ void UProcessManagerBase::Tick(float deltaTime)
 	TArray<FName> deadProcesses;
 
 	//Tick Processes
-	for(TPair<FName, TScriptInterface<IProcessInterface>> processElement : _runningProcesses)
+	for (TPair<FName, UProcessBase*> processElement : _runningProcesses)
 	{
-		processElement.Value->VTick(deltaTime);
-		if (processElement.Value->VIsDead())
+		processElement.Value->Tick(deltaTime);
+		if (processElement.Value->IsDead())
 		{
 			deadProcesses.Add(processElement.Key);
 		}
 	}
 
 	//Clear Dead Processes
-	for(FName processName : deadProcesses)
+	for (FName processName : deadProcesses)
 	{
 		_runningProcesses.Remove(processName);
 	}

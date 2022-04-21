@@ -9,7 +9,7 @@
 #include "WeaponBase.generated.h"
 
 class ACreatureCharacter;
-
+class UProcessBase;
 class UPoseableMeshComponent;
 class UExTransformProviderComponent;
 class UActionComponent;
@@ -92,7 +92,7 @@ public:
 	void ExecuteProcess(FName processName);
 	void StopProcess(FName processName);
 	void StopAllProcesses();
-	void AddToProcessStorage(IProcessInterface* process);
+	void AddToProcessStorage(UProcessBase* process);
 	bool IsProcessRunning(FName processName);
 
 	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState);

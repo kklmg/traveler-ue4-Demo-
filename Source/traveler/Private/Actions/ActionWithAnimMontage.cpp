@@ -25,9 +25,6 @@ void UActionWithAnimMontage::VTMExecute()
 
 void UActionWithAnimMontage::VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted)
 {
-	if (montage != _aniMontage)return;
-	if (GetActionOwner() == nullptr) return;
-
 	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
 	if (animInstance == nullptr) return;
 

@@ -15,14 +15,14 @@ class TRAVELER_API UCompositeProcessBase : public UProcessBase
 	GENERATED_BODY()
 
 public:
+	UCompositeProcessBase();
+
 	void AddProcess(UProcessBase* process);
 	void setIsLoop(bool isLoop);
 
-	virtual void VTMInitialize() override;
+	virtual void VTMInit() override;
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
-	virtual FName VGetProcessName() override;
-	virtual bool VIsInstantProcess() override;
 	virtual void VTMTick(float deltaTime) override;
 	virtual void VTMOnDead() override;
 	virtual void VTMReset() override;
@@ -31,9 +31,6 @@ public:
 private:
 	UPROPERTY()
 	TArray<UProcessBase*> _procesPool;
-
-	UPROPERTY(EditDefaultsOnly)
-	FName _processName;
 
 	bool _bLoop;
 	int32 _curProcessID;

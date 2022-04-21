@@ -72,7 +72,7 @@ public:
 	EActionType GetActionType();
 
 	UFUNCTION(BlueprintCallable)
-	bool IsCompleted();
+	bool IsDead();
 
 	UFUNCTION(BlueprintCallable)
 	EProcessState GetActionProcessState();
@@ -91,7 +91,7 @@ protected:
 	virtual bool VTMCanExecute();
 	virtual void VTMExecute();
 	virtual void VTMTick(float deltaTime);
-	virtual void VOnActionCompleted();
+	virtual void VOnActionProcessDead();
 
 protected:
 	void SetActionProcessSucceed();
@@ -114,8 +114,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool _bInstantAction;
-
-	
 
 private:
 	UPROPERTY()

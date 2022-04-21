@@ -23,8 +23,8 @@ void UStatusEffectProcessManager::ExecuteProcess(AActor* effectReceiver, AActor*
 	{
 		UStatusEffectProcessBase* newProcess = NewObject<UStatusEffectProcessBase>(this);
 		newProcess->SetData(effectReceiver, effectCauser, effectInstigator, statusEffectData);
-		newProcess->VInitialize();
-		newProcess->VExecute();
+		newProcess->Init();
+		newProcess->Execute();
 		_processMap.Add(statusEffectData->StatusEffectType, newProcess);
 	}
 }
@@ -34,7 +34,7 @@ UStatusEffectProcessBase* UStatusEffectProcessManager::StopProcess(EStatusEffect
 	if (_processMap.Contains(statusEffectType))
 	{
 		UStatusEffectProcessBase* process = _processMap[statusEffectType];
-		process->VAbort();
+		process->Abort();
 		 _processMap.Remove(statusEffectType);
 		 return process;
 	}
@@ -54,9 +54,9 @@ void UStatusEffectProcessManager::Tick(float deltaTime)
 	//run processes
 	for (auto processElement : _processMap)
 	{
-		processElement.Value->VTick(deltaTime);
+		processElement.Value->Tick(deltaTime);
 
-		if(processElement.Value->VIsDead())
+		if(processElement.Value->IsDead())
 		{
 			deadProcesstypes.Add(processElement.Key);
 		}

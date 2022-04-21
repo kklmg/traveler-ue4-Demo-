@@ -116,7 +116,7 @@ EActionType UActionBase::GetActionType()
 	return _actionType;
 }
 
-FORCEINLINE bool UActionBase::IsCompleted()
+FORCEINLINE bool UActionBase::IsDead()
 {
 	return (_processState == EProcessState::EPS_SUCCEEDED || _processState == EProcessState::EPS_FAILED || _processState == EProcessState::EPS_Aborted);
 }
@@ -144,13 +144,13 @@ float UActionBase::GetElapsedTime()
 void UActionBase::SetActionProcessSucceed()
 {
 	_processState = EProcessState::EPS_SUCCEEDED;
-	VOnActionCompleted();
+	VOnActionProcessDead();
 }
 
 void UActionBase::SetActionProcessFailed()
 {
 	_processState = EProcessState::EPS_FAILED;
-	VOnActionCompleted();
+	VOnActionProcessDead();
 }
 
 FORCEINLINE_DEBUGGABLE UActionComponent* UActionBase::GetActionComp()
@@ -193,7 +193,8 @@ FORCEINLINE_DEBUGGABLE bool UActionBase::IsInstantAction()
 	return _bInstantAction;
 }
 
-void UActionBase::VOnActionCompleted()
+void UActionBase::VOnActionProcessDead()
 {
+
 }
 

@@ -15,7 +15,7 @@ float UProcessSectionBase::GetElapsedTime()
 
 void UProcessSectionBase::VTMInitialize()
 {
-	Super::VTMInitialize();
+	Super::VTMInit();
 	_elapsedTime = 0;
 }
 

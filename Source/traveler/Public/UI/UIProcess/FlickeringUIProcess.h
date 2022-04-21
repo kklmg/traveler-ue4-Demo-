@@ -18,7 +18,7 @@ public:
 	void SetOpacityCurve(UCurveFloat* opacityCurve);
 
 protected:
-	virtual void VTMInitialize() override;
+	virtual void VTMInit() override;
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;

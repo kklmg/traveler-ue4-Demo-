@@ -31,6 +31,8 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UAnimInstance* GetAnimInstance();
+
 	//animation model -----------------------------------------------------------------
 
 	UFUNCTION(BlueprintCallable)
@@ -55,6 +57,9 @@ public:
 	UAnimNotifier* GetNotifer(EAnimNotifyKey notifyKey);
 	UAnimNotifier* GetOrCreateNotifer(EAnimNotifyKey notifyKey);
 
+	//animation Montage ------------------------------------------------------------------
+	void PlayAnimMontage(EAnimMontage animMontageType);
+
 private:
 	UPROPERTY()
 	UAnimationModelBase* _animationModelIns;
@@ -69,7 +74,7 @@ private:
 	EAnimationState _animationState;
 
 	UPROPERTY(EditDefaultsOnly,Category = animMontage)
-	UAnimMontage* _montage;
+	TMap<EAnimMontage, UAnimMontage*> _montageMap;
 
 	UPROPERTY()
 	TMap<EAnimNotifyKey, UAnimNotifier*> _mapNotifiers;

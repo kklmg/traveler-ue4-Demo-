@@ -4,6 +4,10 @@
 #include "Process/CompositeProcessBase.h"
 
 
+UCompositeProcessBase::UCompositeProcessBase()
+{
+}
+
 void UCompositeProcessBase::AddProcess(UProcessBase* process)
 {
 	_procesPool.Add(process);
@@ -15,12 +19,12 @@ void UCompositeProcessBase::setIsLoop(bool isLoop)
 	_bLoop = isLoop;
 }
 
-void UCompositeProcessBase::VTMInitialize()
+void UCompositeProcessBase::VTMInit()
 {
-	Super::VTMInitialize();
+	Super::VTMInit();
 
     _curProcessID = 0;
-	_procesPool[_curProcessID]->VInitialize();
+	_procesPool[_curProcessID]->Init();
 }
 
 bool UCompositeProcessBase::VTMCanExecute()
@@ -29,30 +33,20 @@ bool UCompositeProcessBase::VTMCanExecute()
 
 	if (_curProcessID >= _procesPool.Num()) return false;
 
-	return 	_procesPool[_curProcessID]->VCanExecute();
+	return 	_procesPool[_curProcessID]->CanExecute();
 }
 
 void UCompositeProcessBase::VTMExecute()
 {
-	_procesPool[_curProcessID]->VExecute();
-}
-
-FName UCompositeProcessBase::VGetProcessName()
-{
-	return _processName;
-}
-
-bool UCompositeProcessBase::VIsInstantProcess()
-{
-    return false;
+	_procesPool[_curProcessID]->Execute();
 }
 
 void UCompositeProcessBase::VTMTick(float deltaTime)
 {
-    _procesPool[_curProcessID]->VTick(deltaTime);
+    _procesPool[_curProcessID]->Tick(deltaTime);
 
     //current process is finshed
-    if(_procesPool[_curProcessID]->VIsDead())
+    if(_procesPool[_curProcessID]->IsDead())
     {
         //move index
         if(_bLoop)
@@ -72,8 +66,8 @@ void UCompositeProcessBase::VTMTick(float deltaTime)
         }
 
         //execute next process
-        _procesPool[_curProcessID]->VInitialize();
-        _procesPool[_curProcessID]->VExecute();
+        _procesPool[_curProcessID]->Init();
+        _procesPool[_curProcessID]->Execute();
     }
 }
 
@@ -90,7 +84,7 @@ void UCompositeProcessBase::VTMOnAborted()
     {
         if (process)
         {
-			process->VAbort();
+			process->Abort();
         }
     }
 }
@@ -103,7 +97,7 @@ void UCompositeProcessBase::VTMReset()
     {
         if (process)
         {
-            process->VReset();
+            process->Init();
         }
     }
 }

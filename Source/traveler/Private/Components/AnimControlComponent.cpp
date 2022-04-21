@@ -31,9 +31,6 @@ void UAnimControlComponent::InitializeComponent()
 void UAnimControlComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	_character->PlayAnimMontage(_montage);
 }
 
 UAnimationModelBase* UAnimControlComponent::GetAnimationModel()
@@ -68,6 +65,14 @@ void UAnimControlComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+FORCEINLINE_DEBUGGABLE UAnimInstance* UAnimControlComponent::GetAnimInstance()
+{
+	check(_character);
+	check(_character->GetMesh());
+
+	return _character->GetMesh()->GetAnimInstance();
 }
 
 void UAnimControlComponent::NotifyAnimStateBegin(EAnimNotifyKey notifyKey, float totalTime)
@@ -110,5 +115,14 @@ UAnimNotifier* UAnimControlComponent::GetOrCreateNotifer(EAnimNotifyKey notifyKe
 		UAnimNotifier* notifier = NewObject<UAnimNotifier>(this);
 		_mapNotifiers.Add(notifyKey, notifier);
 		return notifier;
+	}
+}
+
+void UAnimControlComponent::PlayAnimMontage(EAnimMontage animMontageType)
+{
+	check(_character);
+	if(_montageMap.Contains(animMontageType) && _montageMap[animMontageType])
+	{
+		_character->PlayAnimMontage(_montageMap[animMontageType]);
 	}
 }

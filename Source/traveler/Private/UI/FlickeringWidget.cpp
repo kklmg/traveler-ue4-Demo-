@@ -56,7 +56,7 @@ void UFlickeringWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 	}
 
 	//Run processes
-	_compositeProcess->VTick(InDeltaTime);
+	_compositeProcess->Tick(InDeltaTime);
 }
 
 void UFlickeringWidget::SetData(FFlickeringWidgetData& widgetData)
@@ -79,8 +79,8 @@ void UFlickeringWidget::ExecuteFlickeringProcess()
 
 		_coolingProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].CoolingDuration);
 
-		_compositeProcess->VInitialize();
-		_compositeProcess->VExecute();
+		_compositeProcess->Init();
+		_compositeProcess->Execute();
 	}
 }
 
@@ -89,5 +89,5 @@ void UFlickeringWidget::Reset()
 	_curTimeNodeID = 0;
 	_elapsedTime = 0.0f;
 
-	_compositeProcess->VReset();
+	_compositeProcess->Init();
 }

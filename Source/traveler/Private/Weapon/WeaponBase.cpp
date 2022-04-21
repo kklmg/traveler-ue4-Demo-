@@ -10,7 +10,6 @@
 #include "Components/ActionComponent.h"
 #include "Process/ProcessManagerBase.h"
 #include "Interface/CharacterCameraInterface.h"
-#include "Process/ProcessInterface.h"
 
 
 // Sets default values
@@ -104,7 +103,7 @@ void AWeaponBase::StopAllProcesses()
 	_processManager->StopAllProcess();
 }
 
-void AWeaponBase::AddToProcessStorage(IProcessInterface* process)
+void AWeaponBase::AddToProcessStorage(UProcessBase* process)
 {
 	_processManager->AddToProcessPresets(process);
 }
