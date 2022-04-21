@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "Data/CombatData.h"
+#include "Enums/EnumCombat.h"
 #include "MyGameplayStatics.generated.h"
 
 class UCameraComponent;

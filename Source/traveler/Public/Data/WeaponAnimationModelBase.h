@@ -11,7 +11,7 @@
  * 
  */
 
-namespace WeaponAnimationDataKey
+namespace NSNameAnimData
 {
 	const FName bIsFiring = FName(TEXT("bIsFiring"));
 	const FName bIsAiming = FName(TEXT("bIsAiming"));

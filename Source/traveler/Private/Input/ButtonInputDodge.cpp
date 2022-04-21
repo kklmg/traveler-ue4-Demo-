@@ -7,7 +7,7 @@
 UButtonInputDodge::UButtonInputDodge()
 {
 	_buttonName = TEXT("Dodge");
-	_inputMappingName = InputActionName::DODGE;
+	_inputMappingName = NSNameInputAction::DODGE;
 }
 
 void UButtonInputDodge::VTMPress()

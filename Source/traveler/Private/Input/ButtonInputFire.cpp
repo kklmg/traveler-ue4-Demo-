@@ -7,7 +7,7 @@
 UButtonInputFire::UButtonInputFire()
 {
 	_buttonName = TEXT("Fire");
-	_inputMappingName = InputActionName::FIRE;
+	_inputMappingName = NSNameInputAction::FIRE;
 }
 
 

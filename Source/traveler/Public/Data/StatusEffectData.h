@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Data/CombatData.h"
+#include "Enums/EnumCombat.h"
 #include "StatusEffectData.generated.h"
 
 

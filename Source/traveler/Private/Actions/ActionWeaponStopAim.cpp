@@ -8,7 +8,7 @@
 
 UActionWeaponStopAim::UActionWeaponStopAim()
 {
-	_actionName = ActionName::WeaponAim;
+	_actionName = NSNameAction::WeaponAim;
 	_actionType = EActionType::EACT_WeaponStopAim;
 }
 

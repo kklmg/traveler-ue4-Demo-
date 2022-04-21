@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Event/EventBroker.h"
-#include "Data/StateData.h"
+#include "Enums/EnumAnimation.h"
 #include "AnimNotify/EnumAnimNotify.h"
 #include "AnimControlComponent.generated.h"
 

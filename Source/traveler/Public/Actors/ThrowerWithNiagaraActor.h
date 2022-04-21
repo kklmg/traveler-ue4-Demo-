@@ -8,7 +8,7 @@
 
 class UNiagaraComponent;
 
-namespace NiagaraParameter
+namespace NSNameNiagaraParams
 {
 	const FName SpeedMax(TEXT("SpeedMax"));
 	const FName SpeedMin(TEXT("SpeedMin"));

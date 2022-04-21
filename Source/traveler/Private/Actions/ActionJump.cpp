@@ -10,7 +10,7 @@
 
 UActionJump::UActionJump()
 {
-	_actionName = ActionName::JUMP;
+	_actionName = NSNameAction::JUMP;
 	_actionType = EActionType::EACT_Jumping;
 	_bInstantAction = false;
 	_delayTime = 0.3f;

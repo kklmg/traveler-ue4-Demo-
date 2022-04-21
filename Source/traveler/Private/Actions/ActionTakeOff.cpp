@@ -7,7 +7,7 @@
 
 UActionTakeOff::UActionTakeOff()
 {
-	_actionName = ActionName::TAKEOFF;
+	_actionName = NSNameAction::TAKEOFF;
 	_actionType = EActionType::EACT_TakeOff;
 }
 

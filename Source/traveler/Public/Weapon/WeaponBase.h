@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Enums/EnumProcessState.h"
 #include "Enums/EnumWeaponType.h"
-#include "Data/StateData.h"
 #include "WeaponBase.generated.h"
 
 class ACreatureCharacter;

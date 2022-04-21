@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Process/CompositeProcessBase.h"
 #include "UI/FlickeringWidget.h"
-#include "Data/CombatData.h"
+#include "Enums/EnumCombat.h"
 #include "UI/ActorWidget.h"
 #include "ActorStatusWidgetBase.generated.h"
 

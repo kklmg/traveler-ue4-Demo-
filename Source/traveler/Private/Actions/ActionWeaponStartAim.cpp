@@ -9,7 +9,7 @@
 
 UActionWeaponStartAim::UActionWeaponStartAim()
 {
-	_actionName = ActionName::WeaponAim;
+	_actionName = NSNameAction::WeaponAim;
 	_actionType = EActionType::EACT_WeaponStartAim;
 	_bInstantAction = true;
 }

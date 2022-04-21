@@ -7,7 +7,7 @@
 UButtonInputAim::UButtonInputAim()
 {
 	_buttonName = TEXT("Aim");
-	_inputMappingName = InputActionName::AIM;
+	_inputMappingName = NSNameInputAction::AIM;
 }
 
 void UButtonInputAim::VTMPress()

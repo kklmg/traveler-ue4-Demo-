@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CombatData.generated.h"
+#include "EnumCombat.generated.h"
 /**
  * 
  */

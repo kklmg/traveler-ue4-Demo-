@@ -11,7 +11,7 @@
 
 UActionDodge::UActionDodge()
 {
-	_actionName = ActionName::DODGE;
+	_actionName = NSNameAction::DODGE;
 	_actionType = EActionType::EACT_Dodge;
 	_bInstantAction = false;
 	_dodgeSpeed = 250;

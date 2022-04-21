@@ -6,7 +6,7 @@
 #include "Components/PrimitiveComponent.h"
 #include "UI/ActorWidget.h"
 #include "Data/ActorUIData.h"
-#include "Data/CombatData.h"
+#include "Enums/EnumCombat.h"
 #include "ActorUIComponent.generated.h"
 
 

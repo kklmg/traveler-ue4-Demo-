@@ -8,7 +8,7 @@
 
 UActionMoveAndFaceTo::UActionMoveAndFaceTo()
 {
-	_actionName = ActionName::MOVE;
+	_actionName = NSNameAction::MOVE;
 	_actionType = EActionType::EACT_Moving;
 }
 void UActionMoveAndFaceTo::VTMExecute()

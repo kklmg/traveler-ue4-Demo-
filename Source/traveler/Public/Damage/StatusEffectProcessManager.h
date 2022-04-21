@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Process/ProcessManagerBase.h"
-#include "Data/CombatData.h"
+#include "Enums/EnumCombat.h"
 #include "StatusEffectProcessManager.generated.h"
 
 class UStatusEffectProcessBase;

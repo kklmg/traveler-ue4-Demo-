@@ -7,7 +7,7 @@
 UButtonInputJump::UButtonInputJump()
 {
 	_buttonName = TEXT("Jump");
-	_inputMappingName = InputActionName::JUMP;
+	_inputMappingName = NSNameInputAction::JUMP;
 }
 
 void UButtonInputJump::VTMPress()

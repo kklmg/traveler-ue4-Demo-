@@ -15,7 +15,7 @@
 
 UActionFlyTo::UActionFlyTo()
 {
-	_actionName = ActionName::FlyTo;
+	_actionName = NSNameAction::FlyTo;
 	_actionType = EActionType::EACT_FlyTo;
 
 	_bInstantAction = false;

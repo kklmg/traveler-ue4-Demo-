@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Data/StateData.h"
 #include "ActionComponent.generated.h"
 
 class UActionBase;

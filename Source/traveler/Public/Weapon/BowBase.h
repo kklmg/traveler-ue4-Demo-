@@ -21,7 +21,7 @@ class UFloatOption;
 class UBowProcessFire;
 class UBowProcessAim;
 
-namespace BowAnimEventName
+namespace NSNameBowAnimEvent
 {
 	const FName Bow_FullyDrawed = FName(TEXT("Anim_Bow_FullyDrawed"));
 	const FName Bow_DrawingBowString = FName(TEXT("Anim_Bow_DrawingBowString"));

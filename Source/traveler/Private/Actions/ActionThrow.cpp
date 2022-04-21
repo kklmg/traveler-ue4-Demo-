@@ -13,7 +13,7 @@
 
 UActionThrow::UActionThrow()
 {
-	_actionName = ActionName::Throw;
+	_actionName = NSNameAction::Throw;
 	_actionType = EActionType::EACT_Throw;
 	_bInstantAction = false;
 	_throwingSpeed = 100;

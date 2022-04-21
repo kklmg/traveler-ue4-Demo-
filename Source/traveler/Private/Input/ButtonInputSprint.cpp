@@ -8,7 +8,7 @@
 UButtonInputSprint::UButtonInputSprint()
 {
 	_buttonName = TEXT("Sprint");
-	_inputMappingName = InputActionName::SPRINT;
+	_inputMappingName = NSNameInputAction::SPRINT;
 }
 
 void UButtonInputSprint::VTMPress()

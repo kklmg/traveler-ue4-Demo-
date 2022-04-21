@@ -19,7 +19,7 @@ class UAnimControlComponent;
 class UExTransformProviderComponent;
 
 
-namespace ActionName
+namespace NSNameAction
 {
 	const FName Throw = FName(TEXT("Throw"));
 	const FName JUMP = FName(TEXT("jump"));

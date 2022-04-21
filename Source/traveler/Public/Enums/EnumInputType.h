@@ -25,7 +25,7 @@ enum class EInputType : uint8
 	EIT_CameraZoomInOut UMETA(DisplayName = "CameraZoomInOut"),
 };
 
-namespace InputActionName
+namespace NSNameInputAction
 {
 	const FName MOVEFORWARD = FName(TEXT("MoveForward"));
 	const FName MOVERIGHT = FName(TEXT("MoveRight"));

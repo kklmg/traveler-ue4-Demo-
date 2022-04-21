@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Data/CombatData.h"
+#include "Enums/EnumCombat.h"
 #include "UI/DamageWidget.h"
 #include "DamageDisplayer.generated.h"
 

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Data/CombatData.h"
+#include "Enums/EnumCombat.h"
 #include "Effet/EnumEffect.h"
 #include "EffectControllerComponent.generated.h"
 

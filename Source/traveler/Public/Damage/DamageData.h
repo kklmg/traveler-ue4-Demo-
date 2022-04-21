@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Data/CombatData.h"
+#include "Enums/EnumCombat.h"
 #include "DamageData.generated.h"
 
 class UStatusEffectData;
