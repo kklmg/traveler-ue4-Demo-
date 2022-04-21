@@ -14,7 +14,7 @@ class ACreatureCharacter;
 
 class IAnimControlInterface;
 class ULifeControlComponent;
-class UExtraTransformProviderComponent;
+class UExTransformProviderComponent;
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeaponBase*,weapon);
@@ -85,7 +85,7 @@ private:
 	ULifeControlComponent* _lifeControlComp;
 
 	UPROPERTY()
-	UExtraTransformProviderComponent* _ownerExTransformProviderComp;
+	UExTransformProviderComponent* _ownerExTransformProviderComp;
 
 
 	IAnimControlInterface* _animationCommunicator;

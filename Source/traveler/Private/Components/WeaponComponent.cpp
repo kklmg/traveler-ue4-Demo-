@@ -2,7 +2,7 @@
 
 #include "Components/WeaponComponent.h"
 #include "Components/AnimControlComponent.h"
-#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/ExTransformProviderComponent.h"
 #include "Components/LifeControlComponent.h"
 #include "Data/AnimationModelBase.h"
 #include "Weapon/WeaponBase.h"
@@ -49,7 +49,7 @@ void UWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	_ownerExTransformProviderComp = Cast<UExtraTransformProviderComponent>(GetOwner()->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
+	_ownerExTransformProviderComp = Cast<UExTransformProviderComponent>(GetOwner()->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 
 	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
 	if (animControlComp)

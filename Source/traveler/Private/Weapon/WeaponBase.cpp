@@ -6,7 +6,7 @@
 #include "Data/WeaponAnimationModelBase.h"
 #include "Components/PoseableMeshComponent.h"
 #include "Components/EventBrokerComponent.h"
-#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/ExTransformProviderComponent.h"
 #include "Components/ActionComponent.h"
 #include "Process/ProcessManagerBase.h"
 #include "Interface/CharacterCameraInterface.h"
@@ -30,7 +30,7 @@ AWeaponBase::AWeaponBase(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	//Create mesh component
 	if (_extraTransformProviderComp == nullptr)
 	{
-		_extraTransformProviderComp = CreateDefaultSubobject<UExtraTransformProviderComponent>(TEXT("ExTransformProviderComponent"));
+		_extraTransformProviderComp = CreateDefaultSubobject<UExTransformProviderComponent>(TEXT("ExTransformProviderComponent"));
 		check(_extraTransformProviderComp);
 		_extraTransformProviderComp->Initialize(_skeletalMeshComponent);
 	}
@@ -62,7 +62,7 @@ void AWeaponBase::VInitialize(ACreatureCharacter* weaponOwner)
 	_ownerEventBrokerComp = Cast<UEventBrokerComponent>(_weaponOwner->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 	check(_ownerEventBrokerComp);
 
-	_ownerExtraTransformProviderComp = Cast<UExtraTransformProviderComponent>(_weaponOwner->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
+	_ownerExtraTransformProviderComp = Cast<UExTransformProviderComponent>(_weaponOwner->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 	check(_ownerExtraTransformProviderComp);
 
 	_ownerCameraInterface = Cast<ICharacterCameraInterface>(_weaponOwner);
@@ -144,12 +144,12 @@ FORCEINLINE_DEBUGGABLE UActionComponent* AWeaponBase::GetOwnerActionComp()
 	return _ownerActionComp;
 }
 
-FORCEINLINE_DEBUGGABLE UExtraTransformProviderComponent* AWeaponBase::GetExTransformProviderComp()
+FORCEINLINE_DEBUGGABLE UExTransformProviderComponent* AWeaponBase::GetExTransformProviderComp()
 {
 	return _extraTransformProviderComp;
 }
 
-FORCEINLINE_DEBUGGABLE UExtraTransformProviderComponent* AWeaponBase::GetOwnerExTransformProviderComp()
+FORCEINLINE_DEBUGGABLE UExTransformProviderComponent* AWeaponBase::GetOwnerExTransformProviderComp()
 {
 	return _ownerExtraTransformProviderComp;
 }

@@ -12,7 +12,7 @@
 class ACreatureCharacter;
 
 class UPoseableMeshComponent;
-class UExtraTransformProviderComponent;
+class UExTransformProviderComponent;
 class UActionComponent;
 class UEventBrokerComponent;
 
@@ -67,9 +67,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	UActionComponent* GetOwnerActionComp();
 	UFUNCTION(BlueprintPure)
-	UExtraTransformProviderComponent* GetExTransformProviderComp();
+	UExTransformProviderComponent* GetExTransformProviderComp();
 	UFUNCTION(BlueprintPure)
-	UExtraTransformProviderComponent* GetOwnerExTransformProviderComp();
+	UExTransformProviderComponent* GetOwnerExTransformProviderComp();
 	UFUNCTION(BlueprintPure)
 	UEventBrokerComponent* GetOwnerEventBrokerComp();
 	UFUNCTION(BlueprintPure)
@@ -112,10 +112,10 @@ private:
 	USkeletalMeshComponent* _skeletalMeshComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UExtraTransformProviderComponent* _extraTransformProviderComp;
+	UExTransformProviderComponent* _extraTransformProviderComp;
 
 	UPROPERTY(VisibleAnywhere)
-	UExtraTransformProviderComponent* _ownerExtraTransformProviderComp;
+	UExTransformProviderComponent* _ownerExtraTransformProviderComp;
 
 	UPROPERTY(VisibleAnywhere)
 	ACreatureCharacter* _weaponOwner;

@@ -11,7 +11,7 @@
 #include "Components/PawnCameraComponent.h"
 #include "Components/CameraSpringArmComponent.h"
 #include "Components/WeaponComponent.h"
-#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/ExTransformProviderComponent.h"
 #include "Components/MyCharacterMovementComponent.h"
 #include "Components/IKComponent.h"
 #include "Components/DamageHandlerComponent.h"
@@ -61,11 +61,11 @@ ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializ
 	}
 	
 	//Create Extra Transform provider component
-	if (_ExTransformProviderComponent == nullptr)
+	if (_ExTransformProviderComp == nullptr)
 	{
-		_ExTransformProviderComponent = CreateDefaultSubobject<UExtraTransformProviderComponent>(TEXT("ExTransformProviderComponent"));
-		check(_ExTransformProviderComponent != nullptr);
-		_ExTransformProviderComponent->Initialize(GetMesh());
+		_ExTransformProviderComp = CreateDefaultSubobject<UExTransformProviderComponent>(TEXT("ExTransformProviderComponent"));
+		check(_ExTransformProviderComp != nullptr);
+		_ExTransformProviderComp->Initialize(GetMesh());
 	}
 
 	//Create action component

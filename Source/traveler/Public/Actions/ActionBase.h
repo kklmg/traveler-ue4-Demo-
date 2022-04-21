@@ -16,7 +16,7 @@ class UWeaponComponent;
 class UActionBlackBoard;
 class UAnimationModelBase;
 class UAnimControlComponent;
-class UExtraTransformProviderComponent;
+class UExTransformProviderComponent;
 
 
 namespace ActionName
@@ -103,7 +103,7 @@ protected:
 	UAnimationModelBase* GetAnimationViewModel();
 	UWeaponComponent* GetWeaponComp();
 	UStatusComponent* GetStatusComp();
-	UExtraTransformProviderComponent* GetExTransformProviderComp();
+	UExTransformProviderComponent* GetExTransformProviderComp();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
@@ -125,7 +125,7 @@ private:
 	UActionComponent* _actionComp;
 
 	UPROPERTY()
-	UExtraTransformProviderComponent* _exTransformProviderComp;
+	UExTransformProviderComponent* _exTransformProviderComp;
 
 	UPROPERTY()
 	UWeaponComponent* _weaponComp;

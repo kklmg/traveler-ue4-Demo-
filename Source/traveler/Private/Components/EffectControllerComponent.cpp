@@ -4,7 +4,7 @@
 #include "Components/EffectControllerComponent.h"
 #include "GameFramework/Character.h"
 #include "Effet/EffectPlayerBase.h"
-#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/ExTransformProviderComponent.h"
 
 // Sets default values for this component's properties
 UEffectControllerComponent::UEffectControllerComponent()

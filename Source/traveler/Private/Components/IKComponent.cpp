@@ -3,7 +3,7 @@
 
 #include "Components/IKComponent.h"
 #include "Components/AnimControlComponent.h"
-#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/ExTransformProviderComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
@@ -36,7 +36,7 @@ void UIKComponent::BeginPlay()
 	}
 
 	_exTransformProviderComp =
-		Cast<UExtraTransformProviderComponent>(GetOwner()->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
+		Cast<UExTransformProviderComponent>(GetOwner()->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 
 	UAnimControlComponent* animControlComp = 
 		Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));

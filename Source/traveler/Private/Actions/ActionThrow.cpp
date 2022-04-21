@@ -6,7 +6,7 @@
 #include "Character/CreatureCharacter.h"
 #include "AnimNotify/AnimNotifier.h"
 #include "Components/AnimControlComponent.h"
-#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/ExTransformProviderComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actors/ThrowerActorBase.h"
 #include "DrawDebugHelpers.h"

@@ -20,7 +20,7 @@ class UStatusComponent;
 class UPawnCameraComponent;
 class UCameraSpringArmComponent;
 class UWeaponComponent;
-class UExtraTransformProviderComponent;
+class UExTransformProviderComponent;
 class UDamageHandlerComponent;
 class UIKComponent;
 class UEffectControllerComponent;
@@ -109,7 +109,7 @@ protected:
 	UWeaponComponent* _weaponComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UExtraTransformProviderComponent* _ExTransformProviderComponent;
+	UExTransformProviderComponent* _ExTransformProviderComp;
 
 	UPROPERTY(VisibleAnywhere)
 	UDamageHandlerComponent* _damageHandlerComponent;

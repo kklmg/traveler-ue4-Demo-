@@ -48,7 +48,7 @@ private:
 	class UAnimationModelBase* _animationViewModel;
 
 	UPROPERTY()
-	class UExtraTransformProviderComponent* _exTransformProviderComp;
+	class UExTransformProviderComponent* _exTransformProviderComp;
 
 	UPROPERTY()
 	UIKFootData* _footIKData;

@@ -5,17 +5,17 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Data/EnumTransformType.h"
-#include "ExtraTransformProviderComponent.generated.h"
+#include "ExTransformProviderComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TRAVELER_API UExtraTransformProviderComponent : public UActorComponent
+class TRAVELER_API UExTransformProviderComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UExtraTransformProviderComponent();
+	UExTransformProviderComponent();
 
 	void Initialize(USkeletalMeshComponent* skeletalMeshComp);
 

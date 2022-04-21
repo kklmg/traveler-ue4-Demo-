@@ -4,7 +4,7 @@
 #include "UI/ActorWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
-#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/ExTransformProviderComponent.h"
 
 UActorWidget::UActorWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -17,7 +17,7 @@ void UActorWidget::SetData(AActor* widgetOwner, ETransform transformType)
 	_widgetOwner = widgetOwner;
 	_transformType = transformType;
 
-	_exTransformProviderComp = Cast<UExtraTransformProviderComponent>(_widgetOwner->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
+	_exTransformProviderComp = Cast<UExTransformProviderComponent>(_widgetOwner->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 	OnWidgetOwnerChangedDelegate.Broadcast(_widgetOwner);
 }
 

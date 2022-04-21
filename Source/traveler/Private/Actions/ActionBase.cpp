@@ -5,7 +5,7 @@
 #include "Components/ActionComponent.h"
 #include "Components/StatusComponent.h"
 #include "Components/AnimControlComponent.h"
-#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/ExTransformProviderComponent.h"
 #include "Components/WeaponComponent.h"
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
@@ -35,7 +35,7 @@ void UActionBase::VInitialize(ACharacter* character, UActionComponent* actionCom
 
 	_statusComp = Cast<UStatusComponent>(_actionOwner->GetComponentByClass(UStatusComponent::StaticClass()));
 	_weaponComp = Cast<UWeaponComponent>(_actionOwner->GetComponentByClass(UWeaponComponent::StaticClass()));
-	_exTransformProviderComp = Cast<UExtraTransformProviderComponent>(_actionOwner->GetComponentByClass(UExtraTransformProviderComponent::StaticClass()));
+	_exTransformProviderComp = Cast<UExTransformProviderComponent>(_actionOwner->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 	_animControlComp = Cast<UAnimControlComponent>(_actionOwner->GetComponentByClass(UAnimControlComponent::StaticClass()));
 
 	_processState = EProcessState::EPS_ReadyToExecute;
@@ -183,7 +183,7 @@ FORCEINLINE_DEBUGGABLE UStatusComponent* UActionBase::GetStatusComp()
 	return _statusComp;
 }
 
-FORCEINLINE_DEBUGGABLE UExtraTransformProviderComponent* UActionBase::GetExTransformProviderComp()
+FORCEINLINE_DEBUGGABLE UExTransformProviderComponent* UActionBase::GetExTransformProviderComp()
 {
 	return _exTransformProviderComp;
 }

@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Components/ExtraTransformProviderComponent.h"
+#include "Components/ExTransformProviderComponent.h"
 #include "GameSystem/DebugMessageHelper.h"
 
 // Sets default values for this component's properties
-UExtraTransformProviderComponent::UExtraTransformProviderComponent()
+UExTransformProviderComponent::UExTransformProviderComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -15,13 +15,13 @@ UExtraTransformProviderComponent::UExtraTransformProviderComponent()
 }
 
 
-void UExtraTransformProviderComponent::Initialize(USkeletalMeshComponent* skeletalMeshComp)
+void UExTransformProviderComponent::Initialize(USkeletalMeshComponent* skeletalMeshComp)
 {
 	_skeletalMeshComp = skeletalMeshComp;
 }
 
 // Called when the game starts
-void UExtraTransformProviderComponent::BeginPlay()
+void UExTransformProviderComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -31,14 +31,14 @@ void UExtraTransformProviderComponent::BeginPlay()
 
 
 // Called every frame
-void UExtraTransformProviderComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UExTransformProviderComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
 
-bool UExtraTransformProviderComponent::TryGetSocketName(ETransform transformType, FName& outSocketName)
+bool UExTransformProviderComponent::TryGetSocketName(ETransform transformType, FName& outSocketName)
 {
 	if (_boneNameMap.Contains(transformType))
 	{
@@ -51,7 +51,7 @@ bool UExtraTransformProviderComponent::TryGetSocketName(ETransform transformType
 	}
 }
 
-bool UExtraTransformProviderComponent::TryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
+bool UExTransformProviderComponent::TryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
 {
 	//try get bone Transform
 	if (_skeletalMeshComp && _boneNameMap.Contains(transformType))
