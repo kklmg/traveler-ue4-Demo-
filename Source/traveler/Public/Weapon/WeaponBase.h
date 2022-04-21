@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Data/EnumProcessState.h"
-#include "Data/EnumWeaponType.h"
+#include "Enums/EnumProcessState.h"
+#include "Enums/EnumWeaponType.h"
 #include "Data/StateData.h"
 #include "WeaponBase.generated.h"
 

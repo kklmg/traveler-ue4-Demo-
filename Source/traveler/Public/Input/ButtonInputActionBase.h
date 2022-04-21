@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Input/ButtonInputBase.h"
-#include "Data/EnumActionType.h"
+#include "Enums/EnumActionType.h"
 #include "ButtonInputActionBase.generated.h"
 
 class UActionComponent;

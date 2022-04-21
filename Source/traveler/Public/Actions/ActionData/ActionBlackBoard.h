@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Data/EnumActionType.h"
+#include "Enums/EnumActionType.h"
 #include "ActionBlackBoard.generated.h"
 
 class UActionDataBase;

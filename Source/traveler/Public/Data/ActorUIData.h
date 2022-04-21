@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Data/EnumTransformType.h"
+#include "Enums/EnumTransformType.h"
 #include "ActorUIData.generated.h"
 
 class UActorWidget;

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Data/EnumTransformType.h"
+#include "Enums/EnumTransformType.h"
 #include "Interface/CharacterCameraInterface.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "CreatureCharacter.generated.h"

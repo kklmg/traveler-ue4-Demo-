@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Data/EnumActionType.h"
-#include "Data/EnumProcessState.h"
+#include "Enums/EnumActionType.h"
+#include "Enums/EnumProcessState.h"
 #include "ActionBase.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogAction, Log, All);

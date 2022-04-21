@@ -5,8 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Input/InputHandlerInterface.h"
-#include "Data/EnumCharacterState.h"
-#include "Data/EnumInputType.h"
+#include "Enums/EnumInputType.h"
 #include "InputHandlerComponent.generated.h"
 
 

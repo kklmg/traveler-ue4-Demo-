@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Data/EnumProcessState.h"
+#include "Enums/EnumProcessState.h"
 #include "ProcessInterface.generated.h"
 
 // This class does not need to be modified.

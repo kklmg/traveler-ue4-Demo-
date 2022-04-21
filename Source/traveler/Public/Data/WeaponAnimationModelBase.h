@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Data/AnimationModelBase.h"
-#include "Data/EnumWeaponType.h"
+#include "Enums/EnumWeaponType.h"
 #include "WeaponAnimationModelBase.generated.h"
 
 /**

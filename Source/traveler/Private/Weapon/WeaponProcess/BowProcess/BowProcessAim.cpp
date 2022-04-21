@@ -3,7 +3,7 @@
 
 #include "Weapon/WeaponProcess/BowProcess/BowProcessAim.h"
 #include "Components/ActionComponent.h"
-#include "Data/EnumActionType.h"
+#include "Enums/EnumActionType.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Character/CreatureCharacter.h"
 

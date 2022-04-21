@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Data/EnumInputType.h"
+#include "Enums/EnumInputType.h"
 #include "ButtonInputBase.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogMyInput, Log, All);

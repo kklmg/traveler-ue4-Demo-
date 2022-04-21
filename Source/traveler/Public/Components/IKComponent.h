@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Data/EnumTransformType.h"
+#include "Enums/EnumTransformType.h"
 #include "Data/IKData.h"
 #include "IKComponent.generated.h"
 

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actions/ActionWithAnimMontage.h"
-#include "Data/EnumTransformType.h"
+#include "Enums/EnumTransformType.h"
 #include "ActionThrow.generated.h"
 
 class AThrowerActorBase;
