@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Process/ProcessBase.h"
 #include "Enums/EnumActionType.h"
 #include "Enums/EnumProcessState.h"
 #include "ActionBase.generated.h"
@@ -41,41 +42,16 @@ namespace NSNameAction
  *
  */
 UCLASS(Blueprintable)
-class TRAVELER_API UActionBase : public UObject
+class TRAVELER_API UActionBase : public UProcessBase
 {
 	GENERATED_BODY()
 public:
 	UActionBase();
 
-	virtual void VInitialize(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard);
-
-	UFUNCTION(BlueprintCallable)
-	void Execute();
-	UFUNCTION(BlueprintCallable)
-	bool CanExecute();
-	UFUNCTION()
-	void Tick(float deltaTime);
-
-	UFUNCTION(BlueprintCallable)
-	void Pause();
-
-	UFUNCTION(BlueprintCallable)
-	void Abort();
-
-	UFUNCTION(BlueprintCallable)
-	bool IsInstantAction();
-
-	UFUNCTION(BlueprintCallable)
-	FName GetActionName();
+	void SetActionData(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard);
 
 	UFUNCTION(BlueprintCallable)
 	EActionType GetActionType();
-
-	UFUNCTION(BlueprintCallable)
-	bool IsDead();
-
-	UFUNCTION(BlueprintCallable)
-	EProcessState GetActionProcessState();
 
 	UFUNCTION(BlueprintCallable)
 	ACharacter* GetActionOwner();
@@ -87,15 +63,12 @@ public:
 	float GetElapsedTime();
 
 protected:
-
-	virtual bool VTMCanExecute();
-	virtual void VTMExecute();
-	virtual void VTMTick(float deltaTime);
-	virtual void VOnActionProcessDead();
+	virtual void VTMInit() override;
+	virtual void VTMExecute() override;
+	virtual bool VTMCanExecute() override;
+	virtual void VTMTick(float deltaTime) override;
 
 protected:
-	void SetActionProcessSucceed();
-	void SetActionProcessFailed();
 
 	UActionComponent* GetActionComp();
 	UAnimControlComponent* GetAnimControlComp();
@@ -107,13 +80,7 @@ protected:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
-	FName _actionName;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	EActionType _actionType;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Action")
-	bool _bInstantAction;
 
 private:
 	UPROPERTY()
@@ -130,9 +97,6 @@ private:
 
 	UPROPERTY()
 	UActionBlackBoard* _actionBlackBoard;
-
-	UPROPERTY(VisibleAnywhere, Category = "Action")
-	EProcessState _processState;
 
 	UPROPERTY(EditDefaultsOnly)
 	UCostData* _costData;

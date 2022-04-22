@@ -13,9 +13,9 @@
 
 UActionThrow::UActionThrow()
 {
-	_actionName = NSNameAction::Throw;
+	_processName = NSNameAction::Throw;
 	_actionType = EActionType::EACT_Throw;
-	_bInstantAction = false;
+	_bIsInstantProcess = false;
 	_throwingSpeed = 100;
 }
 

@@ -104,7 +104,7 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 
 	//Handle case when the same action is in progress 
 	if (_mapActionProcessPool[index] &&
-		_mapActionProcessPool[index]->GetActionProcessState() == EProcessState::EPS_Running)
+		_mapActionProcessPool[index]->GetProcessState() == EProcessState::EPS_Running)
 	{
 		//todo
 		return nullptr;
@@ -115,7 +115,8 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 	if (newActionIns)
 	{
 		//Execute Action
-		newActionIns->VInitialize(_character, this, _actionBlackBoard);
+		newActionIns->SetActionData(_character, this, _actionBlackBoard);
+		newActionIns->Init();
 		newActionIns->Execute();
 
 		//add action Instance to pool for management
@@ -186,7 +187,7 @@ bool UActionComponent::CheckActionIsInProgress(EActionType actionType)
 {
 	int32 index = int32(actionType);
 	return _mapActionProcessPool[index]
-		&& _mapActionProcessPool[index]->GetActionProcessState() == EProcessState::EPS_Running;
+		&& _mapActionProcessPool[index]->GetProcessState() == EProcessState::EPS_Running;
 }
 
 

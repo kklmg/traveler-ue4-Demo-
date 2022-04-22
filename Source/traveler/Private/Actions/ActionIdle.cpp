@@ -5,7 +5,7 @@
 
 UActionIdle::UActionIdle() 
 {
-	_actionName = NSNameAction::IDLE;
+	_processName = NSNameAction::IDLE;
 	_actionType = EActionType::EACT_Idle;
 }
 

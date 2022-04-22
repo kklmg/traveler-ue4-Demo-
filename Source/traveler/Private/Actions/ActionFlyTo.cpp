@@ -15,11 +15,22 @@
 
 UActionFlyTo::UActionFlyTo()
 {
-	_actionName = NSNameAction::FlyTo;
+	_processName = NSNameAction::FlyTo;
 	_actionType = EActionType::EACT_FlyTo;
 
-	_bInstantAction = false;
+	_bIsInstantProcess = false;
 	_bUpdateDestination = true;
+}
+
+
+
+bool UActionFlyTo::VTMCanExecute()
+{
+	if (!Super::VTMCanExecute()) return false;
+	//
+	//
+	//
+	return true;
 }
 
 void UActionFlyTo::VTMExecute()
@@ -28,7 +39,7 @@ void UActionFlyTo::VTMExecute()
 
 	if (_GetDestination(_destination) == false)
 	{
-		SetActionProcessFailed();
+		SetProcessFailed();
 		UE_LOG(LogAction, Warning, TEXT("Fly to: No Destination Data"))
 	}
 
@@ -36,19 +47,19 @@ void UActionFlyTo::VTMExecute()
 		(GetActionOwner()->GetComponentByClass(UMyCharacterMovementComponent::StaticClass()));
 	if (_myMovementComp == nullptr)
 	{
-		SetActionProcessFailed();
+		SetProcessFailed();
 		UE_LOG(LogAction, Warning, TEXT("Fly to: No Movement component"))
 	}
 
 	if (GetStatusComp() == nullptr)
 	{
-		SetActionProcessFailed();
+		SetProcessFailed();
 		UE_LOG(LogAction, Warning, TEXT("Fly to: no Status Component"))
 	}
 
 	if (GetStatusComp()->GetFinalValue(EStatusType::EStatus_FlyingSpeed) == 0.0f)
 	{
-		SetActionProcessFailed();
+		SetProcessFailed();
 		UE_LOG(LogAction, Warning, TEXT("Fly to: Flying speed is zero"))
 	}
 }
@@ -66,7 +77,7 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	if (dist < 300.0f)
 	{
 		//GetActionOwner()->GetCharacterMovement()->Velocity = FVector::ZeroVector;
-		SetActionProcessSucceed();
+		SetProcessSucceed();
 	}
 
 

@@ -9,18 +9,13 @@
 
 UActionWeaponStartAim::UActionWeaponStartAim()
 {
-	_actionName = NSNameAction::WeaponAim;
+	_processName = NSNameAction::WeaponAim;
 	_actionType = EActionType::EACT_WeaponStartAim;
-	_bInstantAction = true;
-}
-
-void UActionWeaponStartAim::VInitialize(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard)
-{
-	Super::VInitialize(character, actionComp, actionBlackBoard);
+	_bIsInstantProcess = true;
 }
 
 void UActionWeaponStartAim::VTMExecute()
-{
+{ 
 	if(GetWeaponComp())
 	{
 		GetWeaponComp()->ExecuteWeaponProcess(NSNameWeaponProcess::AIM);

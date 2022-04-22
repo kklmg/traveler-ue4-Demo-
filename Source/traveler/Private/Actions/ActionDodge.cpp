@@ -11,19 +11,15 @@
 
 UActionDodge::UActionDodge()
 {
-	_actionName = NSNameAction::DODGE;
+	_processName = NSNameAction::DODGE;
 	_actionType = EActionType::EACT_Dodge;
-	_bInstantAction = false;
+	_bIsInstantProcess = false;
 	_dodgeSpeed = 250;
 
 	GetCostData()->AddCost(EStatusType::EStatus_Stamina,20);
 	
 }
 
-void UActionDodge::VInitialize(ACharacter* owner, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard)
-{
-	Super::VInitialize(owner, actionComp, actionBlackBoard);
-}
 
 bool UActionDodge::VTMCanExecute()
 {
@@ -72,6 +68,5 @@ void UActionDodge::OnAnimMontageFinished(UAnimMontage* montage,bool interrupted)
 	if(montage != _aniMontage)return;
 
 	GetActionOwner()->GetMesh()->GetAnimInstance()->OnMontageEnded.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
-
-	SetActionProcessSucceed();
+	SetProcessSucceed();
 }

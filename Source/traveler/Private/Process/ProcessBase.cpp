@@ -5,7 +5,7 @@
 
 bool UProcessBase::Init()
 {
-	SetAborted();
+	SetProcessAborted();
 
 	if(SetProcessState(EProcessState::EPS_ReadyToExecute))
 	{
@@ -23,6 +23,12 @@ bool UProcessBase::Execute()
 	if (CanExecute() && SetProcessState(EProcessState::EPS_Running))
 	{
 		VTMExecute();
+
+		if(_bIsInstantProcess)
+		{
+			SetProcessSucceed();
+		}
+
 		return true;
 	}
 	else
@@ -33,7 +39,7 @@ bool UProcessBase::Execute()
 
 bool UProcessBase::Abort()
 {
-	return SetAborted();
+	return SetProcessAborted();
 }
 
 bool UProcessBase::CanExecute()
@@ -41,7 +47,7 @@ bool UProcessBase::CanExecute()
 	return _processState == EProcessState::EPS_ReadyToExecute && VTMCanExecute();
 }
 
-bool UProcessBase::SetSucceed()
+bool UProcessBase::SetProcessSucceed()
 {
 	if (IsAlive() && SetProcessState(EProcessState::EPS_SUCCEEDED))
 	{
@@ -55,7 +61,7 @@ bool UProcessBase::SetSucceed()
 	}
 }
 
-bool UProcessBase::SetFailed()
+bool UProcessBase::SetProcessFailed()
 {
 	if (IsAlive() && SetProcessState(EProcessState::EPS_FAILED))
 	{
@@ -69,7 +75,7 @@ bool UProcessBase::SetFailed()
 	}
 }
 
-bool UProcessBase::SetAborted()
+bool UProcessBase::SetProcessAborted()
 {
 	if (IsAlive() && SetProcessState(EProcessState::EPS_Aborted))
 	{

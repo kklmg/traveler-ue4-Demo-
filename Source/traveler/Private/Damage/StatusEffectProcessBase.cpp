@@ -102,7 +102,7 @@ void UStatusEffectProcessBase::VTMTick(float deltaTime)
 
 	if (_totalElapsedTime > _effectDuration)
 	{
-		SetSucceed();
+		SetProcessSucceed();
 	}
 }
 

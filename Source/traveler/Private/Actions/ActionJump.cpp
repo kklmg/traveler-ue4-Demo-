@@ -10,9 +10,9 @@
 
 UActionJump::UActionJump()
 {
-	_actionName = NSNameAction::JUMP;
+	_processName = NSNameAction::JUMP;
 	_actionType = EActionType::EACT_Jumping;
-	_bInstantAction = false;
+	_bIsInstantProcess = false;
 	_delayTime = 0.3f;
 }
 
@@ -44,6 +44,6 @@ void UActionJump::VTMTick(float deltaTime)
 			GetAnimationViewModel()->SetBool(NSAnimationDataKey::bWantToJump, false);
 		}
 
-		SetActionProcessSucceed();
+		SetProcessSucceed();
 	}
 }

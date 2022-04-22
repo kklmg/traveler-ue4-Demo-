@@ -7,7 +7,7 @@
 
 UActionTeleport::UActionTeleport()
 {
-	_actionName = NSNameAction::TELEPORT;
+	_processName = NSNameAction::TELEPORT;
 	_actionType = EActionType::EACT_Teleport;
 }
 

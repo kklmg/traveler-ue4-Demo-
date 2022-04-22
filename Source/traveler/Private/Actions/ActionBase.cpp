@@ -16,18 +16,19 @@ DEFINE_LOG_CATEGORY(LogAction);
 
 UActionBase::UActionBase()
 {
-	_processState = EProcessState::EPS_UnInitialized;
-	_bInstantAction = true;
-	_actionName = FName(TEXT("UnKnown"));
+	_bIsInstantProcess = true;
+	_processName = FName(TEXT("UnKnown"));
 	_actionType = EActionType::EACT_None;
 	_costData = CreateDefaultSubobject<UCostData>(TEXT("CostData"));
 }
 
-void UActionBase::VInitialize(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard)
+void UActionBase::SetActionData(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard)
 {
 	check(character);
 	check(actionComp);
 	check(actionBlackBoard);
+
+	SetProcessAborted();
 
 	_actionOwner = character;
 	_actionComp = actionComp;
@@ -37,93 +38,41 @@ void UActionBase::VInitialize(ACharacter* character, UActionComponent* actionCom
 	_weaponComp = Cast<UWeaponComponent>(_actionOwner->GetComponentByClass(UWeaponComponent::StaticClass()));
 	_exTransformProviderComp = Cast<UExTransformProviderComponent>(_actionOwner->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 	_animControlComp = Cast<UAnimControlComponent>(_actionOwner->GetComponentByClass(UAnimControlComponent::StaticClass()));
-
-	_processState = EProcessState::EPS_ReadyToExecute;
 }
 
 
 
-void UActionBase::Pause()
+void UActionBase::VTMInit()
 {
-	_processState = EProcessState::EPS_Paused;
+	_elapsedTime = 0.0f;
 }
 
-FORCEINLINE void UActionBase::Execute()
+FORCEINLINE void UActionBase::VTMExecute()
 {
-	if (CanExecute() == false)
-	{
-		UE_LOG(LogAction, Warning, TEXT("Can't execute Action"));
-		_processState = EProcessState::EPS_FAILED;
-		return;
-	}
-
+	Super::VTMExecute();
 	if(_statusComp)
 	{
 		_statusComp->ApplyCost(_costData);
 	}
-
-	VTMExecute();
-
-	_processState = _bInstantAction ? EProcessState::EPS_SUCCEEDED : EProcessState::EPS_Running;
 }
 
-FORCEINLINE bool UActionBase::CanExecute()
+FORCEINLINE bool UActionBase::VTMCanExecute()
 {
-	bool bEnoughResources = _statusComp && _statusComp->IsRemainingValueEnough(_costData);
+	if (!Super::VTMCanExecute()) return false;
 
-	return (_processState == EProcessState::EPS_ReadyToExecute && bEnoughResources && VTMCanExecute());
-}
-
-void UActionBase::Tick(float deltaTime)
-{
-	if (_processState == EProcessState::EPS_Running)
-	{
-		_elapsedTime += deltaTime;
-		VTMTick(deltaTime);
-	}
-}
-
-bool UActionBase::VTMCanExecute()
-{
-	return true;
-}
-
-void UActionBase::VTMExecute() 
-{
+	return _statusComp && _statusComp->IsRemainingValueEnough(_costData);
 }
 
 void UActionBase::VTMTick(float deltaTime)
 {
+	Super::VTMTick(deltaTime);
+
+	_elapsedTime += deltaTime;
 }
-
-void UActionBase::Abort()
-{
-	if (_processState == EProcessState::EPS_Running)
-	{
-		_processState = EProcessState::EPS_Aborted;
-	}
-}
-
-
-FORCEINLINE FName UActionBase::GetActionName()
-{
-	return _actionName;
-}
-
 
 EActionType UActionBase::GetActionType()
 {
 	return _actionType;
-}
-
-FORCEINLINE bool UActionBase::IsDead()
-{
-	return (_processState == EProcessState::EPS_SUCCEEDED || _processState == EProcessState::EPS_FAILED || _processState == EProcessState::EPS_Aborted);
-}
-
-FORCEINLINE EProcessState UActionBase::GetActionProcessState()
-{
-	return _processState;
 }
 
 FORCEINLINE ACharacter* UActionBase::GetActionOwner()
@@ -139,18 +88,6 @@ FORCEINLINE UActionBlackBoard* UActionBase::GetActionBlackBoard()
 float UActionBase::GetElapsedTime()
 {
 	return _elapsedTime;
-}
-
-void UActionBase::SetActionProcessSucceed()
-{
-	_processState = EProcessState::EPS_SUCCEEDED;
-	VOnActionProcessDead();
-}
-
-void UActionBase::SetActionProcessFailed()
-{
-	_processState = EProcessState::EPS_FAILED;
-	VOnActionProcessDead();
 }
 
 FORCEINLINE_DEBUGGABLE UActionComponent* UActionBase::GetActionComp()
@@ -188,13 +125,6 @@ FORCEINLINE_DEBUGGABLE UExTransformProviderComponent* UActionBase::GetExTransfor
 	return _exTransformProviderComp;
 }
 
-FORCEINLINE_DEBUGGABLE bool UActionBase::IsInstantAction()
-{
-	return _bInstantAction;
-}
 
-void UActionBase::VOnActionProcessDead()
-{
 
-}
 

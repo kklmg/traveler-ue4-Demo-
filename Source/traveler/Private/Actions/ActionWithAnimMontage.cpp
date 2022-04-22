@@ -6,7 +6,7 @@
 
 UActionWithAnimMontage::UActionWithAnimMontage()
 {
-	_bInstantAction = false;
+	_bIsInstantProcess = false;
 }
 
 void UActionWithAnimMontage::VTMExecute()
@@ -32,10 +32,10 @@ void UActionWithAnimMontage::VOnAnimMontageFinished(UAnimMontage* montage, bool 
 
 	if(interrupted)
 	{
-		SetActionProcessFailed();
+		SetProcessFailed();
 	}
 	else
 	{
-		SetActionProcessSucceed();
+		SetProcessSucceed();
 	}
 }

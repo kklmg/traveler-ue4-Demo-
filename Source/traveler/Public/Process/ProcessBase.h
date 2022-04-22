@@ -26,6 +26,8 @@ public:
 	bool IsDead();
 	bool IsInstantProcess();
 	FName GetProcessName();
+	
+	UFUNCTION(BlueprintCallable)
 	EProcessState GetProcessState();
 
 	void Tick(float deltaTime);
@@ -46,9 +48,9 @@ protected:
 	virtual void VTMOnAborted();
 
 protected:
-	bool SetSucceed();
-	bool SetFailed();
-	bool SetAborted();
+	bool SetProcessSucceed();
+	bool SetProcessFailed();
+	bool SetProcessAborted();
 
 	UPROPERTY(EditDefaultsOnly)
 	FName _processName;

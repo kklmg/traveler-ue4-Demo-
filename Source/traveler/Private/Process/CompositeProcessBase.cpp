@@ -60,7 +60,7 @@ void UCompositeProcessBase::VTMTick(float deltaTime)
             //no next process 
             if (_curProcessID >= _procesPool.Num())
             {
-                SetSucceed();
+                SetProcessSucceed();
 				return;
             }
         }

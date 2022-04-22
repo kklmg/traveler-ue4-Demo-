@@ -8,7 +8,7 @@
 
 UActionWeaponStopFire::UActionWeaponStopFire()
 {
-	_actionName = NSNameAction::WeaponFire;
+	_processName = NSNameAction::WeaponFire;
 	_actionType = EActionType::EACT_WeaponStopFire;
 }
 

@@ -39,7 +39,7 @@ void UProcessSectionBase::VTMTick(float deltaTime)
 
 	if (_elapsedTime > _duration)
 	{
-		SetSucceed();
+		SetProcessSucceed();
 	}
 }
 

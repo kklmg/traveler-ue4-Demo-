@@ -8,7 +8,7 @@
 
 UActionWeaponStartFire::UActionWeaponStartFire()
 {
-	_actionName = NSNameAction::WeaponFire;
+	_processName = NSNameAction::WeaponFire;
 	_actionType = EActionType::EACT_WeaponStartFire;
 }
 

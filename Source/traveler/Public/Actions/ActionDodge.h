@@ -16,7 +16,6 @@ class TRAVELER_API UActionDodge : public UActionBase
 public:
 	UActionDodge();
 
-	virtual void VInitialize(ACharacter* owner, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard) override;
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
