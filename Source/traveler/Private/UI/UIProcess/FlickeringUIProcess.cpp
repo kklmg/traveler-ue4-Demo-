@@ -54,12 +54,6 @@ void UFlickeringUIProcess::VTMTick(float deltaTime)
 	}
 }
 
-void UFlickeringUIProcess::VTMReset()
-{
-	Super::VTMReset();
-
-	_elapsedTime = 0;
-}
 
 void UFlickeringUIProcess::VTMOnDead()
 {

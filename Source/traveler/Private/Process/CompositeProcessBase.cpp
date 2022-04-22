@@ -23,6 +23,14 @@ void UCompositeProcessBase::VTMInit()
 {
 	Super::VTMInit();
 
+    for (UProcessBase* process : _procesPool)
+    {
+        if (process)
+        {
+            process->Init();
+        }
+    }
+
     _curProcessID = 0;
 	_procesPool[_curProcessID]->Init();
 }
@@ -89,15 +97,3 @@ void UCompositeProcessBase::VTMOnAborted()
     }
 }
 
-void UCompositeProcessBase::VTMReset()
-{
-    Super::VTMReset();
-
-    for (UProcessBase* process : _procesPool)
-    {
-        if (process)
-        {
-            process->Init();
-        }
-    }
-}

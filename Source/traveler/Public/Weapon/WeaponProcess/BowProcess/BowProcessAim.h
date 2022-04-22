@@ -19,7 +19,6 @@ public:
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
-	virtual void VTMReset() override;
 
 	virtual void VTMOnDead() override;
 };

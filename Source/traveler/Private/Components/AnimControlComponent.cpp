@@ -118,11 +118,23 @@ UAnimNotifier* UAnimControlComponent::GetOrCreateNotifer(EAnimNotifyKey notifyKe
 	}
 }
 
-void UAnimControlComponent::PlayAnimMontage(EAnimMontage animMontageType)
+bool UAnimControlComponent::PlayAnimMontage(EAnimMontage animMontageType)
 {
 	check(_character);
 	if(_montageMap.Contains(animMontageType) && _montageMap[animMontageType])
 	{
-		_character->PlayAnimMontage(_montageMap[animMontageType]);
+		if(GetAnimInstance()->Montage_IsPlaying(_montageMap[animMontageType]))
+		{
+			return false;
+		}
+		else
+		{
+			_character->PlayAnimMontage(_montageMap[animMontageType]);
+			return true;
+		}
+	}
+	else
+	{
+		return false;
 	}
 }

@@ -62,11 +62,6 @@ void UBowProcessAim::VTMTick(float deltaTime)
 	}
 }
 
-void UBowProcessAim::VTMReset()
-{
-	Super::VTMReset();
-}
-
 void UBowProcessAim::VTMOnDead()
 {
 	Super::VTMOnDead();

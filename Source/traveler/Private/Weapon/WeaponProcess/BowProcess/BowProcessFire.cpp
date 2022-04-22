@@ -48,11 +48,6 @@ void UBowProcessFire::VTMTick(float deltaTime)
 	Super::VTMTick(deltaTime);
 }
 
-void UBowProcessFire::VTMReset()
-{
-	Super::VTMReset();
-}
-
 void UBowProcessFire::VTMOnDead()
 {
 	Super::VTMOnDead();

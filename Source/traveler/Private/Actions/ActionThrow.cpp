@@ -30,11 +30,27 @@ void UActionThrow::VTMExecute()
 		notifier->NotifyTickDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyTick);
 		notifier->NotifyEndDelegate.AddDynamic(this, &UActionThrow::OnAttackNotifyEnd);
 	}
+	else
+	{
+		SetProcessFailed();
+	}
 }
 
 void UActionThrow::VTMTick(float deltaTime)
 {
 	Super::VTMTick(deltaTime);
+}
+
+void UActionThrow::VTMOnDead()
+{
+	if (GetAnimControlComp())
+	{
+		UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKey::ANK_SpreadAttack);
+
+		notifier->NotifyBeginDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyBegin);
+		notifier->NotifyTickDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyTick);
+		notifier->NotifyEndDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyEnd);
+	}
 }
 
 void UActionThrow::OnAttackNotifyBegin(float durationTime)
@@ -87,19 +103,6 @@ void UActionThrow::OnAttackNotifyEnd()
 		_throwerIns->VAutoDestroy();
 		_throwerIns = nullptr;
 	}
-}
 
-
-void UActionThrow::VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted)
-{
-	Super::VOnAnimMontageFinished(montage, interrupted);
-
-	if (GetAnimControlComp())
-	{
-		UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKey::ANK_SpreadAttack);
-
-		notifier->NotifyBeginDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyBegin);
-		notifier->NotifyTickDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyTick);
-		notifier->NotifyEndDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyEnd);
-	}
+	SetProcessFailed();
 }

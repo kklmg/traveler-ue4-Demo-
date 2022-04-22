@@ -68,6 +68,11 @@ protected:
 	virtual bool VTMCanExecute() override;
 	virtual void VTMTick(float deltaTime) override;
 
+	//virtual void VTMOnDead() override;
+	//virtual void VTMOnSucceed() override;
+	//virtual void VTMOnFailed() override;
+	//virtual void VTMOnAborted() override;
+
 protected:
 
 	UActionComponent* GetActionComp();
@@ -106,5 +111,6 @@ private:
 	UPROPERTY()
 	UAnimControlComponent* _animControlComp;
 
+	bool _bDataIsSet;
 	float _elapsedTime;
 };

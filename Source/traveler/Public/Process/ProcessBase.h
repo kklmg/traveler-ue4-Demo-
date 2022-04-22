@@ -40,7 +40,6 @@ protected:
 	virtual void VTMInit();
 	virtual void VTMExecute();
 	virtual void VTMTick(float deltaTime);
-	virtual void VTMReset();
 
 	virtual void VTMOnDead();
 	virtual void VTMOnSucceed();

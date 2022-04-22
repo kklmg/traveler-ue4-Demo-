@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actions/ActionBase.h"
+#include "Enums/EnumAnimation.h"
 #include "ActionWithAnimMontage.generated.h"
 
 /**
@@ -18,12 +19,11 @@ public:
 	UActionWithAnimMontage();
 
 	virtual void VTMExecute() override;
-	//virtual void 
+	virtual void VTMOnDead() override;
 
-	UFUNCTION()
 	virtual void VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = animation)
-	UAnimMontage* _aniMontage;
+	EAnimMontage _animMontageType;
 };

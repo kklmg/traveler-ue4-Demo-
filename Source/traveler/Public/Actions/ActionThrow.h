@@ -12,6 +12,7 @@ class AThrowerActorBase;
 /**
  * 
  */
+
 UCLASS()
 class TRAVELER_API UActionThrow : public UActionWithAnimMontage
 {
@@ -21,6 +22,7 @@ public:
 
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
+	virtual void VTMOnDead() override;
 
 private:
 
@@ -43,7 +45,4 @@ public:
 	void OnAttackNotifyTick(float frameDeltaTime);
 	UFUNCTION()
 	void OnAttackNotifyEnd();
-	
-
-	void VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted) override;
 };

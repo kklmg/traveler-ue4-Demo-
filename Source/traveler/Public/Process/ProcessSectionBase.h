@@ -21,7 +21,6 @@ public:
 	virtual bool VTMCanExecute();
 	virtual void VTMExecute();
 	virtual void VTMTick(float deltaTime);
-	virtual void VTMReset();
 
 	virtual void VTMOnDead();
 	virtual void VTMOnSucceed();

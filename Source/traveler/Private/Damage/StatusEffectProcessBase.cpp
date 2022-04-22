@@ -117,8 +117,3 @@ void UStatusEffectProcessBase::VTMOnDead()
 		_effectControlComp->StopEffect(EEffectType::EEffectType_StatusEffect, (uint8)_statusEffectType);
 	}
 }
-
-void UStatusEffectProcessBase::VTMReset()
-{
-	
-}

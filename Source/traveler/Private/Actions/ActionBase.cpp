@@ -38,6 +38,8 @@ void UActionBase::SetActionData(ACharacter* character, UActionComponent* actionC
 	_weaponComp = Cast<UWeaponComponent>(_actionOwner->GetComponentByClass(UWeaponComponent::StaticClass()));
 	_exTransformProviderComp = Cast<UExTransformProviderComponent>(_actionOwner->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 	_animControlComp = Cast<UAnimControlComponent>(_actionOwner->GetComponentByClass(UAnimControlComponent::StaticClass()));
+
+	_bDataIsSet = true;
 }
 
 
@@ -59,6 +61,7 @@ FORCEINLINE void UActionBase::VTMExecute()
 FORCEINLINE bool UActionBase::VTMCanExecute()
 {
 	if (!Super::VTMCanExecute()) return false;
+	if(!_bDataIsSet) return false;
 
 	return _statusComp && _statusComp->IsRemainingValueEnough(_costData);
 }

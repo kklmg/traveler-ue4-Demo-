@@ -43,12 +43,6 @@ void UProcessSectionBase::VTMTick(float deltaTime)
 	}
 }
 
-void UProcessSectionBase::VTMReset()
-{
-	Super::VTMReset();
-
-	_elapsedTime = 0;
-}
 
 void UProcessSectionBase::VTMOnDead()
 {

@@ -58,7 +58,7 @@ public:
 	UAnimNotifier* GetOrCreateNotifer(EAnimNotifyKey notifyKey);
 
 	//animation Montage ------------------------------------------------------------------
-	void PlayAnimMontage(EAnimMontage animMontageType);
+	bool PlayAnimMontage(EAnimMontage animMontageType);
 
 private:
 	UPROPERTY()

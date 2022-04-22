@@ -26,8 +26,7 @@ void UActionJump::VTMExecute()
 
 	if (GetWeaponComp())
 	{
-		GetWeaponComp()->StopWeaponProcess(NSNameWeaponProcess::AIM);
-		GetWeaponComp()->StopWeaponProcess(NSNameWeaponProcess::FIRE);
+		GetWeaponComp()->StopAllWeaponProcesses();
 	}
 }
 

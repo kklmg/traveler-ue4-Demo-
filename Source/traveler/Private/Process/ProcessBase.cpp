@@ -167,7 +167,3 @@ void UProcessBase::VTMOnFailed()
 void UProcessBase::VTMOnAborted()
 {
 }
-
-void UProcessBase::VTMReset()
-{
-}

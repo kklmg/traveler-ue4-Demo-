@@ -3,6 +3,7 @@
 
 #include "Actions/ActionWithAnimMontage.h"
 #include "Character/CreatureCharacter.h"
+#include "Components/AnimControlComponent.h"
 
 UActionWithAnimMontage::UActionWithAnimMontage()
 {
@@ -11,28 +12,41 @@ UActionWithAnimMontage::UActionWithAnimMontage()
 
 void UActionWithAnimMontage::VTMExecute()
 {
-	if (GetActionOwner() == nullptr || _aniMontage == nullptr) return;
+	check(GetActionOwner());
 
-	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
-	if(animInstance == nullptr) return;
+	if(GetAnimControlComp() && GetAnimControlComp()->GetAnimInstance())
+	{
+		UAnimInstance* animInstance = GetAnimControlComp()->GetAnimInstance();
+	
+		if(animInstance && GetAnimControlComp()->PlayAnimMontage(_animMontageType))
+		{
+			//subscribe montageEnded event
+			animInstance->OnMontageEnded.AddDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
+		}
+		else
+		{
+			SetProcessFailed();
+		}
+	}
+	else
+	{
+		SetProcessFailed();
+	}
+}
 
-	//subscribe montageEnded event
-	animInstance->OnMontageEnded.AddDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
+void UActionWithAnimMontage::VTMOnDead()
+{
+	check(GetAnimControlComp()->GetAnimInstance());
 
-	//play montage
-	GetActionOwner()->PlayAnimMontage(_aniMontage);
+	GetAnimControlComp()->GetAnimInstance()->OnMontageEnded
+		.RemoveDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
 }
 
 void UActionWithAnimMontage::VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted)
 {
-	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
-	if (animInstance == nullptr) return;
-
-	animInstance->OnMontageEnded.RemoveDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
-
-	if(interrupted)
+	if (interrupted)
 	{
-		SetProcessFailed();
+		SetProcessAborted();
 	}
 	else
 	{

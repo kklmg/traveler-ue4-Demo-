@@ -25,7 +25,6 @@ public:
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
 	virtual void VTMOnDead() override;
-	virtual void VTMReset() override;
 	virtual void VTMOnAborted() override;
 
 private:
