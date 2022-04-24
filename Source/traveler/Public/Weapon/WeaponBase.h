@@ -89,10 +89,12 @@ public:
 
 	//Weapon process handling -----------------------------------------------------------------------------
 
+	UProcessBase* GetProcess(FName processName);
 	void ExecuteProcess(FName processName);
+	void TickProcess(FName processName,float deltaTime);
 	void StopProcess(FName processName);
 	void StopAllProcesses();
-	void AddToProcessStorage(UProcessBase* process);
+	void AddToProcessMap(UProcessBase* process);
 	bool IsProcessRunning(FName processName);
 
 	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState);
@@ -120,7 +122,7 @@ private:
 	ACreatureCharacter* _weaponOwner;
 
 	UPROPERTY()
-	UProcessManagerBase* _processManager;
+	TMap<FName, UProcessBase*> _processMap;
 
 	UPROPERTY()
 	UWeaponAnimationModelBase* _weaponAnimationModel;

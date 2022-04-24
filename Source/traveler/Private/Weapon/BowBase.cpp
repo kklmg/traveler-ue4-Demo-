@@ -48,12 +48,12 @@ void ABowBase::PreInitializeComponents()
 	_processFire = NewObject<UBowProcessFire>(this);
 	_processFire->VSetWeapon(this);
 	_processFire->ProcessStateChangedDelegate.AddUObject(this, &ABowBase::OnFireProcessChanged);
-	AddToProcessStorage(_processFire);
+	AddToProcessMap(_processFire);
 
 	_processAim = NewObject<UBowProcessAim>(this);
 	_processAim->VSetWeapon(this);
 	_processAim->ProcessStateChangedDelegate.AddUObject(this, &ABowBase::OnAimProcessChanged);
-	AddToProcessStorage(_processAim);
+	AddToProcessMap(_processAim);
 
 	if (GetWeaponAnimationModel())
 	{
@@ -414,7 +414,6 @@ void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAni
 
 void ABowBase::OnAnim_StartDrawingBowString(UObject* data)
 {
-	if (IsProcessRunning(NSNameWeaponProcess::AIM) == false) return;
 	SetBowState(EBowState::EBS_Drawing);
 }
 
@@ -425,15 +424,12 @@ void ABowBase::OnAnim_TakeOutArrows(UObject* data)
 
 void ABowBase::OnAnim_ReleaseBowString(UObject* data)
 {
-	if (IsProcessRunning(NSNameWeaponProcess::AIM) == false) return;
-
 	LaunchArrows();
 	SetBowState(EBowState::EBS_ReleaseEnd);
 }
 
 void ABowBase::OnAnim_FullyDrawed(UObject* data)
 {
-	if (IsProcessRunning(NSNameWeaponProcess::AIM) == false) return;
 	SetBowState(EBowState::EBS_FullyDrawed);
 }
 

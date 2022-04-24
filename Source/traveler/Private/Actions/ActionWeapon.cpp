@@ -17,30 +17,41 @@ void UActionWeapon::VTMInit()
 {
 	Super::VTMInit();
 	_weaponComp = Cast<UWeaponComponent>(GetActionOwner()->GetComponentByClass(UWeaponComponent::StaticClass()));
+	_weaponProcess = _weaponComp ? _weaponComp->GetWeaponProcess(_processName) : nullptr;
+	if(_weaponProcess)
+	{
+		_weaponProcess->Init();
+		_delegateHandle = _weaponProcess->ProcessStateChangedDelegate.AddUObject(this, &UActionWeapon::OnWeaponProcessStateChanged);
+	}
+
+	GetWeaponComp()->OnWeaponChanged.AddDynamic(this, &UActionWeapon::OnWeaponChanged);
+
 }
 
 bool UActionWeapon::VTMCanExecute()
 {
 	if (!Super::VTMCanExecute()) return false;
 
-	return _weaponComp != nullptr;
+	if (_weaponComp == nullptr || _weaponProcess == nullptr) return false;
+
+
+	return _weaponProcess->CanExecute();
 }
 
 void UActionWeapon::VTMExecute()
 {
 	Super::VTMExecute();
+	
+	check(_weaponProcess);
 
-	check(_weaponComp);
-
-	GetWeaponComp()->ExecuteWeaponProcess(_processName);
-	GetWeaponComp()->OnWeaponChanged.AddDynamic(this, &UActionWeapon::OnWeaponChanged);
+	_weaponProcess->Execute();
 }
 
 void UActionWeapon::VTMTick(float deltaTime)
 {
 	Super::VTMTick(deltaTime);
 
-	GetWeaponComp()->ExecuteWeaponProcess(_processName);
+	_weaponProcess->Tick(deltaTime);
 }
 
 void UActionWeapon::VTMOnDead()
@@ -49,7 +60,8 @@ void UActionWeapon::VTMOnDead()
 
 	check(GetWeaponComp());
 
-	GetWeaponComp()->StopWeaponProcess(_processName);
+	_weaponProcess->Abort();
+	_weaponProcess->ProcessStateChangedDelegate.Remove(_delegateHandle);
 	GetWeaponComp()->OnWeaponChanged.RemoveDynamic(this, &UActionWeapon::OnWeaponChanged);
 }
 
@@ -61,4 +73,14 @@ UWeaponComponent* UActionWeapon::GetWeaponComp()
 void UActionWeapon::OnWeaponChanged(AWeaponBase* weaponIns)
 {
 	SetProcessAborted();
+}
+
+void UActionWeapon::OnWeaponProcessStateChanged(EProcessState processState)
+{
+	check(_weaponProcess);
+
+	if(_weaponProcess->IsDead())
+	{
+		SetProcessAborted();
+	}
 }

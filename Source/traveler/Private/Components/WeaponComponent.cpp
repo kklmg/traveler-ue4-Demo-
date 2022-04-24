@@ -7,6 +7,7 @@
 #include "Data/AnimationModelBase.h"
 #include "Weapon/WeaponBase.h"
 #include "Weapon/BowBase.h"
+#include "Process/ProcessBase.h"
 #include "Character/CreatureCharacter.h"
 
 // Sets default values for this component's properties
@@ -85,11 +86,24 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+UProcessBase* UWeaponComponent::GetWeaponProcess(FName processName)
+{
+	return _weaponIns ? _weaponIns->GetProcess(processName) : nullptr;
+}
+
 void UWeaponComponent::ExecuteWeaponProcess(FName processName)
 {
 	if (_weaponIns)
 	{
 		_weaponIns->ExecuteProcess(processName);
+	}
+}
+
+void UWeaponComponent::TickWeaponProcess(FName processName, float deltaTime)
+{
+	if (_weaponIns)
+	{
+		_weaponIns->TickProcess(processName,deltaTime);
 	}
 }
 

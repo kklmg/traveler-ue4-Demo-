@@ -7,7 +7,7 @@
 #include "ActionWeapon.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class TRAVELER_API UActionWeapon : public UActionBase
@@ -28,6 +28,14 @@ private:
 	UFUNCTION()
 	void OnWeaponChanged(AWeaponBase* weaponIns);
 
+	UFUNCTION()
+	void OnWeaponProcessStateChanged(EProcessState processState);
+
 	UPROPERTY()
 	UWeaponComponent* _weaponComp;
+
+	UPROPERTY()
+	UProcessBase* _weaponProcess;
+
+	FDelegateHandle _delegateHandle;
 };

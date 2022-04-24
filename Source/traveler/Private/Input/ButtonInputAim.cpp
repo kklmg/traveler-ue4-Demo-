@@ -16,7 +16,7 @@ void UButtonInputAim::VTMPress()
 	{
 		GetActionComp()->ExecuteAction(EActionType::EACT_Aim);
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("button down"));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("button down"));
 }
 
 void UButtonInputAim::VTMPressing(float deltaTime)
@@ -25,7 +25,7 @@ void UButtonInputAim::VTMPressing(float deltaTime)
 	{
 		GetActionComp()->ExecuteAction(EActionType::EACT_Aim);
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("button pressing"));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("button pressing"));
 }
 
 void UButtonInputAim::VTMRelease()
@@ -34,5 +34,5 @@ void UButtonInputAim::VTMRelease()
 	{
 		GetActionComp()->AbortAction(EActionType::EACT_Aim);
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("button up"));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("button up"));
 }

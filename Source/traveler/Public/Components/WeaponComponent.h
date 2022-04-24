@@ -12,7 +12,7 @@ class UAnimationModelBase;
 class AWeaponBase;
 class ACreatureCharacter;
 
-class IAnimControlInterface;
+class UProcessBase;
 class ULifeControlComponent;
 class UExTransformProviderComponent;
 
@@ -41,7 +41,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UProcessBase* GetWeaponProcess(FName processName);
 	void ExecuteWeaponProcess(FName processName);
+	void TickWeaponProcess(FName processName,float deltaTime);
 	void StopWeaponProcess(FName processName);
 	void StopAllWeaponProcesses();
 

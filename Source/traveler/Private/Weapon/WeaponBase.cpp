@@ -9,6 +9,7 @@
 #include "Components/ExTransformProviderComponent.h"
 #include "Components/ActionComponent.h"
 #include "Process/ProcessManagerBase.h"
+#include "Process/ProcessBase.h"
 #include "Interface/CharacterCameraInterface.h"
 
 
@@ -40,7 +41,6 @@ void AWeaponBase::PreInitializeComponents()
 {
 	Super::PreInitializeComponents();
 
-	_processManager = NewObject<UProcessManagerBase>(this);
 	_weaponAnimationModel = NewObject<UWeaponAnimationModelBase>(this);
 }
 
@@ -54,7 +54,7 @@ void AWeaponBase::VInitialize(ACreatureCharacter* weaponOwner)
 {
 	_weaponOwner = weaponOwner;
 	check(_weaponOwner);
-	
+
 	_ownerActionComp = Cast<UActionComponent>(_weaponOwner->GetComponentByClass(UActionComponent::StaticClass()));
 	check(weaponOwner);
 
@@ -71,8 +71,6 @@ void AWeaponBase::VInitialize(ACreatureCharacter* weaponOwner)
 void AWeaponBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	_processManager->Tick(DeltaTime);
 }
 
 void AWeaponBase::VOnEquipped()
@@ -88,29 +86,67 @@ void AWeaponBase::VOnUnEquipped()
 	_weaponAnimationModel->ClearData();
 }
 
+FORCEINLINE_DEBUGGABLE UProcessBase* AWeaponBase::GetProcess(FName processName)
+{
+	return _processMap.Contains(processName) ? _processMap[processName] : nullptr;
+}
+
 void AWeaponBase::ExecuteProcess(FName processName)
 {
-	_processManager->ExecutePresetedProcess(processName);
+	if (_processMap.Contains(processName) && _processMap[processName])
+	{
+		if (_processMap[processName]->GetProcessState() != EProcessState::EPS_Running)
+		{
+			_processMap[processName]->Init();
+		}
+		_processMap[processName]->Execute();
+	}
+}
+
+void AWeaponBase::TickProcess(FName processName, float deltaTime)
+{
+	if (_processMap.Contains(processName) && _processMap[processName])
+	{
+		_processMap[processName]->Tick(deltaTime);
+	}
 }
 
 void AWeaponBase::StopProcess(FName processName)
 {
-	_processManager->StopProcess(processName);
+	if (_processMap.Contains(processName) && _processMap[processName])
+	{
+		_processMap[processName]->Abort();
+	}
 }
 
 void AWeaponBase::StopAllProcesses()
 {
-	_processManager->StopAllProcess();
+	for (auto pair : _processMap)
+	{
+		check(pair.Value);
+		pair.Value->Abort();
+	}
 }
 
-void AWeaponBase::AddToProcessStorage(UProcessBase* process)
+void AWeaponBase::AddToProcessMap(UProcessBase* process)
 {
-	_processManager->AddToProcessPresets(process);
+	if (process && _processMap.Contains(process->GetProcessName()) == false)
+	{
+		_processMap.Add(process->GetProcessName(), process);
+	}
 }
 
 bool AWeaponBase::IsProcessRunning(FName processName)
 {
-	return _processManager->IsProcessRunning(processName);
+	if (_processMap.Contains(processName))
+	{
+		check(_processMap[processName]);
+		return _processMap[processName]->GetProcessState() == EProcessState::EPS_Running;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 FORCEINLINE_DEBUGGABLE USkeletalMeshComponent* AWeaponBase::GetMeshComponent()
