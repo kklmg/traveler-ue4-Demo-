@@ -14,7 +14,7 @@ UButtonInputFire::UButtonInputFire()
 void UButtonInputFire::VTMPress()
 {
 	check(GetActionComp())
-	GetActionComp()->ExecuteAction(EActionType::EACT_WeaponStartFire);
+	GetActionComp()->ExecuteAction(EActionType::EACT_Fire);
 }
 
 void UButtonInputFire::VTMPressing(float deltaTime)
@@ -24,5 +24,5 @@ void UButtonInputFire::VTMPressing(float deltaTime)
 void UButtonInputFire::VTMRelease()
 {
 	check(GetActionComp())
-	GetActionComp()->ExecuteAction(EActionType::EACT_WeaponStopFire);
+	GetActionComp()->AbortAction(EActionType::EACT_Fire);
 }

@@ -14,22 +14,25 @@ void UButtonInputAim::VTMPress()
 {
 	if (GetActionComp())
 	{
-		GetActionComp()->ExecuteAction(EActionType::EACT_WeaponStartAim);
+		GetActionComp()->ExecuteAction(EActionType::EACT_Aim);
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("button down"));
 }
 
 void UButtonInputAim::VTMPressing(float deltaTime)
 {
 	if (GetActionComp())
 	{
-		GetActionComp()->ExecuteAction(EActionType::EACT_WeaponStartAim);
+		GetActionComp()->ExecuteAction(EActionType::EACT_Aim);
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("button pressing"));
 }
 
 void UButtonInputAim::VTMRelease()
 {
 	if (GetActionComp())
 	{
-		GetActionComp()->ExecuteAction(EActionType::EACT_WeaponStopAim);
+		GetActionComp()->AbortAction(EActionType::EACT_Aim);
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("button up"));
 }

@@ -47,6 +47,9 @@ public:
 	UActionBase* ExecuteAction(EActionType actionType);
 
 	UFUNCTION(BlueprintCallable)
+	UActionBase* AbortAction(EActionType actionType);
+
+	UFUNCTION(BlueprintCallable)
 	UActionBlackBoard* GetActionBlackBoard();
 	
 private:

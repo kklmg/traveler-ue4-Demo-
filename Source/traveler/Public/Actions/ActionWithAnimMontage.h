@@ -21,6 +21,7 @@ public:
 	virtual void VTMExecute() override;
 	virtual void VTMOnDead() override;
 
+	UFUNCTION()
 	virtual void VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted);
 
 private:

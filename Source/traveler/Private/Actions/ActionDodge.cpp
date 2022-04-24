@@ -7,6 +7,7 @@
 #include "Data/CostData.h"
 #include "Weapon/WeaponBase.h"
 #include "Components/WeaponComponent.h"
+#include "Components/ActionComponent.h"
 
 
 UActionDodge::UActionDodge()
@@ -33,12 +34,8 @@ void UActionDodge::VTMExecute()
 {
 	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
 
-	if (GetWeaponComp())
-	{
-		GetWeaponComp()->StopWeaponProcess(NSNameWeaponProcess::AIM);
-		GetWeaponComp()->StopWeaponProcess(NSNameWeaponProcess::FIRE);
-	}
-
+	GetActionComp()->AbortAction(EActionType::EACT_Aim);
+	GetActionComp()->AbortAction(EActionType::EACT_Fire);
 
 	if (_aniMontage && animInstance)
 	{

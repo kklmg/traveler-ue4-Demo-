@@ -12,6 +12,8 @@ UActionWithAnimMontage::UActionWithAnimMontage()
 
 void UActionWithAnimMontage::VTMExecute()
 {
+	Super::VTMExecute();
+
 	check(GetActionOwner());
 
 	if(GetAnimControlComp() && GetAnimControlComp()->GetAnimInstance())

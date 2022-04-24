@@ -86,7 +86,4 @@ private:
 
 	UPROPERTY()
 	UExTransformProviderComponent* _ownerExTransformProviderComp;
-
-
-	IAnimControlInterface* _animationCommunicator;
 };

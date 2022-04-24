@@ -35,7 +35,6 @@ void UActionBase::SetActionData(ACharacter* character, UActionComponent* actionC
 	_actionBlackBoard = actionBlackBoard;
 
 	_statusComp = Cast<UStatusComponent>(_actionOwner->GetComponentByClass(UStatusComponent::StaticClass()));
-	_weaponComp = Cast<UWeaponComponent>(_actionOwner->GetComponentByClass(UWeaponComponent::StaticClass()));
 	_exTransformProviderComp = Cast<UExTransformProviderComponent>(_actionOwner->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 	_animControlComp = Cast<UAnimControlComponent>(_actionOwner->GetComponentByClass(UAnimControlComponent::StaticClass()));
 
@@ -106,11 +105,6 @@ FORCEINLINE_DEBUGGABLE UCostData* UActionBase::GetCostData()
 FORCEINLINE_DEBUGGABLE UAnimationModelBase* UActionBase::GetAnimationViewModel()
 {
 	return _animControlComp ? _animControlComp->GetAnimationModel() : nullptr;
-}
-
-FORCEINLINE_DEBUGGABLE UWeaponComponent* UActionBase::GetWeaponComp()
-{
-	return _weaponComp;
 }
 
 FORCEINLINE_DEBUGGABLE UAnimControlComponent* UActionBase::GetAnimControlComp()

@@ -33,6 +33,7 @@ bool UProcessBase::Execute()
 	}
 	else
 	{
+		SetProcessFailed();
 		return false;
 	}
 }

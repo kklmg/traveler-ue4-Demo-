@@ -23,10 +23,8 @@ enum class EActionType : uint8
 	EACT_Teleport UMETA(DisplayName = "Teleport"),
 	EACT_Throw UMETA(DisplayName = "Throw"),
 	EACT_Ascend UMETA(DisplayName = "Ascend"),
-	EACT_WeaponStartFire UMETA(DisplayName = "WeaponStartFire"),
-	EACT_WeaponStopFire UMETA(DisplayName = "WeaponStopFire"),
-	EACT_WeaponStartAim UMETA(DisplayName = "WeaponStartAim"),
-	EACT_WeaponStopAim UMETA(DisplayName = "WeaponStopAim"),
+	EACT_Fire UMETA(DisplayName = "Fire"),
+	EACT_Aim UMETA(DisplayName = "Aim"),
 	EACT_Max UMETA(DisplayName = "Max"),
 };
 

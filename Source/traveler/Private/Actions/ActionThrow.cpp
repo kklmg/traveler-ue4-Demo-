@@ -43,6 +43,8 @@ void UActionThrow::VTMTick(float deltaTime)
 
 void UActionThrow::VTMOnDead()
 {
+	Super::VTMOnDead();
+
 	if (GetAnimControlComp())
 	{
 		UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKey::ANK_SpreadAttack);
@@ -103,6 +105,4 @@ void UActionThrow::OnAttackNotifyEnd()
 		_throwerIns->VAutoDestroy();
 		_throwerIns = nullptr;
 	}
-
-	SetProcessFailed();
 }

@@ -4,7 +4,7 @@
 #include "Character/CreatureCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Data/AnimationModelBase.h"
-#include "Components/WeaponComponent.h"
+#include "Components/ActionComponent.h"
 #include "Weapon/WeaponBase.h"
 
 
@@ -24,10 +24,8 @@ void UActionJump::VTMExecute()
 		GetAnimationViewModel()->SetBool(NSAnimationDataKey::bWantToJump, true);
 	}
 
-	if (GetWeaponComp())
-	{
-		GetWeaponComp()->StopAllWeaponProcesses();
-	}
+	GetActionComp()->AbortAction(EActionType::EACT_Fire);
+	GetActionComp()->AbortAction(EActionType::EACT_Aim);
 }
 
 void UActionJump::VTMTick(float deltaTime)

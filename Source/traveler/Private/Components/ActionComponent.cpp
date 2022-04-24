@@ -126,6 +126,27 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 	return newActionIns;
 }
 
+UActionBase* UActionComponent::AbortAction(EActionType actionType)
+{
+	int32 index = int32(actionType);
+
+	if (index >= _mapActionProcessPool.Num())
+	{
+		return nullptr;
+	}
+
+	if(_mapActionProcessPool[index])
+	{
+		UActionBase* cachedAction = _mapActionProcessPool[index];
+		_mapActionProcessPool[index]->Abort();
+		_mapActionProcessPool[index] = nullptr;
+
+		return cachedAction;
+	}
+
+	return nullptr;
+}
+
 
 void UActionComponent::_tickActionProcess(float deltaTime)
 {

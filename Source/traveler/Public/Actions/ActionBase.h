@@ -79,7 +79,6 @@ protected:
 	UAnimControlComponent* GetAnimControlComp();
 	UCostData* GetCostData();
 	UAnimationModelBase* GetAnimationViewModel();
-	UWeaponComponent* GetWeaponComp();
 	UStatusComponent* GetStatusComp();
 	UExTransformProviderComponent* GetExTransformProviderComp();
 
@@ -96,9 +95,6 @@ private:
 
 	UPROPERTY()
 	UExTransformProviderComponent* _exTransformProviderComp;
-
-	UPROPERTY()
-	UWeaponComponent* _weaponComp;
 
 	UPROPERTY()
 	UActionBlackBoard* _actionBlackBoard;
