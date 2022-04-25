@@ -9,6 +9,7 @@
 #include "StatusEffectProcessBase.generated.h"
 
 
+class UDamageHandlerComponent;
 class UActorUIComponent;
 class UEffectControllerComponent;
 
@@ -61,8 +62,8 @@ private:
 	UPROPERTY()
 	AMyHUD* _hud;
 
-
-	IDamageHandlerInterface* _damageHandlerInterface;
+	UPROPERTY()
+	UDamageHandlerComponent* _damageHandlerComp;
 	UPROPERTY()
 	UEffectControllerComponent* _effectControlComp;
 	UPROPERTY()

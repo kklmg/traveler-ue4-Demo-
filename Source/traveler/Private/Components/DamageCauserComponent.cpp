@@ -2,7 +2,6 @@
 
 
 #include "Components/DamageCauserComponent.h"
-#include "Damage/DamageData.h"
 #include "GameSystem/MyGameplayStatics.h"
 
 
@@ -23,10 +22,6 @@ void UDamageCauserComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	if(_damageDataClass)
-	{
-		_damageDataIns = NewObject<UDamageData>(this, _damageDataClass);
-	}
 };
 
 
@@ -41,8 +36,7 @@ void UDamageCauserComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UDamageCauserComponent::CauseDamageTo(AActor* damagedActor)
 {
 	if (!damagedActor) return;
-	if (!_damageDataIns) return;
 
-	UMyGameplayStatics::CauseDamage(damagedActor, _damageDataIns, damagedActor->GetActorLocation(), GetOwner(), nullptr);
+	UMyGameplayStatics::CauseDamage(damagedActor, _damageData, damagedActor->GetActorLocation(), GetOwner(), nullptr);
 }
 

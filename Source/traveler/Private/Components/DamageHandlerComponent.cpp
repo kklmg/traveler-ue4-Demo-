@@ -7,7 +7,6 @@
 #include "Components/ActorUIComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Damage/DamageDisplayer.h"
-#include "Damage/DamageData.h"
 #include "Data/StatusEffectData.h"
 #include "UI/MyHUD.h"
 
@@ -40,7 +39,7 @@ void UDamageHandlerComponent::HandleDamage(float basicDamage, EElementalType ele
 	float finalDamage = CalculateDamage(basicDamage, elementalType, GetOwner(), causer, instigator);
 
 	//apply damage
-	if (_statusComp)
+	if (_statusComp && finalDamage != 0.0f)
 	{
 		_statusComp->ApplyRemainingValueChange(EStatusType::EStatus_Health, -finalDamage);
 	}
@@ -57,17 +56,15 @@ void UDamageHandlerComponent::HandleDamage(float basicDamage, EElementalType ele
 	}
 }
 
-void UDamageHandlerComponent::HandleDamageData(UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator)
+void UDamageHandlerComponent::HandleDamageData(FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator)
 {
-	if (!damageData) return;
-
 	//handle basic damage
-	HandleDamage(damageData->Damage, damageData->ElementalType, impactPoint, causer, instigator);
+	HandleDamage(damageData.Damage, damageData.ElementalType, impactPoint, causer, instigator);
 
 	//handle status effect
-	if (damageData->StatusEffectDataClass)
+	if (damageData.StatusEffectDataClass)
 	{
-		UStatusEffectData* statusEffectDataIns = NewObject<UStatusEffectData>(this, damageData->StatusEffectDataClass);
+		UStatusEffectData* statusEffectDataIns = NewObject<UStatusEffectData>(this, damageData.StatusEffectDataClass);
 		HandleStatusEffect(statusEffectDataIns, impactPoint, causer, instigator);
 	}
 
@@ -77,8 +74,8 @@ void UDamageHandlerComponent::HandleDamageData(UDamageData* damageData, FVector 
 		_actorUIComp->ShowActorUI(EActorUI::ActorUI_Status);
 	}
 
-	UGameplayStatics::ApplyDamage(GetOwner(), damageData->Damage, instigator ? instigator->GetController() : nullptr,
-		causer, damageData->DamageTypeClass);
+	UGameplayStatics::ApplyDamage(GetOwner(), damageData.Damage, instigator ? instigator->GetController() : nullptr,
+		causer, damageData.DamageTypeClass);
 }
 
 void UDamageHandlerComponent::HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator)

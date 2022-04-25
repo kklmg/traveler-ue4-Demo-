@@ -50,7 +50,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	UCurveFloat* _scaleCurve;
-
-	UPROPERTY(EditDefaultsOnly, Category = Damage)
-	TSubclassOf<UDamageType> _damageTypeClass;
 };

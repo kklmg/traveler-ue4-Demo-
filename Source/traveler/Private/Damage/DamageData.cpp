@@ -4,7 +4,7 @@
 #include "Damage/DamageData.h"
 #include "Data/StatusEffectData.h"
 
-UDamageData::UDamageData()
+FDamageData::FDamageData()
 {
 	ElementalType = EElementalType::EElemental_Physics;
 }

@@ -5,7 +5,6 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Damage/DamageHandlerInterface.h"
-#include "Damage/DamageData.h"
 #include "GameSystem/MyGameplayStatics.h"
 
 AArrowActorBase::AArrowActorBase()
@@ -33,11 +32,6 @@ AArrowActorBase::AArrowActorBase()
 void AArrowActorBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (_damageDataClass)
-	{
-		_damageDataIns = NewObject<UDamageData>(this, _damageDataClass);
-	}
 
 	if (_primitiveComp)
 	{
@@ -126,5 +120,5 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	AttachToComponent(OtherComponent, FAttachmentTransformRules::KeepWorldTransform, Hit.BoneName);
 
 	//apply damagge
-	UMyGameplayStatics::CauseDamage(OtherActor, _damageDataIns, Hit.ImpactPoint, this, GetInstigator());
+	UMyGameplayStatics::CauseDamage(OtherActor, _damageData, Hit.ImpactPoint, this, GetInstigator());
 }

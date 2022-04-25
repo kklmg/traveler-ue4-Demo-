@@ -72,9 +72,4 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	EArrowState _arrowState;
 
-	UPROPERTY()
-	UDamageData* _damageDataIns;
-
-	UPROPERTY(EditDefaultsOnly, Category = Damage)
-	TSubclassOf<UDamageData> _damageDataClass;
 };

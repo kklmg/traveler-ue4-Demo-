@@ -9,6 +9,7 @@
 #include "Actors/SphereProjectile.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "GameSystem/ObjectPoolBase.h"
+#include "GameSystem/MyGameplayStatics.h"
 
 
 // Sets default values for this component's properties
@@ -48,7 +49,6 @@ void UProjectileThrowerComponent::BeginPlay()
 
 	GetWorld()->GetTimerManager().SetTimer(_timerHandle, this,
 		&UProjectileThrowerComponent::SpawnProjectile, _throwerData.ThrowingRate, true);
-
 }
 
 

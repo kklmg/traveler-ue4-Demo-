@@ -221,19 +221,3 @@ UCameraComponent* ACreatureCharacter::VGetCameraComponent()
 {
 	return _cameraComponent;
 }
-
-
-void ACreatureCharacter::VHandleDamage(float basicDamage, EElementalType damageType, FVector impactPoint, AActor* causer, APawn* instigator)
-{
-	_damageHandlerComponent->HandleDamage(basicDamage, damageType, impactPoint, causer, instigator);
-}
-
-void ACreatureCharacter::VHandleDamageData(UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator)
-{
-	_damageHandlerComponent->HandleDamageData(damageData, impactPoint, causer, instigator);
-}
-
-void ACreatureCharacter::VHandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator)
-{
-	_damageHandlerComponent->HandleStatusEffect(statusEffectData, impactPoint, causer, instigator);
-}

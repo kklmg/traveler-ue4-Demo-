@@ -4,9 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Damage/DamageData.h"
 #include "DamageCauserComponent.generated.h"
-
-class UDamageData;
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -31,8 +30,5 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UDamageData> _damageDataClass;
-
-	UPROPERTY()
-	UDamageData* _damageDataIns;
+	FDamageData _damageData;
 };

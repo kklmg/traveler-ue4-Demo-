@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Enums/EnumCombat.h"
+#include "Damage/DamageData.h"
 #include "MyGameplayStatics.generated.h"
 
 class UCameraComponent;
-class UDamageData;
+
 
 /**
  * 
@@ -32,11 +33,5 @@ public:
 
 	static float ComputeDistance(FVector from, FVector to, EPlane plane = Plane_None);
 
-	//static EElementalType StatusEffectTypeToDamageType(EStatusEffect statusEffectType);
-
-	static bool CauseDamage(AActor* damagedActor, UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator);
-
-	//static float CalculateDamage(float basicDamage, EDamageType damageType, AActor* damageGiver, AActor* damageReceiver);
-
-	//static bool CanFaceToDirection(FVector direction, FVector CurLocation,float forwardSpeed,float turningSpeed);
+	static bool CauseDamage(AActor* damagedActor, FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator);
 };

@@ -12,12 +12,13 @@ class UStatusEffectData;
 /**
  * 
  */
-UCLASS(BlueprintType,Blueprintable)
-class TRAVELER_API UDamageData : public UObject
+
+USTRUCT()
+struct TRAVELER_API FDamageData
 {
 	GENERATED_BODY()
 public:
-	UDamageData();
+	FDamageData();
 
 public:
 	UPROPERTY(EditDefaultsOnly)

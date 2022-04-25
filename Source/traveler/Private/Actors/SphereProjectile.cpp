@@ -7,7 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-
+#include "GameSystem/MyGameplayStatics.h"
 
 // Sets default values
 ASphereProjectile::ASphereProjectile()
@@ -86,7 +86,8 @@ void ASphereProjectile::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherA
 
 	if (OtherActor != instigator)
 	{
-		UGameplayStatics::ApplyDamage(OtherActor, _damage, instigator? GetInstigator()->GetController():nullptr, this, _damageTypeClass);
+		//apply damagge
+		UMyGameplayStatics::CauseDamage(OtherActor, _damageData, Hit.ImpactPoint, this, GetInstigator());
 	}
 }
 
@@ -101,7 +102,8 @@ void ASphereProjectile::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent
 
 	if (OtherActor != instigator)
 	{
-		UGameplayStatics::ApplyDamage(OtherActor, _damage, instigator ? GetInstigator()->GetController() : nullptr, this, _damageTypeClass);
+		//apply damagge
+		UMyGameplayStatics::CauseDamage(OtherActor, _damageData, OtherActor->GetActorLocation(), this, GetInstigator());
 	}
 	if (OtherComp->GetCollisionObjectType() == ECollisionChannel::ECC_WorldStatic)
 	{

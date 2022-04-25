@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Enums/EnumCombat.h"
+#include "Damage/DamageData.h"
 #include "DamageHandlerComponent.generated.h"
 
 class UStatusEffectProcessManager;
@@ -27,7 +28,7 @@ public:
 	UDamageHandlerComponent();
 
 	void HandleDamage(float basicDamage, EElementalType elementalType, FVector impactPoint, AActor* causer, APawn* instigator);
-	void HandleDamageData(UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator);
+	void HandleDamageData(FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator);
 	void HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator);
 
 	UFUNCTION()

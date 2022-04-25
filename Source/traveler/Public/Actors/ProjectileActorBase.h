@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Interface/PoolableInterface.h"
 #include "Interface/ThrowableInterface.h"
+#include "Damage/DamageData.h"
 #include "ProjectileActorBase.generated.h"
 
 DECLARE_DELEGATE_OneParam(FOnActorInactivated, int)
@@ -64,6 +65,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* _projectileMovementComp;
+
+	UPROPERTY(EditDefaultsOnly)
+	FDamageData _damageData;
 
 	UPROPERTY(VisibleAnywhere)
 	bool _bIsActive;

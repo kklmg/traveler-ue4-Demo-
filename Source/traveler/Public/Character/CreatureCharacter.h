@@ -37,7 +37,7 @@ class FDMD_OnFloatValueChanged;
 
 
 UCLASS()
-class TRAVELER_API ACreatureCharacter : public ACharacter , public ICharacterCameraInterface, public IDamageHandlerInterface
+class TRAVELER_API ACreatureCharacter : public ACharacter , public ICharacterCameraInterface
 {
 	GENERATED_BODY()
 
@@ -73,12 +73,6 @@ public:
 	virtual	void VResetCameraArmPitchLimit() override;
 	virtual float VGetCameraArmLength() override;
 	virtual UCameraComponent* VGetCameraComponent() override;
-
-
-	//Damage Handler Interface implementation --------------------------------------------------
-	virtual void VHandleDamage(float basicDamage, EElementalType damageType, FVector impactPoint, AActor* causer, APawn* instigator)  override;
-	virtual void VHandleDamageData(UDamageData* damageData, FVector impactPoint, AActor* causer, APawn* instigator)  override;
-	virtual void VHandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator) override;
 
 protected:
 	UPROPERTY(VisibleAnywhere)

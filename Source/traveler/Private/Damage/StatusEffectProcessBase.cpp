@@ -5,6 +5,7 @@
 #include "Components/DamageHandlerComponent.h"
 #include "Components/ActorUIComponent.h"
 #include "Components/EffectControllerComponent.h"
+#include "Components/DamageHandlerComponent.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "GameSystem/MyGameplayStatics.h"
 
@@ -20,7 +21,7 @@ void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCau
 
 	_actorUIComp = Cast<UActorUIComponent>(effectReceiver->GetComponentByClass(UActorUIComponent::StaticClass()));
 	_effectControlComp = Cast<UEffectControllerComponent>(effectReceiver->GetComponentByClass(UEffectControllerComponent::StaticClass()));
-	_damageHandlerInterface = Cast<IDamageHandlerInterface>(effectReceiver);
+	_damageHandlerComp = Cast<UDamageHandlerComponent>(effectReceiver->GetComponentByClass(UDamageHandlerComponent::StaticClass()));
 
 	if(effectData)
 	{
@@ -89,9 +90,9 @@ void UStatusEffectProcessBase::VTMTick(float deltaTime)
 
 	while (_ElapsedTimeFromLastDamage >= _damageInterval)
 	{
-		if (_damage != 0.0f && _damageHandlerInterface)
+		if (_damage != 0.0f && _damageHandlerComp)
 		{
-			_damageHandlerInterface->VHandleDamage(_damage, _elementalType, _effectReceiver->GetActorLocation(), 
+			_damageHandlerComp->HandleDamage(_damage, _elementalType, _effectReceiver->GetActorLocation(),
 				_effectCauser, _effectInstigator);
 		}
 
