@@ -11,19 +11,6 @@ AProjectileActorBase::AProjectileActorBase()
 		// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//if (!_rootSceneComp)
-	//{
-	//	_rootSceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("RootSceneComp"));
-	//	SetRootComponent(_rootSceneComp);
-	//}
-
-	if (!_meshComp)
-	{
-		_meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
-		_meshComp->AttachToComponent(_rootSceneComp, FAttachmentTransformRules::KeepRelativeTransform);
-		RootComponent = _meshComp;
-	}
-
 	if (!_projectileMovementComp)
 	{
 		// Use this component to drive this projectile's movement.
@@ -116,11 +103,11 @@ void AProjectileActorBase::VReset()
 	_projectileMovementComp->Velocity = FVector::ZeroVector;
 	_projectileMovementComp->SetUpdatedComponent(GetRootComponent());
 	_projectileMovementComp->SetComponentTickEnabled(true);
-	_meshComp->MoveIgnoreActors.Empty();
+	_primitiveComp->MoveIgnoreActors.Empty();
 
 	if (GetInstigator() && _bIgnoreInstigator)
 	{
-		_meshComp->IgnoreActorWhenMoving(GetInstigator(), true);
+		_primitiveComp->IgnoreActorWhenMoving(GetInstigator(), true);
 		GetInstigator()->MoveIgnoreActorAdd(this);
 	}
 }

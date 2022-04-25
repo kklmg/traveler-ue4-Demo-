@@ -1,17 +1,29 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Actors/ProjectileActor.h"
+#include "Actors/SphereProjectile.h"
 #include "Curves/CurveFloat.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/SphereComponent.h"
+#include "DrawDebugHelpers.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 
 // Sets default values
-AProjectileActor::AProjectileActor()
+ASphereProjectile::ASphereProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	if (!_primitiveComp)
+	{
+		_sphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
+		check(_sphereComp);
+
+		_primitiveComp = _sphereComp;
+		SetRootComponent(_primitiveComp);
+		_primitiveComp->SetCollisionProfileName(FName("Particle"));
+	}
 
 	_basicScale = 1.0f; 
 	_coneAngle = 5.0f;
@@ -20,21 +32,21 @@ AProjectileActor::AProjectileActor()
 }
 
 // Called when the game starts or when spawned
-void AProjectileActor::BeginPlay()
+void ASphereProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_initialMeshScale = _meshComp->GetComponentScale();
-	if(_meshComp)
+	_initialMeshScale = _primitiveComp->GetComponentScale();
+	if(_primitiveComp)
 	{
 		//OnHit 
-		_meshComp->OnComponentHit.AddDynamic(this, &AProjectileActor::VOnHit);
-		_meshComp->OnComponentBeginOverlap.AddDynamic(this, &AProjectileActor::VOnOverlapBegin);
+		_primitiveComp->OnComponentHit.AddDynamic(this, &ASphereProjectile::VOnHit);
+		_primitiveComp->OnComponentBeginOverlap.AddDynamic(this, &ASphereProjectile::VOnOverlapBegin);
 	}
 }
 
 // Called every frame
-void AProjectileActor::Tick(float DeltaTime)
+void ASphereProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -48,11 +60,13 @@ void AProjectileActor::Tick(float DeltaTime)
 	if (_scaleCurve)
 	{
 		float normalizedElapsedTime = FMath::Clamp(_elapsedLifeTime / _lifeTime, 0.0f, 1.0f);
-		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime) * _basicScale;
+		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime) * _basicScale * 0.001;
 	}
 	
 	//SetActorScale3D(FVector(scale, scale, scale));
-	_meshComp->SetWorldScale3D(FVector(scale, scale, scale)* _initialMeshScale);
+	//_primitiveComp->SetWorldScale3D(FVector(scale, scale, scale)* _initialMeshScale);
+
+	_sphereComp->SetSphereRadius(scale);
 
 	VApplyDamageToOverlapedActor();
 
@@ -60,27 +74,23 @@ void AProjectileActor::Tick(float DeltaTime)
 	{
 		VInActivate();
 	}
+
+	DrawDebugSphere(GetWorld(), GetActorLocation(), _sphereComp->GetScaledSphereRadius(), 10.0f, FColor::Red);
 }
 
 
 
-void AProjectileActor::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+void ASphereProjectile::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
-	//{
-	//	OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, Hit.ImpactPoint);
-	//}
-
 	APawn* instigator = GetInstigator();
 
 	if (OtherActor != instigator)
 	{
 		UGameplayStatics::ApplyDamage(OtherActor, _damage, instigator? GetInstigator()->GetController():nullptr, this, _damageTypeClass);
 	}
-	
 }
 
-void AProjectileActor::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ASphereProjectile::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor != this && OverlappedComponent->IsSimulatingPhysics())
 	{
@@ -101,15 +111,15 @@ void AProjectileActor::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 
 
 
-void AProjectileActor::VApplyDamageToOverlapedActor()
+void ASphereProjectile::VApplyDamageToOverlapedActor()
 {
-	if(_meshComp)
+	if(_primitiveComp)
 	{
 		TArray<AActor*> _actors;
 
 		FDamageEvent damageEvent;
 
-		_meshComp->GetOverlappingActors(_actors);
+		_primitiveComp->GetOverlappingActors(_actors);
 		
 		for (AActor* actor : _actors)
 		{
@@ -118,12 +128,12 @@ void AProjectileActor::VApplyDamageToOverlapedActor()
 	}
 }
 
-void AProjectileActor::VOnActive()
+void ASphereProjectile::VOnActive()
 {
 	Super::VOnActive();
 }
 
-void AProjectileActor::VOnInActive()
+void ASphereProjectile::VOnInActive()
 {
 	Super::VOnInActive();
 
@@ -131,7 +141,7 @@ void AProjectileActor::VOnInActive()
 }
 
 
-void AProjectileActor::VSetScaleCurve(UCurveFloat* curve)
+void ASphereProjectile::VSetScaleCurve(UCurveFloat* curve)
 {
 	_scaleCurve = curve;
 }

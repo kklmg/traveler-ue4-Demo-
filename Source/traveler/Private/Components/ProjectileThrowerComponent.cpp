@@ -6,7 +6,7 @@
 #include "TimerManager.h"
 #include "Interface/ThrowableInterface.h"
 #include "Interface/ThrowerDataProviderInterface.h"
-#include "Actors/ProjectileActor.h"
+#include "Actors/SphereProjectile.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "GameSystem/ObjectPoolBase.h"
 
@@ -95,7 +95,7 @@ void UProjectileThrowerComponent::SpawnProjectile()
 	check(_pool);
 
 	if (isSpawnable() == false) return;
-	AProjectileActor* actor = _pool->SpawnObject<AProjectileActor>();
+	ASphereProjectile* actor = _pool->SpawnObject<ASphereProjectile>();
 
 	if (actor)
 	{

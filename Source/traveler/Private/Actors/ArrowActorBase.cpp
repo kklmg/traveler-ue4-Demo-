@@ -10,6 +10,14 @@
 
 AArrowActorBase::AArrowActorBase()
 {
+	if (!_primitiveComp)
+	{
+		_primitiveComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
+		check(_primitiveComp);
+		SetRootComponent(_primitiveComp);
+		_primitiveComp->SetCollisionProfileName(FName("Projectile"));
+	}
+
 	_timeToDrop = 5.0f;
 	_arrowState = EArrowState::EAS_Spawned;
 	_gravity = 0.1f;
@@ -20,11 +28,6 @@ AArrowActorBase::AArrowActorBase()
 
 	_elapsedTimeFromLaunch = 0.0f;
 	_elapsedTimeFromHit = 0.0f;
-
-	if(_meshComp)
-	{
-		_meshComp->SetCollisionProfileName(FName("Projectile"));
-	}
 }
 
 void AArrowActorBase::BeginPlay()
@@ -36,12 +39,12 @@ void AArrowActorBase::BeginPlay()
 		_damageDataIns = NewObject<UDamageData>(this, _damageDataClass);
 	}
 
-	if (_meshComp)
+	if (_primitiveComp)
 	{
-		_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		_primitiveComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		//OnHit 
-		_meshComp->OnComponentHit.AddDynamic(this, &AArrowActorBase::VOnHit);
+		_primitiveComp->OnComponentHit.AddDynamic(this, &AArrowActorBase::VOnHit);
 	}
 }
 
@@ -81,7 +84,7 @@ void AArrowActorBase::Tick(float DeltaTime)
 void AArrowActorBase::Launch(float strength)
 {
 	_arrowState = EArrowState::EAS_Launched;
-	_meshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	VSetVelocity(_launchDirection * _basicSpeed * strength);
 }
@@ -99,7 +102,7 @@ void AArrowActorBase::VReset()
 	_elapsedTimeFromLaunch = 0.0f;
 	_elapsedTimeFromHit = 0.0f;
 	_projectileMovementComp->ProjectileGravityScale = 0.0f;
-	_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	FDetachmentTransformRules detachRule(EDetachmentRule::KeepWorld,true);
 	DetachFromActor(detachRule);

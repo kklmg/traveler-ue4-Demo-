@@ -10,6 +10,7 @@
 
 DECLARE_DELEGATE_OneParam(FOnActorInactivated, int)
 
+class USphereComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
@@ -56,7 +57,10 @@ protected:
 	USceneComponent* _rootSceneComp;
 
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* _meshComp;
+	UPrimitiveComponent* _primitiveComp;
+
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* _sphereComp;
 
 	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* _projectileMovementComp;

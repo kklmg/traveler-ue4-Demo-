@@ -35,7 +35,6 @@ public:
 	virtual FThrowerData VGetThrowerData() override;
 	virtual void VAutoDestroy() override;
 
-
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = ThrowerSetting)
 	FThrowerData _throwerData;

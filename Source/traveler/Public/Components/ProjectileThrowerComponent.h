@@ -11,7 +11,8 @@
 
 class IThrowerDataProviderInterface;
 
-class AProjectileActor;
+class AProjectileActorBase;
+class ASphereProjectile;
 class UObjectPoolBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -54,7 +55,7 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AProjectileActor> _spawningActorClass;
+	TSubclassOf<AProjectileActorBase> _spawningActorClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	FTimerHandle _timerHandle;
