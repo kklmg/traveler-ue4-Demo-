@@ -18,6 +18,8 @@ public:
 	AThrowerActorBase();
 
 protected:
+	virtual void PostInitializeComponents() override;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -27,4 +29,17 @@ public:
 	
 	virtual void VSetSpawningLocation(FVector location) override;
 	virtual void VSetThrowingDirection(FVector direction) override;
+	virtual void VSetSpawningActorScale(float scale) override;
+	virtual void VSetSpeed(float speed) override;
+	virtual void VSetLife(float life) override;
+	virtual FThrowerData VGetThrowerData() override;
+	virtual void VAutoDestroy() override;
+
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = ThrowerSetting)
+	FThrowerData _throwerData;
+private:
+	UPROPERTY()
+	TArray<TScriptInterface<IThrowerInterface>> _throwerInterfaces;
 };

@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Data/ThrowerData.h"
 #include "Interface/ThrowableInterface.h"
-#include "ThrowerComponent.generated.h"
+#include "Interface/ThrowerInterface.h"
+#include "ProjectileThrowerComponent.generated.h"
 
 class IThrowerDataProviderInterface;
 
@@ -13,24 +15,34 @@ class AProjectileActor;
 class UObjectPoolBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TRAVELER_API UThrowerComponent : public UActorComponent 
+class TRAVELER_API UProjectileThrowerComponent : public UActorComponent , public IThrowerInterface
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UThrowerComponent();
+	UProjectileThrowerComponent();
 
 protected:
+	virtual void InitializeComponent() override;
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+public:
+	virtual void VSetSpawningLocation(FVector location) override;
+	virtual void VSetSpawningActorScale(float scale) override;
+	virtual void VSetThrowingDirection(FVector direction)override;
+	virtual void VSetSpeed(float speed) override;
+	virtual void VSetLife(float life) override;
+	virtual void VAutoDestroy() override;
+
+
 	UFUNCTION()
-	void SpawnThrowingActor();
+	void SpawnProjectile();
 
 	UFUNCTION()
 	bool isSpawnable();
@@ -53,6 +65,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	int32 _poolSize;
 
+	FThrowerData _throwerData;
+
 	float _elapsedTime;
-	IThrowerDataProviderInterface* _throwerDataProvider;
 };

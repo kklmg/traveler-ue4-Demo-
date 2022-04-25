@@ -3,10 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/ThrowerActor.h"
-#include "ThrowerWithNiagaraActor.generated.h"
-
-class UNiagaraComponent;
+#include "NiagaraComponent.h"
+#include "Interface/ThrowerInterface.h"
+#include "NiagaraThrowerComponent.generated.h"
 
 namespace NSNameNiagaraParams
 {
@@ -23,30 +22,25 @@ namespace NSNameNiagaraParams
 /**
  * 
  */
-UCLASS()
-class TRAVELER_API AThrowerWithNiagaraActor : public AThrowerActor
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+class TRAVELER_API UNiagaraThrowerComponent : public UNiagaraComponent, public IThrowerInterface
 {
 	GENERATED_BODY()
 public:
-	AThrowerWithNiagaraActor();
+	UNiagaraThrowerComponent();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+
+	virtual void VSetSpawningLocation(FVector location) override;
+	virtual void VSetSpawningActorScale(float scale) override;
+	virtual void VSetThrowingDirection(FVector direction) override;
 	virtual void VSetSpeed(float speed) override;
 	virtual void VSetLife(float life) override;
-	virtual void VSetSpawningActorScale(float scale) override;
-
 	virtual void VAutoDestroy() override;
-
-private:
-	UPROPERTY(VisibleAnywhere)
-	UNiagaraComponent* _throwingNiagaraEffectComp;
-
-	UPROPERTY(VisibleAnywhere)
-	UNiagaraComponent* _impactedNiagaraEffectComp;
 };

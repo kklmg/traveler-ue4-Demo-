@@ -25,16 +25,12 @@ void UActionWeapon::VTMInit()
 	}
 
 	GetWeaponComp()->OnWeaponChanged.AddDynamic(this, &UActionWeapon::OnWeaponChanged);
-
 }
 
 bool UActionWeapon::VTMCanExecute()
 {
 	if (!Super::VTMCanExecute()) return false;
-
 	if (_weaponComp == nullptr || _weaponProcess == nullptr) return false;
-
-
 	return _weaponProcess->CanExecute();
 }
 

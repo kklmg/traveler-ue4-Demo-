@@ -11,11 +11,25 @@ AThrowerActorBase::AThrowerActorBase()
 
 }
 
+void AThrowerActorBase::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	auto components = GetComponentsByInterface(UThrowerInterface::StaticClass());
+	for (auto component : components)
+	{
+		_throwerInterfaces.Add(component);
+	}
+
+	VSetSpeed(_throwerData.Speed);
+	VSetLife(_throwerData.Life);
+	VSetSpawningActorScale(_throwerData.Scale);
+}
+
 // Called when the game starts or when spawned
 void AThrowerActorBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -28,10 +42,65 @@ void AThrowerActorBase::Tick(float DeltaTime)
 void AThrowerActorBase::VSetSpawningLocation(FVector location)
 {
 	SetActorLocation(location);
+	for (auto throwerIntreface : _throwerInterfaces)
+	{
+		throwerIntreface->VSetSpawningLocation(location);
+	}
 }
 
 void AThrowerActorBase::VSetThrowingDirection(FVector direction)
 {
 	SetActorRotation(direction.ToOrientationQuat());
+	for (auto throwerIntreface : _throwerInterfaces)
+	{
+		throwerIntreface->VSetThrowingDirection(direction);
+	}
 }
 
+void AThrowerActorBase::VSetSpawningActorScale(float scale)
+{
+	_throwerData.Scale = scale;
+	for (auto throwerIntreface : _throwerInterfaces)
+	{
+		throwerIntreface->VSetSpawningActorScale(scale);
+	}
+}
+
+void AThrowerActorBase::VSetSpeed(float speed)
+{
+	_throwerData.Speed = speed;
+	for (auto throwerIntreface : _throwerInterfaces)
+	{
+		throwerIntreface->VSetSpeed(speed);
+	}
+}
+
+void AThrowerActorBase::VSetLife(float life)
+{
+	_throwerData.Life = life;
+	for (auto throwerIntreface : _throwerInterfaces)
+	{
+		throwerIntreface->VSetLife(life);
+	}
+}
+
+FThrowerData AThrowerActorBase::VGetThrowerData()
+{
+	return _throwerData;
+}
+
+void AThrowerActorBase::VAutoDestroy()
+{
+	SetLifeSpan(_throwerData.Life);
+
+	for (auto throwerIntreface : _throwerInterfaces)
+	{
+		throwerIntreface->VAutoDestroy();
+	}
+
+	/*if (_throwerComp)
+	{
+		_throwerComp->StopSpawning();
+		_throwerComp->Deactivate();
+	}*/
+}
