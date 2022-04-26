@@ -27,7 +27,7 @@ UProjectileThrowerComponent::UProjectileThrowerComponent()
 
 void UProjectileThrowerComponent::InitializeComponent()
 {
-
+	Super::InitializeComponent();
 }
 
 // Called when the game starts
@@ -44,6 +44,11 @@ void UProjectileThrowerComponent::BeginPlay()
 
 	_pool = NewObject<UObjectPoolBase>(this);
 	_pool->Initialize(_spawningActorClass, _poolSize);
+
+	if(_bSpawnProjectileOnBeginPlay)
+	{
+		VStartThrowing();
+	}
 }
 
 void UProjectileThrowerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)

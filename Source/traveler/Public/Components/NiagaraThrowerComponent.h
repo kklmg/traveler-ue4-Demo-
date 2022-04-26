@@ -36,7 +36,6 @@ public:
 	// Called every frame
 	void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-
 	virtual void VSetSpawningLocation(FVector location) override;
 	virtual void VSetSpawningActorScale(float scale) override;
 	virtual void VSetThrowingDirection(FVector direction) override;

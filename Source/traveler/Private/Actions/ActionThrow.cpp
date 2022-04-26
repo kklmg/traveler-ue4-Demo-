@@ -56,7 +56,7 @@ void UActionThrow::VTMOnDead()
 	if (_throwerIns)
 	{
 		_throwerIns->VStartThrowing();
-		_throwerIns->Destroy();
+		_throwerIns->MarkDestroy();
 		_throwerIns = nullptr;
 	}
 }
@@ -110,7 +110,7 @@ void UActionThrow::OnAttackNotifyEnd()
 	if (_throwerIns)
 	{
 		_throwerIns->VStartThrowing();
-		_throwerIns->Destroy();
+		_throwerIns->MarkDestroy();
 		_throwerIns = nullptr;
 	}
 }

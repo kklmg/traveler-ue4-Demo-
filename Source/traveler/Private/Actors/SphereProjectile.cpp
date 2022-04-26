@@ -60,7 +60,7 @@ void ASphereProjectile::Tick(float DeltaTime)
 	if (_scaleCurve)
 	{
 		float normalizedElapsedTime = FMath::Clamp(_elapsedLifeTime / _lifeTime, 0.0f, 1.0f);
-		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime) * _basicScale * 0.001;
+		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime) * _basicScale * 0.1;
 	}
 	
 	//SetActorScale3D(FVector(scale, scale, scale));

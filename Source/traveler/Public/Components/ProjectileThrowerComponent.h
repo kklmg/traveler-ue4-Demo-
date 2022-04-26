@@ -43,29 +43,30 @@ public:
 	virtual void VStartThrowing() override;
 	virtual void VStopThrowing() override;
 
-
+protected:
 	UFUNCTION()
 	void SpawnProjectile();
 
 	UFUNCTION()
 	bool isSpawnable();
 
+	//todo deprecated
 	void SphereTracing();
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AProjectileActorBase> _spawningActorClass;
+	bool _bSpawnProjectileOnBeginPlay;
 
 	UPROPERTY(EditDefaultsOnly)
-	FTimerHandle _timerHandle;
-
-	UPROPERTY()
-	UObjectPoolBase* _pool;
+	TSubclassOf<AProjectileActorBase> _spawningActorClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 _poolSize;
 
-	FThrowerData _throwerData;
+	UPROPERTY()
+	UObjectPoolBase* _pool;
 
+	FTimerHandle _timerHandle;
+	FThrowerData _throwerData;
 	float _elapsedTime;
 };

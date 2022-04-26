@@ -109,3 +109,13 @@ void AThrowerActorBase::VStopThrowing()
 		throwerIntreface->VStopThrowing();
 	}
 }
+
+void AThrowerActorBase::MarkDestroy()
+{
+	SetLifeSpan(_throwerData.Life);
+
+	for (auto throwerIntreface : _throwerInterfaces)
+	{
+		throwerIntreface->VStopThrowing();
+	}
+}

@@ -27,7 +27,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+
 	virtual void VSetSpawningLocation(FVector location) override;
 	virtual void VSetThrowingDirection(FVector direction) override;
 	virtual void VSetSpawningActorScale(float scale) override;
@@ -36,6 +36,8 @@ public:
 	virtual FThrowerData VGetThrowerData() override;
 	virtual void VStartThrowing() override;
 	virtual void VStopThrowing() override;
+
+	virtual void MarkDestroy();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = ThrowerSetting)
