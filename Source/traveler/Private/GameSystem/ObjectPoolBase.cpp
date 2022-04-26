@@ -12,17 +12,12 @@ UObjectPoolBase::UObjectPoolBase()
 
 UObject* UObjectPoolBase::SpawnObject()
 {
-	if (!_spawnObjectClass)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No SpawnObjectClass!"));
-		return nullptr;
-	}
+	check(_spawnObjectClass);
 
 	//recycle
 	if (_emptyIndicies.Num() > 0)
 	{
 		int32 emptySlotID = _emptyIndicies.Pop();
-		_spawnedOrder.Add(emptySlotID);
 		_pool[emptySlotID]->VActivate();
 
 		return _pool[emptySlotID].GetObject();
@@ -50,12 +45,12 @@ UObject* UObjectPoolBase::SpawnObject()
 		}
 		
 		IPoolableInterface* poolObjectInterface = Cast<IPoolableInterface>(newObject);
-
 		if (newObject && poolObjectInterface)
 		{
-			_spawnedOrder.Add(_pool.Num());
 			poolObjectInterface->VSetPoolId(_pool.Num());
-			poolObjectInterface->VGetObjectInactiveDelegate().BindUFunction(this, FName("OnObjectInactive"));
+
+			check(poolObjectInterface->VGetObjectInactiveDelegate());
+			poolObjectInterface->VGetObjectInactiveDelegate()->BindUObject(this, &UObjectPoolBase::OnObjectInactive);
 			poolObjectInterface->VActivate();
 			_pool.Add(newObject);
 
@@ -68,16 +63,9 @@ UObject* UObjectPoolBase::SpawnObject()
 		}
 	}
 	else
-	{
-	/*	int32 FirstID = _spawnedOrder[0];
-		_pool[FirstID]->VInActivate();
-		_pool[FirstID]->VActivate();
-		_spawnedOrder.RemoveAt(0);
-		
-		return _pool[FirstID].GetObject();*/
+	{	//todo
 		return nullptr;
 	}
-
 }
 
 void UObjectPoolBase::Initialize(TSubclassOf<UObject> objectClass, int32 poolSize)
@@ -97,7 +85,6 @@ void UObjectPoolBase::Initialize(TSubclassOf<UObject> objectClass, int32 poolSiz
 	}
 
 	_emptyIndicies.Empty();
-	_spawnedOrder.Empty();
 	_pool.Empty();
 }
 
@@ -113,13 +100,18 @@ bool UObjectPoolBase::IsSpawnable()
 	return _pool.Num() < _poolSize || _emptyIndicies.Num() > 0;
 }
 
+void UObjectPoolBase::EmptyPool()
+{
+	for (auto element : _pool)
+	{
+		element->VMarkDestroy();
+	}
+	_pool.Empty();
+}
+
 void UObjectPoolBase::OnObjectInactive(int32 index)
 {
 	_emptyIndicies.Add(index);
-
-	//todo: find more efficent way
-	_spawnedOrder.Remove(index);
-	_spawnedOrder.Add(index);
 }
 
 

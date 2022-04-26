@@ -62,12 +62,13 @@ public:
 	//PoolObject Interface implementation---------------------------------
 
 	virtual bool VIsActive() override;
-	virtual void VActivate() override;
-	virtual void VInActivate() override;
+	virtual bool VActivate() override;
+	virtual bool VInActivate() override;
+	virtual void VMarkDestroy() override;
 
 	virtual int VGetPoolId()  override;
 	virtual void VSetPoolId(int32 poolId)  override;
-	virtual FOnObjectInactive& VGetObjectInactiveDelegate()  override;
+	virtual FOnObjectInactive* VGetObjectInactiveDelegate()  override;
 
 public:
 	UPROPERTY(BlueprintReadOnly)
@@ -86,4 +87,5 @@ private:
 	FOnObjectInactive _onObjectInActive;
 	int32 _poolId;
 	bool _bIsActive;
+	bool _bMarkDestroy;
 };

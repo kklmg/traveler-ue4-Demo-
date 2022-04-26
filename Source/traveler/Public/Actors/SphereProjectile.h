@@ -37,8 +37,8 @@ public:
 
 	virtual void VApplyDamageToOverlapedActor();
 
-	virtual void VOnActive() override;
-	virtual void VOnInActive() override;
+	virtual bool VActivate() override;
+	virtual bool VInActivate() override;
 
 private:
 	UPROPERTY(VisibleAnywhere)

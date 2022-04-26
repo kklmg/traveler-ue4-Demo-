@@ -27,5 +27,6 @@ public:
 	virtual void VSetThrowingDirection(FVector direction) PURE_VIRTUAL(UThrowerInterface::VSetThrowingDirection, );
 	virtual void VSetSpeed(float speed) PURE_VIRTUAL(UThrowerInterface::VSetSpeed, );
 	virtual void VSetLife(float life) PURE_VIRTUAL(UThrowerInterface::VSetLife, );
-	virtual void VAutoDestroy() PURE_VIRTUAL(UThrowerInterface::VAutoDestroy, );
+	virtual void VStartThrowing() PURE_VIRTUAL(UThrowerInterface::VStartThrowing, );
+	virtual void VStopThrowing() PURE_VIRTUAL(UThrowerInterface::VStopThrowing, );
 };

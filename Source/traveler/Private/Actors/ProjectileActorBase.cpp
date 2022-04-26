@@ -59,7 +59,7 @@ bool AProjectileActorBase::VIsActive()
 	return _bIsActive;
 }
 
-void AProjectileActorBase::VActivate()
+bool AProjectileActorBase::VActivate()
 {
 	if(!_bIsActive)
 	{
@@ -69,11 +69,15 @@ void AProjectileActorBase::VActivate()
 		SetActorEnableCollision(true);
 
 		VReset();
-		VOnActive();
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
-void AProjectileActorBase::VInActivate()
+bool AProjectileActorBase::VInActivate()
 {
 	if (_bIsActive)
 	{
@@ -83,18 +87,18 @@ void AProjectileActorBase::VInActivate()
 		SetActorHiddenInGame(true);
 		SetActorEnableCollision(false);
 
-		_onOnjectInactive.ExecuteIfBound(_poolId);
-		VOnInActive();
+		_OnObjectInactiveDelegate.ExecuteIfBound(_poolId);
+
+		if (_bIsMarkDead)
+		{
+			Destroy();
+		}
+		return true;
 	}
-}
-
-void AProjectileActorBase::VOnActive()
-{
-}
-
-void AProjectileActorBase::VOnInActive()
-{
-	OnActorInactivated.ExecuteIfBound(_poolId);
+	else
+	{
+		return false;
+	}
 }
 
 void AProjectileActorBase::VReset()
@@ -122,9 +126,18 @@ void AProjectileActorBase::VSetPoolId(int poolId)
 	_poolId = poolId;
 }
 
-FOnObjectInactive& AProjectileActorBase::VGetObjectInactiveDelegate()
+FOnObjectInactive* AProjectileActorBase::VGetObjectInactiveDelegate()
 {
-	return _onOnjectInactive;
+	return &_OnObjectInactiveDelegate;
+}
+
+void AProjectileActorBase::VMarkDestroy()
+{
+	_bIsMarkDead = true;
+	if (_bIsMarkDead && _bIsActive == false)
+	{
+		Destroy();
+	}
 }
 
 void AProjectileActorBase::VSetScale(float scale)

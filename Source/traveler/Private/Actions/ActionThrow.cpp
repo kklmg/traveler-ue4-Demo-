@@ -53,6 +53,12 @@ void UActionThrow::VTMOnDead()
 		notifier->NotifyTickDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyTick);
 		notifier->NotifyEndDelegate.RemoveDynamic(this, &UActionThrow::OnAttackNotifyEnd);
 	}
+	if (_throwerIns)
+	{
+		_throwerIns->VStartThrowing();
+		_throwerIns->Destroy();
+		_throwerIns = nullptr;
+	}
 }
 
 void UActionThrow::OnAttackNotifyBegin(float durationTime)
@@ -76,6 +82,9 @@ void UActionThrow::OnAttackNotifyBegin(float durationTime)
 	//spawn actor
 	_throwerIns = GetWorld()->SpawnActor<AThrowerActorBase>(_throwerClass, outTransform, spawnParameters);
 	_throwerIns->AttachToComponent(GetActionOwner()->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, outSocketName);
+	
+	//
+	_throwerIns->VStartThrowing();
 }
 
 void UActionThrow::OnAttackNotifyTick(float frameDeltaTime)
@@ -98,11 +107,10 @@ void UActionThrow::OnAttackNotifyTick(float frameDeltaTime)
 
 void UActionThrow::OnAttackNotifyEnd()
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("attack notify End"));
-
 	if (_throwerIns)
 	{
-		_throwerIns->VAutoDestroy();
+		_throwerIns->VStartThrowing();
+		_throwerIns->Destroy();
 		_throwerIns = nullptr;
 	}
 }

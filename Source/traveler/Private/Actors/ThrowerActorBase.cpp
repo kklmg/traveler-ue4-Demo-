@@ -32,6 +32,11 @@ void AThrowerActorBase::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AThrowerActorBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+}
+
 // Called every frame
 void AThrowerActorBase::Tick(float DeltaTime)
 {
@@ -89,18 +94,18 @@ FThrowerData AThrowerActorBase::VGetThrowerData()
 	return _throwerData;
 }
 
-void AThrowerActorBase::VAutoDestroy()
+void AThrowerActorBase::VStartThrowing()
 {
-	SetLifeSpan(_throwerData.Life);
-
 	for (auto throwerIntreface : _throwerInterfaces)
 	{
-		throwerIntreface->VAutoDestroy();
+		throwerIntreface->VStartThrowing();
 	}
+}
 
-	/*if (_throwerComp)
+void AThrowerActorBase::VStopThrowing()
+{
+	for (auto throwerIntreface : _throwerInterfaces)
 	{
-		_throwerComp->StopSpawning();
-		_throwerComp->Deactivate();
-	}*/
+		throwerIntreface->VStopThrowing();
+	}
 }

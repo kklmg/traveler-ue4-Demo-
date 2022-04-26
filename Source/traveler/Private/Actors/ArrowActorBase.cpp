@@ -101,7 +101,6 @@ void AArrowActorBase::VReset()
 	FDetachmentTransformRules detachRule(EDetachmentRule::KeepWorld,true);
 	DetachFromActor(detachRule);
 	//DetachRootComponentFromParent();
-	
 }
 
 void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)

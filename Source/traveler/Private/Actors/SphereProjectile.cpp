@@ -130,16 +130,23 @@ void ASphereProjectile::VApplyDamageToOverlapedActor()
 	}
 }
 
-void ASphereProjectile::VOnActive()
+bool ASphereProjectile::VActivate()
 {
-	Super::VOnActive();
+	return Super::VActivate();
 }
 
-void ASphereProjectile::VOnInActive()
-{
-	Super::VOnInActive();
 
-	_shift = 0.0f;
+bool ASphereProjectile::VInActivate()
+{
+	if (Super::VInActivate())
+	{
+		_shift = 0.0f;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 

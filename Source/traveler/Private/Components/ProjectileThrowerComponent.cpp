@@ -44,11 +44,14 @@ void UProjectileThrowerComponent::BeginPlay()
 
 	_pool = NewObject<UObjectPoolBase>(this);
 	_pool->Initialize(_spawningActorClass, _poolSize);
+}
 
-	check(GetWorld());
+void UProjectileThrowerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
 
-	GetWorld()->GetTimerManager().SetTimer(_timerHandle, this,
-		&UProjectileThrowerComponent::SpawnProjectile, _throwerData.ThrowingRate, true);
+	check(_pool);
+	_pool->EmptyPool();
 }
 
 
@@ -84,9 +87,22 @@ void UProjectileThrowerComponent::VSetLife(float life)
 	_throwerData.Life = life;
 }
 
-void UProjectileThrowerComponent::VAutoDestroy()
+void UProjectileThrowerComponent::VStartThrowing()
 {
+	check(GetWorld());
 
+	GetWorld()->GetTimerManager().SetTimer(_timerHandle, this,
+		&UProjectileThrowerComponent::SpawnProjectile, _throwerData.ThrowingRate, true);
+}
+
+void UProjectileThrowerComponent::VStopThrowing()
+{
+	check(GetWorld());
+
+	if (_timerHandle.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(_timerHandle);
+	}
 }
 
 void UProjectileThrowerComponent::SpawnProjectile()
@@ -112,11 +128,6 @@ void UProjectileThrowerComponent::SpawnProjectile()
 bool UProjectileThrowerComponent::isSpawnable()
 {
 	return _pool ? _pool->IsSpawnable() : false;
-}
-
-void UProjectileThrowerComponent::StopSpawning()
-{
-	GetWorld()->GetTimerManager().ClearTimer(_timerHandle);
 }
 
 void UProjectileThrowerComponent::SphereTracing()

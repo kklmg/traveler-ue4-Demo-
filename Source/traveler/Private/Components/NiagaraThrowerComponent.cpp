@@ -44,8 +44,12 @@ void UNiagaraThrowerComponent::VSetThrowingDirection(FVector direction)
 {
 }
 
+void UNiagaraThrowerComponent::VStartThrowing()
+{
+	Activate();
+}
 
-void UNiagaraThrowerComponent::VAutoDestroy()
+void UNiagaraThrowerComponent::VStopThrowing()
 {
 	Deactivate();
 }

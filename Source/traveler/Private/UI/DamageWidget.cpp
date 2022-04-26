@@ -25,7 +25,7 @@ FDamageWidgetData::FDamageWidgetData(FColor color)
 	ZOrder = 100;
 }
 
-void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime) 
+void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	if (!_bIsActive) return;
 
@@ -45,7 +45,7 @@ void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	renderLocation /= scale;
 
 	ScrollOffset += DamageWidgetData.ScrollDirection * DamageWidgetData.ScrollSpeed * InDeltaTime;
-	
+
 	SetRenderTranslation(renderLocation + ScrollOffset);
 
 
@@ -70,16 +70,21 @@ bool UDamageWidget::VIsActive()
 	return _bIsActive;
 }
 
-void UDamageWidget::VActivate()
+bool UDamageWidget::VActivate()
 {
-	if(!_bIsActive)
+	if (!_bIsActive)
 	{
 		_bIsActive = true;
 		AddToViewport(DamageWidgetData.ZOrder);
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
-void UDamageWidget::VInActivate()
+bool UDamageWidget::VInActivate()
 {
 	if (_bIsActive)
 	{
@@ -88,6 +93,27 @@ void UDamageWidget::VInActivate()
 		_onObjectInActive.ExecuteIfBound(_poolId);
 
 		ElapsedTime = 0.0f;
+
+		if(_bMarkDestroy)
+		{
+			MarkPendingKill();
+		}
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void UDamageWidget::VMarkDestroy()
+{
+	_bMarkDestroy = true;
+
+	if (_bIsActive == false)
+	{
+		MarkPendingKill();
 	}
 }
 
@@ -101,8 +127,8 @@ void UDamageWidget::VSetPoolId(int32 poolId)
 	_poolId = poolId;
 }
 
-FOnObjectInactive& UDamageWidget::VGetObjectInactiveDelegate()
+FOnObjectInactive* UDamageWidget::VGetObjectInactiveDelegate()
 {
-	return _onObjectInActive;
+	return &_onObjectInActive;
 }
 

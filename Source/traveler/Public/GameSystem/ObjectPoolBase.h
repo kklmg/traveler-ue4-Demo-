@@ -24,6 +24,7 @@ public:
 
 	void Initialize(TSubclassOf<UObject> objectClass, int32 poolSize);
 	bool IsSpawnable();
+	void EmptyPool();
 
 	void DrawDebugMessage();
 protected:
@@ -31,7 +32,6 @@ protected:
 	UFUNCTION()
 	void OnObjectInactive(int32 index);
 
-	
 private:
 	UPROPERTY()
 	TSubclassOf<UObject> _spawnObjectClass;
@@ -40,7 +40,6 @@ private:
 	TArray<TScriptInterface<IPoolableInterface>> _pool;
 
 	TArray<int32> _emptyIndicies;
-	TArray<int32> _spawnedOrder; //todo: find more efficent way
 	
 	int32 _poolSize;
 	bool _bIsActor;

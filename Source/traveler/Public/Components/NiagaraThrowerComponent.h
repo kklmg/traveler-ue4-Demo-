@@ -42,5 +42,6 @@ public:
 	virtual void VSetThrowingDirection(FVector direction) override;
 	virtual void VSetSpeed(float speed) override;
 	virtual void VSetLife(float life) override;
-	virtual void VAutoDestroy() override;
+	virtual void VStartThrowing() override;
+	virtual void VStopThrowing() override;
 };

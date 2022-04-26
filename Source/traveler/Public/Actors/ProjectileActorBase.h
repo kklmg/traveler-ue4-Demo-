@@ -9,7 +9,6 @@
 #include "Damage/DamageData.h"
 #include "ProjectileActorBase.generated.h"
 
-DECLARE_DELEGATE_OneParam(FOnActorInactivated, int)
 
 class USphereComponent;
 class UProjectileMovementComponent;
@@ -32,12 +31,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//IPoolableInterface
-	virtual bool VIsActive() override;
-	virtual void VActivate() override;
-	virtual void VInActivate() override;
+	virtual bool VIsActive() final;
+	virtual bool VActivate() override;
+	virtual bool VInActivate() override;
 	virtual int VGetPoolId() final;
 	virtual void VSetPoolId(int poolId) final;
-	virtual FOnObjectInactive& VGetObjectInactiveDelegate() override;
+	virtual FOnObjectInactive* VGetObjectInactiveDelegate() final;
+	virtual void VMarkDestroy() final;
 
 	//IThrowableInterface
 	virtual void VSetScale(float scale) override;
@@ -46,12 +46,7 @@ public:
 	virtual void VSetDamage(float damage) override;
 
 protected:
-	virtual void VOnActive();
-	virtual void VOnInActive();
 	virtual void VReset();
-
-public:
-	FOnActorInactivated OnActorInactivated;
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -68,6 +63,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	FDamageData _damageData;
+
+	UPROPERTY(VisibleAnywhere)
+	bool _bIsMarkDead;
 
 	UPROPERTY(VisibleAnywhere)
 	bool _bIsActive;
@@ -93,5 +91,5 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	float _damage;
 
-	FOnObjectInactive _onOnjectInactive;
+	FOnObjectInactive _OnObjectInactiveDelegate;
 };

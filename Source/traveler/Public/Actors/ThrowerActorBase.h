@@ -22,6 +22,7 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:	
 	// Called every frame
@@ -33,7 +34,8 @@ public:
 	virtual void VSetSpeed(float speed) override;
 	virtual void VSetLife(float life) override;
 	virtual FThrowerData VGetThrowerData() override;
-	virtual void VAutoDestroy() override;
+	virtual void VStartThrowing() override;
+	virtual void VStopThrowing() override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = ThrowerSetting)
