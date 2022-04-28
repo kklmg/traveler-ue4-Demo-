@@ -37,7 +37,8 @@ public:
 	virtual void VStartThrowing() override;
 	virtual void VStopThrowing() override;
 
-	virtual void MarkDestroy();
+	float GetThrowingRange();
+	void MarkDestroy();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = ThrowerSetting)

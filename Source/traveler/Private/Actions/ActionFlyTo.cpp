@@ -37,10 +37,10 @@ void UActionFlyTo::VTMExecute()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Execute Fly To"));
 
-	if (_GetDestination(_destination) == false)
+	if (!TryGetDestData())
 	{
 		SetProcessFailed();
-		UE_LOG(LogAction, Warning, TEXT("Fly to: No Destination Data"))
+		UE_LOG(LogAction, Warning, TEXT("Fly to: No Destination Data"));
 	}
 
 	_myMovementComp = Cast<UMyCharacterMovementComponent>
@@ -48,19 +48,19 @@ void UActionFlyTo::VTMExecute()
 	if (_myMovementComp == nullptr)
 	{
 		SetProcessFailed();
-		UE_LOG(LogAction, Warning, TEXT("Fly to: No Movement component"))
+		UE_LOG(LogAction, Warning, TEXT("Fly to: No Movement component"));
 	}
 
 	if (GetStatusComp() == nullptr)
 	{
 		SetProcessFailed();
-		UE_LOG(LogAction, Warning, TEXT("Fly to: no Status Component"))
+		UE_LOG(LogAction, Warning, TEXT("Fly to: no Status Component"));
 	}
 
 	if (GetStatusComp()->GetFinalValue(EStatusType::EStatus_FlyingSpeed) == 0.0f)
 	{
 		SetProcessFailed();
-		UE_LOG(LogAction, Warning, TEXT("Fly to: Flying speed is zero"))
+		UE_LOG(LogAction, Warning, TEXT("Fly to: Flying speed is zero"));
 	}
 }
 
@@ -68,13 +68,20 @@ void UActionFlyTo::VTMTick(float deltaTime)
 {
 	Super::VTMTick(deltaTime);
 
+	if (!TryGetDestData())
+	{
+		SetProcessFailed();
+	}
+
 	FVector curLocation = GetActionOwner()->GetActorLocation();
-	float dist = FVector::Distance(_destination, curLocation); 
-	float distXY = FVector::DistXY(_destination, curLocation);
+	float dist = FVector::Distance(_destLocation, curLocation); 
+	float distXY = FVector::DistXY(_destLocation, curLocation);
+	float distZ = FMath::Abs(_destLocation.Z - curLocation.Z);
+
 
 	//action completed
 	//-------------------------------------------------------------------------------------------------------------
-	if (dist < 300.0f)
+	if (distXY < _destRadius && distZ < 20.f)
 	{
 		//GetActionOwner()->GetCharacterMovement()->Velocity = FVector::ZeroVector;
 		SetProcessSucceed();
@@ -93,7 +100,7 @@ void UActionFlyTo::VTMTick(float deltaTime)
 
 	//Destination
 	//-------------------------------------------------------------------------------------------------------------
-	FVector offset_Dest = _destination - curLocation;
+	FVector offset_Dest = _destLocation - curLocation;
 	FVector dirToDest = offset_Dest.GetSafeNormal();
 	FVector dirToDestXY = FVector(dirToDest.X, dirToDest.Y, 0.0f);
 	dirToDestXY.Normalize();
@@ -135,15 +142,16 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	//debug message
 	//-------------------------------------------------------------------------------------------------------------
 
-	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), _destination, FColor::Black, false, -1.0f, 0U, 30.0f);
+	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), _destLocation, FColor::Black, false, -1.0f, 0U, 30.0f);
 	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), GetActionOwner()->GetActorLocation() + GetActionOwner()->GetActorForwardVector() * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat(dist));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "current Velocity: " + FString::SanitizeFloat(curVelocity.Size()));
 }
 
-bool UActionFlyTo::_GetDestination(FVector& outVector)
+bool UActionFlyTo::TryGetDestData()
 {
-	return GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_DestLocation, outVector);
+	return GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_DestLocation, _destLocation) &&
+		GetActionBlackBoard()->TryGetData_Float(EActionDataKey::EACTD_DestRadius, _destRadius);
 }
 
 
@@ -166,7 +174,7 @@ float UActionFlyTo::ComputeDeltaYaw(float curflyingSpeedXY, FFlyingAbilityData& 
 	FVector trackCenter = deltaAngleDegreeXY_Forward_ToDest < 0
 		? actorLocation - dirRight * trackRadius : actorLocation + dirRight * trackRadius;
 
-	float dist_Dest_TrackCenter = UMyGameplayStatics::ComputeDistance(_destination, trackCenter, EPlane::Plane_XY);
+	float dist_Dest_TrackCenter = UMyGameplayStatics::ComputeDistance(_destLocation, trackCenter, EPlane::Plane_XY);
 
 
 	if (dist_Dest_TrackCenter < trackRadius)
@@ -207,7 +215,7 @@ float UActionFlyTo::ComputeSpeedZ(FVector& curVelocity, FFlyingAbilityData& flyi
 {
 	float curSpeed_Z = FMath::Abs(curVelocity.Z);
 
-	float offset_Z = _destination.Z - curAltitude;
+	float offset_Z = _destLocation.Z - curAltitude;
 	float altitude_diff = FMath::Abs(offset_Z);
 
 	if (curVelocity.Z >= 0)

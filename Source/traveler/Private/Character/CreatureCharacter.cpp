@@ -22,6 +22,9 @@
 #include "Components/StatusComponent.h"
 #include "Components/LifeControlComponent.h"
 #include "Input/InputHandlerComponent.h"
+#include "Perception/AISense_Damage.h"
+
+
 
 
 ACreatureCharacter::ACreatureCharacter(const FObjectInitializer& ObjectInitializer) 

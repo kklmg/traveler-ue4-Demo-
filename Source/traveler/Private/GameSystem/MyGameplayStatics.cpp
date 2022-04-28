@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/DamageHandlerComponent.h"
 #include "Damage/DamageHandlerInterface.h"
+#include "Perception/AISense_Damage.h"
 
 
 
@@ -72,6 +73,8 @@ bool UMyGameplayStatics::CauseDamage(AActor* damagedActor, FDamageData& damageDa
 	{
 		UGameplayStatics::ApplyDamage(damagedActor, damageData.Damage, instigator ? instigator->GetController() : nullptr, causer, damageData.DamageTypeClass);
 	}
+
+	UAISense_Damage::ReportDamageEvent(damagedActor->GetWorld(), damagedActor,instigator,damageData.Damage,impactPoint,impactPoint);
 
 	return true;
 }

@@ -110,6 +110,11 @@ void AThrowerActorBase::VStopThrowing()
 	}
 }
 
+float AThrowerActorBase::GetThrowingRange()
+{
+	return _throwerData.Speed * _throwerData.Life;
+}
+
 void AThrowerActorBase::MarkDestroy()
 {
 	SetLifeSpan(_throwerData.Life);

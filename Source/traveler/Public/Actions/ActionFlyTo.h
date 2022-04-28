@@ -24,7 +24,7 @@ public:
 	virtual void VTMTick(float deltaTime) override;
 
 private:
-	bool _GetDestination(FVector& outVector);
+	bool TryGetDestData();
 
 	UPROPERTY()
 	UMyCharacterMovementComponent* _myMovementComp;
@@ -32,7 +32,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = speed)
 	bool _bUpdateDestination;
 
-	FVector _destination;
+	FVector _destLocation;
+	float _destRadius;
 	
 	float ComputeDeltaYaw(float curflyingSpeedXY, FFlyingAbilityData& flyingAbility, float deltaAngleDegreeXY_Forward_ToDest, float deltaTime);
 	float ComputeSpeedXY(float curflyingSpeedXY, FFlyingAbilityData& flyingAbility, float deltaAngleDegreeXY_Forward_ToDest, float distXY, float deltaTime);
