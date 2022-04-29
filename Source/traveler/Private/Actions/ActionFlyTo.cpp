@@ -16,7 +16,7 @@
 UActionFlyTo::UActionFlyTo()
 {
 	_processName = NSNameAction::FlyTo;
-	_actionType = EActionType::EACT_FlyTo;
+	_actionType = EActionType::EACT_Flying;
 
 	_bIsInstantProcess = false;
 	_bUpdateDestination = true;
@@ -74,70 +74,115 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	}
 
 	FVector curLocation = GetActionOwner()->GetActorLocation();
-	float dist = FVector::Distance(_destLocation, curLocation); 
+	float dist = FVector::Distance(_destLocation, curLocation);
 	float distXY = FVector::DistXY(_destLocation, curLocation);
-	float distZ = FMath::Abs(_destLocation.Z - curLocation.Z);
+	float distZ = FMath::Abs(_destAltitude - curLocation.Z);
 
+	//forward planeXY
+	FVector actorForwardXY = GetActionOwner()->GetActorForwardVector();
+	FRotator forwardRot = GetActionOwner()->GetActorForwardVector().Rotation();
+
+	actorForwardXY.Z = 0;
+	actorForwardXY.Normalize();
+
+	//dest direction PlaneXY
+	FVector offset_Dest = _destLocation - curLocation;
+	FVector dirToDest = offset_Dest.GetSafeNormal();
+	FVector dirToDestXY = FVector(dirToDest.X, dirToDest.Y, 0.0f);
+	dirToDestXY.Normalize();
+
+	//angle degree between forward with dest
+	float deltaAngleDegreeH_Forward_ToDest = FMath::FindDeltaAngleDegrees(actorForwardXY.Rotation().Yaw, dirToDest.Rotation().Yaw);
+	float deltaAngleDegreeV_Forward_ToDest = FMath::FindDeltaAngleDegrees(actorForwardXY.Rotation().Pitch, dirToDest.Rotation().Pitch);
 
 	//action completed
 	//-------------------------------------------------------------------------------------------------------------
-	if (distXY < _destRadius && distZ < 20.f)
+	if (distXY < _destRadius && distZ < _destAltitude && FMath::Abs(deltaAngleDegreeH_Forward_ToDest) < 5.0f)
 	{
 		//GetActionOwner()->GetCharacterMovement()->Velocity = FVector::ZeroVector;
 		SetProcessSucceed();
 	}
 
 
-	//Get flying abilidy
+	//Get flying abiliyy
 	//-------------------------------------------------------------------------------------------------------------
 	FFlyingAbilityData& flyingAbility = _myMovementComp->getFlyingAbilityData();
-
 	FVector curVelocity = GetActionOwner()->GetVelocity();
-	FVector newVelocity = curVelocity;
 
-	FRotator curRotation = GetActionOwner()->GetActorRotation();
-	FRotator newRotation = curRotation;
 
-	//Destination
+	//Rotation Yaw 
 	//-------------------------------------------------------------------------------------------------------------
-	FVector offset_Dest = _destLocation - curLocation;
-	FVector dirToDest = offset_Dest.GetSafeNormal();
-	FVector dirToDestXY = FVector(dirToDest.X, dirToDest.Y, 0.0f);
-	dirToDestXY.Normalize();
+	FRotator curRot = GetActionOwner()->GetActorRotation();
+	FRotator newRot = curRot;
 
-	FVector actorForwardXY = GetActionOwner()->GetActorForwardVector();
-	actorForwardXY.Z = 0;
-	actorForwardXY.Normalize();
-	
-	float speedXY = curVelocity.Size2D();
-	
+	float deltaYaw = 0.0f;
+	if (FMath::IsNearlyZero(deltaAngleDegreeH_Forward_ToDest) == false)
+	{
+		//Compute Track Radius
+		//v = W * R => R = V / W 
+		float trackRadius = curVelocity.Size2D() / FMath::DegreesToRadians(flyingAbility.YawAngSpeed);
 
-	//delta yaw
+		//Compute Track Center
+		FVector dirRight = GetActionOwner()->GetActorRightVector();
+		dirRight.Z = 0;
+		dirRight.Normalize();
+
+		FVector trackCenter = deltaAngleDegreeH_Forward_ToDest < 0
+			? curLocation - dirRight * trackRadius : curLocation + dirRight * trackRadius;
+
+		//Compute distance from trackcenter to destination
+		float dist_TrackCenter_Dest = FVector::Dist2D(_destLocation, trackCenter);
+
+
+		if (dist_TrackCenter_Dest > trackRadius && curVelocity.Size2D() > 50.0f)
+		{
+			deltaYaw = flyingAbility.YawAngSpeed * deltaTime;
+
+			deltaYaw = deltaAngleDegreeH_Forward_ToDest > 0 ?
+				FMath::Min(deltaYaw, deltaAngleDegreeH_Forward_ToDest)
+				: FMath::Max(-deltaYaw, deltaAngleDegreeH_Forward_ToDest);
+		}
+	}
+
+	//Rotation Pitch 
 	//-------------------------------------------------------------------------------------------------------------
-	float deltaAngleDegreeXY_Forward_ToDest = FMath::FindDeltaAngleDegrees(actorForwardXY.Rotation().Yaw, dirToDestXY.Rotation().Yaw);
+	float offset_Z = _destAltitude - curLocation.Z;
+	float deltaPitch = flyingAbility.PitchAngSpeed * deltaTime;
+	if (offset_Z > 0)
+	{
+		deltaPitch = FMath::Min(deltaPitch, flyingAbility.PitchLimit - curRot.Pitch);
+	}
+	else
+	{
+		deltaPitch = FMath::Max(-deltaPitch, -flyingAbility.PitchLimit - curRot.Pitch);
+	}
 
-	float deltaYaw = ComputeDeltaYaw(speedXY, flyingAbility, deltaAngleDegreeXY_Forward_ToDest, deltaTime);
+	if (deltaYaw != 0.0f || deltaPitch != 0.0f)
+	{
+		newRot.Yaw += deltaYaw;
+		newRot.Pitch += deltaPitch;
+		GetActionOwner()->SetActorRotation(newRot);
+	}
 
-	newRotation.Yaw += deltaYaw;
-
-	//SpeedXY
+	//Movement Horizontal 
 	//-------------------------------------------------------------------------------------------------------------
-	float newspeedXY = ComputeSpeedXY(speedXY, flyingAbility, deltaAngleDegreeXY_Forward_ToDest, distXY, deltaTime);
+	if (FMath::IsNearlyZero(deltaAngleDegreeH_Forward_ToDest))
+	{
+		_myMovementComp->Accelerate(true, deltaTime);
+	}
+	else
+	{
+		float DistTraveledDuringDecelerateTo0 = _myMovementComp->ComputeDistTraveledDuringDecelerateTo0();
 
-	newVelocity = actorForwardXY * newspeedXY;
-
-	//SpeedZ
-	//-------------------------------------------------------------------------------------------------------------
-	float newspeedZ = ComputeSpeedZ(curVelocity, flyingAbility, curLocation.Z, deltaTime);
-	
-	newVelocity.Z = newspeedZ;
-
-	//apply new velocity, Rotation
-	//-------------------------------------------------------------------------------------------------------------
-
-	GetActionOwner()->SetActorRotation(newRotation);
-	_myMovementComp->Velocity = newVelocity;
-
+		if (distXY > DistTraveledDuringDecelerateTo0)
+		{
+			_myMovementComp->Accelerate(true, deltaTime);
+		}
+		else
+		{
+			_myMovementComp->Accelerate(false, deltaTime);
+		}
+	}
 
 	//debug message
 	//-------------------------------------------------------------------------------------------------------------
@@ -146,123 +191,12 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), GetActionOwner()->GetActorLocation() + GetActionOwner()->GetActorForwardVector() * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat(dist));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "current Velocity: " + FString::SanitizeFloat(curVelocity.Size()));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "current Altitude: " + FString::SanitizeFloat(curLocation.Z));
 }
 
 bool UActionFlyTo::TryGetDestData()
 {
 	return GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_DestLocation, _destLocation) &&
-		GetActionBlackBoard()->TryGetData_Float(EActionDataKey::EACTD_DestRadius, _destRadius);
-}
-
-
-float UActionFlyTo::ComputeDeltaYaw(float curflyingSpeedXY, FFlyingAbilityData& flyingAbility, float deltaAngleDegreeXY_Forward_ToDest, float deltaTime)
-{
-	if (FMath::IsNearlyZero(deltaAngleDegreeXY_Forward_ToDest))
-	{
-		return 0.0f;
-	}
-
-	//Compute Track Radius,TrackCenter 
-	//-------------------------------------------------------------------------------------------------------------
-	FVector actorLocation = GetActionOwner()->GetActorLocation();
-	FVector dirRight = GetActionOwner()->GetActorRightVector();
-	dirRight.Z = 0;
-	dirRight.Normalize();
-
-
-	float trackRadius = curflyingSpeedXY / FMath::DegreesToRadians(flyingAbility.YawRate);
-	FVector trackCenter = deltaAngleDegreeXY_Forward_ToDest < 0
-		? actorLocation - dirRight * trackRadius : actorLocation + dirRight * trackRadius;
-
-	float dist_Dest_TrackCenter = UMyGameplayStatics::ComputeDistance(_destLocation, trackCenter, EPlane::Plane_XY);
-
-
-	if (dist_Dest_TrackCenter < trackRadius)
-	{
-		return 0.0f;
-	}
-	float deltaYawStep = flyingAbility.YawRate * deltaTime;
-	float deltaYaw = deltaAngleDegreeXY_Forward_ToDest > 0 ?
-		FMath::Min(deltaYawStep, deltaAngleDegreeXY_Forward_ToDest) : FMath::Max(-deltaYawStep, deltaAngleDegreeXY_Forward_ToDest);
-
-	return deltaYaw;
-}
-
-float UActionFlyTo::ComputeSpeedXY(float curflyingSpeedXY, FFlyingAbilityData& flyingAbility, float deltaAngleDegreeXY_Forward_ToDest, float distXY, float deltaTime)
-{
-	if (FMath::IsNearlyZero(deltaAngleDegreeXY_Forward_ToDest))
-	{
-		return FMath::Min(curflyingSpeedXY + flyingAbility.AccelXY * deltaTime, flyingAbility.SpeedXYMax);
-	}
-	else
-	{
-		//s = v0t + 1/2 * at^2
-		float time_decelerate = curflyingSpeedXY / flyingAbility.AccelXY;
-		float distance_decelerate = curflyingSpeedXY * time_decelerate - flyingAbility.AccelXY * time_decelerate * time_decelerate * 0.5;
-
-		if (distXY > distance_decelerate)
-		{
-			return FMath::Min(curflyingSpeedXY + flyingAbility.AccelXY * deltaTime, flyingAbility.SpeedXYMax);
-		}
-		else
-		{
-			return FMath::Max(curflyingSpeedXY - flyingAbility.AccelXY * deltaTime, 0.0f);
-		}
-	}
-}
-
-float UActionFlyTo::ComputeSpeedZ(FVector& curVelocity, FFlyingAbilityData& flyingAbility, float curAltitude, float deltaTime)
-{
-	float curSpeed_Z = FMath::Abs(curVelocity.Z);
-
-	float offset_Z = _destLocation.Z - curAltitude;
-	float altitude_diff = FMath::Abs(offset_Z);
-
-	if (curVelocity.Z >= 0)
-	{
-		if (offset_Z < 0)
-		{
-			return curVelocity.Z - flyingAbility.AccelZ * deltaTime;
-		}
-		else
-		{
-			float time_decelerate = FMath::Abs(curSpeed_Z / flyingAbility.AccelZ);
-
-			//s = v0t + 1/2 * at^2
-			float distance_decelerate = curSpeed_Z * time_decelerate - flyingAbility.AccelZ * time_decelerate * time_decelerate * 0.5;
-
-			if (altitude_diff > distance_decelerate)
-			{
-				return FMath::Min(curVelocity.Z + flyingAbility.AccelZ * deltaTime, flyingAbility.SpeedZMax);
-			}
-			else
-			{
-				return FMath::Max(curVelocity.Z - flyingAbility.AccelZ * deltaTime, 0.0f);
-			}
-		}
-	}
-
-	else /*if (curVelocity.Z < 0)*/
-	{
-		if (offset_Z > 0)
-		{
-			return curSpeed_Z - flyingAbility.AccelZ * deltaTime;
-		}
-		else
-		{
-			float time_decelerate = FMath::Abs(curSpeed_Z / flyingAbility.AccelZ);
-
-			//s = v0t + 1/2 * at^2
-			float distance_decelerate = curSpeed_Z * time_decelerate - flyingAbility.AccelZ * time_decelerate * time_decelerate * 0.5;
-
-			if (altitude_diff > distance_decelerate)
-			{
-				return FMath::Max(curVelocity.Z - flyingAbility.AccelZ * deltaTime, -flyingAbility.SpeedZMax);
-			}
-			else
-			{
-				return FMath::Min(curVelocity.Z + flyingAbility.AccelZ * deltaTime, 0.0f);
-			}
-		}
-	}
+		GetActionBlackBoard()->TryGetData_Float(EActionDataKey::EACTD_DestRadius, _destRadius) &&
+		GetActionBlackBoard()->TryGetData_Float(EActionDataKey::EACTD_DestAltitude, _destAltitude);
 }

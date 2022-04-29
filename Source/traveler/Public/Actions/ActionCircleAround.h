@@ -4,8 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actions/ActionBase.h"
-#include "Data/FlyingAbilityData.h"
-#include "ActionFlyTo.generated.h"
+#include "ActionCircleAround.generated.h"
 
 class UMyCharacterMovementComponent;
 
@@ -13,26 +12,21 @@ class UMyCharacterMovementComponent;
  * 
  */
 UCLASS()
-class TRAVELER_API UActionFlyTo : public UActionBase
+class TRAVELER_API UActionCircleAround : public UActionBase
 {
 	GENERATED_BODY()
 public:
-	UActionFlyTo();
+	UActionCircleAround();
 
 	virtual bool VTMCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
 
 private:
-	bool TryGetDestData();
+	bool TryGetData();
 
 	UPROPERTY()
 	UMyCharacterMovementComponent* _myMovementComp;
 
-	UPROPERTY(EditDefaultsOnly, Category = speed)
-	bool _bUpdateDestination;
-
-	FVector _destLocation;
-	float _destRadius;
-	float _destAltitude;
+	float _normalizedSpeed;
 };

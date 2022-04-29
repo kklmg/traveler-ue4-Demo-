@@ -28,6 +28,13 @@ public:
 
 	FFlyingAbilityData& getFlyingAbilityData();
 
+	float ComputeRequiredTimeToStopXY();
+	float ComputeDistTraveledDuringDecelerateTo0();
+	void AccelerateXY(bool bPositive, float deltaTime);
+	void Accelerate(bool bPositive, float deltaTime);
+	void AccelerateZ(bool bPositive, float deltaTime);
+	void KeepSpeedXY(float normalizedSpeed, float deltaTime);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -36,6 +43,7 @@ protected:
 
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
 	virtual void OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity) override;
+
 
 	void PublishMovementModeChangedEvent();
 

@@ -34,6 +34,7 @@ namespace NSNameAction
 	const FName TAKEOFF = FName(TEXT("takeoff"));
 	const FName TELEPORT = FName(TEXT("teleport"));
 	const FName FlyTo = FName(TEXT("FlyTo"));
+	const FName FlyAroundPoint = FName(TEXT("FlyAroundPoint"));
 	const FName WeaponFire = FName(TEXT("WeaponFire"));
 	const FName WeaponAim = FName(TEXT("WeaponAim"));
 }
