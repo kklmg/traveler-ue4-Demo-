@@ -20,6 +20,9 @@ UActionFlyTo::UActionFlyTo()
 
 	_bIsInstantProcess = false;
 	_bUpdateDestination = true;
+
+	_horizontalTolerance = 1500.0f;
+	_verticalTolerance = 1500.0f;
 }
 
 
@@ -74,6 +77,7 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	}
 
 	FVector curLocation = GetActionOwner()->GetActorLocation();
+	FRotator curRotation = GetActionOwner()->GetActorRotation();
 	float dist = FVector::Distance(_destLocation, curLocation);
 	float distXY = FVector::DistXY(_destLocation, curLocation);
 	float distZ = FMath::Abs(_destAltitude - curLocation.Z);
@@ -92,17 +96,20 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	dirToDestXY.Normalize();
 
 	//angle degree between forward with dest
-	float deltaAngleDegreeH_Forward_ToDest = FMath::FindDeltaAngleDegrees(actorForwardXY.Rotation().Yaw, dirToDest.Rotation().Yaw);
-	float deltaAngleDegreeV_Forward_ToDest = FMath::FindDeltaAngleDegrees(actorForwardXY.Rotation().Pitch, dirToDest.Rotation().Pitch);
+	float deltaAngleDegreeH_Forward_ToDest = FMath::FindDeltaAngleDegrees(actorForwardXY.Rotation().Yaw, dirToDestXY.Rotation().Yaw);
+	//float deltaAngleDegreeV_Forward_ToDest = FMath::FindDeltaAngleDegrees(actorForwardXY.Rotation().Pitch, dirToDestXY.Rotation().Pitch);
 
 	//action completed
 	//-------------------------------------------------------------------------------------------------------------
-	if (distXY < _destRadius && distZ < _destAltitude && FMath::Abs(deltaAngleDegreeH_Forward_ToDest) < 5.0f)
+
+	if (distXY < _destRadius + _horizontalTolerance 
+		&& distZ < _verticalTolerance 
+		&& FMath::Abs(deltaAngleDegreeH_Forward_ToDest) < 2.0f 
+		&& FMath::Abs(curRotation.Pitch) < 2.0f)
 	{
-		//GetActionOwner()->GetCharacterMovement()->Velocity = FVector::ZeroVector;
+		//GetActionOwner()->GetCharacterMovement()->StopMovementImmediately();
 		SetProcessSucceed();
 	}
-
 
 	//Get flying abiliyy
 	//-------------------------------------------------------------------------------------------------------------
@@ -112,10 +119,7 @@ void UActionFlyTo::VTMTick(float deltaTime)
 
 	//Rotation Yaw 
 	//-------------------------------------------------------------------------------------------------------------
-	FRotator curRot = GetActionOwner()->GetActorRotation();
-	FRotator newRot = curRot;
 
-	float deltaYaw = 0.0f;
 	if (FMath::IsNearlyZero(deltaAngleDegreeH_Forward_ToDest) == false)
 	{
 		//Compute Track Radius
@@ -136,32 +140,31 @@ void UActionFlyTo::VTMTick(float deltaTime)
 
 		if (dist_TrackCenter_Dest > trackRadius && curVelocity.Size2D() > 50.0f)
 		{
-			deltaYaw = flyingAbility.YawAngSpeed * deltaTime;
-
-			deltaYaw = deltaAngleDegreeH_Forward_ToDest > 0 ?
-				FMath::Min(deltaYaw, deltaAngleDegreeH_Forward_ToDest)
-				: FMath::Max(-deltaYaw, deltaAngleDegreeH_Forward_ToDest);
+			_myMovementComp->RotateToYaw(deltaAngleDegreeH_Forward_ToDest,deltaTime);
 		}
 	}
+
+	//float tolerance;
 
 	//Rotation Pitch 
 	//-------------------------------------------------------------------------------------------------------------
 	float offset_Z = _destAltitude - curLocation.Z;
-	float deltaPitch = flyingAbility.PitchAngSpeed * deltaTime;
-	if (offset_Z > 0)
+	float DistTraveledDuringKeepHorizontal = _myMovementComp->ComputeDistTraveledDuringPitch0();
+
+	if (distZ < _verticalTolerance)
 	{
-		deltaPitch = FMath::Min(deltaPitch, flyingAbility.PitchLimit - curRot.Pitch);
+		_myMovementComp->KeepHorizontal(deltaTime);
 	}
 	else
 	{
-		deltaPitch = FMath::Max(-deltaPitch, -flyingAbility.PitchLimit - curRot.Pitch);
-	}
-
-	if (deltaYaw != 0.0f || deltaPitch != 0.0f)
-	{
-		newRot.Yaw += deltaYaw;
-		newRot.Pitch += deltaPitch;
-		GetActionOwner()->SetActorRotation(newRot);
+		if (offset_Z > 0)
+		{
+			_myMovementComp->Ascend(DistTraveledDuringKeepHorizontal + curLocation.Z < _destAltitude, deltaTime);
+		}
+		else
+		{
+			_myMovementComp->Ascend(-DistTraveledDuringKeepHorizontal + curLocation.Z < _destAltitude, deltaTime);
+		}
 	}
 
 	//Movement Horizontal 
@@ -172,26 +175,34 @@ void UActionFlyTo::VTMTick(float deltaTime)
 	}
 	else
 	{
-		float DistTraveledDuringDecelerateTo0 = _myMovementComp->ComputeDistTraveledDuringDecelerateTo0();
-
-		if (distXY > DistTraveledDuringDecelerateTo0)
+		float breakingDistance = _myMovementComp->ComputeBrakingDistance();
+		
+		if (distXY > breakingDistance)
 		{
 			_myMovementComp->Accelerate(true, deltaTime);
 		}
 		else
 		{
-			_myMovementComp->Accelerate(false, deltaTime);
+			_myMovementComp->Accelerate(false, deltaTime);			
 		}
 	}
 
 	//debug message
 	//-------------------------------------------------------------------------------------------------------------
+	//DrawDebugLine(GetWorld(), curLocation, FVector(curLocation.X, curLocation.Y, _destAltitude), FColor::Blue, false, -1.0f, 0U, 30.0f);
+	//DrawDebugLine(GetWorld(), curLocation, _destLocation, FColor::Black, false, -1.0f, 0U, 30.0f);
+	//DrawDebugLine(GetWorld(), curLocation, FVector(_destLocation.X, _destLocation.Y, curLocation.Z), FColor::Black, false, -1.0f, 0U, 30.0f);
+	//DrawDebugLine(GetWorld(), curLocation, curLocation + GetActionOwner()->GetActorForwardVector() * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
+	/*GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat(dist));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "current Velocity: " + FString::SanitizeFloat(curVelocity.Size()));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "z offset: " + FString::SanitizeFloat(offset_Z));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "current pitch: " + FString::SanitizeFloat(curRotation.Pitch));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "current Altitude: " + FString::SanitizeFloat(curLocation.Z));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "dest Altitude: " + FString::SanitizeFloat(_destAltitude));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "distance xy: " + FString::SanitizeFloat(distXY));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "dest Radius: " + FString::SanitizeFloat(_destRadius));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, "deltaAngleDegreeH_Forward_ToDest: " + FString::SanitizeFloat(deltaAngleDegreeH_Forward_ToDest));*/
 
-	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), _destLocation, FColor::Black, false, -1.0f, 0U, 30.0f);
-	DrawDebugLine(GetWorld(), GetActionOwner()->GetActorLocation(), GetActionOwner()->GetActorLocation() + GetActionOwner()->GetActorForwardVector() * 750, FColor::Blue, false, -1.0f, 0U, 30.0f);
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Distance: " + FString::SanitizeFloat(dist));
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "current Velocity: " + FString::SanitizeFloat(curVelocity.Size()));
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "current Altitude: " + FString::SanitizeFloat(curLocation.Z));
 }
 
 bool UActionFlyTo::TryGetDestData()

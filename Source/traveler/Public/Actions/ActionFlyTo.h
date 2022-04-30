@@ -29,8 +29,14 @@ private:
 	UPROPERTY()
 	UMyCharacterMovementComponent* _myMovementComp;
 
-	UPROPERTY(EditDefaultsOnly, Category = speed)
+	UPROPERTY(EditDefaultsOnly)
 	bool _bUpdateDestination;
+
+	UPROPERTY(EditDefaultsOnly, Category = Tolerance)
+	float _horizontalTolerance;
+
+	UPROPERTY(EditDefaultsOnly, Category = Tolerance)
+	float _verticalTolerance;
 
 	FVector _destLocation;
 	float _destRadius;

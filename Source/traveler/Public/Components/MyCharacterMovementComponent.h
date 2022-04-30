@@ -28,11 +28,13 @@ public:
 
 	FFlyingAbilityData& getFlyingAbilityData();
 
-	float ComputeRequiredTimeToStopXY();
-	float ComputeDistTraveledDuringDecelerateTo0();
-	void AccelerateXY(bool bPositive, float deltaTime);
+	float ComputeRequiredTimeToBrake();
+	float ComputeBrakingDistance();
+	float ComputeDistTraveledDuringPitch0();
 	void Accelerate(bool bPositive, float deltaTime);
-	void AccelerateZ(bool bPositive, float deltaTime);
+	void RotateToYaw(float destYaw, float deltaTime);
+	void Ascend(bool bPositive, float deltaTime);
+	void KeepHorizontal(float deltaTime);
 	void KeepSpeedXY(float normalizedSpeed, float deltaTime);
 
 protected:
@@ -65,4 +67,7 @@ private:
 
 	UPROPERTY()
 	UEventBrokerComponent* _eventBrokerComp;
+
+	float _inputDeltaPitch;
+	float _inputDeltaYaw;
 };

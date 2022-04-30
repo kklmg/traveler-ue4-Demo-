@@ -25,12 +25,4 @@ public:
 	float PitchLimit;
 	UPROPERTY(EditDefaultsOnly)
 	float RollLimit;
-	UPROPERTY(EditDefaultsOnly)
-	float SpeedXYMax;
-	UPROPERTY(EditDefaultsOnly)
-	float SpeedZMax;
-	UPROPERTY(EditDefaultsOnly)
-	float AccelXY;
-	UPROPERTY(EditDefaultsOnly)
-	float AccelZ;
 };
