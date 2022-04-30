@@ -120,6 +120,8 @@ void UProjectileThrowerComponent::SpawnProjectile()
 
 	if (actor)
 	{
+		actor->SetInstigator(GetOwner()->GetInstigator());
+		actor->SetOwner(GetOwner());
 		actor->SetActorTransform(GetOwner()->GetTransform());
 		actor->VSetLife(_throwerData.Life);
 		actor->VSetScale(_throwerData.Scale);

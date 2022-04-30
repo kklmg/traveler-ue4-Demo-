@@ -67,16 +67,10 @@ void UActionCircleAround::VTMTick(float deltaTime)
 		SetProcessFailed();
 	}
 
-	//Get flying ability
-	//-------------------------------------------------------------------------------------------------------------
-	FFlyingAbilityData& flyingAbility = _myMovementComp->getFlyingAbilityData();
-
 	//apply new velocity, Rotation
 	//-------------------------------------------------------------------------------------------------------------
-	FQuat deltaQuat(FVector::UpVector, FMath::DegreesToRadians(flyingAbility.YawAngSpeed * deltaTime));
-	GetActionOwner()->AddActorWorldRotation(deltaQuat);
-	_myMovementComp->KeepSpeedXY(_normalizedSpeed, deltaTime);
-
+	_myMovementComp->RotateYaw(true, deltaTime, 1.0f);
+	_myMovementComp->KeepSpeed(_normalizedSpeed, deltaTime);
 }
 
 bool UActionCircleAround::TryGetData()

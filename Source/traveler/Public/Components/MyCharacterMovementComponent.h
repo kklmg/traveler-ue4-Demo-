@@ -32,10 +32,11 @@ public:
 	float ComputeBrakingDistance();
 	float ComputeDistTraveledDuringPitch0();
 	void Accelerate(bool bPositive, float deltaTime);
+	void RotateYaw(bool bPositive, float deltaTime, float scale = 1.0f);
 	void RotateToYaw(float destYaw, float deltaTime);
 	void Ascend(bool bPositive, float deltaTime);
 	void KeepHorizontal(float deltaTime);
-	void KeepSpeedXY(float normalizedSpeed, float deltaTime);
+	void KeepSpeed(float normalizedSpeed, float deltaTime);
 
 protected:
 	// Called when the game starts or when spawned

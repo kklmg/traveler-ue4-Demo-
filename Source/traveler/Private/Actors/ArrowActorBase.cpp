@@ -105,9 +105,11 @@ void AArrowActorBase::VReset()
 
 void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//_projectileMovementComp->Velocity = FVector::ZeroVector;
+	if (_arrowState == EArrowState::EAS_Hitted) return;
+
+	_projectileMovementComp->Velocity = FVector::ZeroVector;
 	_arrowState = EArrowState::EAS_Hitted;
-	//_meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
@@ -115,7 +117,6 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	}
 
 	//Todo
-	AddActorWorldOffset(GetActorForwardVector() * 30);
 	AttachToComponent(OtherComponent, FAttachmentTransformRules::KeepWorldTransform, Hit.BoneName);
 
 	//apply damagge

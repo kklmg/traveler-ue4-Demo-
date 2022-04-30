@@ -45,8 +45,8 @@ FORCEINLINE_DEBUGGABLE float UMyCharacterMovementComponent::ComputeDistTraveledD
 	//Integral => - cos(curPitch + pitchAngSpeed * deltaTime) / pitchAngSpeed * velcocityZ
 	//shift = (VelocityZ* (-cos(curPitch + pitchAngSpeed * RequiredTimeToPitch0) + cos(curPitch))) / pitchAngSpeed
 
-	float shift = Velocity.Z * 
-		(-FMath::Cos(FMath::DegreesToRadians(curPitch + angSpeedPitch * RequiredTimeToPitch0)) + FMath::Cos(FMath::DegreesToRadians(curPitch))) /FMath::DegreesToRadians(angSpeedPitch);
+	float shift = Velocity.Z *
+		(-FMath::Cos(FMath::DegreesToRadians(curPitch + angSpeedPitch * RequiredTimeToPitch0)) + FMath::Cos(FMath::DegreesToRadians(curPitch))) / FMath::DegreesToRadians(angSpeedPitch);
 
 	return shift;
 }
@@ -55,7 +55,7 @@ void UMyCharacterMovementComponent::Accelerate(bool bPositive, float deltaTime)
 {
 	//AddInputVector(bPositive ? GetOwner()->GetActorForwardVector() : -GetOwner()->GetActorForwardVector());
 
-	if(bPositive)
+	if (bPositive)
 	{
 		AddInputVector(GetOwner()->GetActorForwardVector());
 	}
@@ -65,13 +65,27 @@ void UMyCharacterMovementComponent::Accelerate(bool bPositive, float deltaTime)
 	}
 }
 
+void UMyCharacterMovementComponent::RotateYaw(bool bPositive, float deltaTime, float scale)
+{
+	if (MovementMode == EMovementMode::MOVE_Flying)
+	{
+		_inputDeltaYaw = bPositive ? _FlyingAbilityData.YawAngSpeed * deltaTime * scale :
+						-_FlyingAbilityData.YawAngSpeed * deltaTime * scale;
+	}
+	//todo
+	else
+	{
+	}
+
+}
+
 void UMyCharacterMovementComponent::RotateToYaw(float destYaw, float deltaTime)
 {
 	if (MovementMode == EMovementMode::MOVE_Flying)
 	{
 		float deltaYaw = _FlyingAbilityData.YawAngSpeed * deltaTime;
 		deltaYaw = destYaw > 0 ?
-			FMath::Min(deltaYaw, destYaw): FMath::Max(-deltaYaw, destYaw);
+			FMath::Min(deltaYaw, destYaw) : FMath::Max(-deltaYaw, destYaw);
 
 		_inputDeltaYaw = deltaYaw;
 	}
@@ -81,16 +95,17 @@ void UMyCharacterMovementComponent::RotateToYaw(float destYaw, float deltaTime)
 	}
 }
 
+
 void UMyCharacterMovementComponent::Ascend(bool bPositive, float deltaTime)
 {
 	check(GetOwner())
-	FRotator curRotator = GetOwner()->GetActorRotation();
+		FRotator curRotator = GetOwner()->GetActorRotation();
 
 	if (MovementMode == EMovementMode::MOVE_Flying)
 	{
 		float deltaPitch = _FlyingAbilityData.PitchAngSpeed * deltaTime;
 
-		deltaPitch = bPositive?
+		deltaPitch = bPositive ?
 			FMath::Min(deltaPitch, _FlyingAbilityData.PitchLimit - curRotator.Pitch) :
 			FMath::Max(-deltaPitch, -_FlyingAbilityData.PitchLimit - curRotator.Pitch);
 
@@ -98,7 +113,7 @@ void UMyCharacterMovementComponent::Ascend(bool bPositive, float deltaTime)
 	}
 
 
-	if(bPositive)
+	if (bPositive)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Ascend: ");
 	}
@@ -111,7 +126,7 @@ void UMyCharacterMovementComponent::Ascend(bool bPositive, float deltaTime)
 void UMyCharacterMovementComponent::KeepHorizontal(float deltaTime)
 {
 	check(GetOwner())
-	FRotator curRotator = GetOwner()->GetActorRotation();
+		FRotator curRotator = GetOwner()->GetActorRotation();
 
 	if (curRotator.Pitch == 0.0f)
 	{
@@ -131,8 +146,8 @@ void UMyCharacterMovementComponent::KeepHorizontal(float deltaTime)
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Keep Horizontal: ");
 }
 
-void UMyCharacterMovementComponent::KeepSpeedXY(float normalizedSpeed, float deltaTime)
-{	
+void UMyCharacterMovementComponent::KeepSpeed(float normalizedSpeed, float deltaTime)
+{
 	float speed = FMath::Lerp(0.0f, GetMaxSpeed(), normalizedSpeed);
 
 	if (Velocity.Size() > speed)
