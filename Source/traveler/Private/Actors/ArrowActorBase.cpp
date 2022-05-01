@@ -3,6 +3,7 @@
 
 #include "Actors/ArrowActorBase.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "GameSystem/MyGameplayStatics.h"
@@ -15,6 +16,29 @@ AArrowActorBase::AArrowActorBase()
 		check(_primitiveComp);
 		SetRootComponent(_primitiveComp);
 		_primitiveComp->SetCollisionProfileName(FName("Projectile"));
+	}
+
+	if (!_headEffect)
+	{
+		_headEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Head Effect"));
+		check(_headEffect);
+		_headEffect->AttachToComponent(_primitiveComp, FAttachmentTransformRules::KeepWorldTransform);
+	}
+
+	if (!_headTrailEffect)
+	{
+		_headTrailEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Head Trail Effect"));
+		check(_headTrailEffect);
+		_headTrailEffect->AttachToComponent(_primitiveComp, FAttachmentTransformRules::KeepWorldTransform);
+		_headTrailEffect->Deactivate();
+	}
+
+	if (!_tailTrailEffect)
+	{
+		_tailTrailEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Tail Trail Effect"));
+		check(_headEffect);
+		_tailTrailEffect->AttachToComponent(_primitiveComp, FAttachmentTransformRules::KeepWorldTransform);
+		_tailTrailEffect->Deactivate();
 	}
 
 	_timeToDrop = 5.0f;
@@ -80,6 +104,9 @@ void AArrowActorBase::Launch(float strength)
 	_arrowState = EArrowState::EAS_Launched;
 	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
+	_tailTrailEffect->Activate();
+	_headTrailEffect->Activate();
+
 	VSetVelocity(_launchDirection * _basicSpeed * strength);
 }
 
@@ -97,10 +124,10 @@ void AArrowActorBase::VReset()
 	_elapsedTimeFromHit = 0.0f;
 	_projectileMovementComp->ProjectileGravityScale = 0.0f;
 	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+	_headTrailEffect->Deactivate();
+	_tailTrailEffect->Deactivate();
 	FDetachmentTransformRules detachRule(EDetachmentRule::KeepWorld,true);
 	DetachFromActor(detachRule);
-	//DetachRootComponentFromParent();
 }
 
 void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
@@ -110,6 +137,9 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	_projectileMovementComp->Velocity = FVector::ZeroVector;
 	_arrowState = EArrowState::EAS_Hitted;
 	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	_headTrailEffect->Deactivate();
+	_tailTrailEffect->Deactivate();
 
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{

@@ -8,6 +8,7 @@
 
 
 class UDamageData;
+class UNiagaraComponent;
 
 UENUM(BlueprintType)
 enum class EArrowState : uint8
@@ -45,6 +46,16 @@ public:
 	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
 private:
+	UPROPERTY(VisibleAnywhere)
+	UNiagaraComponent* _tailTrailEffect;
+
+	UPROPERTY(VisibleAnywhere)
+	UNiagaraComponent* _headTrailEffect;
+
+	UPROPERTY(VisibleAnywhere)
+	UNiagaraComponent* _headEffect;
+
+
 	UPROPERTY(VisibleAnywhere)
 	FVector _launchDirection;
 
