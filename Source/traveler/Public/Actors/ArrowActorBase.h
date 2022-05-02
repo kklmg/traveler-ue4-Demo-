@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/ProjectileActorBase.h"
+#include "Data/ArrowData.h"
 #include "ArrowActorBase.generated.h"
 
 
@@ -38,6 +39,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void SetArrowData(UArrowData* arrowData);
 	void Launch(float strength = 1.0f);
 	void SetLaunchDirection(FVector direction);
 	void VReset();
@@ -47,14 +49,13 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere)
-	UNiagaraComponent* _tailTrailEffect;
+	UNiagaraComponent* _headEffect;
 
 	UPROPERTY(VisibleAnywhere)
 	UNiagaraComponent* _headTrailEffect;
 
 	UPROPERTY(VisibleAnywhere)
-	UNiagaraComponent* _headEffect;
-
+	UNiagaraComponent* _tailTrailEffect;
 
 	UPROPERTY(VisibleAnywhere)
 	FVector _launchDirection;

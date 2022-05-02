@@ -64,6 +64,8 @@ public:
 	virtual void VWeaponControlButtonB() override;
 	virtual void VWeaponControlButtonC() override;
 	virtual void VWeaponControlButtonD() override;
+	virtual void VWeaponControlButtonE() override;
+	virtual void VWeaponControlButtonF() override;
 
 	//animation event -------------------------------------------------------------------------
 

@@ -8,6 +8,7 @@
 #include "Damage/DamageHandlerInterface.h"
 #include "GameSystem/MyGameplayStatics.h"
 
+
 AArrowActorBase::AArrowActorBase()
 {
 	if (!_primitiveComp)
@@ -36,7 +37,7 @@ AArrowActorBase::AArrowActorBase()
 	if (!_tailTrailEffect)
 	{
 		_tailTrailEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Tail Trail Effect"));
-		check(_headEffect);
+		check(_tailTrailEffect);
 		_tailTrailEffect->AttachToComponent(_primitiveComp, FAttachmentTransformRules::KeepWorldTransform);
 		_tailTrailEffect->Deactivate();
 	}
@@ -97,6 +98,20 @@ void AArrowActorBase::Tick(float DeltaTime)
 			VInActivate();
 		}
 	}
+}
+
+void AArrowActorBase::SetArrowData(UArrowData* arrowData)
+{
+	check(_headEffect);
+	check(_headTrailEffect);
+	check(_tailTrailEffect);
+	check(arrowData);
+
+	_headEffect->SetAsset(arrowData->Effect_Head);
+	_headTrailEffect->SetAsset(arrowData->Effect_HeadTrail);
+	_tailTrailEffect->SetAsset(arrowData->Effect_TailTrail);
+
+	_damageData = arrowData->DamageData;
 }
 
 void AArrowActorBase::Launch(float strength)

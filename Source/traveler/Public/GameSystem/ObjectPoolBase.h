@@ -8,7 +8,7 @@
 #include "ObjectPoolBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class TRAVELER_API UObjectPoolBase : public UObject
@@ -40,7 +40,7 @@ private:
 	TArray<TScriptInterface<IPoolableInterface>> _pool;
 
 	TArray<int32> _emptyIndicies;
-	
+
 	int32 _poolSize;
 	bool _bIsActor;
 };

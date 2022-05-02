@@ -27,10 +27,10 @@ UObject* UObjectPoolBase::SpawnObject()
 	else if (_pool.Num() < _poolSize)
 	{
 		UObject* newObject;
-		if (_bIsActor) 
+		if (_bIsActor)
 		{
 			UWorld* world = GetWorld();
-			if(world)
+			if (world)
 			{
 				newObject = GetWorld()->SpawnActor(_spawnObjectClass);
 			}
@@ -43,7 +43,7 @@ UObject* UObjectPoolBase::SpawnObject()
 		{
 			newObject = NewObject<UObject>(this, _spawnObjectClass);
 		}
-		
+
 		IPoolableInterface* poolObjectInterface = Cast<IPoolableInterface>(newObject);
 		if (newObject && poolObjectInterface)
 		{
@@ -74,14 +74,14 @@ void UObjectPoolBase::Initialize(TSubclassOf<UObject> objectClass, int32 poolSiz
 
 	IPoolableInterface* poolableInterface = Cast<IPoolableInterface>(objectClass.GetDefaultObject());
 	AActor* actor = Cast<AActor>(objectClass.GetDefaultObject());
-	if(poolableInterface)
+	if (poolableInterface)
 	{
 		_bIsActor = actor != nullptr;
 		_spawnObjectClass = objectClass;
 	}
 	else
 	{
-		UE_LOG(LogTemp,Warning,TEXT("try to set non poolable object class"));
+		UE_LOG(LogTemp, Warning, TEXT("try to set non poolable object class"));
 	}
 
 	_emptyIndicies.Empty();

@@ -5,6 +5,14 @@
 #include "Math/UnrealMathUtility.h"
 
 
+void UOptionBase::SetID(int32 id)
+{
+	if (id < VGetSize())
+	{
+		_curID = id;
+	}
+}
+
 void UOptionBase::Scroll(int32 delta)
 {
 	_curID = (_curID + delta) % VGetSize();
@@ -15,13 +23,13 @@ void UOptionBase::Scroll(int32 delta)
 	}
 }
 
-FORCEINLINE int32 UOptionBase::GetCurID()
+FORCEINLINE_DEBUGGABLE int32 UOptionBase::GetCurID()
 {
 	return _curID;
 }
 
 
-int32 UIntOption::VGetSize()
+FORCEINLINE_DEBUGGABLE int32 UIntOption::VGetSize()
 {
 	return _options.Num();
 }

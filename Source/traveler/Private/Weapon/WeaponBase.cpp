@@ -215,6 +215,14 @@ void AWeaponBase::VWeaponControlButtonD()
 {
 }
 
+void AWeaponBase::VWeaponControlButtonE()
+{
+}
+
+void AWeaponBase::VWeaponControlButtonF()
+{
+}
+
 void AWeaponBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
 {
 	_characterAnimationState = newState;

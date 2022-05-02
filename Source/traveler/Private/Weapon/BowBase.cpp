@@ -31,7 +31,7 @@ ABowBase::ABowBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectIn
 		check(_quiverComponent != nullptr);
 	}
 
-	_weaponType	= EWeaponType::EWT_Bow;
+	_weaponType = EWeaponType::EWT_Bow;
 	_bowState = EBowState::EBS_Normal;
 
 	_strength = 0.0f;
@@ -79,7 +79,7 @@ void ABowBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(_crosshairWidgetClass)
+	if (_crosshairWidgetClass)
 	{
 		_crosshairWidgetIns = NewObject<UCrosshairWidgetBase>(this, _crosshairWidgetClass);
 	}
@@ -105,23 +105,23 @@ void ABowBase::UpdateArrowsTransform()
 {
 	switch (_bowState)
 	{
-		case EBowState::EBS_Normal:
-		{
-			AttachArrowsToBow();
-		}
+	case EBowState::EBS_Normal:
+	{
+		AttachArrowsToBow();
+	}
+	break;
+	case EBowState::EBS_Drawing:
+	case EBowState::EBS_FullyDrawed:
+	case EBowState::EBS_OverDrawing:
+	case EBowState::EBS_ReleaseStart:
+	{
+		AttachArrowsToHand();
+	}
+	break;
+	case EBowState::EBS_ReleaseEnd:
 		break;
-		case EBowState::EBS_Drawing:
-		case EBowState::EBS_FullyDrawed:
-		case EBowState::EBS_OverDrawing:
-		case EBowState::EBS_ReleaseStart:
-		{
-			AttachArrowsToHand();
-		}
+	default:
 		break;
-		case EBowState::EBS_ReleaseEnd:
-			break;
-		default:
-			break;
 	}
 }
 
@@ -129,21 +129,21 @@ bool ABowBase::IsDrawingBow()
 {
 	switch (_bowState)
 	{
-		case EBowState::EBS_Drawing:
-		case EBowState::EBS_FullyDrawed:
-		case EBowState::EBS_OverDrawing:
-		case EBowState::EBS_ReleaseStart:
-		{
-			return true;
-		}
-		break;
-		case EBowState::EBS_Normal:
-		case EBowState::EBS_ReleaseEnd:
-		default:
-		{
-			return false; 
-		}
-		break;
+	case EBowState::EBS_Drawing:
+	case EBowState::EBS_FullyDrawed:
+	case EBowState::EBS_OverDrawing:
+	case EBowState::EBS_ReleaseStart:
+	{
+		return true;
+	}
+	break;
+	case EBowState::EBS_Normal:
+	case EBowState::EBS_ReleaseEnd:
+	default:
+	{
+		return false;
+	}
+	break;
 	}
 }
 
@@ -158,8 +158,8 @@ void ABowBase::VOnEquipped()
 		FDelegateHandle delegateHandle;
 
 		delegateHandle = eventBrokerComp->
-				GetEventDelegate(NSNameBowAnimEvent::Bow_DrawingBowString).AddUObject(this, &ABowBase::OnAnim_StartDrawingBowString);
-		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Bow_DrawingBowString,delegateHandle));
+			GetEventDelegate(NSNameBowAnimEvent::Bow_DrawingBowString).AddUObject(this, &ABowBase::OnAnim_StartDrawingBowString);
+		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Bow_DrawingBowString, delegateHandle));
 
 		delegateHandle = eventBrokerComp->
 			GetEventDelegate(NSNameBowAnimEvent::Bow_TakeOutArrows).AddUObject(this, &ABowBase::OnAnim_TakeOutArrows);
@@ -175,7 +175,7 @@ void ABowBase::VOnEquipped()
 	}
 
 	auto weaponAnimationModel = GetWeaponAnimationModel();
-	if(weaponAnimationModel)
+	if (weaponAnimationModel)
 	{
 		weaponAnimationModel->SetBool(NSNameAnimData::bArrowsSpawned, false);
 		weaponAnimationModel->SetUInt8(NSNameAnimData::byteBowState, (uint8)_bowState);
@@ -185,7 +185,6 @@ void ABowBase::VOnEquipped()
 		weaponAnimationModel->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponProcess::AIM));
 	}
 }
-
 
 void ABowBase::VOnUnEquipped()
 {
@@ -231,7 +230,7 @@ void ABowBase::AttachArrowsToHand()
 	FVector LineTraceEnd = cameraLocation + cameraForward * cameraComp->OrthoFarClipPlane;
 
 	FVector hitLocation = LineTraceEnd;
-	
+
 	//Execute line Tracing
 	bool bHitted = false;
 	bHitted = GetWorld()->LineTraceSingleByChannel(hitResult, LineTraceStart, LineTraceEnd, ECC_Visibility, CollisionParams);
@@ -249,7 +248,7 @@ void ABowBase::AttachArrowsToHand()
 
 	//get hand transform
 	FTransform rightHandTransform;
-	if(GetOwnerExTransformProviderComp())
+	if (GetOwnerExTransformProviderComp())
 	{
 		GetOwnerExTransformProviderComp()->TryGetTransform(ETransform::ETransform_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
 	}
@@ -265,22 +264,22 @@ void ABowBase::AttachArrowsToHand()
 	FQuat ToHitQuat = dirToHitedLocation.ToOrientationQuat();
 
 	FVector muzzleLeft = muzzleTransform.GetRotation().RotateVector(FVector::LeftVector);
-	
+
 
 	float curDeltaDegree = 0;
 	FQuat curDeltaQuat;
-	
+
 	for (int i = 0; i < _holdingArrows.Num(); ++i)
 	{
 		//compute quaternion
-		curDeltaDegree = (i % 2) ? 
+		curDeltaDegree = (i % 2) ?
 			_arrowIntervalOptionIns->GetSelection() * i
-				: _arrowIntervalOptionIns->GetSelection() * i * -1;
+			: _arrowIntervalOptionIns->GetSelection() * i * -1;
 
 		curDeltaQuat = FQuat(muzzleLeft, FMath::DegreesToRadians(curDeltaDegree));
 		projectileQuat = curDeltaQuat * projectileQuat;
 		ToHitQuat = curDeltaQuat * ToHitQuat;
-		
+
 		//apply location,rotation
 		if (_holdingArrows[i] != NULL)
 		{
@@ -312,7 +311,7 @@ void ABowBase::AttachArrowsToBow()
 		//compute quaternion
 		curDeltaDegree = (i % 2) ?
 			_arrowIntervalOptionIns->GetSelection() * i
-				: _arrowIntervalOptionIns->GetSelection() * i * -1;
+			: _arrowIntervalOptionIns->GetSelection() * i * -1;
 
 		curDeltaQuat = FQuat(bowStringUp, FMath::DegreesToRadians(curDeltaDegree));
 		arrowQuat = curDeltaQuat * arrowQuat;
@@ -345,7 +344,7 @@ void ABowBase::ClearHoldingArrows(bool bDeactivateArrows)
 {
 	if (_holdingArrows.Num() == 0) return;
 
-	if(bDeactivateArrows)
+	if (bDeactivateArrows)
 	{
 		for (AArrowActorBase* arrow : _holdingArrows)
 		{
@@ -354,7 +353,7 @@ void ABowBase::ClearHoldingArrows(bool bDeactivateArrows)
 	}
 	_holdingArrows.Empty();
 
-	if(GetWeaponAnimationModel())
+	if (GetWeaponAnimationModel())
 	{
 		GetWeaponAnimationModel()->SetBool(NSNameAnimData::bArrowsSpawned, false);
 	}
@@ -403,9 +402,9 @@ void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAni
 {
 	Super::VOnCharacterAnimationStateChanged(prevState, newState);
 
-	if(prevState == EAnimationState::EAnimState_Fall || prevState == EAnimationState::EAnimState_Walk)
+	if (prevState == EAnimationState::EAnimState_Fall || prevState == EAnimationState::EAnimState_Walk)
 	{
-		if(newState!= EAnimationState::EAnimState_Fall && newState != EAnimationState::EAnimState_Walk)
+		if (newState != EAnimationState::EAnimState_Fall && newState != EAnimationState::EAnimState_Walk)
 		{
 			StopAllProcesses();
 		}
@@ -453,6 +452,20 @@ void ABowBase::VWeaponControlButtonD()
 	AdjustArrowIntervals();
 }
 
+void ABowBase::VWeaponControlButtonE()
+{
+	_quiverComponent->ScrollArrowOption(-1);
+	ClearHoldingArrows(true);
+	SetBowState(EBowState::EBS_Normal);
+}
+
+void ABowBase::VWeaponControlButtonF()
+{
+	_quiverComponent->ScrollArrowOption(1);
+	ClearHoldingArrows(true);
+	SetBowState(EBowState::EBS_Normal);
+}
+
 float ABowBase::CalculateDamage()
 {
 	return _strength * _maxDamage;
@@ -473,7 +486,7 @@ bool ABowBase::SetBowState(EBowState bowState)
 	if (_bowState == bowState) return false;
 
 	_bowState = bowState;
-	if(GetWeaponAnimationModel())
+	if (GetWeaponAnimationModel())
 	{
 		GetWeaponAnimationModel()->SetUInt8(NSNameAnimData::byteBowState, (uint8)_bowState);
 		GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsDrawingBow, IsDrawingBow());
@@ -486,7 +499,7 @@ void ABowBase::DragCamera(bool bDrag)
 	ICharacterCameraInterface* cameraInterface = GetOwnerCameraInterface();
 	if (!cameraInterface) return;
 
-	if (bDrag) 
+	if (bDrag)
 	{
 		cameraInterface->VSetCameraArmPitchLimit(-60, 60);
 		cameraInterface->VDragCamera(_aimingCameraOffset);
@@ -507,8 +520,8 @@ void ABowBase::AnimateCrosshair(bool bForward)
 void ABowBase::TakeOutArrows()
 {
 	ClearHoldingArrows(true);
-	
-	if(_quiverComponent->SpawnArrows(_arrowCountOptionIns->GetSelection(), GetWeaponOwner(), _holdingArrows))
+
+	if (_quiverComponent->SpawnArrows(_arrowCountOptionIns->GetSelection(), GetWeaponOwner(), _holdingArrows))
 	{
 		if (GetWeaponAnimationModel())
 		{

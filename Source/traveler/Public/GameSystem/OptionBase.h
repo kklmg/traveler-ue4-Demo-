@@ -15,6 +15,9 @@ class TRAVELER_API UOptionBase : public UObject
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable)
+	void SetID(int32 id);
+
+	UFUNCTION(BlueprintCallable)
 	void Scroll(int32 delta);
 
 	UFUNCTION(BlueprintPure)

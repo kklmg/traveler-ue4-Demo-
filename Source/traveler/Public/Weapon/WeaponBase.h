@@ -86,6 +86,8 @@ public:
 	virtual void VWeaponControlButtonB();
 	virtual void VWeaponControlButtonC();
 	virtual void VWeaponControlButtonD();
+	virtual void VWeaponControlButtonE();
+	virtual void VWeaponControlButtonF();
 
 	//Weapon process handling -----------------------------------------------------------------------------
 

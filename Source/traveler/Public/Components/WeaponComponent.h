@@ -55,6 +55,8 @@ public:
 	void WeaponControlButtonB();
 	void WeaponControlButtonC();
 	void WeaponControlButtonD();
+	void WeaponControlButtonE();
+	void WeaponControlButtonF();
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
 	FDelegateWeapon OnWeaponChanged;

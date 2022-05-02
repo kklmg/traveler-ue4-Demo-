@@ -42,6 +42,8 @@ void UWeaponComponent::BindInputs(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("WeaponButtonB", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonB);
 	PlayerInputComponent->BindAction("WeaponButtonC", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonC);
 	PlayerInputComponent->BindAction("WeaponButtonD", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonD);
+	PlayerInputComponent->BindAction("WeaponButtonE", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonE);
+	PlayerInputComponent->BindAction("WeaponButtonF", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonF);
 }
 
 // Called when the game starts
@@ -199,6 +201,22 @@ void UWeaponComponent::WeaponControlButtonD()
 	if (_weaponIns)
 	{
 		_weaponIns->VWeaponControlButtonD();
+	}
+}
+
+void UWeaponComponent::WeaponControlButtonE()
+{
+	if (_weaponIns)
+	{
+		_weaponIns->VWeaponControlButtonE();
+	}
+}
+
+void UWeaponComponent::WeaponControlButtonF()
+{
+	if (_weaponIns)
+	{
+		_weaponIns->VWeaponControlButtonF();
 	}
 }
 
