@@ -21,7 +21,7 @@ bool UConditionBase::GetResult()
 bool UConditionBase::Validate()
 {
 	_cachedResult = VTMValidate();
-	OnValidated.Broadcast(_cachedResult);
+	OnValidatedDelegate.Broadcast(_cachedResult);
 	return _cachedResult;
 }
 

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Enums/EnumCombat.h"
+#include "Data/MyDelegates.h"
 #include "EffectPlayerBase.generated.h"
 
 /**
@@ -22,13 +23,19 @@ public:
 
 	virtual void VPlayEffect(uint8 effectOption);
 	virtual void VStopEffect(uint8 effectOption);
+
 	virtual void VTick(float deltaTime);
+
+	FMD_BoolValueChangeSignature& GetEffectFinishedDelegate();
 
 	UFUNCTION(BlueprintPure)
 	UMaterialInstanceDynamic* GetMaterial();
 
 	UFUNCTION(BlueprintPure)
 	AActor* GetOwner();
+
+protected:
+	FMD_BoolValueChangeSignature _OnEffectFinishedDelegate;
 
 private:
 	UPROPERTY()

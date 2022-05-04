@@ -61,12 +61,23 @@ void UEffectControllerComponent::StopEffect(EEffectType effectType, uint8 effect
 	}
 }
 
+FMD_BoolValueChangeSignature* UEffectControllerComponent::GetEffectFinishedDelegate(EEffectType effectType)
+{
+	if(_effectPlayerInsMap.Contains(effectType))
+	{
+		return &_effectPlayerInsMap[effectType]->GetEffectFinishedDelegate();
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
 void UEffectControllerComponent::SetupDynamicMaterial(int32 elementIndex)
 {
-	ACharacter* character = GetOwner<ACharacter>();
-	if (!character) return;
-	
-	USkeletalMeshComponent* meshComp = character->GetMesh();
+	check(GetOwner());
+
+	UMeshComponent* meshComp = Cast<UMeshComponent>(GetOwner()->GetComponentByClass(UMeshComponent::StaticClass()));
 	if (!meshComp) return;
 
 	UMaterialInterface* matInterface = meshComp->GetMaterial(elementIndex);

@@ -42,6 +42,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UCompositeActorCondition> _lifeConditionClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	bool _bDestroyAfterDead;
+
 	UPROPERTY()
 	UCompositeActorCondition* _lifeConditionIns;
 

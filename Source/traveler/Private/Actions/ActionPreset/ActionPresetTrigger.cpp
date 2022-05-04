@@ -18,7 +18,7 @@ void UActionPresetTrigger::Initiazlie(UActionComponent* actionComponent)
 		_conditionIns = NewObject<UCompositeActorCondition>(this, _conditionClass);
 		_conditionIns->SetActor(_actionComponent->GetOwner());
 		_conditionIns->Initialize();
-		_conditionIns->OnValidated.AddUObject(this, &UActionPresetTrigger::OnValidate);
+		_conditionIns->OnValidatedDelegate.AddUObject(this, &UActionPresetTrigger::OnValidate);
 		_conditionIns->Validate();
 	}
 

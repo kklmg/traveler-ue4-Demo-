@@ -29,7 +29,7 @@ private:
 	bool _cachedResult;
 
 public:
-	FMD_BoolValueChangeSignature OnValidated;
+	FMD_BoolValueChangeSignature OnValidatedDelegate;
 };
 
 

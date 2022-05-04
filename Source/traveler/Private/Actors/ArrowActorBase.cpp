@@ -23,14 +23,14 @@ AArrowActorBase::AArrowActorBase()
 	{
 		_headEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Head Effect"));
 		check(_headEffect);
-		_headEffect->AttachToComponent(_primitiveComp, FAttachmentTransformRules::KeepWorldTransform);
+		_headEffect->SetupAttachment(_primitiveComp);
 	}
 
 	if (!_headTrailEffect)
 	{
 		_headTrailEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Head Trail Effect"));
 		check(_headTrailEffect);
-		_headTrailEffect->AttachToComponent(_primitiveComp, FAttachmentTransformRules::KeepWorldTransform);
+		_headTrailEffect->SetupAttachment(_primitiveComp);
 		_headTrailEffect->Deactivate();
 	}
 
@@ -38,7 +38,7 @@ AArrowActorBase::AArrowActorBase()
 	{
 		_tailTrailEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Tail Trail Effect"));
 		check(_tailTrailEffect);
-		_tailTrailEffect->AttachToComponent(_primitiveComp, FAttachmentTransformRules::KeepWorldTransform);
+		_tailTrailEffect->SetupAttachment(_primitiveComp);
 		_tailTrailEffect->Deactivate();
 	}
 

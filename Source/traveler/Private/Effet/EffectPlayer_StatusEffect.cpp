@@ -32,8 +32,9 @@ UEffectPlayer_StatusEffect::UEffectPlayer_StatusEffect(const FObjectInitializer&
 
 void UEffectPlayer_StatusEffect::VPlayEffect(uint8 effectOption)
 {
+
 	EStatusEffect statusEffectType = (EStatusEffect)effectOption;
-	if (_runningEffect.Contains(statusEffectType)) return;
+	if (_runningEffect.Contains(statusEffectType)) return ;
 	if (!_effectData.Contains(statusEffectType)) return;
 
 	_runningEffect.Add(statusEffectType);
@@ -77,6 +78,8 @@ void UEffectPlayer_StatusEffect::VStopEffect(uint8 effectOption)
 		_effectData[statusEffectType].EffectActorIns->Destroy();
 		_effectData[statusEffectType].EffectActorIns = nullptr;
 	}
+
+	_OnEffectFinishedDelegate.Broadcast(true);
 }
 
 void UEffectPlayer_StatusEffect::VTick(float deltaTime)

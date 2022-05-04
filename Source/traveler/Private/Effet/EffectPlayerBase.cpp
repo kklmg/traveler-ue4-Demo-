@@ -16,6 +16,15 @@ void UEffectPlayerBase::VInitialize(AActor* owner, UMaterialInstanceDynamic* mid
 	_mid = mid;
 }
 
+void UEffectPlayerBase::VTick(float deltaTime)
+{
+}
+
+FMD_BoolValueChangeSignature& UEffectPlayerBase::GetEffectFinishedDelegate()
+{
+	return _OnEffectFinishedDelegate;
+}
+
 void UEffectPlayerBase::VPlayEffect(uint8 effectOption)
 {
 }
@@ -24,16 +33,13 @@ void UEffectPlayerBase::VStopEffect(uint8 effectOption)
 {
 }
 
-FORCEINLINE UMaterialInstanceDynamic* UEffectPlayerBase::GetMaterial()
+FORCEINLINE_DEBUGGABLE  UMaterialInstanceDynamic* UEffectPlayerBase::GetMaterial()
 {
 	return _mid;
 }
 
-void UEffectPlayerBase::VTick(float deltaTime)
-{
-}
 
-FORCEINLINE AActor* UEffectPlayerBase::GetOwner()
+FORCEINLINE_DEBUGGABLE AActor* UEffectPlayerBase::GetOwner()
 {
 	return _owner;
 }

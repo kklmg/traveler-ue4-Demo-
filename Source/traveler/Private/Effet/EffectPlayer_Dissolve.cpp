@@ -10,7 +10,7 @@ UEffectPlayer_Dissolve::UEffectPlayer_Dissolve(const FObjectInitializer& ObjectI
 	_matParamInfo_DissolveAmount.Index = 2;
 
 	_dissolveAmount = 0;
-	_duration = 4.0f;
+	_duration = 0.8f;
 }
 
 void UEffectPlayer_Dissolve::VInitialize(AActor * owner, UMaterialInstanceDynamic * mid)
@@ -48,4 +48,14 @@ void UEffectPlayer_Dissolve::VTick(float deltaTime)
 	//Set Material Parameter value
 	_dissolveAmount = _dissolveAmountCurve->GetFloatValue(normalizedElapsedTime);
 	GetMaterial()->SetScalarParameterValueByInfo(_matParamInfo_DissolveAmount, _dissolveAmount);
+
+	//Notify effect finished 
+	if (_bForward && _elapsedTime == _duration) 
+	{
+		_OnEffectFinishedDelegate.Broadcast(true);
+	}
+	if((!_bForward) && _elapsedTime == 0.0f)
+	{
+		_OnEffectFinishedDelegate.Broadcast(false);
+	}
 }

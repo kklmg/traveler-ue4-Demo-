@@ -5,12 +5,14 @@
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/LifeControlComponent.h"
 #include "UI/ActorStatusWidgetBase.h"
 
 
 UActorUIComponent::UActorUIComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	bWantsInitializeComponent = true;
 }
 
 void UActorUIComponent::InitializeComponent()
@@ -21,11 +23,23 @@ void UActorUIComponent::InitializeComponent()
 void UActorUIComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	_lifeControlComp = Cast<ULifeControlComponent>(GetOwner()->GetComponentByClass(ULifeControlComponent::StaticClass()));
+	if (_lifeControlComp && _lifeControlComp->GetLifeChangedDelegate())
+	{
+		_lifeControlComp->GetLifeChangedDelegate()->AddUObject(this, &UActorUIComponent::OnLifeStateChanged);
+	}
 	
 	if(_bShowStatusDefault)
 	{
 		ShowActorUI(EActorUI::ActorUI_Status);
 	}
+}
+
+void UActorUIComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	RemoveAllUI();
 }
 
 void UActorUIComponent::ShowActorUI(EActorUI widgeType)
@@ -55,6 +69,28 @@ void UActorUIComponent::HideActorUI(EActorUI widgeType)
 	}
 }
 
+void UActorUIComponent::HideAllUI()
+{
+	for (auto& element : _mapWidgetInstance)
+	{
+		if (element.Value)
+		{
+			element.Value->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+}
+
+void UActorUIComponent::RemoveAllUI()
+{
+	for (auto& element : _mapWidgetInstance)
+	{
+		if (element.Value)
+		{
+			element.Value->RemoveFromViewport();
+		}
+	}
+}
+
 void UActorUIComponent::ShowActorStatusEffectUI(EStatusEffect StatusType, float duration)
 {
 	ShowActorUI(EActorUI::ActorUI_Status);
@@ -77,6 +113,19 @@ void UActorUIComponent::HideActorStatusEffectUI(EStatusEffect StatusType)
 	{
 		statusUI->HideStatus(StatusType);
 	}
+}
+
+void UActorUIComponent::OnLifeStateChanged(bool bAlive)
+{
+	if(bAlive)
+	{
+
+	}
+	else
+	{
+		RemoveAllUI();
+	}
+
 }
 
 void UActorUIComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

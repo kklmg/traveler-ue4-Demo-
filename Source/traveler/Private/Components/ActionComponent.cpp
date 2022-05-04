@@ -40,8 +40,6 @@ void UActionComponent::InitializeComponent()
 
 	_mapActionProcessPool.SetNum(int32(EActionType::EACT_Max), false);
 
-	_lifeControlComp = Cast<ULifeControlComponent>(GetOwner()->GetComponentByClass(ULifeControlComponent::StaticClass()));
-
 	for (auto triggerClass : _actionSetTriggerClasses)
 	{
 		if (triggerClass)
@@ -59,6 +57,7 @@ void UActionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	_lifeControlComp = Cast<ULifeControlComponent>(GetOwner()->GetComponentByClass(ULifeControlComponent::StaticClass()));
 	if (_lifeControlComp && _lifeControlComp->GetLifeChangedDelegate())
 	{
 		_lifeControlComp->GetLifeChangedDelegate()->AddUObject(this, &UActionComponent::OnLifeChanged);

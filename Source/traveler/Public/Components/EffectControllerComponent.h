@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/MyDelegates.h"
 #include "Components/ActorComponent.h"
 #include "Enums/EnumCombat.h"
 #include "Effet/EnumEffect.h"
@@ -28,6 +29,7 @@ public:
 
 	void PlayEffect(EEffectType effectType, uint8 effectOption);
 	void StopEffect(EEffectType effectType, uint8 effectOption);
+	FMD_BoolValueChangeSignature* GetEffectFinishedDelegate(EEffectType effectType);
 
 	// Called when the game starts
 	virtual void BeginPlay() override;

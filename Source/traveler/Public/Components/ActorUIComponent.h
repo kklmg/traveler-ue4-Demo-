@@ -3,19 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/PrimitiveComponent.h"
+#include "Components/ActorComponent.h"
 #include "UI/ActorWidget.h"
 #include "Data/ActorUIData.h"
 #include "Enums/EnumCombat.h"
 #include "ActorUIComponent.generated.h"
 
-
 class UUserWidget;
+class ULifeControlComponent;
+
 /**
  * 
  */
-UCLASS()
-class TRAVELER_API UActorUIComponent : public UPrimitiveComponent
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+class TRAVELER_API UActorUIComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -27,6 +28,7 @@ protected:
 	virtual void InitializeComponent() override;
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
 
 public:
 	// Called every frame
@@ -34,9 +36,12 @@ public:
 
 	void ShowActorUI(EActorUI widgeType);
 	void HideActorUI(EActorUI widgeType);
+	void HideAllUI();
+	void RemoveAllUI();
 	void ShowActorStatusEffectUI(EStatusEffect StatusType, float duration);
 	void HideActorStatusEffectUI(EStatusEffect StatusType);
 
+	void OnLifeStateChanged(bool bAlive);
 private:
 
 	UPROPERTY(EditDefaultsOnly)
@@ -49,5 +54,5 @@ private:
 	TMap<EActorUI, UActorWidget*> _mapWidgetInstance;
 
 	UPROPERTY()
-	UActorWidget* _widget;
+	ULifeControlComponent* _lifeControlComp;
 };

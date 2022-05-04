@@ -29,7 +29,7 @@ void UCompositeCondition::VTMInitialize()
 		if (!conditionIns) continue;
 
 		conditionIns->Initialize();
-		conditionIns->OnValidated.AddUObject(this, &UCompositeCondition::OnSubConditionChanged);
+		conditionIns->OnValidatedDelegate.AddUObject(this, &UCompositeCondition::OnSubConditionChanged);
 		_conditions.Add(conditionIns);
 	}
 }
@@ -41,5 +41,5 @@ void UCompositeCondition::Add(UConditionBase* condition)
 
 void UCompositeCondition::OnSubConditionChanged(bool result)
 {
-	this->OnValidated.Broadcast(this->Validate());
+	this->OnValidatedDelegate.Broadcast(this->Validate());
 }

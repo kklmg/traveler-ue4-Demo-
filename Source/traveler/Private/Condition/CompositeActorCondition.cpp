@@ -23,7 +23,7 @@ void UCompositeActorCondition::VTMInitialize()
 
 		conditionIns->VSetActor(_actor);
 		conditionIns->Initialize();
-		conditionIns->OnValidated.AddUObject(this, &UCompositeCondition::OnSubConditionChanged);
+		conditionIns->OnValidatedDelegate.AddUObject(this, &UCompositeCondition::OnSubConditionChanged);
 		this->Add(conditionIns);
 	}
 }

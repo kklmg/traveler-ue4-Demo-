@@ -39,8 +39,8 @@ void ULifeControlComponent::BeginPlay()
 
 	_lifeConditionIns->SetActor(GetOwner());
 	_lifeConditionIns->Initialize();
-	_lifeConditionIns->OnValidated.AddUObject(this, &ULifeControlComponent::OnLifeStateChanged);
-	
+	_lifeConditionIns->OnValidatedDelegate.AddUObject(this, &ULifeControlComponent::OnLifeStateChanged);
+
 	_effectControlComp = Cast<UEffectControllerComponent>(GetOwner()->GetComponentByClass(UEffectControllerComponent::StaticClass()));
 
 	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
@@ -56,21 +56,39 @@ void ULifeControlComponent::BeginPlay()
 
 void ULifeControlComponent::OnLifeStateChanged(bool isAlive)
 {
-	if(_animViewModel)
+	if (_animViewModel)
 	{
-		_animViewModel->SetBool(NSAnimationDataKey::bIsAlive,isAlive);
+		_animViewModel->SetBool(NSAnimationDataKey::bIsAlive, isAlive);
 	}
 
 	if (_effectControlComp)
 	{
-		if(isAlive)
+		if (isAlive)
 		{
 			_effectControlComp->StopEffect(EEffectType::EEffectType_Dissolve, 0);
 		}
 		else
 		{
+			//destroy actor after death effect finished
+			if (_bDestroyAfterDead)
+			{
+				auto effectFinishedDelegate = _effectControlComp->GetEffectFinishedDelegate(EEffectType::EEffectType_Dissolve);
+				if (effectFinishedDelegate)
+				{
+					effectFinishedDelegate->AddLambda([this](bool bForward)
+					{
+						GetOwner()->Destroy();
+					});
+				}
+			}
+
+			//play death effect
 			_effectControlComp->PlayEffect(EEffectType::EEffectType_Dissolve, 0);
 		}
+	}
+	else if (_bDestroyAfterDead)
+	{
+		GetOwner()->Destroy();
 	}
 }
 
@@ -90,6 +108,7 @@ bool ULifeControlComponent::IsAlive()
 
 FMD_BoolValueChangeSignature* ULifeControlComponent::GetLifeChangedDelegate()
 {
-	return _lifeConditionIns ? &_lifeConditionIns->OnValidated : nullptr;
+	return _lifeConditionIns ? &_lifeConditionIns->OnValidatedDelegate : nullptr;
 }
+
 
