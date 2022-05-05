@@ -3,9 +3,7 @@
 
 #include "Components/LifeControlComponent.h"
 #include "Condition/CompositeActorCondition.h"
-#include "Components/AnimControlComponent.h"
-#include "Components/EffectControllerComponent.h"
-#include "Data/AnimationModelBase.h"
+#include "Components/EventBrokerComponent.h"
 
 
 // Sets default values for this component's properties
@@ -23,6 +21,14 @@ ULifeControlComponent::ULifeControlComponent()
 void ULifeControlComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
+
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
+	if(_eventBrokerComp)
+	{
+		_eventBrokerComp->RegisterEvent(NSEvent::ActorLifeStateChanged::Name);
+		_lifeStateChangedData = NewObject<NSEvent::ActorLifeStateChanged::DataType>(this);
+		check(_lifeStateChangedData);
+	}
 }
 
 // Called when the game starts
@@ -32,63 +38,52 @@ void ULifeControlComponent::BeginPlay()
 
 	// ...
 
-	_lifeConditionIns = _lifeConditionClass ?
+	_ConditionIsAliveIns = _lifeConditionClass ?
 		NewObject<UCompositeActorCondition>(this, _lifeConditionClass) : NewObject<UCompositeActorCondition>(this);
 
-	check(_lifeConditionIns);
+	check(_ConditionIsAliveIns);
 
-	_lifeConditionIns->SetActor(GetOwner());
-	_lifeConditionIns->Initialize();
-	_lifeConditionIns->OnValidatedDelegate.AddUObject(this, &ULifeControlComponent::OnLifeStateChanged);
+	_ConditionIsAliveIns->SetActor(GetOwner());
+	_ConditionIsAliveIns->Initialize();
+	_ConditionIsAliveIns->OnValidatedDelegate.AddUObject(this, &ULifeControlComponent::OnLifeStateChanged);
 
-	_effectControlComp = Cast<UEffectControllerComponent>(GetOwner()->GetComponentByClass(UEffectControllerComponent::StaticClass()));
-
-	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
-	if (animControlComp)
+	if(_eventBrokerComp && _eventBrokerComp->ContainsRegisteredEvent(NSEvent::ActorDeathEffectFinished::Name))
 	{
-		_animViewModel = animControlComp->GetAnimationModel();
+		//destroy actor after death effect finished
+		_eventBrokerComp->GetEventDelegate(NSEvent::ActorDeathEffectFinished::Name)
+		->AddLambda([this](UObject* eventData)
+		{
+			auto data = Cast<NSEvent::ActorDeathEffectFinished::DataType>(eventData);
+
+			if (_bDestroyAfterDead && data && data->Value == true)
+			{
+				GetOwner()->Destroy();
+			}	
+		});
 	}
-	if (_animViewModel && _lifeConditionIns)
-	{
-		_animViewModel->SetBool(NSAnimationDataKey::bIsAlive, _lifeConditionIns->GetResult());
-	}
+
+	_ConditionIsAliveIns->Validate();
 }
 
 void ULifeControlComponent::OnLifeStateChanged(bool isAlive)
 {
-	if (_animViewModel)
+	//publish actorLife Changed Event to other actor components
+	if (_eventBrokerComp) 
 	{
-		_animViewModel->SetBool(NSAnimationDataKey::bIsAlive, isAlive);
+		_lifeStateChangedData->Value = isAlive;
+		_eventBrokerComp->PublishEvent(NSEvent::ActorLifeStateChanged::Name, _lifeStateChangedData);
 	}
 
-	if (_effectControlComp)
+	if (_bDestroyAfterDead) 
 	{
-		if (isAlive)
+		if(_eventBrokerComp == nullptr)
 		{
-			_effectControlComp->StopEffect(EEffectType::EEffectType_Dissolve, 0);
+			GetOwner()->Destroy();
 		}
-		else
+		else if (_eventBrokerComp->ContainsRegisteredEvent(NSEvent::ActorDeathEffectFinished::Name) == false)
 		{
-			//destroy actor after death effect finished
-			if (_bDestroyAfterDead)
-			{
-				auto effectFinishedDelegate = _effectControlComp->GetEffectFinishedDelegate(EEffectType::EEffectType_Dissolve);
-				if (effectFinishedDelegate)
-				{
-					effectFinishedDelegate->AddLambda([this](bool bForward)
-					{
-						GetOwner()->Destroy();
-					});
-				}
-			}
-
-			//play death effect
-			_effectControlComp->PlayEffect(EEffectType::EEffectType_Dissolve, 0);
+			GetOwner()->Destroy();
 		}
-	}
-	else if (_bDestroyAfterDead)
-	{
-		GetOwner()->Destroy();
 	}
 }
 
@@ -103,12 +98,12 @@ void ULifeControlComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 
 bool ULifeControlComponent::IsAlive()
 {
-	return _lifeConditionIns ? _lifeConditionIns->GetResult() : true;
+	return _ConditionIsAliveIns ? _ConditionIsAliveIns->GetResult() : true;
 }
 
 FMD_BoolValueChangeSignature* ULifeControlComponent::GetLifeChangedDelegate()
 {
-	return _lifeConditionIns ? &_lifeConditionIns->OnValidatedDelegate : nullptr;
+	return _ConditionIsAliveIns ? &_ConditionIsAliveIns->OnValidatedDelegate : nullptr;
 }
 
 

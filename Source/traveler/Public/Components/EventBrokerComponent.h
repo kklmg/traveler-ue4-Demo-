@@ -29,12 +29,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	bool RegisterEvent(FName eventName);
+	bool ContainsRegisteredEvent(FName eventName);
+
 	UFUNCTION(BlueprintCallable)
-	void PublishEvent(FName eventName, UObject* data);
-
-	FMD_OnEventPublished& GetEventDelegate(FName eventName);
-
+	bool PublishEvent(FName eventName, UObject* data);
+	FMD_OnEventPublished* GetEventDelegate(FName eventName);
+	FMD_OnEventPublished& RegisterAndGetEventDelegate(FName eventName);
 private:
 	UPROPERTY()
-	UEventBroker* _eventBroker;
+	UEventBroker* _eventBrokerIns;
 };

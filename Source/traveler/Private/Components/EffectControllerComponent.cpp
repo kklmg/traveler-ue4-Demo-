@@ -5,6 +5,8 @@
 #include "GameFramework/Character.h"
 #include "Effet/EffectPlayerBase.h"
 #include "Components/ExTransformProviderComponent.h"
+#include "Components/EventBrokerComponent.h"
+#include "Event/EventData.h"
 
 // Sets default values for this component's properties
 UEffectControllerComponent::UEffectControllerComponent()
@@ -30,12 +32,28 @@ void UEffectControllerComponent::InitializeComponent()
 			_effectPlayerInsMap.Add(efffectPlayerclass.Key, effectPlayerIns);
 		}
 	}
+
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
+	if (_eventBrokerComp && _eventBrokerComp->ContainsRegisteredEvent(NSEvent::ActorLifeStateChanged::Name))
+	{
+		_eventBrokerComp->GetEventDelegate(NSEvent::ActorLifeStateChanged::Name)->AddUObject(this, &UEffectControllerComponent::OnActorLifeStateChanged);
+		_eventData_DeathEffectFinished = NewObject<UDataBool>(this);
+
+		_eventBrokerComp->RegisterEvent(NSEvent::ActorDeathEffectFinished::Name);
+	}
 }
 
 // Called when the game starts
 void UEffectControllerComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	auto pEffectFinishedDelegate = GetEffectFinishedDelegate(EEffectType::EEffectType_Dissolve);
+	if(pEffectFinishedDelegate)
+	{
+		pEffectFinishedDelegate->AddUObject(this, &UEffectControllerComponent::OnActorDeathEffectFinished);
+	}
+
 
 	// ...
 }
@@ -103,4 +121,24 @@ void UEffectControllerComponent::TickComponent(float DeltaTime, ELevelTick TickT
 		}
 	}
 }
+
+void UEffectControllerComponent::OnActorLifeStateChanged(UObject* data)
+{
+	auto isAliveData = Cast<NSEvent::ActorLifeStateChanged::DataType>(data);
+
+	if (isAliveData)
+	{
+		isAliveData->Value ? StopEffect(EEffectType::EEffectType_Dissolve, 0) : PlayEffect(EEffectType::EEffectType_Dissolve,0);
+	}
+}
+
+void UEffectControllerComponent::OnActorDeathEffectFinished(bool bForward)
+{
+	if(_eventBrokerComp)
+	{
+		_eventData_DeathEffectFinished->Value = bForward;
+		_eventBrokerComp->PublishEvent(NSEvent::ActorDeathEffectFinished::Name,_eventData_DeathEffectFinished);
+	}
+}
+
 

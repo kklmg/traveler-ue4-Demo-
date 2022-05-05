@@ -12,11 +12,16 @@ UEventBrokerComponent::UEventBrokerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	bWantsInitializeComponent = true;
+	if (_eventBrokerIns == nullptr)
+	{
+		_eventBrokerIns = CreateDefaultSubobject<UEventBroker>(TEXT("EventBrokerIns"));
+		checkf(_eventBrokerIns != nullptr, TEXT("missing instance of EventBroker"));
+	}
 }
 
 void UEventBrokerComponent::InitializeComponent()
 {
-	_eventBroker = NewObject<UEventBroker>(this);
+	
 }
 
 // Called when the game starts
@@ -37,17 +42,28 @@ void UEventBrokerComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	// ...
 }
 
-void UEventBrokerComponent::PublishEvent(FName eventName, UObject* data)
+bool UEventBrokerComponent::RegisterEvent(FName eventName)
 {
-	checkf(_eventBroker != nullptr, TEXT("missing instance of EventBroker"));
-
-	_eventBroker->Publish(eventName, data);
+	return _eventBrokerIns->RegisterEvent(eventName);
 }
 
-FMD_OnEventPublished& UEventBrokerComponent::GetEventDelegate(FName eventName)
+bool UEventBrokerComponent::ContainsRegisteredEvent(FName eventName)
 {
-	checkf(_eventBroker != nullptr, TEXT("missing instance of EventBroker"));
+	return _eventBrokerIns->ContainsRegisteredEvent(eventName);
+}
 
-	return _eventBroker->GetDelegate(eventName);
+bool UEventBrokerComponent::PublishEvent(FName eventName, UObject* data)
+{
+	return _eventBrokerIns->PublishEvent(eventName, data);
+}
+
+FMD_OnEventPublished* UEventBrokerComponent::GetEventDelegate(FName eventName)
+{
+	return _eventBrokerIns->GetEventDelegate(eventName);
+}
+
+FMD_OnEventPublished& UEventBrokerComponent::RegisterAndGetEventDelegate(FName eventName)
+{
+	return _eventBrokerIns->RegisterAndGetEventDelegate(eventName);
 }
 

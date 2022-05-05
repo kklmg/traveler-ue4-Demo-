@@ -11,6 +11,7 @@
 
 class UAnimationModelBase;
 class UAnimNotifier;
+class UEventBrokerComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UAnimControlComponent : public UActorComponent
@@ -60,9 +61,12 @@ public:
 	//animation Montage ------------------------------------------------------------------
 	bool PlayAnimMontage(EAnimMontage animMontageType);
 
+protected:
+	void OnActorLifeStateChanged(UObject* data);
+
 private:
 	UPROPERTY()
-	UAnimationModelBase* _animationModelIns;
+	UAnimationModelBase* _animViewModelIns;
 
 	UPROPERTY()
 	ACharacter* _character;
@@ -75,6 +79,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly,Category = animMontage)
 	TMap<EAnimMontage, UAnimMontage*> _montageMap;
+
+	UPROPERTY()
+	UEventBrokerComponent* _eventBrokerComp;
 
 	UPROPERTY()
 	TMap<EAnimNotifyKey, UAnimNotifier*> _mapNotifiers;

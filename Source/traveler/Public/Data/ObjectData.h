@@ -11,6 +11,25 @@
 /**
  * 
  */
+
+UCLASS()
+class TRAVELER_API UDataBool : public UObject
+{
+	GENERATED_BODY()
+public:
+	bool Value;
+};
+
+UCLASS()
+class TRAVELER_API UDataUInt8 : public UObject
+{
+	GENERATED_BODY()
+public:
+	uint8 Value;
+};
+
+
+
 UCLASS()
 class TRAVELER_API UDataInt32 : public UObject
 {

@@ -39,8 +39,11 @@ class TRAVELER_API UEventBroker : public UObject
 	GENERATED_BODY()
 
 public:
-	FMD_OnEventPublished& GetDelegate(FName eventName);
-	void Publish(FName eventName, UObject* data);
+	bool RegisterEvent(FName eventName);
+	bool ContainsRegisteredEvent(FName eventName);
+	bool PublishEvent(FName eventName, UObject* data);
+	FMD_OnEventPublished& RegisterAndGetEventDelegate(FName eventName);
+	FMD_OnEventPublished* GetEventDelegate(FName eventName);
 
 private:
 	UPROPERTY()

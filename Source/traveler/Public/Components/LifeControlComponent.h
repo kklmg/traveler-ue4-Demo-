@@ -5,14 +5,19 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Data/MyDelegates.h"
+#include "Event/EventData.h"
 #include "LifeControlComponent.generated.h"
 
-class UAnimationModelBase;
+class UDataBool;
 class UCompositeActorCondition;
-class UEffectControllerComponent;
+class UEventBrokerComponent;
 
 
 class IActorEffectInterface;
+#define asd UObject
+
+	
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API ULifeControlComponent : public UActorComponent
@@ -46,11 +51,11 @@ private:
 	bool _bDestroyAfterDead;
 
 	UPROPERTY()
-	UCompositeActorCondition* _lifeConditionIns;
+	UCompositeActorCondition* _ConditionIsAliveIns;
 
 	UPROPERTY()
-	UAnimationModelBase* _animViewModel;
+	UEventBrokerComponent* _eventBrokerComp;
 
 	UPROPERTY()
-	UEffectControllerComponent* _effectControlComp;
+	UDataBool* _lifeStateChangedData;
 };

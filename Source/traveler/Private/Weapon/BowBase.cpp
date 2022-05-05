@@ -158,19 +158,19 @@ void ABowBase::VOnEquipped()
 		FDelegateHandle delegateHandle;
 
 		delegateHandle = eventBrokerComp->
-			GetEventDelegate(NSNameBowAnimEvent::Bow_DrawingBowString).AddUObject(this, &ABowBase::OnAnim_StartDrawingBowString);
+			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Bow_DrawingBowString).AddUObject(this, &ABowBase::OnAnim_StartDrawingBowString);
 		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Bow_DrawingBowString, delegateHandle));
 
 		delegateHandle = eventBrokerComp->
-			GetEventDelegate(NSNameBowAnimEvent::Bow_TakeOutArrows).AddUObject(this, &ABowBase::OnAnim_TakeOutArrows);
+			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Bow_TakeOutArrows).AddUObject(this, &ABowBase::OnAnim_TakeOutArrows);
 		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Bow_TakeOutArrows, delegateHandle));
 
 		delegateHandle = eventBrokerComp->
-			GetEventDelegate(NSNameBowAnimEvent::Bow_FullyDrawed).AddUObject(this, &ABowBase::OnAnim_FullyDrawed);
+			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Bow_FullyDrawed).AddUObject(this, &ABowBase::OnAnim_FullyDrawed);
 		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Bow_FullyDrawed, delegateHandle));
 
 		delegateHandle = eventBrokerComp->
-			GetEventDelegate(NSNameBowAnimEvent::Bow_ReleasedBowString).AddUObject(this, &ABowBase::OnAnim_ReleaseBowString);
+			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Bow_ReleasedBowString).AddUObject(this, &ABowBase::OnAnim_ReleaseBowString);
 		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Bow_ReleasedBowString, delegateHandle));
 	}
 
@@ -197,7 +197,10 @@ void ABowBase::VOnUnEquipped()
 		FMD_OnEventPublished outEventPublishedDelegate;
 		for (auto delegateHandleData : _delegateHandles)
 		{
-			eventBrokerComp->GetEventDelegate(delegateHandleData.EventName).Remove(delegateHandleData.DelegateHandle);
+			if (eventBrokerComp->GetEventDelegate(delegateHandleData.EventName)) 
+			{
+				eventBrokerComp->GetEventDelegate(delegateHandleData.EventName)->Remove(delegateHandleData.DelegateHandle);
+			}	
 		}
 	}
 

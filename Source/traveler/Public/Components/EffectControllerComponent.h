@@ -9,12 +9,9 @@
 #include "Effet/EnumEffect.h"
 #include "EffectControllerComponent.generated.h"
 
-
-
 class UEffectPlayerBase;
-
-
-
+class UEventBrokerComponent;
+class UDataBool;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TRAVELER_API UEffectControllerComponent : public UActorComponent
@@ -40,9 +37,19 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+protected:
+	void OnActorLifeStateChanged(UObject* data);
+	void OnActorDeathEffectFinished(bool bForward);
+
 private:
 	UPROPERTY()
 	UMaterialInstanceDynamic* _MID;
+
+	UPROPERTY()
+	UEventBrokerComponent* _eventBrokerComp;
+
+	UPROPERTY()
+	UDataBool* _eventData_DeathEffectFinished;
 
 	UPROPERTY(EditDefaultsOnly)
 	TMap<EEffectType, TSubclassOf<UEffectPlayerBase>> _effectPlayerClassMap;

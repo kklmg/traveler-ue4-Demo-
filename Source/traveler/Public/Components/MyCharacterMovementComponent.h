@@ -15,6 +15,7 @@ class UAnimationModelBase;
 class UActionComponent;
 class UStatusComponent;
 class UEventBrokerComponent;
+class UDataUInt8;
 
 /**
  * 
@@ -41,6 +42,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void InitializeComponent() override;
 
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -68,6 +70,9 @@ private:
 
 	UPROPERTY()
 	UEventBrokerComponent* _eventBrokerComp;
+
+	UPROPERTY()
+	UDataUInt8* _eventData_MovementModeChanged;
 
 	float _inputDeltaPitch;
 	float _inputDeltaYaw;

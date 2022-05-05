@@ -7,13 +7,14 @@
 #include "Components/AnimControlComponent.h"
 #include "Components/EventBrokerComponent.h"
 #include "Data/ObjectData.h"
-#include "Event/EventNames.h"
+#include "Event/EventData.h"
 #include "Data/AnimationModelBase.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 
 UMyCharacterMovementComponent::UMyCharacterMovementComponent()
 {
 	BrakingDecelerationFlying = 2000.0f;
+	bWantsInitializeComponent = true;
 }
 
 FFlyingAbilityData& UMyCharacterMovementComponent::getFlyingAbilityData()
@@ -70,13 +71,12 @@ void UMyCharacterMovementComponent::RotateYaw(bool bPositive, float deltaTime, f
 	if (MovementMode == EMovementMode::MOVE_Flying)
 	{
 		_inputDeltaYaw = bPositive ? _FlyingAbilityData.YawAngSpeed * deltaTime * scale :
-						-_FlyingAbilityData.YawAngSpeed * deltaTime * scale;
+			-_FlyingAbilityData.YawAngSpeed * deltaTime * scale;
 	}
 	//todo
 	else
 	{
 	}
-
 }
 
 void UMyCharacterMovementComponent::RotateToYaw(float destYaw, float deltaTime)
@@ -158,16 +158,11 @@ void UMyCharacterMovementComponent::KeepSpeed(float normalizedSpeed, float delta
 	{
 		Accelerate(true, deltaTime);
 	}
-
 }
 
 void UMyCharacterMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	_actionComp = Cast<UActionComponent>(GetOwner()->GetComponentByClass(UActionComponent::StaticClass()));
-	_statusComp = Cast<UStatusComponent>(GetOwner()->GetComponentByClass(UStatusComponent::StaticClass()));
-	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 
 	if (_statusComp && _actionComp)
 	{
@@ -185,6 +180,22 @@ void UMyCharacterMovementComponent::BeginPlay()
 	}
 
 	PublishMovementModeChangedEvent();
+}
+
+void UMyCharacterMovementComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+
+	_actionComp = Cast<UActionComponent>(GetOwner()->GetComponentByClass(UActionComponent::StaticClass()));
+	_statusComp = Cast<UStatusComponent>(GetOwner()->GetComponentByClass(UStatusComponent::StaticClass()));
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
+	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
+
+	if (_eventBrokerComp)
+	{
+		_eventBrokerComp->RegisterEvent(NSEvent::MovementModeChanged::Name);
+		_eventData_MovementModeChanged = NewObject<UDataUInt8>(this);
+	}
 }
 
 void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -229,9 +240,8 @@ void UMyCharacterMovementComponent::PublishMovementModeChangedEvent()
 {
 	if (_eventBrokerComp)
 	{
-		UDataInt32* eventData = NewObject<UDataInt32>(this);
-		eventData->Value = MovementMode;
-		_eventBrokerComp->PublishEvent(NSEventNames::MovementModeChanged, eventData);
+		_eventData_MovementModeChanged->Value = MovementMode;
+		_eventBrokerComp->PublishEvent(NSEvent::MovementModeChanged::Name, _eventData_MovementModeChanged);
 	}
 }
 

@@ -14,26 +14,54 @@ FDelegateHandleData::FDelegateHandleData(FName eventName, FDelegateHandle delega
 	DelegateHandle = delegateHandle;
 }
 
-FMD_OnEventPublished& UEventBroker::GetDelegate(FName eventName)
+FMD_OnEventPublished* UEventBroker::GetEventDelegate(FName eventName)
 {
-	if(_delegateMap.Contains(eventName))
-	{
-		return _delegateMap[eventName].OnEventPublished;
-	}
-	else
-	{
-		_delegateMap.Add(eventName,FDelegateWrapper());
-		return _delegateMap[eventName].OnEventPublished;
-	}
+	return _delegateMap.Contains(eventName) ?
+		&_delegateMap[eventName].OnEventPublished : nullptr;
 }
 
-void UEventBroker::Publish(FName eventName, UObject* data)
+bool UEventBroker::PublishEvent(FName eventName, UObject* data)
 {
 	if (_delegateMap.Contains(eventName))
 	{
 		_delegateMap[eventName].CachedData = data;
 		_delegateMap[eventName].OnEventPublished.Broadcast(data);
-
 		//UDebugMessageHelper::Messsage_String(TEXT("Published Event"), eventName.ToString());
+		return true;
 	}
+	else
+	{
+		return false;
+	}
+}
+
+FMD_OnEventPublished& UEventBroker::RegisterAndGetEventDelegate(FName eventName)
+{
+	if (_delegateMap.Contains(eventName))
+	{
+		return _delegateMap[eventName].OnEventPublished;
+	}
+	else
+	{
+		_delegateMap.Add(eventName, FDelegateWrapper());
+		return _delegateMap[eventName].OnEventPublished;
+	}
+}
+
+bool UEventBroker::RegisterEvent(FName eventName)
+{
+	if (_delegateMap.Contains(eventName)) 
+	{
+		return false;
+	}
+	else
+	{
+		_delegateMap.Add(eventName, FDelegateWrapper());
+		return true;
+	}
+}
+
+bool UEventBroker::ContainsRegisteredEvent(FName eventName)
+{
+	return _delegateMap.Contains(eventName);
 }

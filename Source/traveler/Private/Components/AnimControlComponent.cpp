@@ -5,6 +5,8 @@
 #include "Data/AnimationModelBase.h"
 #include "GameFramework/Character.h"
 #include "AnimNotify/AnimNotifier.h"
+#include "Components/EventBrokerComponent.h"
+#include "Event/EventData.h"
 
 // Sets default values for this component's properties
 UAnimControlComponent::UAnimControlComponent()
@@ -21,8 +23,14 @@ UAnimControlComponent::UAnimControlComponent()
 
 void UAnimControlComponent::InitializeComponent()
 {
-	_animationModelIns = _animationModelClass ?
+	_animViewModelIns = _animationModelClass ?
 			NewObject<UAnimationModelBase>(this, _animationModelClass) : NewObject<UAnimationModelBase>(this);
+
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
+	if (_eventBrokerComp && _eventBrokerComp->ContainsRegisteredEvent(NSEvent::ActorLifeStateChanged::Name))
+	{
+		_eventBrokerComp->GetEventDelegate(NSEvent::ActorLifeStateChanged::Name)->AddUObject(this, &UAnimControlComponent::OnActorLifeStateChanged);
+	}
 
 	_character = GetOwner<ACharacter>();
 }
@@ -35,7 +43,7 @@ void UAnimControlComponent::BeginPlay()
 
 UAnimationModelBase* UAnimControlComponent::GetAnimationModel()
 {
-	return _animationModelIns;
+	return _animViewModelIns;
 }
 
 void UAnimControlComponent::SetAnimationState(EAnimationState newState)
@@ -136,5 +144,15 @@ bool UAnimControlComponent::PlayAnimMontage(EAnimMontage animMontageType)
 	else
 	{
 		return false;
+	}
+}
+
+void UAnimControlComponent::OnActorLifeStateChanged(UObject* data)
+{
+	auto lifeStateData = Cast<NSEvent::ActorLifeStateChanged::DataType>(data);
+	
+	if (lifeStateData)
+	{
+		_animViewModelIns->SetBool(NSAnimationDataKey::bIsAlive, lifeStateData->Value);
 	}
 }
