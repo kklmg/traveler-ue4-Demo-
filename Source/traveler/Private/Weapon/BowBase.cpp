@@ -194,7 +194,7 @@ void ABowBase::VOnUnEquipped()
 
 	if (eventBrokerComp)
 	{
-		FMD_OnEventPublished outEventPublishedDelegate;
+		FMD_UObjectSignature outEventPublishedDelegate;
 		for (auto delegateHandleData : _delegateHandles)
 		{
 			if (eventBrokerComp->GetEventDelegate(delegateHandleData.EventName)) 

@@ -17,6 +17,60 @@ UMyCharacterMovementComponent::UMyCharacterMovementComponent()
 	bWantsInitializeComponent = true;
 }
 
+void UMyCharacterMovementComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+
+	_actionComp = Cast<UActionComponent>(GetOwner()->GetComponentByClass(UActionComponent::StaticClass()));
+	_statusComp = Cast<UStatusComponent>(GetOwner()->GetComponentByClass(UStatusComponent::StaticClass()));
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
+	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
+
+	if (_eventBrokerComp)
+	{
+		_eventBrokerComp->RegisterEvent(NSEvent::MovementModeChanged::Name);
+		_eventBrokerComp->RegisterEvent(NSEvent::VelocityChanged::Name);
+		_eventData_MovementModeChanged = NewObject<UDataUInt8>(this);
+		_eventData_VelocityChanged = NewObject<UDataVector>(this);
+	}
+}
+
+void UMyCharacterMovementComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (_eventBrokerComp)
+	{
+		_eventBrokerComp->SubscribeEvent
+			(NSEvent::CharacterWantToSprint::Name, this, &UMyCharacterMovementComponent::OnCharacterWantToSprint);
+	}
+
+	if (_statusComp)
+	{
+		//set walking speed 
+		MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_WalkingSpeed);
+	}
+
+	PublishEvent_MovementModeChanged();
+}
+
+void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (_inputDeltaPitch != 0.0f || _inputDeltaYaw != 0.0f)
+	{
+		FRotator rotator = GetOwner()->GetActorRotation();
+		rotator.Yaw += _inputDeltaYaw;
+		rotator.Pitch += _inputDeltaPitch;
+
+		GetOwner()->SetActorRotation(rotator);
+
+		_inputDeltaPitch = 0.0f;
+		_inputDeltaYaw = 0.0f;
+	}
+}
+
 FFlyingAbilityData& UMyCharacterMovementComponent::getFlyingAbilityData()
 {
 	return _FlyingAbilityData;
@@ -95,7 +149,6 @@ void UMyCharacterMovementComponent::RotateToYaw(float destYaw, float deltaTime)
 	}
 }
 
-
 void UMyCharacterMovementComponent::Ascend(bool bPositive, float deltaTime)
 {
 	check(GetOwner())
@@ -160,83 +213,21 @@ void UMyCharacterMovementComponent::KeepSpeed(float normalizedSpeed, float delta
 	}
 }
 
-void UMyCharacterMovementComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if (_statusComp && _actionComp)
-	{
-		//set walking speed 
-		MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_WalkingSpeed);
-
-		_actionComp->GetActionBlackBoard()->
-			GetValueChangedDelegate_Bool(EActionDataKey::EACTD_WantToSprint).AddUObject(this, &UMyCharacterMovementComponent::OnCharacterWantToSprint);
-	}
-
-	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
-	if (animControlComp)
-	{
-		_animationViewModel = animControlComp->GetAnimationModel();
-	}
-
-	PublishMovementModeChangedEvent();
-}
-
-void UMyCharacterMovementComponent::InitializeComponent()
-{
-	Super::InitializeComponent();
-
-	_actionComp = Cast<UActionComponent>(GetOwner()->GetComponentByClass(UActionComponent::StaticClass()));
-	_statusComp = Cast<UStatusComponent>(GetOwner()->GetComponentByClass(UStatusComponent::StaticClass()));
-	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
-	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
-
-	if (_eventBrokerComp)
-	{
-		_eventBrokerComp->RegisterEvent(NSEvent::MovementModeChanged::Name);
-		_eventData_MovementModeChanged = NewObject<UDataUInt8>(this);
-	}
-}
-
-void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if (_inputDeltaPitch != 0.0f || _inputDeltaYaw != 0.0f)
-	{
-		FRotator rotator = GetOwner()->GetActorRotation();
-		rotator.Yaw += _inputDeltaYaw;
-		rotator.Pitch += _inputDeltaPitch;
-
-		GetOwner()->SetActorRotation(rotator);
-
-		_inputDeltaPitch = 0.0f;
-		_inputDeltaYaw = 0.0f;
-	}
-}
-
 void UMyCharacterMovementComponent::OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode)
 {
 	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
 
-	if (_animationViewModel)
-	{
-		_animationViewModel->SetUInt8(NSAnimationDataKey::byteMovementMode, MovementMode);
-	}
-	PublishMovementModeChangedEvent();
+	PublishEvent_MovementModeChanged();
 }
 
 void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity)
 {
 	Super::OnMovementUpdated(DeltaSeconds, OldLocation, OldVelocity);
 
-	if (_animationViewModel)
-	{
-		_animationViewModel->SetVector(NSAnimationDataKey::vMovingVelocity, Velocity);
-	}
+	PublishEvent_VelocityModeChanged();
 }
 
-void UMyCharacterMovementComponent::PublishMovementModeChangedEvent()
+void UMyCharacterMovementComponent::PublishEvent_MovementModeChanged()
 {
 	if (_eventBrokerComp)
 	{
@@ -245,18 +236,28 @@ void UMyCharacterMovementComponent::PublishMovementModeChangedEvent()
 	}
 }
 
-void UMyCharacterMovementComponent::OnCharacterWantToSprint(bool wantToSprint)
+void UMyCharacterMovementComponent::PublishEvent_VelocityModeChanged()
 {
-	if (_statusComp)
+	if (_eventBrokerComp)
 	{
-		if (wantToSprint)
-		{
-			MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_SprintingSpeed);
-		}
-		else
-		{
+		_eventData_VelocityChanged->Value = Velocity;
+		_eventBrokerComp->PublishEvent(NSEvent::VelocityChanged::Name, _eventData_VelocityChanged);
+	}
+}
 
-			MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_WalkingSpeed);
-		}
+void UMyCharacterMovementComponent::OnCharacterWantToSprint(UObject* baseData)
+{
+	if (_statusComp == nullptr) return;
+
+	auto eventData = Cast<NSEvent::CharacterWantToSprint::DataType>(baseData);
+	if (eventData == nullptr) return;
+
+	if (eventData->Value)
+	{
+		MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_SprintingSpeed);
+	}
+	else
+	{
+		MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_WalkingSpeed);
 	}
 }

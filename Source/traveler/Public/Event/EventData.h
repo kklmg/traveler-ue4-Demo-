@@ -18,6 +18,8 @@ namespace NSEvent
 {
 	MyEventWithData(ActorDeathEffectFinished,UDataBool);
 	MyEventWithData(MovementModeChanged,UDataUInt8);
+	MyEventWithData(VelocityChanged,UDataVector);
 	MyEventWithData(ActorLifeStateChanged, UDataBool);
+	MyEventWithData(CharacterWantToSprint, UDataBool);
 }
 

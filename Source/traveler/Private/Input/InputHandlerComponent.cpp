@@ -161,7 +161,7 @@ void UInputHandlerComponent::InitializeButtons()
 		else
 		{
 			UButtonInputActionBase* buttonIns = NewObject<UButtonInputActionBase>(this, buttonClass);
-			buttonIns->Initialize(_actionComp);
+			buttonIns->SetActor(GetOwner());
 			_mapButtons.Add(buttonIns->GetInputMappingName(),buttonIns);
 		}
 	}

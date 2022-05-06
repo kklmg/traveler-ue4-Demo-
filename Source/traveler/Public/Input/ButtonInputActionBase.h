@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Input/ButtonInputBase.h"
 #include "Enums/EnumActionType.h"
+#include "GameFramework/Actor.h"
 #include "ButtonInputActionBase.generated.h"
 
 class UActionComponent;
@@ -17,7 +18,7 @@ class TRAVELER_API UButtonInputActionBase : public UButtonInputBase
 {
 	GENERATED_BODY()
 public:
-	void Initialize(UActionComponent* actionComp);
+	void SetActor(AActor* actor);
 
 	EActionType GetActionType();
 	UActionComponent* GetActionComp();
@@ -26,6 +27,9 @@ protected:
 	EActionType _actionType;
 
 private:
+	UPROPERTY(EditDefaultsOnly)
+	AActor* _actor;
+
 	UPROPERTY()
 	UActionComponent* _actionComp;
 };

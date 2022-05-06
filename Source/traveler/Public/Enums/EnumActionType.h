@@ -7,6 +7,7 @@
 /**
  * 
  */
+
 UENUM(BlueprintType)
 enum class EActionType : uint8
 {
@@ -45,4 +46,3 @@ enum class EActionDataKey : uint8
 	EACTD_WantToSprint UMETA(DisplayName = "WantToSprint"),
 	EACTD_TurnToMovingDirection UMETA(DisplayName = "TurnToMovingDirection"),
 };
-

@@ -24,12 +24,17 @@ UAnimControlComponent::UAnimControlComponent()
 void UAnimControlComponent::InitializeComponent()
 {
 	_animViewModelIns = _animationModelClass ?
-			NewObject<UAnimationModelBase>(this, _animationModelClass) : NewObject<UAnimationModelBase>(this);
+		NewObject<UAnimationModelBase>(this, _animationModelClass) : NewObject<UAnimationModelBase>(this);
 
 	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
-	if (_eventBrokerComp && _eventBrokerComp->ContainsRegisteredEvent(NSEvent::ActorLifeStateChanged::Name))
+	if (_eventBrokerComp)
 	{
-		_eventBrokerComp->GetEventDelegate(NSEvent::ActorLifeStateChanged::Name)->AddUObject(this, &UAnimControlComponent::OnActorLifeStateChanged);
+		_eventBrokerComp->SubscribeEvent<UAnimControlComponent>
+			(NSEvent::ActorLifeStateChanged::Name, this, &UAnimControlComponent::OnActorLifeStateChanged);
+		_eventBrokerComp->SubscribeEvent<UAnimControlComponent>
+			(NSEvent::MovementModeChanged::Name, this, &UAnimControlComponent::OnMovementModeChanged);
+		_eventBrokerComp->SubscribeEvent<UAnimControlComponent>
+			(NSEvent::VelocityChanged::Name, this, &UAnimControlComponent::OnVelocityChanged);
 	}
 
 	_character = GetOwner<ACharacter>();
@@ -39,6 +44,14 @@ void UAnimControlComponent::InitializeComponent()
 void UAnimControlComponent::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+// Called every frame
+void UAnimControlComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// ...
 }
 
 UAnimationModelBase* UAnimControlComponent::GetAnimationModel()
@@ -64,15 +77,6 @@ EAnimationState UAnimControlComponent::GetAnimationState()
 FOnAnimationStateChanged& UAnimControlComponent::GetAnimationStateChangedDelegate()
 {
 	return _animationStateChangedDelegate;
-}
-
-
-// Called every frame
-void UAnimControlComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 FORCEINLINE_DEBUGGABLE UAnimInstance* UAnimControlComponent::GetAnimInstance()
@@ -147,12 +151,30 @@ bool UAnimControlComponent::PlayAnimMontage(EAnimMontage animMontageType)
 	}
 }
 
-void UAnimControlComponent::OnActorLifeStateChanged(UObject* data)
+void UAnimControlComponent::OnActorLifeStateChanged(UObject* baseData)
 {
-	auto lifeStateData = Cast<NSEvent::ActorLifeStateChanged::DataType>(data);
-	
-	if (lifeStateData)
+	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	if (eventData)
 	{
-		_animViewModelIns->SetBool(NSAnimationDataKey::bIsAlive, lifeStateData->Value);
+		_animViewModelIns->SetBool(NSAnimationDataKey::bIsAlive, eventData->Value);
+	}
+}
+
+void UAnimControlComponent::OnVelocityChanged(UObject* baseData)
+{
+	auto eventData = Cast<NSEvent::VelocityChanged::DataType>(baseData);
+	if (eventData)
+	{
+		_animViewModelIns->SetVector(NSAnimationDataKey::vMovingVelocity, eventData->Value);
+	}
+
+}
+
+void UAnimControlComponent::OnMovementModeChanged(UObject* baseData)
+{
+	auto eventData = Cast<NSEvent::MovementModeChanged::DataType>(baseData);
+	if (eventData)
+	{
+		_animViewModelIns->SetUInt8(NSAnimationDataKey::byteMovementMode, eventData->Value);
 	}
 }

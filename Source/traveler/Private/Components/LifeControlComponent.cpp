@@ -23,7 +23,7 @@ void ULifeControlComponent::InitializeComponent()
 	Super::InitializeComponent();
 
 	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
-	if(_eventBrokerComp)
+	if (_eventBrokerComp)
 	{
 		_eventBrokerComp->RegisterEvent(NSEvent::ActorLifeStateChanged::Name);
 		_lifeStateChangedData = NewObject<NSEvent::ActorLifeStateChanged::DataType>(this);
@@ -47,19 +47,11 @@ void ULifeControlComponent::BeginPlay()
 	_ConditionIsAliveIns->Initialize();
 	_ConditionIsAliveIns->OnValidatedDelegate.AddUObject(this, &ULifeControlComponent::OnLifeStateChanged);
 
-	if(_eventBrokerComp && _eventBrokerComp->ContainsRegisteredEvent(NSEvent::ActorDeathEffectFinished::Name))
+	if (_eventBrokerComp)
 	{
 		//destroy actor after death effect finished
-		_eventBrokerComp->GetEventDelegate(NSEvent::ActorDeathEffectFinished::Name)
-		->AddLambda([this](UObject* eventData)
-		{
-			auto data = Cast<NSEvent::ActorDeathEffectFinished::DataType>(eventData);
-
-			if (_bDestroyAfterDead && data && data->Value == true)
-			{
-				GetOwner()->Destroy();
-			}	
-		});
+		_eventBrokerComp->SubscribeEvent<ULifeControlComponent>
+			(NSEvent::ActorDeathEffectFinished::Name, this, &ULifeControlComponent::OnActorDeathEffectFinished);
 	}
 
 	_ConditionIsAliveIns->Validate();
@@ -68,15 +60,15 @@ void ULifeControlComponent::BeginPlay()
 void ULifeControlComponent::OnLifeStateChanged(bool isAlive)
 {
 	//publish actorLife Changed Event to other actor components
-	if (_eventBrokerComp) 
+	if (_eventBrokerComp)
 	{
 		_lifeStateChangedData->Value = isAlive;
 		_eventBrokerComp->PublishEvent(NSEvent::ActorLifeStateChanged::Name, _lifeStateChangedData);
 	}
 
-	if (_bDestroyAfterDead) 
+	if (_bDestroyAfterDead)
 	{
-		if(_eventBrokerComp == nullptr)
+		if (_eventBrokerComp == nullptr)
 		{
 			GetOwner()->Destroy();
 		}
@@ -84,6 +76,15 @@ void ULifeControlComponent::OnLifeStateChanged(bool isAlive)
 		{
 			GetOwner()->Destroy();
 		}
+	}
+}
+
+void ULifeControlComponent::OnActorDeathEffectFinished(UObject* baseData)
+{
+	auto eventData = Cast<NSEvent::ActorDeathEffectFinished::DataType>(baseData);
+	if (_bDestroyAfterDead && eventData && eventData->Value == true)
+	{
+		GetOwner()->Destroy();
 	}
 }
 
@@ -101,7 +102,7 @@ bool ULifeControlComponent::IsAlive()
 	return _ConditionIsAliveIns ? _ConditionIsAliveIns->GetResult() : true;
 }
 
-FMD_BoolValueChangeSignature* ULifeControlComponent::GetLifeChangedDelegate()
+FMD_BoolSignature* ULifeControlComponent::GetLifeChangedDelegate()
 {
 	return _ConditionIsAliveIns ? &_ConditionIsAliveIns->OnValidatedDelegate : nullptr;
 }

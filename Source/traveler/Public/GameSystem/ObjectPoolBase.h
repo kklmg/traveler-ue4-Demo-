@@ -19,8 +19,8 @@ public:
 
 	UObject* SpawnObject();
 
-	template<typename T>
-	T* SpawnObject();
+	template<typename TData>
+	TData* SpawnObject();
 
 	void Initialize(TSubclassOf<UObject> objectClass, int32 poolSize);
 	bool IsSpawnable();
@@ -46,8 +46,8 @@ private:
 };
 
 
-template<typename T>
-T* UObjectPoolBase::SpawnObject()
+template<typename TData>
+TData* UObjectPoolBase::SpawnObject()
 {
-	return Cast<T>(SpawnObject());
+	return Cast<TData>(SpawnObject());
 }

@@ -14,7 +14,7 @@ FDelegateHandleData::FDelegateHandleData(FName eventName, FDelegateHandle delega
 	DelegateHandle = delegateHandle;
 }
 
-FMD_OnEventPublished* UEventBroker::GetEventDelegate(FName eventName)
+FMD_UObjectSignature* UEventBroker::GetEventDelegate(FName eventName)
 {
 	return _delegateMap.Contains(eventName) ?
 		&_delegateMap[eventName].OnEventPublished : nullptr;
@@ -35,7 +35,12 @@ bool UEventBroker::PublishEvent(FName eventName, UObject* data)
 	}
 }
 
-FMD_OnEventPublished& UEventBroker::RegisterAndGetEventDelegate(FName eventName)
+UObject* UEventBroker::GetCachedEventData(FName eventName)
+{
+	return _delegateMap.Contains(eventName) ? _delegateMap[eventName].CachedData : nullptr;
+}
+
+FMD_UObjectSignature& UEventBroker::RegisterAndGetEventDelegate(FName eventName)
 {
 	if (_delegateMap.Contains(eventName))
 	{

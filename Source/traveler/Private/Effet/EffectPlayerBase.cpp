@@ -20,7 +20,7 @@ void UEffectPlayerBase::VTick(float deltaTime)
 {
 }
 
-FMD_BoolValueChangeSignature& UEffectPlayerBase::GetEffectFinishedDelegate()
+FMD_BoolSignature& UEffectPlayerBase::GetEffectFinishedDelegate()
 {
 	return _OnEffectFinishedDelegate;
 }

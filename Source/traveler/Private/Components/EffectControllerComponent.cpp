@@ -40,6 +40,7 @@ void UEffectControllerComponent::InitializeComponent()
 		_eventData_DeathEffectFinished = NewObject<UDataBool>(this);
 
 		_eventBrokerComp->RegisterEvent(NSEvent::ActorDeathEffectFinished::Name);
+		_eventBrokerComp->RegisterEvent(NSEvent::VelocityChanged::Name);
 	}
 }
 
@@ -79,7 +80,7 @@ void UEffectControllerComponent::StopEffect(EEffectType effectType, uint8 effect
 	}
 }
 
-FMD_BoolValueChangeSignature* UEffectControllerComponent::GetEffectFinishedDelegate(EEffectType effectType)
+FMD_BoolSignature* UEffectControllerComponent::GetEffectFinishedDelegate(EEffectType effectType)
 {
 	if(_effectPlayerInsMap.Contains(effectType))
 	{

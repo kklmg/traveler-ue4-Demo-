@@ -26,7 +26,7 @@ public:
 
 	virtual void VTick(float deltaTime);
 
-	FMD_BoolValueChangeSignature& GetEffectFinishedDelegate();
+	FMD_BoolSignature& GetEffectFinishedDelegate();
 
 	UFUNCTION(BlueprintPure)
 	UMaterialInstanceDynamic* GetMaterial();
@@ -35,7 +35,7 @@ public:
 	AActor* GetOwner();
 
 protected:
-	FMD_BoolValueChangeSignature _OnEffectFinishedDelegate;
+	FMD_BoolSignature _OnEffectFinishedDelegate;
 
 private:
 	UPROPERTY()

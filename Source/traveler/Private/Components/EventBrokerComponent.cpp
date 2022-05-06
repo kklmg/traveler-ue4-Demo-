@@ -2,7 +2,6 @@
 
 
 #include "Components/EventBrokerComponent.h"
-#include "Event/EventBroker.h"
 
 // Sets default values for this component's properties
 UEventBrokerComponent::UEventBrokerComponent()
@@ -57,12 +56,12 @@ bool UEventBrokerComponent::PublishEvent(FName eventName, UObject* data)
 	return _eventBrokerIns->PublishEvent(eventName, data);
 }
 
-FMD_OnEventPublished* UEventBrokerComponent::GetEventDelegate(FName eventName)
+FMD_UObjectSignature* UEventBrokerComponent::GetEventDelegate(FName eventName)
 {
 	return _eventBrokerIns->GetEventDelegate(eventName);
 }
 
-FMD_OnEventPublished& UEventBrokerComponent::RegisterAndGetEventDelegate(FName eventName)
+FMD_UObjectSignature& UEventBrokerComponent::RegisterAndGetEventDelegate(FName eventName)
 {
 	return _eventBrokerIns->RegisterAndGetEventDelegate(eventName);
 }

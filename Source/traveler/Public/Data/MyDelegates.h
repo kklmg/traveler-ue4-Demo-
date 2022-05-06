@@ -8,8 +8,7 @@
 /**
  * 
  */
- class UEventDataBase;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FMD_BoolValueChangeSignature, bool);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMD_BoolSignature, bool);
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FMD_OnEventPublished, UObject*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMD_UObjectSignature, UObject*);

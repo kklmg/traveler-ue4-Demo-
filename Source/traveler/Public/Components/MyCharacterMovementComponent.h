@@ -16,6 +16,7 @@ class UActionComponent;
 class UStatusComponent;
 class UEventBrokerComponent;
 class UDataUInt8;
+class UDataVector;
 
 /**
  * 
@@ -27,8 +28,15 @@ class TRAVELER_API UMyCharacterMovementComponent : public UCharacterMovementComp
 public:
 	UMyCharacterMovementComponent();
 
-	FFlyingAbilityData& getFlyingAbilityData();
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+	virtual void InitializeComponent() override;
 
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+public:
+	FFlyingAbilityData& getFlyingAbilityData();
 	float ComputeRequiredTimeToBrake();
 	float ComputeBrakingDistance();
 	float ComputeDistTraveledDuringPitch0();
@@ -40,27 +48,21 @@ public:
 	void KeepSpeed(float normalizedSpeed, float deltaTime);
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	virtual void InitializeComponent() override;
-
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
 	virtual void OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity) override;
 
-
-	void PublishMovementModeChangedEvent();
+	void PublishEvent_MovementModeChanged();
+	void PublishEvent_VelocityModeChanged();
 
 	UFUNCTION()
-	void OnCharacterWantToSprint(bool wantToSprint);
+	void OnCharacterWantToSprint(UObject* baseData);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = FlyingAbility)
 	FFlyingAbilityData _FlyingAbilityData;
 
-	UPROPERTY()
-	UAnimationModelBase* _animationViewModel;
+	//UPROPERTY()
+	//UAnimationModelBase* _animationViewModel;
 
 	UPROPERTY()
 	UActionComponent* _actionComp;
@@ -73,6 +75,9 @@ private:
 
 	UPROPERTY()
 	UDataUInt8* _eventData_MovementModeChanged;
+
+	UPROPERTY()
+	UDataVector* _eventData_VelocityChanged;
 
 	float _inputDeltaPitch;
 	float _inputDeltaYaw;

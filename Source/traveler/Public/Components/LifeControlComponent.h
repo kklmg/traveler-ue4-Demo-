@@ -34,14 +34,16 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void OnLifeStateChanged(bool isAlive);
-
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	bool IsAlive();
-	FMD_BoolValueChangeSignature* GetLifeChangedDelegate();
+	FMD_BoolSignature* GetLifeChangedDelegate();
+
+protected:
+	void OnLifeStateChanged(bool isAlive);
+	void OnActorDeathEffectFinished(UObject* baseData);
 
 private:
 	UPROPERTY(EditDefaultsOnly)

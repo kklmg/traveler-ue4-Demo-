@@ -5,84 +5,145 @@
 
 void UActionBlackBoard::WriteData_Bool(EActionDataKey key, bool value)
 {
-	_boolData.WriteData(key,value);
+	auto data = GetOrCreateDataAs<UDataBool>(key);
+	data->Value = value;
+	NotifyData(key);
 }
 
-void UActionBlackBoard::WriteData_Int(EActionDataKey key, int value)
+void UActionBlackBoard::WriteData_Int32(EActionDataKey key, int32 value)
 {
-	_intData.WriteData(key, value);
+	auto data = GetOrCreateDataAs<UDataInt32>(key);
+	data->Value = value;
+	NotifyData(key);
 }
 
 void UActionBlackBoard::WriteData_Float(EActionDataKey key, float value)
 {
-	_floatData.WriteData(key, value);
+	auto data = GetOrCreateDataAs<UDataFloat>(key);
+	data->Value = value;
+	NotifyData(key);
 }
 
 void UActionBlackBoard::WriteData_FVector(EActionDataKey key, FVector value)
 {
-	_vectorData.WriteData(key, value);
+	auto data = GetOrCreateDataAs<UDataVector>(key);
+	data->Value = value;
+	NotifyData(key);
 }
 
-//void UActionBlackBoard::WriteData_UObject(EActionDataKey key, UObject* value)
-//{
-//	_objectData.WriteData(key, value);
-//}
+void UActionBlackBoard::WriteData_UObject(EActionDataKey key, UObject* value)
+{
+	if (_mapData.Contains(key))
+	{
+		_mapData[key] = value;
+	}
+	else
+	{
+		_mapData.Add(key, value);
+	}
+	NotifyData(key);
+}
 
 bool UActionBlackBoard::TryGetData_Bool(EActionDataKey key, bool& outValue,bool bConsumeData)
 {
-	return _boolData.TryGetData(key,outValue);
+	auto data = GetDataAs<UDataBool>(key);
+	if(data)
+	{
+		outValue = data->Value;
+		if(bConsumeData)
+		{
+			_mapData.Remove(key);
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
-bool UActionBlackBoard::TryGetData_Int(EActionDataKey key, int& outValue, bool bConsumeData)
+bool UActionBlackBoard::TryGetData_Int32(EActionDataKey key, int32& outValue, bool bConsumeData)
 {
-	return _intData.TryGetData(key, outValue);
+	auto data = GetDataAs<UDataInt32>(key);
+	if (data)
+	{
+		outValue = data->Value;
+		if (bConsumeData)
+		{
+			_mapData.Remove(key);
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool UActionBlackBoard::TryGetData_Float(EActionDataKey key, float& outValue, bool bConsumeData)
 {
-	return _floatData.TryGetData(key, outValue);
+	auto data = GetDataAs<UDataFloat>(key);
+	if (data)
+	{
+		outValue = data->Value;
+		if (bConsumeData)
+		{
+			_mapData.Remove(key);
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool UActionBlackBoard::TryGetData_FVector(EActionDataKey key, FVector& outValue, bool bConsumeData)
 {
-	return _vectorData.TryGetData(key,outValue);
+	auto data = GetDataAs<UDataVector>(key);
+	if (data)
+	{
+		outValue = data->Value;
+		if (bConsumeData)
+		{
+			_mapData.Remove(key);
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
-//bool UActionBlackBoard::TryGetData_UObject(EActionDataKey key, UObject** outValue, bool bConsumeData)
-//{
-//	return _objectData.TryGetData(key, *outValue);
-//}
-
-TMulticastDelegate<void(bool)>& UActionBlackBoard::GetValueChangedDelegate_Bool(EActionDataKey key)
+UObject* UActionBlackBoard::GetData_UObject(EActionDataKey key, bool bConsumeData)
 {
-	return _boolData.GetDelegate(key);
-}
+	if(_mapData.Contains(key))
+	{
+		UObject* data = _mapData[key];
 
-TMulticastDelegate<void(int)>& UActionBlackBoard::GetValueChangedDelegate_Int(EActionDataKey key)
-{
-	return _intData.GetDelegate(key);
-}
+		if (bConsumeData)
+		{
+			_mapData.Remove(key);
+		}
 
-TMulticastDelegate<void(float)>& UActionBlackBoard::GetValueChangedDelegate_Float(EActionDataKey key)
-{
-	return _floatData.GetDelegate(key);
-}
-
-TMulticastDelegate<void(FVector)>& UActionBlackBoard::GetValueChangedDelegate_FVector(EActionDataKey key)
-{
-	return _vectorData.GetDelegate(key);
-}
-
-TMulticastDelegate<void(FQuat)>& UActionBlackBoard::GetValueChangedDelegate_Fquat(EActionDataKey key)
-{
-	return _quatData.GetDelegate(key);
+		return data;
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 void UActionBlackBoard::DeleteData(EActionDataKey key)
 {
-	_intData.DeleteData(key);
-	_floatData.DeleteData(key);
-	_vectorData.DeleteData(key);
-	_quatData.DeleteData(key);
-	//_objectData.DeleteData(key);
+	_mapData.Remove(key);
+}
+
+void UActionBlackBoard::NotifyData(EActionDataKey key)
+{
+	if (_mapData.Contains(key) && _mapDataDelegates.Contains(key))
+	{
+		_mapDataDelegates[key].Broadcast(_mapData[key]);
+	}
 }

@@ -3,11 +3,16 @@
 
 #include "Input/ButtonInputActionBase.h"
 #include "Components/ActionComponent.h"
+#include "Components/EventBrokerComponent.h"
 
-void UButtonInputActionBase::Initialize(UActionComponent* actionComp)
+
+void UButtonInputActionBase::SetActor(AActor* actor)
 {
-	check(actionComp);
-	_actionComp = actionComp;
+	check(actor);
+	_actor = actor;
+	_actionComp = Cast<UActionComponent>(_actor->GetComponentByClass(UActionComponent::StaticClass()));
+	
+	//_actionComp = actionComp;
 }
 
 EActionType UButtonInputActionBase::GetActionType()

@@ -12,7 +12,7 @@ struct TRAVELER_API FDelegateWrapper
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	FMD_OnEventPublished OnEventPublished;
+	FMD_UObjectSignature OnEventPublished;
 
 	UPROPERTY()
 	UObject* CachedData;
@@ -42,8 +42,9 @@ public:
 	bool RegisterEvent(FName eventName);
 	bool ContainsRegisteredEvent(FName eventName);
 	bool PublishEvent(FName eventName, UObject* data);
-	FMD_OnEventPublished& RegisterAndGetEventDelegate(FName eventName);
-	FMD_OnEventPublished* GetEventDelegate(FName eventName);
+	UObject* GetCachedEventData(FName eventName);
+	FMD_UObjectSignature& RegisterAndGetEventDelegate(FName eventName);
+	FMD_UObjectSignature* GetEventDelegate(FName eventName);
 
 private:
 	UPROPERTY()

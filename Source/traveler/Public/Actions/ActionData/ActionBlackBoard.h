@@ -5,80 +5,12 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Enums/EnumActionType.h"
+#include "Data/MyDelegates.h"
+#include "Data/ObjectData.h"
 #include "ActionBlackBoard.generated.h"
 
 class UActionDataBase;
 
-
-template<typename T>
-class TActionDataBlackBoard
-{
-public:
-	bool TryGetData(EActionDataKey key, T& outValue)
-	{
-		if (_mapActionData.Contains(key))
-		{
-			outValue = _mapActionData[key];
-			return true;
-		}
-		return false;
-	}
-	void WriteData(EActionDataKey key, T value)
-	{
-		if(_mapActionData.Contains(key))
-		{
-			if(_mapActionData[key] == value)
-			{
-				return;
-			}
-			else
-			{
-				_mapActionData[key] = value;
-				BroardCast(key);
-			}
-		}
-		else
-		{
-			_mapActionData.Add(key, value);
-			BroardCast(key);
-		}
-	}
-	void DeleteData(EActionDataKey key)
-	{
-		_mapActionData.Remove(key);
-	}
-
-	TMulticastDelegate<void(T)>& GetDelegate(EActionDataKey key)
-	{
-		if(_mapActionDataChangedDelegates.Contains(key))
-		{
-			return _mapActionDataChangedDelegates[key];
-		}
-		else
-		{
-			_mapActionDataChangedDelegates.Add(key, TMulticastDelegate<void(T)>());
-			return _mapActionDataChangedDelegates[key];
-		}
-	}
-	void BroardCast(EActionDataKey key)
-	{
-		if (_mapActionDataChangedDelegates.Contains(key) && _mapActionData.Contains(key))
-		{
-			_mapActionDataChangedDelegates[key].Broadcast(_mapActionData[key]);
-		}
-	}
-
-
-private:
-	UPROPERTY()
-	TMap<EActionDataKey, T> _mapActionData;
-	TMap<EActionDataKey, TMulticastDelegate<void(T)>> _mapActionDataChangedDelegates;
-};
-
-
-/**
- * 
- */
 UCLASS(Blueprintable)
 class TRAVELER_API UActionBlackBoard : public UObject
 {
@@ -89,7 +21,7 @@ public:
 	void WriteData_Bool(EActionDataKey key, bool value);
 
 	UFUNCTION(BlueprintCallable)
-	void WriteData_Int(EActionDataKey key, int value);
+	void WriteData_Int32(EActionDataKey key, int32 value);
 
 	UFUNCTION(BlueprintCallable)
 	void WriteData_Float(EActionDataKey key, float value);
@@ -97,14 +29,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void WriteData_FVector(EActionDataKey key, FVector value);
 
-	//UFUNCTION(BlueprintCallable)
-	//void WriteData_UObject(EActionDataKey key, UObject* value);
+	UFUNCTION(BlueprintCallable)
+	void WriteData_UObject(EActionDataKey key, UObject* value);
 
 	UFUNCTION(BlueprintCallable)
 	bool TryGetData_Bool(EActionDataKey key, bool& outValue,bool bConsumeData = false);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_Int(EActionDataKey key, int& outValue, bool bConsumeData = false);
+	bool TryGetData_Int32(EActionDataKey key, int32& outValue, bool bConsumeData = false);
 
 	UFUNCTION(BlueprintCallable)
 	bool TryGetData_Float(EActionDataKey key, float& outValue, bool bConsumeData = false);
@@ -112,24 +44,65 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool TryGetData_FVector(EActionDataKey key, FVector& outValue, bool bConsumeData = false);
 
-	//UFUNCTION()
-	//bool TryGetData_UObject(EActionDataKey key, UObject** outValue, bool bConsumeData = false);
+	UFUNCTION(BlueprintCallable)
+	UObject* GetData_UObject(EActionDataKey key, bool bConsumeData = false);
 
-	TMulticastDelegate<void(bool)>& GetValueChangedDelegate_Bool(EActionDataKey key);
-	TMulticastDelegate<void(int)>& GetValueChangedDelegate_Int(EActionDataKey key);
-	TMulticastDelegate<void(float)>& GetValueChangedDelegate_Float(EActionDataKey key);
-	TMulticastDelegate<void(FVector)>& GetValueChangedDelegate_FVector(EActionDataKey key);
-	TMulticastDelegate<void(FQuat)>& GetValueChangedDelegate_Fquat(EActionDataKey key);
+	template<typename TUObject>
+	TUObject* GetDataAs(EActionDataKey key);
 
+	template<typename TUObject>
+	FDelegateHandle Subscribe(EActionDataKey key, TUObject* inUserObj, void (TUObject::* InFunc)(UObject*));
 
 	void DeleteData(EActionDataKey key);
 
-private:
-	TActionDataBlackBoard<bool> _boolData;
-	TActionDataBlackBoard<int> _intData;
-	TActionDataBlackBoard<float> _floatData;
-	TActionDataBlackBoard<FVector> _vectorData;
-	TActionDataBlackBoard<FQuat> _quatData;
+protected:
+	void NotifyData(EActionDataKey key);
 
-	//TActionDataBlackBoard<UObject*> _objectData;
+	template<typename TUObject>
+	TUObject* GetOrCreateDataAs(EActionDataKey key);
+
+private:
+	UPROPERTY()
+	TMap<EActionDataKey, UObject*> _mapData;
+	TMap<EActionDataKey, FMD_UObjectSignature> _mapDataDelegates;
 };
+
+template<typename TUObject>
+TUObject* UActionBlackBoard::GetDataAs(EActionDataKey key)
+{
+	if (_mapData.Contains(key))
+	{
+		return Cast<TUObject>(_mapData[key]);
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+template<typename TUObject>
+TUObject* UActionBlackBoard::GetOrCreateDataAs(EActionDataKey key)
+{
+	if (_mapData.Contains(key))
+	{
+		return Cast<TUObject>(_mapData[key]);
+	}
+	else
+	{
+		TUObject* newData = NewObject<TUObject>(this);
+		_mapData.Add(key, newData);
+		return newData;
+	}
+}
+
+template<typename TUObject>
+FDelegateHandle UActionBlackBoard::Subscribe(EActionDataKey key, TUObject* inUserObj, void (TUObject::* InFunc)(UObject*))
+{
+	if (_mapDataDelegates.Contains(key))
+	{
+		_mapDataDelegates.Add(key,FMD_UObjectSignature());
+	}
+	return 	_mapDataDelegates[key].AddUObject<TUObject>(inUserObj, InFunc);
+}
+
+	

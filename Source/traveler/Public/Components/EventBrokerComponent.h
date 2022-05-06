@@ -6,9 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "Data/MyDelegates.h"
 #include "Condition/ConditionBase.h"
+#include "Event/EventBroker.h"
 #include "EventBrokerComponent.generated.h"
 
-class UEventBroker;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API UEventBrokerComponent : public UActorComponent
@@ -34,9 +34,29 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool PublishEvent(FName eventName, UObject* data);
-	FMD_OnEventPublished* GetEventDelegate(FName eventName);
-	FMD_OnEventPublished& RegisterAndGetEventDelegate(FName eventName);
+	FMD_UObjectSignature* GetEventDelegate(FName eventName);
+	FMD_UObjectSignature& RegisterAndGetEventDelegate(FName eventName);
+
+	template<typename TData>
+	FDelegateHandle SubscribeEvent(FName eventName, TData* inUserObj, void (TData::*InFunc)(UObject*));
+
 private:
 	UPROPERTY()
 	UEventBroker* _eventBrokerIns;
 };
+
+
+template<typename TData>
+FDelegateHandle UEventBrokerComponent::SubscribeEvent(FName eventName,TData* inUserObj,void (TData::* InFunc)(UObject*))
+{
+	FMD_UObjectSignature* eventDelegate = _eventBrokerIns->GetEventDelegate(eventName);
+	if(eventDelegate)
+	{
+		(inUserObj->*InFunc)(_eventBrokerIns->GetCachedEventData(eventName));
+		return eventDelegate->AddUObject<TData>(inUserObj, InFunc);
+	}
+	else
+	{
+		return FDelegateHandle();
+	}
+}
