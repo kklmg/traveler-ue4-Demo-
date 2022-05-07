@@ -3,22 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
-#include "Input/InputHandlerInterface.h"
-#include "Enums/EnumInputType.h"
 #include "InputHandlerComponent.generated.h"
 
-
-DECLARE_DELEGATE_OneParam(FButtonSignature, bool);
 DECLARE_DELEGATE_OneParam(FButtonNameSignarue, FName);
 
-class UButtonInputActionBase;
-class UActionComponent;
-
-class ICharacterCameraInterface;
+class UInputPresetBase;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class TRAVELER_API UInputHandlerComponent : public UActorComponent, public IInputHandlerInterface
+class TRAVELER_API UInputHandlerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -36,37 +28,36 @@ public:
 
 	void BindInputs(UInputComponent* PlayerInputComponent);
 
-	void HandleButtonPress(FName inputName);
-	void HandleButtonRelease(FName inputName);
+protected:	
+	void HandleButtonPressed(FName InputBindingName);
+	void HandleButtonReleased(FName InputBindingName);
+	template<const FName& bindingName>
+	void HandleAxisInput(float value);
 
-	UFUNCTION()
-	void ReceiveInputMoveX(float value);
-	UFUNCTION()
-	void ReceiveInputMoveY(float value);
-	UFUNCTION()
-	void ReceiveInputMoveZ(float value);
-	UFUNCTION()
-	void ReceiveInputCameraArmYaw(float value);
-	UFUNCTION()
-	void ReceiveInputCameraArmPitch(float value);
-	UFUNCTION()
-	void ReceiveInputCameraZoomInOut(float value);
-
-protected:
-	void HandleButtonsPressing(float deltaTime);
-	void ConsumeMovementInput();
-	void InitializeButtons();
+	void RegisterButtonInput(UInputComponent* PlayerInputComponent, FName InputBindingName);
+	template<const FName& bindingName>
+	void RegisterAxisInput(UInputComponent* PlayerInputComponent);
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TArray<TSubclassOf<UButtonInputActionBase>> _presetButtons;
+	TSubclassOf<UInputPresetBase> _inputPresetClass;
 
 	UPROPERTY()
-	TMap<FName,UButtonInputActionBase*> _mapButtons;
-
-	UPROPERTY()
-	UActionComponent* _actionComp;
-
-	ICharacterCameraInterface* _cameraInterface;
-	FVector _movementInput;
+	UInputPresetBase* _inputPresetIns;
 };
+
+
+template<const FName& bindingName>
+void UInputHandlerComponent::HandleAxisInput(float value)
+{
+	if (_inputPresetIns)
+	{
+		_inputPresetIns->HandleAxis(bindingName,value);
+	}
+}
+
+template<const FName& bindingName>
+inline void UInputHandlerComponent::RegisterAxisInput(UInputComponent* PlayerInputComponent)
+{
+	PlayerInputComponent->BindAxis(bindingName, this, &UInputHandlerComponent::HandleAxisInput<bindingName>);
+}

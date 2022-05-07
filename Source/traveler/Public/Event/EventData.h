@@ -4,22 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Data/ObjectData.h"
+#include "MyMacros.h"
 
 /**
  * 
  */
 
-#define MyEvent(EventName) namespace EventName{ const FName Name = FName(TEXT(#EventName));};
-#define MyEventWithData(EventName, EventDataType)  namespace EventName{ const FName Name = FName(TEXT(#EventName)); typedef EventDataType DataType;};
-
-
-
 namespace NSEvent
 {
-	MyEventWithData(ActorDeathEffectFinished,UDataBool);
-	MyEventWithData(MovementModeChanged,UDataUInt8);
-	MyEventWithData(VelocityChanged,UDataVector);
-	MyEventWithData(ActorLifeStateChanged, UDataBool);
-	MyEventWithData(CharacterWantToSprint, UDataBool);
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(ActorDeathEffectFinished,UDataBool);
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(MovementModeChanged,UDataUInt8);
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(VelocityChanged,UDataVector);
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(ActorLifeStateChanged, UDataBool);
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(CharacterWantToSprint, UDataBool);
 }
 

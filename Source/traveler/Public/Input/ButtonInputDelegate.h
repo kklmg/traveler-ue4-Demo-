@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Input/ButtonInputBase.h"
-#include "ButtonInputWithDelegate.generated.h"
+#include "ButtonInputDelegate.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UButtonInputWithDelegate : public UButtonInputBase
+class TRAVELER_API UButtonInputDelegate : public UButtonInputBase
 {
 	GENERATED_BODY()
 public:
 
-	UButtonInputWithDelegate();
+	UButtonInputDelegate();
 public:
 	FButtonInputSignature OnButtonPressed;
 	FButtonInputSignature OnButtonPressing;

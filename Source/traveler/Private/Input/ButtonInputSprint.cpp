@@ -4,17 +4,20 @@
 #include "Input/ButtonInputSprint.h"
 #include "Components/ActionComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
+#include "Components/EventBrokerComponent.h"
 
 UButtonInputSprint::UButtonInputSprint()
 {
-	_buttonName = TEXT("Sprint");
-	_inputMappingName = NSNameInputAction::SPRINT;
+	_bindingName = NSInputBindingName::Sprint;
 }
 
 void UButtonInputSprint::VTMPress()
 {
-	check(GetActionComp())
-	GetActionComp()->GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, true);	
+	static UEventBrokerComponent* eventBrokerComp = GetInputPreset()->GetEventBrokerComp();
+	if (eventBrokerComp)
+	{
+		//eventBrokerComp->PublishEvent(ns)
+	}
 }
 
 void UButtonInputSprint::VTMPressing(float deltaTime)
@@ -23,6 +26,9 @@ void UButtonInputSprint::VTMPressing(float deltaTime)
 
 void UButtonInputSprint::VTMRelease()
 {
-	check(GetActionComp())
-	GetActionComp()->GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, false);
+	static UEventBrokerComponent* eventBrokerComp = GetInputPreset()->GetEventBrokerComp();
+	if (eventBrokerComp)
+	{
+		//eventBrokerComp->PublishEvent(ns)
+	}
 }

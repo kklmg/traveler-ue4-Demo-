@@ -6,14 +6,16 @@
 
 UButtonInputDodge::UButtonInputDodge()
 {
-	_buttonName = TEXT("Dodge");
-	_inputMappingName = NSNameInputAction::DODGE;
+	_bindingName = NSInputBindingName::Dodge;
 }
 
 void UButtonInputDodge::VTMPress()
 {
-	check(GetActionComp())
-	GetActionComp()->ExecuteAction(EActionType::EACT_Dodge);
+	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	if (actionComp)
+	{
+		actionComp->ExecuteAction(EActionType::EACT_Dodge);
+	}
 }
 
 void UButtonInputDodge::VTMPressing(float deltaTime)

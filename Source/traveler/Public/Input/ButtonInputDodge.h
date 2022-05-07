@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Input/ButtonInputActionBase.h"
+#include "Input/ButtonInputBase.h"
 #include "ButtonInputDodge.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UButtonInputDodge : public UButtonInputActionBase
+class TRAVELER_API UButtonInputDodge : public UButtonInputBase
 {
 	GENERATED_BODY()
 public:

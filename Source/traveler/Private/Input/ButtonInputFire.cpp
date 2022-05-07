@@ -6,15 +6,17 @@
 
 UButtonInputFire::UButtonInputFire()
 {
-	_buttonName = TEXT("Fire");
-	_inputMappingName = NSNameInputAction::FIRE;
+	_bindingName = NSInputBindingName::Fire;
 }
 
 
 void UButtonInputFire::VTMPress()
 {
-	check(GetActionComp())
-	GetActionComp()->ExecuteAction(EActionType::EACT_Fire);
+	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	if(actionComp)
+	{
+		actionComp->ExecuteAction(EActionType::EACT_Fire);
+	}
 }
 
 void UButtonInputFire::VTMPressing(float deltaTime)
@@ -23,6 +25,9 @@ void UButtonInputFire::VTMPressing(float deltaTime)
 
 void UButtonInputFire::VTMRelease()
 {
-	check(GetActionComp())
-	GetActionComp()->AbortAction(EActionType::EACT_Fire);
+	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	if(actionComp)
+	{
+		actionComp->AbortAction(EActionType::EACT_Fire);
+	}
 }

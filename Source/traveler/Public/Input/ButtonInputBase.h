@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Enums/EnumInputType.h"
+#include "Input/InputBase.h"
 #include "ButtonInputBase.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogMyInput, Log, All);
@@ -15,7 +16,7 @@ DECLARE_DELEGATE_OneParam(FButtonInputSignature, UButtonInputBase*);
  * 
  */
 UCLASS()
-class TRAVELER_API UButtonInputBase : public UObject
+class TRAVELER_API UButtonInputBase : public UInputBase
 {
 	GENERATED_BODY()
 public:
@@ -23,24 +24,18 @@ public:
 	UButtonInputBase();
 
 public:
-	void Press();
-	void Pressing(float deltaTime);
-	void Release();
-
-	FName GetInputMappingName();
-	float GetHoldingTime();
+	float GetPressingTime();
 	bool IsPressing();
 
+	void OnPressed();
+	void OnPressing(float deltaTime);
+	void OnReleased();
 protected:
 	virtual void VTMPress();
 	virtual void VTMPressing(float deltaTime);
 	virtual void VTMRelease();
 
-	UPROPERTY(EditDefaultsOnly)
-	FString _buttonName;
-	UPROPERTY(EditDefaultsOnly)
-	FName _inputMappingName;
-
-	float _holdingTime;
+private:
+	float _pressingTime;
 	bool _isPressing;
 };

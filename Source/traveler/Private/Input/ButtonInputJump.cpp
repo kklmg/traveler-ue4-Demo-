@@ -6,14 +6,16 @@
 
 UButtonInputJump::UButtonInputJump()
 {
-	_buttonName = TEXT("Jump");
-	_inputMappingName = NSNameInputAction::JUMP;
+	_bindingName = NSInputBindingName::Jump;
 }
 
 void UButtonInputJump::VTMPress()
 {
-	check(GetActionComp())
-	GetActionComp()->ExecuteAction(EActionType::EACT_Jumping);
+	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	if (actionComp)
+	{
+		actionComp->ExecuteAction(EActionType::EACT_Jumping);
+	}
 }
 
 void UButtonInputJump::VTMPressing(float deltaTime)
