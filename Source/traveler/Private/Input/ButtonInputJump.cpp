@@ -9,7 +9,7 @@ UButtonInputJump::UButtonInputJump()
 	_bindingName = NSInputBindingName::Jump;
 }
 
-void UButtonInputJump::VTMPress()
+void UButtonInputJump::VTMOnPressed()
 {
 	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if (actionComp)
@@ -18,11 +18,11 @@ void UButtonInputJump::VTMPress()
 	}
 }
 
-void UButtonInputJump::VTMPressing(float deltaTime)
+void UButtonInputJump::VTMOnPressing(float deltaTime)
 {
 }
 
-void UButtonInputJump::VTMRelease()
+void UButtonInputJump::VTMOnReleased()
 {
 
 }

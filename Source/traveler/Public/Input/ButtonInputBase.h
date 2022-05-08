@@ -31,9 +31,9 @@ public:
 	void OnPressing(float deltaTime);
 	void OnReleased();
 protected:
-	virtual void VTMPress();
-	virtual void VTMPressing(float deltaTime);
-	virtual void VTMRelease();
+	virtual void VTMOnPressed();
+	virtual void VTMOnPressing(float deltaTime);
+	virtual void VTMOnReleased();
 
 private:
 	float _pressingTime;

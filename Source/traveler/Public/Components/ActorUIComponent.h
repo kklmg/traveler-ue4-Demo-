@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
 #include "UI/ActorWidget.h"
 #include "Data/ActorUIData.h"
 #include "Enums/EnumCombat.h"
 #include "ActorUIComponent.generated.h"
 
 class UUserWidget;
-class ULifeControlComponent;
+class UEventBrokerComponent;
+
 
 /**
  * 
@@ -41,7 +41,7 @@ public:
 	void ShowActorStatusEffectUI(EStatusEffect StatusType, float duration);
 	void HideActorStatusEffectUI(EStatusEffect StatusType);
 
-	void OnLifeStateChanged(bool bAlive);
+	void OnReceiveEvent_LifeStateChanged(UObject* baseData);
 private:
 
 	UPROPERTY(EditDefaultsOnly)
@@ -54,5 +54,5 @@ private:
 	TMap<EActorUI, UActorWidget*> _mapWidgetInstance;
 
 	UPROPERTY()
-	ULifeControlComponent* _lifeControlComp;
+	UEventBrokerComponent* _eventBrokerComp;
 };

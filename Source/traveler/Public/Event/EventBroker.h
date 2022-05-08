@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Event/EventData.h"
 #include "Data/MyDelegates.h"
 #include "EventBroker.generated.h"
 

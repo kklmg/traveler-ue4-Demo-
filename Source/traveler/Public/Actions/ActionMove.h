@@ -24,4 +24,6 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly)
 	UCostData* _sprintCost;
+
+	FVector _movementInput;
 };

@@ -11,7 +11,7 @@ UButtonInputSprint::UButtonInputSprint()
 	_bindingName = NSInputBindingName::Sprint;
 }
 
-void UButtonInputSprint::VTMPress()
+void UButtonInputSprint::VTMOnPressed()
 {
 	static UEventBrokerComponent* eventBrokerComp = GetInputPreset()->GetEventBrokerComp();
 	if (eventBrokerComp)
@@ -20,11 +20,11 @@ void UButtonInputSprint::VTMPress()
 	}
 }
 
-void UButtonInputSprint::VTMPressing(float deltaTime)
+void UButtonInputSprint::VTMOnPressing(float deltaTime)
 {
 }
 
-void UButtonInputSprint::VTMRelease()
+void UButtonInputSprint::VTMOnReleased()
 {
 	static UEventBrokerComponent* eventBrokerComp = GetInputPreset()->GetEventBrokerComp();
 	if (eventBrokerComp)

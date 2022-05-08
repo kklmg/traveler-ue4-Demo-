@@ -13,7 +13,7 @@ class AWeaponBase;
 class ACreatureCharacter;
 
 class UProcessBase;
-class ULifeControlComponent;
+class UEventBrokerComponent;
 class UExTransformProviderComponent;
 
 
@@ -35,7 +35,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void InitializeComponent() override;
 
-	void OnLifeChanged(bool isAlive);
+	void OnReceiveEvent_LifeStateChanged(UObject* baseData);
 
 public:	
 	// Called every frame
@@ -86,7 +86,7 @@ private:
 	UAnimationModelBase* _animationViewModel;
 
 	UPROPERTY()
-	ULifeControlComponent* _lifeControlComp;
+	UEventBrokerComponent* _eventBrokerComp;
 
 	UPROPERTY()
 	UExTransformProviderComponent* _ownerExTransformProviderComp;

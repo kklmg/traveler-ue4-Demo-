@@ -39,12 +39,6 @@ void UMyCharacterMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (_eventBrokerComp)
-	{
-		_eventBrokerComp->SubscribeEvent
-			(NSEvent::CharacterWantToSprint::Name, this, &UMyCharacterMovementComponent::OnCharacterWantToSprint);
-	}
-
 	if (_statusComp)
 	{
 		//set walking speed 
@@ -213,6 +207,14 @@ void UMyCharacterMovementComponent::KeepSpeed(float normalizedSpeed, float delta
 	}
 }
 
+void UMyCharacterMovementComponent::ToggleSprint(bool bSprint)
+{
+	if (_bToggleSprint == bSprint) return;
+	if (_statusComp == nullptr) return;
+	_bToggleSprint = bSprint;
+	MaxWalkSpeed = _statusComp->GetFinalValue(_bToggleSprint ? EStatusType::EStatus_SprintingSpeed : EStatusType::EStatus_WalkingSpeed);
+}
+
 void UMyCharacterMovementComponent::OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode)
 {
 	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
@@ -245,19 +247,4 @@ void UMyCharacterMovementComponent::PublishEvent_VelocityModeChanged()
 	}
 }
 
-void UMyCharacterMovementComponent::OnCharacterWantToSprint(UObject* baseData)
-{
-	if (_statusComp == nullptr) return;
 
-	auto eventData = Cast<NSEvent::CharacterWantToSprint::DataType>(baseData);
-	if (eventData == nullptr) return;
-
-	if (eventData->Value)
-	{
-		MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_SprintingSpeed);
-	}
-	else
-	{
-		MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_WalkingSpeed);
-	}
-}

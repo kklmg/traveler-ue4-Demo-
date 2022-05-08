@@ -5,7 +5,7 @@
 #include "Components/ActionComponent.h"
 #include "Components/StatusComponent.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Components/MyCharacterMovementComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Data/CostData.h"
 
@@ -21,45 +21,42 @@ UActionMove::UActionMove()
 
 bool UActionMove::VTMCanExecute()
 {
-	EMovementMode movementMode = GetActionOwner()->GetCharacterMovement()->MovementMode;
-	//bool bIsWalking = movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking;
 	bool bIsDodging = GetActionComp()->CheckActionIsInProgress(EActionType::EACT_Dodge);
-
-	return/* bIsWalking && */(!bIsDodging);
+	return (bIsDodging == false && GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, _movementInput, true));
 }
 
 void UActionMove::VTMExecute()
 {
-	FVector out_MovementInput;
+	auto myMovementComp = Cast<UMyCharacterMovementComponent>(GetActionOwner()->GetCharacterMovement());
+
 	bool out_bTurnToMovingDirection = true;
 	bool out_bWantToSprint = false;
 
+	GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, out_bTurnToMovingDirection);
 
-	if (GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, out_MovementInput))
+	//apply rotation
+	if (out_bTurnToMovingDirection)
 	{
-		GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, out_bTurnToMovingDirection);
-
-		//rotation
-		if(out_bTurnToMovingDirection)
-		{
-			GetActionOwner()->SetActorRotation(out_MovementInput.Rotation());
-		}
-
-		GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_WantToSprint, out_bWantToSprint);
-		if(out_bWantToSprint && GetStatusComp())
-		{
-			if(GetStatusComp()->ApplyCost(_sprintCost))
-			{
-			}
-			else
-			{
-				GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, false);
-			}
-		}
-		
-		//translation
-		GetActionOwner()->AddMovementInput(out_MovementInput);
+		//FQuat deltaQuat = FQuat::FindBetween(GetActionOwner()->GetActorForwardVector(), out_MovementInput);			
+		//GetActionOwner()->AddActorWorldRotation(deltaQuat);
+		//GetActionOwner()->SetActorRotation(_movementInput.ToOrientationQuat());
 	}
+
+	GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_WantToSprint, out_bWantToSprint);
+	if (out_bWantToSprint && GetStatusComp() && myMovementComp)
+	{
+		if (GetStatusComp()->TryApplyCost(_sprintCost))
+		{
+			myMovementComp->ToggleSprint(true);
+		}
+		else
+		{
+			myMovementComp->ToggleSprint(false);
+		}
+	}
+
+	//apply movement
+	GetActionOwner()->AddMovementInput(_movementInput);
 }
 
 void UActionMove::VTMTick(float deltaTime)

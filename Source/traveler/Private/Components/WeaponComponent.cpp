@@ -3,7 +3,7 @@
 #include "Components/WeaponComponent.h"
 #include "Components/AnimControlComponent.h"
 #include "Components/ExTransformProviderComponent.h"
-#include "Components/LifeControlComponent.h"
+#include "Components/EventBrokerComponent.h"
 #include "Data/AnimationModelBase.h"
 #include "Weapon/WeaponBase.h"
 #include "Weapon/BowBase.h"
@@ -19,18 +19,20 @@ UWeaponComponent::UWeaponComponent()
 	
 	// ...
 	bWantsInitializeComponent = true;
-	
 }
 
 
 void UWeaponComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
+
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 }
 
-void UWeaponComponent::OnLifeChanged(bool isAlive)
+void UWeaponComponent::OnReceiveEvent_LifeStateChanged(UObject* baseData)
 {
-	if (!isAlive)
+	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	if (eventData && eventData->Value == false)
 	{
 		StopAllWeaponProcesses();
 	}
@@ -73,11 +75,10 @@ void UWeaponComponent::BeginPlay()
 		OnAnimationStateChanged(animControlComp->GetAnimationState(), animControlComp->GetAnimationState());
 		animControlComp->GetAnimationStateChangedDelegate().AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
 	}
-
-	_lifeControlComp = Cast<ULifeControlComponent>(GetOwner()->GetComponentByClass(ULifeControlComponent::StaticClass()));
-	if (_lifeControlComp && _lifeControlComp->GetLifeChangedDelegate())
+	
+	if (_eventBrokerComp)
 	{
-		_lifeControlComp->GetLifeChangedDelegate()->AddUObject(this, &UWeaponComponent::OnLifeChanged);
+		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name,this, &UWeaponComponent::OnReceiveEvent_LifeStateChanged);
 	}
 }
 

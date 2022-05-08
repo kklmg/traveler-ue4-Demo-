@@ -107,7 +107,7 @@ float UStatusComponent::GetRemainingValue(EStatusType statusType)
 	return _basicStatusMap.Contains(statusType) ? _basicStatusMap[statusType]->GetRemainingValue() : 0.0f;
 }
 
-void UStatusComponent::ApplyRemainingValueChange(EStatusType statusType, float value)
+void UStatusComponent::ApplyRemainingPointChange(EStatusType statusType, float value)
 {
 	if (_basicStatusMap.Contains(statusType))
 	{
@@ -115,7 +115,7 @@ void UStatusComponent::ApplyRemainingValueChange(EStatusType statusType, float v
 	}
 }
 
-bool UStatusComponent::IsRemainingValueEnough(UCostData* costData)
+bool UStatusComponent::IsRemainingPointEnough(UCostData* costData)
 {
 	if (!costData) return true;
 
@@ -130,15 +130,15 @@ bool UStatusComponent::IsRemainingValueEnough(UCostData* costData)
 	return true;
 }
 
-bool UStatusComponent::ApplyCost(UCostData* costData)
+bool UStatusComponent::TryApplyCost(UCostData* costData)
 {
 	if (!costData) return true;
-	if (!IsRemainingValueEnough(costData)) return false;
+	if (!IsRemainingPointEnough(costData)) return false;
 
 	auto costArray = costData->GetCostArray();
 	for (auto costPair : costArray)
 	{
-		ApplyRemainingValueChange(costPair.Key, - costPair.Value);
+		ApplyRemainingPointChange(costPair.Key, - costPair.Value);
 	}
 	return true;
 }

@@ -29,6 +29,11 @@ void ULifeControlComponent::InitializeComponent()
 		_lifeStateChangedData = NewObject<NSEvent::ActorLifeStateChanged::DataType>(this);
 		check(_lifeStateChangedData);
 	}
+
+	_ConditionIsAliveIns = _lifeConditionClass ?
+		NewObject<UCompositeActorCondition>(this, _lifeConditionClass) : NewObject<UCompositeActorCondition>(this);
+
+	check(_ConditionIsAliveIns);
 }
 
 // Called when the game starts
@@ -37,16 +42,7 @@ void ULifeControlComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-
-	_ConditionIsAliveIns = _lifeConditionClass ?
-		NewObject<UCompositeActorCondition>(this, _lifeConditionClass) : NewObject<UCompositeActorCondition>(this);
-
-	check(_ConditionIsAliveIns);
-
-	_ConditionIsAliveIns->SetActor(GetOwner());
-	_ConditionIsAliveIns->Initialize();
-	_ConditionIsAliveIns->OnValidatedDelegate.AddUObject(this, &ULifeControlComponent::OnLifeStateChanged);
-
+	
 	if (_eventBrokerComp)
 	{
 		//destroy actor after death effect finished
@@ -54,6 +50,9 @@ void ULifeControlComponent::BeginPlay()
 			(NSEvent::ActorDeathEffectFinished::Name, this, &ULifeControlComponent::OnActorDeathEffectFinished);
 	}
 
+	_ConditionIsAliveIns->SetActor(GetOwner());
+	_ConditionIsAliveIns->Initialize();
+	_ConditionIsAliveIns->OnValidatedDelegate.AddUObject(this, &ULifeControlComponent::OnLifeStateChanged);
 	_ConditionIsAliveIns->Validate();
 }
 
@@ -100,11 +99,6 @@ void ULifeControlComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 bool ULifeControlComponent::IsAlive()
 {
 	return _ConditionIsAliveIns ? _ConditionIsAliveIns->GetResult() : true;
-}
-
-FMD_BoolSignature* ULifeControlComponent::GetLifeChangedDelegate()
-{
-	return _ConditionIsAliveIns ? &_ConditionIsAliveIns->OnValidatedDelegate : nullptr;
 }
 
 

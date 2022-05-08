@@ -13,12 +13,6 @@ class UCompositeActorCondition;
 class UEventBrokerComponent;
 
 
-class IActorEffectInterface;
-#define asd UObject
-
-	
-
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TRAVELER_API ULifeControlComponent : public UActorComponent
 {
@@ -39,7 +33,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	bool IsAlive();
-	FMD_BoolSignature* GetLifeChangedDelegate();
 
 protected:
 	void OnLifeStateChanged(bool isAlive);

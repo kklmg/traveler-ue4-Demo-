@@ -53,7 +53,7 @@ FORCEINLINE void UActionBase::VTMExecute()
 	Super::VTMExecute();
 	if(_statusComp)
 	{
-		_statusComp->ApplyCost(_costData);
+		_statusComp->TryApplyCost(_costData);
 	}
 }
 
@@ -62,7 +62,7 @@ FORCEINLINE bool UActionBase::VTMCanExecute()
 	if (!Super::VTMCanExecute()) return false;
 	if(!_bDataIsSet) return false;
 
-	return _statusComp && _statusComp->IsRemainingValueEnough(_costData);
+	return _statusComp && _statusComp->IsRemainingPointEnough(_costData);
 }
 
 void UActionBase::VTMTick(float deltaTime)

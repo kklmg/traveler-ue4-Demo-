@@ -13,7 +13,7 @@ UButtonInputBase::UButtonInputBase()
 void UButtonInputBase::OnPressed()
 {
 	_isPressing = true;
-	VTMPress();
+	VTMOnPressed();
 }
 
 void UButtonInputBase::OnPressing(float deltaTime)
@@ -21,13 +21,13 @@ void UButtonInputBase::OnPressing(float deltaTime)
 	if (_isPressing)
 	{
 		_pressingTime += deltaTime;
-		VTMPressing(deltaTime);
+		VTMOnPressing(deltaTime);
 	}
 }
 
 void UButtonInputBase::OnReleased()
 {
-	VTMRelease();
+	VTMOnReleased();
 	_isPressing = false;
 }
 
@@ -41,14 +41,14 @@ bool UButtonInputBase::IsPressing()
 	return _isPressing;
 }
 
-void UButtonInputBase::VTMPress()
+void UButtonInputBase::VTMOnPressed()
 {
 }
 
-void UButtonInputBase::VTMPressing(float deltaTime)
+void UButtonInputBase::VTMOnPressing(float deltaTime)
 {
 }
 
-void UButtonInputBase::VTMRelease()
+void UButtonInputBase::VTMOnReleased()
 {
 }

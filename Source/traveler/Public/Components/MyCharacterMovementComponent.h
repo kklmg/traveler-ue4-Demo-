@@ -46,16 +46,13 @@ public:
 	void Ascend(bool bPositive, float deltaTime);
 	void KeepHorizontal(float deltaTime);
 	void KeepSpeed(float normalizedSpeed, float deltaTime);
-
+	void ToggleSprint(bool bSprint);
 protected:
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
 	virtual void OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity) override;
 
 	void PublishEvent_MovementModeChanged();
 	void PublishEvent_VelocityModeChanged();
-
-	UFUNCTION()
-	void OnCharacterWantToSprint(UObject* baseData);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = FlyingAbility)
@@ -81,4 +78,5 @@ private:
 
 	float _inputDeltaPitch;
 	float _inputDeltaYaw;
+	bool _bToggleSprint;
 };

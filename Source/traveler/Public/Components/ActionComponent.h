@@ -10,7 +10,7 @@ class UActionBase;
 class UCharacterActionPreset;
 class UActionBlackBoard;
 class UActionPresetTrigger;
-class ULifeControlComponent;
+class UEventBrokerComponent;
 
 class ACharacter;
 
@@ -30,7 +30,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void OnLifeChanged(bool isAlive);
+	void OnReceiveEvent_LifeStateChanged(UObject* baseData);
 
 public:	
 	// Called every frame
@@ -76,5 +76,7 @@ private:
 	UCharacterActionPreset* _curActionSet;
 
 	UPROPERTY()
-	ULifeControlComponent* _lifeControlComp;
+	UEventBrokerComponent* _eventBrokerComp;
+
+	bool _bActorAlive;
 };

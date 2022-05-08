@@ -9,7 +9,7 @@ UButtonInputDodge::UButtonInputDodge()
 	_bindingName = NSInputBindingName::Dodge;
 }
 
-void UButtonInputDodge::VTMPress()
+void UButtonInputDodge::VTMOnPressed()
 {
 	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if (actionComp)
@@ -18,10 +18,10 @@ void UButtonInputDodge::VTMPress()
 	}
 }
 
-void UButtonInputDodge::VTMPressing(float deltaTime)
+void UButtonInputDodge::VTMOnPressing(float deltaTime)
 {
 }
 
-void UButtonInputDodge::VTMRelease()
+void UButtonInputDodge::VTMOnReleased()
 {
 }

@@ -55,9 +55,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UBasicStatus* GetBasicStatusIns(EStatusType statusType);
 
-	void ApplyRemainingValueChange(EStatusType statusType, float value);
-	bool IsRemainingValueEnough(UCostData* costData);
-	bool ApplyCost(UCostData* costData);
+	void ApplyRemainingPointChange(EStatusType statusType, float value);
+	bool IsRemainingPointEnough(UCostData* costData);
+	bool TryApplyCost(UCostData* costData);
 
 private:
 	void InitializeStatusData();

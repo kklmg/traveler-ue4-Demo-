@@ -41,7 +41,7 @@ void UDamageHandlerComponent::HandleDamage(float basicDamage, EElementalType ele
 	//apply damage
 	if (_statusComp && finalDamage != 0.0f)
 	{
-		_statusComp->ApplyRemainingValueChange(EStatusType::EStatus_Health, -finalDamage);
+		_statusComp->ApplyRemainingPointChange(EStatusType::EStatus_Health, -finalDamage);
 	}
 
 	//show damage om screen

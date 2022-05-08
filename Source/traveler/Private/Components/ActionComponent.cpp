@@ -6,7 +6,7 @@
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actions/ActionPreset/CharacterActionPreset.h"
 #include "Components/PawnCameraComponent.h"
-#include "Components/LifeControlComponent.h"
+#include "Components/EventBrokerComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyGameplayStatics.h"
 #include "Actions/ActionPreset/ActionPresetTrigger.h"
@@ -25,6 +25,7 @@ UActionComponent::UActionComponent()
 
 	// ...
 	bWantsInitializeComponent = true;
+	_bActorAlive = true;
 }
 
 
@@ -39,6 +40,7 @@ void UActionComponent::InitializeComponent()
 	check(_actionBlackBoard);
 
 	_mapActionProcessPool.SetNum(int32(EActionType::EACT_Max), false);
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 
 	for (auto triggerClass : _actionSetTriggerClasses)
 	{
@@ -57,16 +59,21 @@ void UActionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	_lifeControlComp = Cast<ULifeControlComponent>(GetOwner()->GetComponentByClass(ULifeControlComponent::StaticClass()));
-	if (_lifeControlComp && _lifeControlComp->GetLifeChangedDelegate())
+	
+	if (_eventBrokerComp)
 	{
-		_lifeControlComp->GetLifeChangedDelegate()->AddUObject(this, &UActionComponent::OnLifeChanged);
+		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name,this, &UActionComponent::OnReceiveEvent_LifeStateChanged);
 	}
 }
 
-void UActionComponent::OnLifeChanged(bool isAlive)
+void UActionComponent::OnReceiveEvent_LifeStateChanged(UObject* baseData)
 {
-	if (!isAlive)
+	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	if (!eventData) return;
+	if (_bActorAlive == eventData->Value) return;
+
+	_bActorAlive = eventData->Value;
+	if(_bActorAlive == false)
 	{
 		AbortAllProcesses();
 	}
@@ -83,12 +90,7 @@ void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 {
-	if (_lifeControlComp && _lifeControlComp->IsAlive() == false)
-	{
-		return nullptr;
-	}
-
-	if (_curActionSet == nullptr)
+	if (_bActorAlive == false || _curActionSet == nullptr)
 	{
 		return nullptr;
 	}

@@ -5,7 +5,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/LifeControlComponent.h"
+#include "Components/EventBrokerComponent.h"
 #include "UI/ActorStatusWidgetBase.h"
 
 
@@ -18,16 +18,16 @@ UActorUIComponent::UActorUIComponent()
 void UActorUIComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 }
 
 void UActorUIComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_lifeControlComp = Cast<ULifeControlComponent>(GetOwner()->GetComponentByClass(ULifeControlComponent::StaticClass()));
-	if (_lifeControlComp && _lifeControlComp->GetLifeChangedDelegate())
+	if (_eventBrokerComp)
 	{
-		_lifeControlComp->GetLifeChangedDelegate()->AddUObject(this, &UActorUIComponent::OnLifeStateChanged);
+		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name, this, &UActorUIComponent::OnReceiveEvent_LifeStateChanged);
 	}
 	
 	if(_bShowStatusDefault)
@@ -115,17 +115,13 @@ void UActorUIComponent::HideActorStatusEffectUI(EStatusEffect StatusType)
 	}
 }
 
-void UActorUIComponent::OnLifeStateChanged(bool bAlive)
+void UActorUIComponent::OnReceiveEvent_LifeStateChanged(UObject* baseData)
 {
-	if(bAlive)
-	{
-
-	}
-	else
+	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	if (eventData && eventData->Value == false)
 	{
 		RemoveAllUI();
-	}
-
+	}	
 }
 
 void UActorUIComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

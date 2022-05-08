@@ -17,8 +17,7 @@ class TRAVELER_API UButtonInputSprint : public UButtonInputBase
 public:
 	UButtonInputSprint();
 protected:	
-	void VTMPress() override;
-	void VTMPressing(float deltaTime) override;
-	void VTMRelease() override;
-
+	void VTMOnPressed() override;
+	void VTMOnPressing(float deltaTime) override;
+	void VTMOnReleased() override;
 };
