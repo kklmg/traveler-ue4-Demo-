@@ -185,9 +185,9 @@ void ACreatureCharacter::VCameraZoomInOut(float offset)
 	_cameraSpringArmComponent->ZoomInOut(offset);
 }
 
-FRotator ACreatureCharacter::VGetCameraRotation()
+FQuat ACreatureCharacter::VGetCameraRotation()
 {
-	return _cameraComponent->GetComponentRotation();
+	return _cameraComponent->GetComponentQuat();
 }
 
 FVector ACreatureCharacter::VGetCameraLocation()

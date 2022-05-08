@@ -25,12 +25,6 @@ protected:
 	UWeaponComponent* GetWeaponComp();
 
 private:
-	UFUNCTION()
-	void OnWeaponChanged(AWeaponBase* weaponIns);
-
-	UFUNCTION()
-	void OnWeaponProcessStateChanged(EProcessState processState);
-
 	UPROPERTY()
 	UWeaponComponent* _weaponComp;
 

@@ -31,7 +31,7 @@ public:
 	UFUNCTION()
 	virtual void VCameraZoomInOut(float offset) PURE_VIRTUAL(ICharacterCameraInterface::VCameraZoomInOut, );
 	UFUNCTION()
-	virtual FRotator VGetCameraRotation() PURE_VIRTUAL(ICharacterCameraInterface::VGetCameraRotation, return FRotator(););
+	virtual FQuat VGetCameraRotation() PURE_VIRTUAL(ICharacterCameraInterface::VGetCameraRotation, return FQuat(););
 	UFUNCTION()
 	virtual FVector VGetCameraLocation() PURE_VIRTUAL(ICharacterCameraInterface::VGetCameraLocation, return FVector(););
 	UFUNCTION()

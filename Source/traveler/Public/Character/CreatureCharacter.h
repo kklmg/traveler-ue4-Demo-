@@ -65,7 +65,7 @@ public:
 	virtual void VCameraArmPitch(float angle)  override;
 	virtual void VCameraArmYaw(float angle)   override;
 	virtual void VCameraZoomInOut(float offset)  override;
-	virtual FRotator VGetCameraRotation() override;
+	virtual FQuat VGetCameraRotation() override;
 	virtual FVector VGetCameraLocation() override;
 	virtual	void VDragCamera(FVector offset) override;
 	virtual	void VCancelDragCamera() override;

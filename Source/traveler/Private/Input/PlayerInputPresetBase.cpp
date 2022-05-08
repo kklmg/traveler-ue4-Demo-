@@ -39,6 +39,7 @@ void UPlayerInputPresetBase::ConsumeMovementInput()
 		//Get Moving Direction 
 		FVector movingDir = GetCameraInterface()->VGetCameraRotation().RotateVector(_movementInput);
 		movingDir.Z = 0;
+		movingDir.Normalize();
 
 		//Execute Moving Action
 		GetActionComp()->GetActionBlackBoard()->WriteData_FVector(EActionDataKey::EACTD_MovementInput, movingDir);

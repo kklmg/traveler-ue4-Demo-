@@ -21,10 +21,7 @@ void UActionWeapon::VTMInit()
 	if(_weaponProcess)
 	{
 		_weaponProcess->Init();
-		_delegateHandle = _weaponProcess->ProcessStateChangedDelegate.AddUObject(this, &UActionWeapon::OnWeaponProcessStateChanged);
 	}
-
-	GetWeaponComp()->OnWeaponChanged.AddDynamic(this, &UActionWeapon::OnWeaponChanged);
 }
 
 bool UActionWeapon::VCanExecute()
@@ -56,26 +53,9 @@ void UActionWeapon::VTMOnDead()
 	check(GetWeaponComp());
 
 	_weaponProcess->Abort();
-	_weaponProcess->ProcessStateChangedDelegate.Remove(_delegateHandle);
-	GetWeaponComp()->OnWeaponChanged.RemoveDynamic(this, &UActionWeapon::OnWeaponChanged);
 }
 
 UWeaponComponent* UActionWeapon::GetWeaponComp()
 {
 	return _weaponComp;
-}
-
-void UActionWeapon::OnWeaponChanged(AWeaponBase* weaponIns)
-{
-	SetProcessAborted();
-}
-
-void UActionWeapon::OnWeaponProcessStateChanged(EProcessState processState)
-{
-	check(_weaponProcess);
-
-	if(_weaponProcess->IsDead())
-	{
-		SetProcessAborted();
-	}
 }

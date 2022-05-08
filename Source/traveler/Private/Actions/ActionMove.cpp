@@ -40,13 +40,14 @@ void UActionMove::VTMExecute()
 	{
 		//FQuat deltaQuat = FQuat::FindBetween(GetActionOwner()->GetActorForwardVector(), out_MovementInput);			
 		//GetActionOwner()->AddActorWorldRotation(deltaQuat);
-		//GetActionOwner()->SetActorRotation(_movementInput.ToOrientationQuat());
+		GetActionOwner()->SetActorRotation(_movementInput.ToOrientationQuat());
 	}
 
 	GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_WantToSprint, out_bWantToSprint);
-	if (out_bWantToSprint && GetStatusComp() && myMovementComp)
+
+	if(myMovementComp && GetStatusComp())
 	{
-		if (GetStatusComp()->TryApplyCost(_sprintCost))
+		if(out_bWantToSprint && GetStatusComp()->TryApplyCost(_sprintCost))
 		{
 			myMovementComp->ToggleSprint(true);
 		}

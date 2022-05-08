@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Enums/EnumInputType.h"
+#include "Input/InputBindingNames.h"
 

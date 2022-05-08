@@ -40,6 +40,9 @@ public:
 	template<typename TData>
 	FDelegateHandle SubscribeEvent(FName eventName, TData* inUserObj, void (TData::*InFunc)(UObject*));
 
+protected:
+	UEventBroker* CreateOrGetEventBroker();
+
 private:
 	UPROPERTY()
 	UEventBroker* _eventBrokerIns;

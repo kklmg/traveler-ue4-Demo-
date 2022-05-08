@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Enums/EnumInputType.h"
+#include "Input/InputBindingNames.h"
 #include "InputPresetBase.generated.h"
 
 class UAxisInputBase;

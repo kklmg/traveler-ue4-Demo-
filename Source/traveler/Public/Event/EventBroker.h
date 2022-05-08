@@ -40,6 +40,8 @@ class TRAVELER_API UEventBroker : public UObject
 	GENERATED_BODY()
 
 public:
+	UEventBroker();
+
 	bool RegisterEvent(FName eventName);
 	bool ContainsRegisteredEvent(FName eventName);
 	bool PublishEvent(FName eventName, UObject* data);

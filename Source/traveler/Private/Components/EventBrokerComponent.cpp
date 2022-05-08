@@ -11,16 +11,11 @@ UEventBrokerComponent::UEventBrokerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	bWantsInitializeComponent = true;
-	if (_eventBrokerIns == nullptr)
-	{
-		_eventBrokerIns = CreateDefaultSubobject<UEventBroker>(TEXT("EventBrokerIns"));
-		checkf(_eventBrokerIns != nullptr, TEXT("missing instance of EventBroker"));
-	}
 }
 
 void UEventBrokerComponent::InitializeComponent()
 {
-	
+	Super::InitializeComponent();
 }
 
 // Called when the game starts
@@ -30,8 +25,6 @@ void UEventBrokerComponent::BeginPlay()
 
 	// ...
 }
-
-
 
 // Called every frame
 void UEventBrokerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -43,26 +36,36 @@ void UEventBrokerComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 
 bool UEventBrokerComponent::RegisterEvent(FName eventName)
 {
-	return _eventBrokerIns->RegisterEvent(eventName);
+	return CreateOrGetEventBroker()->RegisterEvent(eventName);
 }
 
 bool UEventBrokerComponent::ContainsRegisteredEvent(FName eventName)
 {
-	return _eventBrokerIns->ContainsRegisteredEvent(eventName);
+	return CreateOrGetEventBroker()->ContainsRegisteredEvent(eventName);
 }
 
 bool UEventBrokerComponent::PublishEvent(FName eventName, UObject* data)
 {
-	return _eventBrokerIns->PublishEvent(eventName, data);
+	return CreateOrGetEventBroker()->PublishEvent(eventName, data);
 }
 
 FMD_UObjectSignature* UEventBrokerComponent::GetEventDelegate(FName eventName)
 {
-	return _eventBrokerIns->GetEventDelegate(eventName);
+	return CreateOrGetEventBroker()->GetEventDelegate(eventName);
 }
 
 FMD_UObjectSignature& UEventBrokerComponent::RegisterAndGetEventDelegate(FName eventName)
 {
-	return _eventBrokerIns->RegisterAndGetEventDelegate(eventName);
+	return CreateOrGetEventBroker()->RegisterAndGetEventDelegate(eventName);
+}
+
+UEventBroker* UEventBrokerComponent::CreateOrGetEventBroker()
+{
+	if (_eventBrokerIns == nullptr)
+	{
+		_eventBrokerIns = NewObject<UEventBroker>(this);
+		checkf(_eventBrokerIns != nullptr, TEXT("missing instance of EventBroker"));
+	}
+	return _eventBrokerIns;
 }
 

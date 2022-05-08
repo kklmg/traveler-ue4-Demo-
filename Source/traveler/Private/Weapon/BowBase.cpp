@@ -222,7 +222,7 @@ void ABowBase::AttachArrowsToHand()
 	if (!cameraComp) return;
 
 	//Get Camera State
-	FRotator cameraRotator = cameraInterface->VGetCameraRotation();
+	FQuat cameraQuat = cameraInterface->VGetCameraRotation();
 	FVector cameraLocation = cameraComp->GetComponentLocation();
 	FVector cameraForward = cameraComp->GetForwardVector();
 

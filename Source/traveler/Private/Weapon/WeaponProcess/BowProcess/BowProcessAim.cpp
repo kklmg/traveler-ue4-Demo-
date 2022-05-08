@@ -54,11 +54,12 @@ void UBowProcessAim::VTMTick(float deltaTime)
 	//make actor face to camera forward
 	if (weaponOwner && cameraInterface)
 	{
-		FRotator cameraRotator = cameraInterface->VGetCameraRotation();
-		cameraRotator.Pitch = 0;
-		cameraRotator.Roll = 0;
+		FQuat cameraQuat = cameraInterface->VGetCameraRotation();
+		FVector forward = cameraQuat.RotateVector(FVector::ForwardVector);
+		forward.Z = 0;
+		forward.Normalize();
 
-		weaponOwner->SetActorRotation(cameraRotator);
+		weaponOwner->SetActorRotation(forward.ToOrientationQuat());
 	}
 }
 

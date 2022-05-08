@@ -53,6 +53,10 @@ FMD_UObjectSignature& UEventBroker::RegisterAndGetEventDelegate(FName eventName)
 	}
 }
 
+UEventBroker::UEventBroker()
+{
+}
+
 bool UEventBroker::RegisterEvent(FName eventName)
 {
 	if (_delegateMap.Contains(eventName)) 
