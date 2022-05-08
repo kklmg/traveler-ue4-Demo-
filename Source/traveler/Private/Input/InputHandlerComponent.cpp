@@ -18,9 +18,6 @@ UInputHandlerComponent::UInputHandlerComponent()
 void UInputHandlerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	_inputPresetIns = _inputPresetClass ? NewObject<UInputPresetBase>(this, _inputPresetClass) : NewObject<UInputPresetBase>(this);
-	_inputPresetIns->VInit(GetOwner());
 }
 
 // Called every frame
@@ -37,6 +34,9 @@ void UInputHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UInputHandlerComponent::BindInputs(UInputComponent* PlayerInputComponent)
 {
+	_inputPresetIns = _inputPresetClass ? NewObject<UInputPresetBase>(this, _inputPresetClass) : NewObject<UInputPresetBase>(this);
+	_inputPresetIns->VInit(GetOwner());
+
 	//Register Axis Inputs
 	RegisterAxisInput<NSInputBindingName::MoveForward>(PlayerInputComponent);
 	RegisterAxisInput<NSInputBindingName::MoveRight>(PlayerInputComponent);

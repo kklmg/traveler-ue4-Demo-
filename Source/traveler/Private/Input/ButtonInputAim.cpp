@@ -11,7 +11,7 @@ UButtonInputAim::UButtonInputAim()
 
 void UButtonInputAim::VTMOnPressed()
 {
-	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if (actionComp)
 	{
 		actionComp->ExecuteAction(EActionType::EACT_Aim);
@@ -20,7 +20,7 @@ void UButtonInputAim::VTMOnPressed()
 
 void UButtonInputAim::VTMOnPressing(float deltaTime)
 {
-	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	{
 		actionComp->ExecuteAction(EActionType::EACT_Aim);
 	}
@@ -28,7 +28,7 @@ void UButtonInputAim::VTMOnPressing(float deltaTime)
 
 void UButtonInputAim::VTMOnReleased()
 {
-	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if (actionComp)
 	{
 		actionComp->AbortAction(EActionType::EACT_Aim);

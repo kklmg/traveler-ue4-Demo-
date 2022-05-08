@@ -17,6 +17,25 @@ void UInputPresetBase::VInit(AActor* owner)
 	_eventBrokerComp = Cast<UEventBrokerComponent>(owner->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 	_cameraInterface = Cast<ICharacterCameraInterface>(owner);
 
+	//Initizalize Axis Inputs
+	for (auto axisInputClass : _presetAxisClass)
+	{
+		if (axisInputClass == nullptr)
+		{
+			continue;
+		}
+		if (_mapAxisIns.Contains(axisInputClass.GetDefaultObject()->GetBindingName()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Exist duplicate button input class"))
+				continue;
+		}
+
+		UAxisInputBase* axisInputIns = NewObject<UAxisInputBase>(this, axisInputClass);
+		check(axisInputIns)
+		axisInputIns->Init(this);
+		_mapAxisIns.Add(axisInputIns->GetBindingName(), axisInputIns);
+	}
+
 	//Initizalize Button Inputs
 	for (auto buttonInputClass : _presetButtonClass)
 	{

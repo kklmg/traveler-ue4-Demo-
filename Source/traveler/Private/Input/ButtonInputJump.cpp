@@ -11,7 +11,7 @@ UButtonInputJump::UButtonInputJump()
 
 void UButtonInputJump::VTMOnPressed()
 {
-	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if (actionComp)
 	{
 		actionComp->ExecuteAction(EActionType::EACT_Jumping);

@@ -12,7 +12,7 @@ UButtonInputFire::UButtonInputFire()
 
 void UButtonInputFire::VTMOnPressed()
 {
-	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if(actionComp)
 	{
 		actionComp->ExecuteAction(EActionType::EACT_Fire);
@@ -25,7 +25,7 @@ void UButtonInputFire::VTMOnPressing(float deltaTime)
 
 void UButtonInputFire::VTMOnReleased()
 {
-	static UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if(actionComp)
 	{
 		actionComp->AbortAction(EActionType::EACT_Fire);

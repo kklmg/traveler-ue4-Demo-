@@ -13,10 +13,10 @@ UButtonInputSprint::UButtonInputSprint()
 
 void UButtonInputSprint::VTMOnPressed()
 {
-	static UEventBrokerComponent* eventBrokerComp = GetInputPreset()->GetEventBrokerComp();
-	if (eventBrokerComp)
+	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	if (actionComp)
 	{
-		//eventBrokerComp->PublishEvent(ns)
+		actionComp->GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, true);
 	}
 }
 
@@ -26,9 +26,9 @@ void UButtonInputSprint::VTMOnPressing(float deltaTime)
 
 void UButtonInputSprint::VTMOnReleased()
 {
-	static UEventBrokerComponent* eventBrokerComp = GetInputPreset()->GetEventBrokerComp();
-	if (eventBrokerComp)
+	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
+	if (actionComp)
 	{
-		//eventBrokerComp->PublishEvent(ns)
+		actionComp->GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, false);
 	}
 }
