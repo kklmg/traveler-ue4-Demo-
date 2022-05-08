@@ -18,7 +18,7 @@ public:
 	float GetElapsedTime();
 
 	virtual void VTMInitialize();
-	virtual bool VTMCanExecute();
+	virtual bool VCanExecute() override;
 	virtual void VTMExecute();
 	virtual void VTMTick(float deltaTime);
 

@@ -22,8 +22,9 @@ UActionDodge::UActionDodge()
 }
 
 
-bool UActionDodge::VTMCanExecute()
+bool UActionDodge::VCanExecute()
 {
+	if (!Super::VCanExecute())return false;
 	EMovementMode movementMode = GetActionOwner()->GetCharacterMovement()->MovementMode;
 	bool bIsWalking = (movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking);
 

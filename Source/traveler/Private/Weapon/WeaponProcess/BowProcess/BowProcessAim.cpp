@@ -13,15 +13,15 @@ UBowProcessAim::UBowProcessAim()
 	_processName = NSNameWeaponProcess::AIM;
 }
 
-bool UBowProcessAim::VTMCanExecute()
+bool UBowProcessAim::VCanExecute()
 {
-	if (!Super::VTMCanExecute()) return false;
+	if (!Super::VCanExecute()) return false;
 	if (!GetBow()) return false;
 
 	EAnimationState animationState = GetBow()->GetOwnerAnimationState();
 
 	return (animationState == EAnimationState::EAnimState_Walk || animationState == EAnimationState::EAnimState_Fall)
-		&& (GetBow()->GetOwnerActionComp()->CheckActionIsInProgress(EActionType::EACT_Dodge) == false);
+		&& (GetBow()->GetOwnerActionComp()->IsActionRunning(EActionType::EACT_Dodge) == false);
 }
 
 void UBowProcessAim::VTMExecute()

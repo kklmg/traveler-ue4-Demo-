@@ -3,24 +3,20 @@
 
 #include "Process/ProcessBase.h"
 
-bool UProcessBase::Init()
+void UProcessBase::Init()
 {
-	SetProcessAborted();
+	if (IsAlive())
+	{
+		SetProcessAborted();
+	}
 
-	if(SetProcessState(EProcessState::EPS_ReadyToExecute))
-	{
-		VTMInit();
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	SetProcessState(EProcessState::EPS_ReadyToExecute);
+	VTMInit();
 }
 
 bool UProcessBase::Execute()
 {
-	if (CanExecute() && SetProcessState(EProcessState::EPS_Running))
+	if (VCanExecute() && SetProcessState(EProcessState::EPS_Running))
 	{
 		VTMExecute();
 
@@ -43,9 +39,9 @@ bool UProcessBase::Abort()
 	return SetProcessAborted();
 }
 
-bool UProcessBase::CanExecute()
+bool UProcessBase::VCanExecute()
 {
-	return _processState == EProcessState::EPS_ReadyToExecute && VTMCanExecute();
+	return _processState == EProcessState::EPS_ReadyToExecute;
 }
 
 bool UProcessBase::SetProcessSucceed()
@@ -90,7 +86,7 @@ bool UProcessBase::SetProcessAborted()
 	}
 }
 
-bool UProcessBase::SetProcessState(EProcessState newState)
+FORCEINLINE_DEBUGGABLE bool UProcessBase::SetProcessState(EProcessState newState)
 {
 	if (_processState == newState) return false;
 
@@ -100,7 +96,7 @@ bool UProcessBase::SetProcessState(EProcessState newState)
 	return true;
 }
 
-void UProcessBase::Tick(float deltaTime)
+FORCEINLINE_DEBUGGABLE void UProcessBase::Tick(float deltaTime)
 {
 	if (_processState == EProcessState::EPS_Running)
 	{
@@ -138,11 +134,6 @@ FORCEINLINE_DEBUGGABLE FName UProcessBase::GetProcessName()
 
 void UProcessBase::VTMInit()
 {
-}
-
-bool UProcessBase::VTMCanExecute()
-{
-	return true;
 }
 
 void UProcessBase::VTMExecute()

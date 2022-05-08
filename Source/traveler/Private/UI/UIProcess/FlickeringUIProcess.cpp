@@ -20,9 +20,9 @@ void UFlickeringUIProcess::SetOpacityCurve(UCurveFloat* opacityCurve)
 }
 
 
-bool UFlickeringUIProcess::VTMCanExecute()
+bool UFlickeringUIProcess::VCanExecute()
 {
-	if (!Super::VTMCanExecute()) return false;
+	if (!Super::VCanExecute()) return false;
 
 	return (_opacityCurve && _duration > 0.0f);
 }

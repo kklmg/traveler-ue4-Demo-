@@ -18,7 +18,7 @@ class TRAVELER_API UActionCircleAround : public UActionBase
 public:
 	UActionCircleAround();
 
-	virtual bool VTMCanExecute() override;
+	virtual bool VCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
 

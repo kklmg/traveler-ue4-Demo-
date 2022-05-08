@@ -27,9 +27,9 @@ UActionFlyTo::UActionFlyTo()
 
 
 
-bool UActionFlyTo::VTMCanExecute()
+bool UActionFlyTo::VCanExecute()
 {
-	if (!Super::VTMCanExecute()) return false;
+	if (!Super::VCanExecute()) return false;
 	//
 	//
 	//

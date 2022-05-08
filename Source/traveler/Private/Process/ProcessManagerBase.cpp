@@ -16,7 +16,7 @@ void UProcessManagerBase::ExecuteProcess(UProcessBase* process)
 	else
 	{
 		process->Init();
-		if (process->CanExecute())
+		if (process->VCanExecute())
 		{
 			process->Execute();
 
@@ -39,7 +39,7 @@ void UProcessManagerBase::ExecutePresetedProcess(FName processName)
 		UProcessBase* process = _processPresets[processName];
 		process->Init();
 
-		if (process->CanExecute())
+		if (process->VCanExecute())
 		{
 			process->Execute();
 

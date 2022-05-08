@@ -7,11 +7,10 @@
 #include "ActionComponent.generated.h"
 
 class UActionBase;
+class UActionPreset;
 class UCharacterActionPreset;
 class UActionBlackBoard;
-class UActionPresetTrigger;
 class UEventBrokerComponent;
-
 class ACharacter;
 
 
@@ -36,11 +35,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void AbortAllProcesses();
-
-	bool CheckActionIsInProgress(EActionType actionType);
-
-	void SwitchActionSet(UCharacterActionPreset* actionSet);
+	void AbortAllActions();
+	bool IsActionRunning(EActionType actionType);
+	void SwitchActionSet(UActionPreset* actionSet);
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -51,9 +48,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UActionBlackBoard* GetActionBlackBoard();
-	
-private:
-	void _tickActionProcess(float deltaTime);
 
 private:
 
@@ -61,22 +55,21 @@ private:
 	ACharacter* _character;
 
 	UPROPERTY()
-	TArray<UActionBase*> _mapActionProcessPool;
-
-	UPROPERTY()
 	UActionBlackBoard* _actionBlackBoard;
 
 	UPROPERTY(EditDefaultsOnly, Category = ActionSetTriggerClasses)
-	TArray<TSubclassOf<UActionPresetTrigger>> _actionSetTriggerClasses;
+	TArray<TSubclassOf<UActionPreset>> _actionPresetClasses;
 
 	UPROPERTY()
-	TArray<UActionPresetTrigger*> _actionSetTriggerInstances;
+	TArray<UActionPreset*> _actionPresetInstances;
 
 	UPROPERTY()
-	UCharacterActionPreset* _curActionSet;
+	UActionPreset* _curActionSet;
 
 	UPROPERTY()
 	UEventBrokerComponent* _eventBrokerComp;
 
 	bool _bActorAlive;
 };
+
+

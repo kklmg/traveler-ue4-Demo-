@@ -22,17 +22,16 @@ UActionBase::UActionBase()
 	_costData = CreateDefaultSubobject<UCostData>(TEXT("CostData"));
 }
 
-void UActionBase::SetActionData(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard)
+void UActionBase::SetActionData(ACharacter* character, UActionComponent* actionComp)
 {
 	check(character);
 	check(actionComp);
-	check(actionBlackBoard);
 
 	SetProcessAborted();
 
 	_actionOwner = character;
 	_actionComp = actionComp;
-	_actionBlackBoard = actionBlackBoard;
+	_actionBlackBoard = actionComp->GetActionBlackBoard();
 
 	_statusComp = Cast<UStatusComponent>(_actionOwner->GetComponentByClass(UStatusComponent::StaticClass()));
 	_exTransformProviderComp = Cast<UExTransformProviderComponent>(_actionOwner->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
@@ -57,9 +56,9 @@ FORCEINLINE void UActionBase::VTMExecute()
 	}
 }
 
-FORCEINLINE bool UActionBase::VTMCanExecute()
+FORCEINLINE bool UActionBase::VCanExecute()
 {
-	if (!Super::VTMCanExecute()) return false;
+	if (!Super::VCanExecute()) return false;
 	if(!_bDataIsSet) return false;
 
 	return _statusComp && _statusComp->IsRemainingPointEnough(_costData);

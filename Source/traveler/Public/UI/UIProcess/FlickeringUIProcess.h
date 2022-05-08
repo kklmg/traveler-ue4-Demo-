@@ -17,12 +17,12 @@ public:
 	void SetDuration(float duration);
 	void SetOpacityCurve(UCurveFloat* opacityCurve);
 
+	virtual bool VCanExecute() override;
 protected:
 	virtual void VTMInit() override;
-	virtual bool VTMCanExecute() override;
+	
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
-
 	virtual void VTMOnDead() override;
 	virtual void VTMOnSucceed() override;
 	virtual void VTMOnFailed() override;

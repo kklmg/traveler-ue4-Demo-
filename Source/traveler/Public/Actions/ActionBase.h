@@ -49,7 +49,7 @@ class TRAVELER_API UActionBase : public UProcessBase
 public:
 	UActionBase();
 
-	void SetActionData(ACharacter* character, UActionComponent* actionComp, UActionBlackBoard* actionBlackBoard);
+	void SetActionData(ACharacter* character, UActionComponent* actionComp);
 
 	UFUNCTION(BlueprintCallable)
 	EActionType GetActionType();
@@ -66,7 +66,7 @@ public:
 protected:
 	virtual void VTMInit() override;
 	virtual void VTMExecute() override;
-	virtual bool VTMCanExecute() override;
+	virtual bool VCanExecute() override;
 	virtual void VTMTick(float deltaTime) override;
 
 	//virtual void VTMOnDead() override;

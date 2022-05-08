@@ -17,7 +17,7 @@ public:
 	UActionWeapon();
 
 	virtual void VTMInit() override;
-	virtual bool VTMCanExecute() override;
+	virtual bool VCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
 	virtual void VTMOnDead() override;

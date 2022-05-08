@@ -60,9 +60,9 @@ void UStatusEffectProcessBase::CombineEffectData(UStatusEffectData* statusEffect
 	}
 }
 
-bool UStatusEffectProcessBase::VTMCanExecute()
+bool UStatusEffectProcessBase::VCanExecute()
 {
-	if (!Super::VTMCanExecute()) return false;
+	if (!Super::VCanExecute()) return false;
 
 	if (_effectDuration <= 0.0f) return false;
    

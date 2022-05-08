@@ -9,7 +9,6 @@
 #include "Components/EventBrokerComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameSystem/MyGameplayStatics.h"
-#include "Actions/ActionPreset/ActionPresetTrigger.h"
 #include "GameSystem/DebugMessageHelper.h"
 #include "Data/MyDelegates.h"
 #include "GameFramework/Character.h"
@@ -39,16 +38,15 @@ void UActionComponent::InitializeComponent()
 	_actionBlackBoard = NewObject<UActionBlackBoard>(this);
 	check(_actionBlackBoard);
 
-	_mapActionProcessPool.SetNum(int32(EActionType::EACT_Max), false);
 	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 
-	for (auto triggerClass : _actionSetTriggerClasses)
+	for (auto presetClass : _actionPresetClasses)
 	{
-		if (triggerClass)
+		if (presetClass)
 		{
-			UActionPresetTrigger* trigger = NewObject<UActionPresetTrigger>(this, triggerClass);
-			trigger->Initiazlie(this);
-			_actionSetTriggerInstances.Add(trigger);
+			auto actionPreset = NewObject<UActionPreset>(this, presetClass);
+			actionPreset->VInitialize(_character, this);
+			_actionPresetInstances.Add(actionPreset);
 		}
 	}
 }
@@ -59,7 +57,6 @@ void UActionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 	if (_eventBrokerComp)
 	{
 		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name,this, &UActionComponent::OnReceiveEvent_LifeStateChanged);
@@ -75,7 +72,7 @@ void UActionComponent::OnReceiveEvent_LifeStateChanged(UObject* baseData)
 	_bActorAlive = eventData->Value;
 	if(_bActorAlive == false)
 	{
-		AbortAllProcesses();
+		AbortAllActions();
 	}
 }
 
@@ -84,8 +81,10 @@ void UActionComponent::OnReceiveEvent_LifeStateChanged(UObject* baseData)
 void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	_tickActionProcess(DeltaTime);
+	if(_curActionSet)
+	{
+		_curActionSet->Tick(DeltaTime);
+	}
 }
 
 UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
@@ -94,79 +93,12 @@ UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
 	{
 		return nullptr;
 	}
-
-	//array index(pool slot)
-	int32 index = int32(actionType);
-
-	if (index >= _mapActionProcessPool.Num())
-	{
-		return nullptr;
-	}
-
-	//Handle case when the same action is in progress 
-	if (_mapActionProcessPool[index] &&
-		_mapActionProcessPool[index]->GetProcessState() == EProcessState::EPS_Running)
-	{
-		//todo
-		return nullptr;
-	}
-
-	//make and get Action Instance
-	UActionBase* newActionIns = _curActionSet->GetActionInstance(actionType);
-	if (newActionIns)
-	{
-		//Execute Action
-		newActionIns->SetActionData(_character, this, _actionBlackBoard);
-		newActionIns->Init();
-		newActionIns->Execute();
-
-		//add action Instance to pool for management
-		_mapActionProcessPool[index] = newActionIns;
-	}
-
-	return newActionIns;
+	return _curActionSet->ExecuteAction(actionType);
 }
 
 UActionBase* UActionComponent::AbortAction(EActionType actionType)
 {
-	int32 index = int32(actionType);
-
-	if (index >= _mapActionProcessPool.Num())
-	{
-		return nullptr;
-	}
-
-	if(_mapActionProcessPool[index])
-	{
-		UActionBase* cachedAction = _mapActionProcessPool[index];
-		_mapActionProcessPool[index]->Abort();
-		_mapActionProcessPool[index] = nullptr;
-
-		return cachedAction;
-	}
-
-	return nullptr;
-}
-
-
-void UActionComponent::_tickActionProcess(float deltaTime)
-{
-	TArray<EActionType> finieshedActionKeys;
-
-	for (int32 i = 0; i < _mapActionProcessPool.Num(); ++i)
-	{
-		if (_mapActionProcessPool[i])
-		{
-			if (_mapActionProcessPool[i]->IsDead())
-			{
-				_mapActionProcessPool[i] = nullptr;
-			}
-			else
-			{
-				_mapActionProcessPool[i]->Tick(deltaTime);
-			}
-		}
-	}
+	return _curActionSet ? _curActionSet->AbortAction(actionType) : nullptr;
 }
 
 UActionBlackBoard* UActionComponent::GetActionBlackBoard()
@@ -174,15 +106,15 @@ UActionBlackBoard* UActionComponent::GetActionBlackBoard()
 	return _actionBlackBoard;
 }
 
-void UActionComponent::SwitchActionSet(UCharacterActionPreset* actionSet)
+void UActionComponent::SwitchActionSet(UActionPreset* actionSet)
 {
 	if (_curActionSet == actionSet) return;
 
-	AbortAllProcesses();
-	if (_curActionSet)
+	if(_curActionSet)
 	{
 		_curActionSet->VLeave();
 	}
+	
 	_curActionSet = actionSet;
 
 	if (_curActionSet)
@@ -193,23 +125,17 @@ void UActionComponent::SwitchActionSet(UCharacterActionPreset* actionSet)
 	UDebugMessageHelper::Messsage_String(TEXT("ActionComp"), TEXT("ActionSetChanged"));
 }
 
-void UActionComponent::AbortAllProcesses()
+void UActionComponent::AbortAllActions()
 {
-	for (int32 i = 0; i < _mapActionProcessPool.Num(); ++i)
+	if (_curActionSet) 
 	{
-		if (_mapActionProcessPool[i])
-		{
-			_mapActionProcessPool[i]->Abort();
-			_mapActionProcessPool[i] = nullptr;
-		}
+		_curActionSet->AbortAllActions();
 	}
 }
 
-bool UActionComponent::CheckActionIsInProgress(EActionType actionType)
+bool UActionComponent::IsActionRunning(EActionType actionType)
 {
-	int32 index = int32(actionType);
-	return _mapActionProcessPool[index]
-		&& _mapActionProcessPool[index]->GetProcessState() == EProcessState::EPS_Running;
+	return _curActionSet ? _curActionSet->IsActionRunning(actionType) : false;
 }
 
 

@@ -19,9 +19,9 @@ void UProcessSectionBase::VTMInitialize()
 	_elapsedTime = 0;
 }
 
-bool UProcessSectionBase::VTMCanExecute()
+bool UProcessSectionBase::VCanExecute()
 {
-	if (!Super::VTMCanExecute()) return false;
+	if (!Super::VCanExecute()) return false;
 
 	return true;
 }

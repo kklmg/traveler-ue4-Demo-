@@ -19,9 +19,10 @@ UActionMove::UActionMove()
 	_sprintCost->AddCost(EStatusType::EStatus_Stamina, 0.25f);
 }
 
-bool UActionMove::VTMCanExecute()
+bool UActionMove::VCanExecute()
 {
-	bool bIsDodging = GetActionComp()->CheckActionIsInProgress(EActionType::EACT_Dodge);
+	if (!Super::VCanExecute()) return false;
+	bool bIsDodging = GetActionComp()->IsActionRunning(EActionType::EACT_Dodge);
 	return (bIsDodging == false && GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, _movementInput, true));
 }
 

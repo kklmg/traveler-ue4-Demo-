@@ -9,9 +9,9 @@ UBowProcessFire::UBowProcessFire()
 	_processName = NSNameWeaponProcess::FIRE;
 }
 
-bool UBowProcessFire::VTMCanExecute()
+bool UBowProcessFire::VCanExecute()
 {
-	if (!Super::VTMCanExecute()) return false;
+	if (!Super::VCanExecute()) return false;
 	if (!GetBow()) return false;
 	
 	EAnimationState animationState = GetBow()->GetOwnerAnimationState();

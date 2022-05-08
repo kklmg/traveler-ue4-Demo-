@@ -21,6 +21,10 @@ public:
 	void Initialize();
 	bool Validate();
 	bool GetResult();
+
+	template<typename TData>
+	void Subscribe(TData* inUserObj, void (TData::* InFunc)(bool));
+
 protected:
 	virtual void VTMInitialize();
 	virtual bool VTMValidate();
@@ -32,5 +36,8 @@ public:
 	FMD_BoolSignature OnValidatedDelegate;
 };
 
-
-
+template<typename TData>
+void UConditionBase::Subscribe(TData* inUserObj, void (TData::* InFunc)(bool))
+{
+	OnValidatedDelegate.AddUObject<TData>(inUserObj, InFunc);
+}

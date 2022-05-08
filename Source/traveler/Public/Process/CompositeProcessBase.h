@@ -21,7 +21,7 @@ public:
 	void setIsLoop(bool isLoop);
 
 	virtual void VTMInit() override;
-	virtual bool VTMCanExecute() override;
+	virtual bool VCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
 	virtual void VTMOnDead() override;

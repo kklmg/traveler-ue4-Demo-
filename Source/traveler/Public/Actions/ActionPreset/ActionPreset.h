@@ -8,6 +8,10 @@
 #include "ActionPreset.generated.h"
 
 class UActionBase;
+class UActionComponent;
+class UCompositeActorCondition;
+class ACharacter;
+
 /**
  * 
  */
@@ -17,17 +21,35 @@ class TRAVELER_API UActionPreset : public UObject
 	GENERATED_BODY()
 
 public:
-	void virtual VInitialize();
+	void virtual VInitialize(ACharacter* character, UActionComponent* actionComp);
 	void virtual VEnter();
 	void virtual VLeave();
 
-	UActionBase* GetActionInstance(EActionType actionType);
+	void Tick(float deltaTime);
+
+	bool IsActionRunning(EActionType actionType);
+	UActionBase* ExecuteAction(EActionType actionType);
+	UActionBase* AbortAction(EActionType actionType);
+	void AbortAllActions();
+
 protected:
-	void AddActionClassToMap(TSubclassOf<UActionBase> actionClass);
+	void MakeActionIns(TSubclassOf<UActionBase> actionClass,ACharacter* character, UActionComponent* actionComp);
+
+	void ActivateThisActionSet(bool result);
+
 private:
 	UPROPERTY()
-	TMap<EActionType,TSubclassOf<UActionBase>> _mapActionClasses;
+	TMap<EActionType, UActionBase*> _mapActionIns;
 
 	UPROPERTY(EditDefaultsOnly,Category = ActionClass)
 	TArray<TSubclassOf<UActionBase>> _arrayActionClasses;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UCompositeActorCondition> _conditionClass;
+
+	UPROPERTY()
+	UCompositeActorCondition* _conditionIns;
+
+	UPROPERTY()
+	UActionComponent* _actionComp;
 };

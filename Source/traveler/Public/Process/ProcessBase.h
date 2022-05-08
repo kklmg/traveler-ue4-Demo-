@@ -17,26 +17,23 @@ class TRAVELER_API UProcessBase : public UObject
 {
 	GENERATED_BODY()
 public:
-	bool Init();
+	void Init();
 	bool Execute();
 	bool Abort();
-
-	bool CanExecute();
 	bool IsAlive();
 	bool IsDead();
 	bool IsInstantProcess();
 	FName GetProcessName();
-	
+
 	UFUNCTION(BlueprintCallable)
 	EProcessState GetProcessState();
 
 	void Tick(float deltaTime);
-
+public:
+	virtual bool VCanExecute();
+	
 protected:	
-
 	//Internal  functions ---------------------------
-
-	virtual bool VTMCanExecute();
 	virtual void VTMInit();
 	virtual void VTMExecute();
 	virtual void VTMTick(float deltaTime);

@@ -17,7 +17,7 @@ class TRAVELER_API UBowProcessFire : public UBowProcessBase
 public:
 	UBowProcessFire();
 
-	virtual bool VTMCanExecute() override;
+	virtual bool VCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;
 

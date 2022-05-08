@@ -35,13 +35,13 @@ void UCompositeProcessBase::VTMInit()
 	_procesPool[_curProcessID]->Init();
 }
 
-bool UCompositeProcessBase::VTMCanExecute()
+bool UCompositeProcessBase::VCanExecute()
 {
-	if (!Super::VTMCanExecute()) return false;
+	if (!Super::VCanExecute()) return false;
 
 	if (_curProcessID >= _procesPool.Num()) return false;
 
-	return 	_procesPool[_curProcessID]->CanExecute();
+	return 	_procesPool[_curProcessID]->VCanExecute();
 }
 
 void UCompositeProcessBase::VTMExecute()
