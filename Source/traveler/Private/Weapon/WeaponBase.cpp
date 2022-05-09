@@ -73,6 +73,11 @@ void AWeaponBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+bool AWeaponBase::VCanFire()
+{
+	return true;
+}
+
 void AWeaponBase::VOnEquipped()
 {
 	OnWeaponEquipped.Broadcast(this);
@@ -81,73 +86,10 @@ void AWeaponBase::VOnEquipped()
 void AWeaponBase::VOnUnEquipped()
 {
 	OnWeaponUnequipped.Broadcast(this);
-
-	StopAllProcesses();
 	_weaponAnimationModel->ClearData();
 }
 
-FORCEINLINE_DEBUGGABLE UProcessBase* AWeaponBase::GetProcess(FName processName)
-{
-	return _processMap.Contains(processName) ? _processMap[processName] : nullptr;
-}
 
-void AWeaponBase::ExecuteProcess(FName processName)
-{
-	if (_processMap.Contains(processName) && _processMap[processName])
-	{
-		if (_processMap[processName]->GetProcessState() != EProcessState::EPS_Running)
-		{
-			_processMap[processName]->Init();
-		}
-		_processMap[processName]->Execute();
-	}
-}
-
-void AWeaponBase::TickProcess(FName processName, float deltaTime)
-{
-	if (_processMap.Contains(processName) && _processMap[processName])
-	{
-		_processMap[processName]->Tick(deltaTime);
-	}
-}
-
-void AWeaponBase::StopProcess(FName processName)
-{
-	if (_processMap.Contains(processName) && _processMap[processName])
-	{
-		_processMap[processName]->Abort();
-	}
-}
-
-void AWeaponBase::StopAllProcesses()
-{
-	for (auto pair : _processMap)
-	{
-		check(pair.Value);
-		pair.Value->Abort();
-	}
-}
-
-void AWeaponBase::AddToProcessMap(UProcessBase* process)
-{
-	if (process && _processMap.Contains(process->GetProcessName()) == false)
-	{
-		_processMap.Add(process->GetProcessName(), process);
-	}
-}
-
-bool AWeaponBase::IsProcessRunning(FName processName)
-{
-	if (_processMap.Contains(processName))
-	{
-		check(_processMap[processName]);
-		return _processMap[processName]->GetProcessState() == EProcessState::EPS_Running;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 FORCEINLINE_DEBUGGABLE USkeletalMeshComponent* AWeaponBase::GetMeshComponent()
 {
@@ -167,16 +109,6 @@ FORCEINLINE_DEBUGGABLE EWeaponType AWeaponBase::GetWeaponType()
 
 void AWeaponBase::VReset()
 {
-}
-
-FORCEINLINE_DEBUGGABLE EAnimationState AWeaponBase::GetOwnerAnimationState()
-{
-	return _characterAnimationState;
-}
-
-FORCEINLINE_DEBUGGABLE UActionComponent* AWeaponBase::GetOwnerActionComp()
-{
-	return _ownerActionComp;
 }
 
 FORCEINLINE_DEBUGGABLE UExTransformProviderComponent* AWeaponBase::GetExTransformProviderComp()
@@ -221,11 +153,6 @@ void AWeaponBase::VWeaponControlButtonE()
 
 void AWeaponBase::VWeaponControlButtonF()
 {
-}
-
-void AWeaponBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
-{
-	_characterAnimationState = newState;
 }
 
 FORCEINLINE UWeaponAnimationModelBase* AWeaponBase::GetWeaponAnimationModel()

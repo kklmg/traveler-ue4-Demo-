@@ -6,16 +6,14 @@
 #include "Components/ActorComponent.h"
 #include "WeaponComponent.generated.h"
 
-
 class UAnimationModelBase;
-
-class AWeaponBase;
-class ACreatureCharacter;
-
 class UProcessBase;
 class UEventBrokerComponent;
 class UExTransformProviderComponent;
-
+class UAnimControlComponent;
+class UActionComponent;
+class AWeaponBase;
+class ACreatureCharacter;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateWeapon, AWeaponBase*,weapon);
 
@@ -35,17 +33,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void InitializeComponent() override;
 
-	void OnReceiveEvent_LifeStateChanged(UObject* baseData);
-
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UProcessBase* GetWeaponProcess(FName processName);
-	bool ExecuteWeaponProcess(FName processName);
-	void TickWeaponProcess(FName processName,float deltaTime);
-	void StopWeaponProcess(FName processName);
-	void StopAllWeaponProcesses();
 
 	void EquipWeapon(AWeaponBase* weapon);
 
@@ -68,25 +58,16 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	AWeaponBase* GetEquipedWeapon();
-
-	UFUNCTION(BluePrintCallable)
-	bool IsFiring();
-
-	UFUNCTION(BluePrintCallable)
-	bool IsAiming();
-
-	UFUNCTION()
-	void OnAnimationStateChanged(EAnimationState prevState, EAnimationState newState);
 	
 private:
 	UPROPERTY()
 	AWeaponBase* _weaponIns;
 
 	UPROPERTY()
-	UAnimationModelBase* _animationViewModel;
+	UActionComponent* _actionComp;
 
 	UPROPERTY()
-	UEventBrokerComponent* _eventBrokerComp;
+	UAnimControlComponent* _animControlComp;
 
 	UPROPERTY()
 	UExTransformProviderComponent* _ownerExTransformProviderComp;

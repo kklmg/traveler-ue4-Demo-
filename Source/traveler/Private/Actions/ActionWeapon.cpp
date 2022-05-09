@@ -17,7 +17,7 @@ void UActionWeapon::VTMInit()
 {
 	Super::VTMInit();
 	_weaponComp = Cast<UWeaponComponent>(GetActionOwner()->GetComponentByClass(UWeaponComponent::StaticClass()));
-	_weaponProcess = _weaponComp ? _weaponComp->GetWeaponProcess(_processName) : nullptr;
+//	_weaponProcess = _weaponComp ? _weaponComp->GetWeaponProcess(_processName) : nullptr;
 	if(_weaponProcess)
 	{
 		_weaponProcess->Init();

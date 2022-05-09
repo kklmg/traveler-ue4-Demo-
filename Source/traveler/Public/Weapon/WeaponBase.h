@@ -55,16 +55,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual bool VCanFire();
 	virtual void VOnEquipped();
 	virtual void VOnUnEquipped();
 
 	virtual void VReset();
 
 	//Weapon attribute getter -----------------------------------------------------------------------------
-	UFUNCTION(BlueprintPure)
-	EAnimationState GetOwnerAnimationState();
-	UFUNCTION(BlueprintPure)
-	UActionComponent* GetOwnerActionComp();
 	UFUNCTION(BlueprintPure)
 	UExTransformProviderComponent* GetExTransformProviderComp();
 	UFUNCTION(BlueprintPure)
@@ -91,15 +88,6 @@ public:
 
 	//Weapon process handling -----------------------------------------------------------------------------
 
-	UProcessBase* GetProcess(FName processName);
-	void ExecuteProcess(FName processName);
-	void TickProcess(FName processName,float deltaTime);
-	void StopProcess(FName processName);
-	void StopAllProcesses();
-	void AddToProcessMap(UProcessBase* process);
-	bool IsProcessRunning(FName processName);
-
-	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState);
 
 	UFUNCTION(BlueprintPure)
 	UWeaponAnimationModelBase* GetWeaponAnimationModel();
@@ -107,8 +95,6 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere)
 	EWeaponType _weaponType;
-
-	EAnimationState _characterAnimationState;
 
 private:
 	UPROPERTY(VisibleAnywhere)

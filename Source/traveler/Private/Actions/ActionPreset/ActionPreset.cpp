@@ -2,19 +2,20 @@
 
 
 #include "Actions/ActionPreset/ActionPreset.h"
-#include "Condition/CompositeActorCondition.h"
-#include "Actions/ActionBase.h"
-#include "Components/ActionComponent.h"
+#include "Actions/ActionPreset/ActionPresetGroup.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
+#include "Actions/ActionBase.h"
+#include "Condition/CompositeActorCondition.h"
+#include "Components/ActionComponent.h"
 #include "GameFramework/Character.h"
 
 
-void UActionPreset::VInitialize(ACharacter* character, UActionComponent* actionComp)
+void UActionPreset::VInitialize(ACharacter* character, UActionComponent* actionComp, UActionPresetGroup* actionPresetGroup)
 {
 	check(character);
 	check(actionComp);
 
-	_actionComp = actionComp;
+	_actionPresetGroup = actionPresetGroup;
 
 	for (TSubclassOf<UActionBase> actionClass : _arrayActionClasses)
 	{
@@ -24,7 +25,7 @@ void UActionPreset::VInitialize(ACharacter* character, UActionComponent* actionC
 	if (_conditionClass)
 	{
 		_conditionIns = NewObject<UCompositeActorCondition>(this, _conditionClass);
-		_conditionIns->SetActor(_actionComp->GetOwner());
+		_conditionIns->SetActor(actionComp->GetOwner());
 		_conditionIns->Initialize();
 		_conditionIns->Subscribe(this, &UActionPreset::ActivateThisActionSet);
 		_conditionIns->Validate();
@@ -48,45 +49,32 @@ void UActionPreset::Tick(float deltaTime)
 	}
 }
 
-bool UActionPreset::IsActionRunning(EActionType actionType)
+bool UActionPreset::IsActionAlive(EActionType actionType)
 {
-	if (_mapActionIns.Contains(actionType))
+	return _mapActionIns.Contains(actionType) ?
+		_mapActionIns[actionType]->IsAlive() : false;
+}
+
+EProcessState UActionPreset::GetActionState(EActionType actionType)
+{
+	return  _mapActionIns.Contains(actionType) ?
+		_mapActionIns[actionType]->GetProcessState() : EProcessState::EPS_None;
+}
+
+void UActionPreset::ExecuteAction(EActionType actionType)
+{
+	if (_mapActionIns.Contains(actionType) && _mapActionIns[actionType]->IsAlive() == false)
 	{
-		return _mapActionIns[actionType]->GetProcessState() == EProcessState::EPS_Running;
-	}
-	else
-	{
-		return false;
+		_mapActionIns[actionType]->Init();
+		_mapActionIns[actionType]->Execute();
 	}
 }
 
-UActionBase* UActionPreset::ExecuteAction(EActionType actionType)
-{
-	if (_mapActionIns.Contains(actionType) == false)
-	{
-		return nullptr;
-	}
-
-	if (_mapActionIns[actionType]->IsAlive())
-	{
-		return nullptr;
-	}
-
-	_mapActionIns[actionType]->Init();
-	_mapActionIns[actionType]->Execute();
-	return _mapActionIns[actionType];
-}
-
-UActionBase* UActionPreset::AbortAction(EActionType actionType)
+void UActionPreset::AbortAction(EActionType actionType)
 {
 	if (_mapActionIns.Contains(actionType))
 	{
 		_mapActionIns[actionType]->Abort();
-		return _mapActionIns[actionType];
-	}
-	else
-	{
-		return nullptr;
 	}
 }
 
@@ -113,15 +101,15 @@ void UActionPreset::MakeActionIns(TSubclassOf<UActionBase> actionClass, ACharact
 	}
 
 	UActionBase* actionIns = NewObject<UActionBase>(this, actionClass);
-	actionIns->SetActionData(character, actionComp);
+	actionIns->SetUpActionData(character, actionComp);
 
 	_mapActionIns.Add(actionType, actionIns);
 }
 
 void UActionPreset::ActivateThisActionSet(bool result)
 {
-	if (_actionComp && result)
+	if (_actionPresetGroup && result)
 	{
-		_actionComp->SwitchActionSet(this);
+		_actionPresetGroup->SwitchActionSet(this);
 	}
 }

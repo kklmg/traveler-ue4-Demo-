@@ -46,3 +46,12 @@ enum class EActionDataKey : uint8
 	EACTD_WantToSprint UMETA(DisplayName = "WantToSprint"),
 	EACTD_TurnToMovingDirection UMETA(DisplayName = "TurnToMovingDirection"),
 };
+
+UENUM(BlueprintType)
+enum class EActionPrestGroup : uint8
+{
+	EACTPresetGroup_None UMETA(DisplayName = "None"),
+	EACTPresetGroup_BasicActions UMETA(DisplayName = "BasicActions"),
+	EACTPresetGroup_BowActions UMETA(DisplayName = "BowActions"),
+	EACTPresetGroup_SwordActions UMETA(DisplayName = "SwordActions"),
+};

@@ -18,9 +18,6 @@ class TRAVELER_API UWeaponActionBase : public UActionBase
 	GENERATED_BODY()
 
 public:
-	virtual void VTMTick(float deltaTime) override;
-	virtual void VTMOnDead() override;
-
 	virtual void VSetWeapon(AWeaponBase* weapon);
 
 private:

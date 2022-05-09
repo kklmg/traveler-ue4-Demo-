@@ -18,7 +18,7 @@ class UActionBlackBoard;
 class UAnimationModelBase;
 class UAnimControlComponent;
 class UExTransformProviderComponent;
-
+class ICharacterCameraInterface;
 
 namespace NSNameAction
 {
@@ -49,7 +49,7 @@ class TRAVELER_API UActionBase : public UProcessBase
 public:
 	UActionBase();
 
-	void SetActionData(ACharacter* character, UActionComponent* actionComp);
+	void SetUpActionData(ACharacter* character, UActionComponent* actionComp);
 
 	UFUNCTION(BlueprintCallable)
 	EActionType GetActionType();
@@ -82,6 +82,7 @@ protected:
 	UAnimationModelBase* GetAnimationViewModel();
 	UStatusComponent* GetStatusComp();
 	UExTransformProviderComponent* GetExTransformProviderComp();
+	ICharacterCameraInterface *GetCameraInterface();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
@@ -108,6 +109,8 @@ private:
 	UPROPERTY()
 	UAnimControlComponent* _animControlComp;
 
-	bool _bDataIsSet;
+	ICharacterCameraInterface* _cameraInterface;
+
+	bool _bDataSettingIsFinished;
 	float _elapsedTime;
 };

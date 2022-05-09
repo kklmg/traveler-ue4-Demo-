@@ -13,7 +13,13 @@ UActionJump::UActionJump()
 	_processName = NSNameAction::JUMP;
 	_actionType = EActionType::EACT_Jumping;
 	_bIsInstantProcess = false;
-	_delayTime = 0.3f;
+	_delayTime = 0.2f;
+}
+
+bool UActionJump::VCanExecute()
+{
+	if (!Super::VCanExecute()) return false;
+	return GetActionComp()->IsActionAlive(EActionType::EACT_Dodge) == false;
 }
 
 void UActionJump::VTMExecute()

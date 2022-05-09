@@ -2,8 +2,21 @@
 
 
 #include "Weapon/WeaponAction/BowAction/BowActionBase.h"
+#include "Components/ActionComponent.h"
+#include "Enums/EnumAnimation.h"
+#include "Components/AnimControlComponent.h"
 
 
+bool UBowActionBase::VCanExecute()
+{
+	if (!Super::VCanExecute()) return false;
+	if (!_bow) return false;
+	if (!GetAnimControlComp()) return false;
+	if (GetActionComp()->IsActionAlive(EActionType::EACT_Dodge)) return false;
+
+	EAnimationState animationState = GetAnimControlComp()->GetAnimationState();
+	return (animationState == EAnimationState::EAnimState_Walk || animationState == EAnimationState::EAnimState_Fall);
+}
 
 void UBowActionBase::VSetWeapon(AWeaponBase* weapon)
 {

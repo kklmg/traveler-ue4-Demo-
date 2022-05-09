@@ -41,7 +41,7 @@ void UActionDodge::VTMExecute()
 	if (_aniMontage && animInstance)
 	{
 		//bind 
-		animInstance->OnMontageEnded.AddDynamic(this, &UActionDodge::OnAnimMontageFinished);
+		animInstance->OnMontageBlendingOut.AddDynamic(this, &UActionDodge::OnAnimMontageFinished);
 
 		//play montage
 		GetActionOwner()->PlayAnimMontage(_aniMontage);
@@ -65,6 +65,6 @@ void UActionDodge::OnAnimMontageFinished(UAnimMontage* montage,bool interrupted)
 {
 	if(montage != _aniMontage)return;
 
-	GetActionOwner()->GetMesh()->GetAnimInstance()->OnMontageEnded.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
+	GetActionOwner()->GetMesh()->GetAnimInstance()->OnMontageBlendingOut.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
 	SetProcessSucceed();
 }

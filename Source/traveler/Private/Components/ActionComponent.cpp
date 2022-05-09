@@ -4,7 +4,7 @@
 #include "Components/ActionComponent.h"
 #include "Actions/ActionBase.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
-#include "Actions/ActionPreset/CharacterActionPreset.h"
+#include "Actions/ActionPreset/ActionPresetGroup.h"
 #include "Components/PawnCameraComponent.h"
 #include "Components/EventBrokerComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -40,14 +40,12 @@ void UActionComponent::InitializeComponent()
 
 	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 
-	for (auto presetClass : _actionPresetClasses)
+	if(_defaultActionPresetGroupClass)
 	{
-		if (presetClass)
-		{
-			auto actionPreset = NewObject<UActionPreset>(this, presetClass);
-			actionPreset->VInitialize(_character, this);
-			_actionPresetInstances.Add(actionPreset);
-		}
+		_curActionPresetGroup = NewObject<UActionPresetGroup>(this,_defaultActionPresetGroupClass);
+		check(_curActionPresetGroup)
+		_curActionPresetGroup->Init(_character, this);
+		_mapActionPresetGroup.Add(EActionPrestGroup::EACTPresetGroup_BasicActions, _curActionPresetGroup);
 	}
 }
 
@@ -81,24 +79,24 @@ void UActionComponent::OnReceiveEvent_LifeStateChanged(UObject* baseData)
 void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if(_curActionSet)
+	if(_curActionPresetGroup)
 	{
-		_curActionSet->Tick(DeltaTime);
+		_curActionPresetGroup->Tick(DeltaTime);
 	}
 }
 
-UActionBase* UActionComponent::ExecuteAction(EActionType actionType)
+void UActionComponent::ExecuteAction(EActionType actionType)
 {
-	if (_bActorAlive == false || _curActionSet == nullptr)
+	if (_bActorAlive == false || _curActionPresetGroup == nullptr)
 	{
-		return nullptr;
+		return;
 	}
-	return _curActionSet->ExecuteAction(actionType);
+	_curActionPresetGroup->ExecuteAction(actionType);
 }
 
-UActionBase* UActionComponent::AbortAction(EActionType actionType)
+void UActionComponent::AbortAction(EActionType actionType)
 {
-	return _curActionSet ? _curActionSet->AbortAction(actionType) : nullptr;
+	return _curActionPresetGroup ? _curActionPresetGroup->AbortAction(actionType) : nullptr;
 }
 
 UActionBlackBoard* UActionComponent::GetActionBlackBoard()
@@ -106,36 +104,35 @@ UActionBlackBoard* UActionComponent::GetActionBlackBoard()
 	return _actionBlackBoard;
 }
 
-void UActionComponent::SwitchActionSet(UActionPreset* actionSet)
+void UActionComponent::SwitchActionPresetGroup(EActionPrestGroup presetGroupType)
 {
-	if (_curActionSet == actionSet) return;
-
-	if(_curActionSet)
-	{
-		_curActionSet->VLeave();
+	if (_mapActionPresetGroup.Contains(presetGroupType)) 
+	{	
+		if(_curActionPresetGroup)
+		{
+			_curActionPresetGroup->AbortAllActions();
+		}
+		_curActionPresetGroup = _mapActionPresetGroup[presetGroupType];
 	}
-	
-	_curActionSet = actionSet;
-
-	if (_curActionSet)
-	{
-		_curActionSet->VEnter();
-	}
-
-	UDebugMessageHelper::Messsage_String(TEXT("ActionComp"), TEXT("ActionSetChanged"));
 }
 
 void UActionComponent::AbortAllActions()
 {
-	if (_curActionSet) 
+	if (_curActionPresetGroup) 
 	{
-		_curActionSet->AbortAllActions();
+		_curActionPresetGroup->AbortAllActions();
 	}
 }
 
-bool UActionComponent::IsActionRunning(EActionType actionType)
+bool UActionComponent::IsActionAlive(EActionType actionType)
 {
-	return _curActionSet ? _curActionSet->IsActionRunning(actionType) : false;
+	return _curActionPresetGroup ? _curActionPresetGroup->IsActionAlive(actionType) : false;
+}
+
+EProcessState UActionComponent::GetActionState(EActionType actionType)
+{
+	return  _curActionPresetGroup ?
+		_curActionPresetGroup->GetActionState(actionType) : EProcessState::EPS_None;
 }
 
 

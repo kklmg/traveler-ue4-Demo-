@@ -10,6 +10,7 @@
 #include "GameFramework/Character.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Data/CostData.h"
+#include "Interface/CharacterCameraInterface.h"
 
 
 DEFINE_LOG_CATEGORY(LogAction);
@@ -22,12 +23,10 @@ UActionBase::UActionBase()
 	_costData = CreateDefaultSubobject<UCostData>(TEXT("CostData"));
 }
 
-void UActionBase::SetActionData(ACharacter* character, UActionComponent* actionComp)
+void UActionBase::SetUpActionData(ACharacter* character, UActionComponent* actionComp)
 {
 	check(character);
 	check(actionComp);
-
-	SetProcessAborted();
 
 	_actionOwner = character;
 	_actionComp = actionComp;
@@ -36,8 +35,9 @@ void UActionBase::SetActionData(ACharacter* character, UActionComponent* actionC
 	_statusComp = Cast<UStatusComponent>(_actionOwner->GetComponentByClass(UStatusComponent::StaticClass()));
 	_exTransformProviderComp = Cast<UExTransformProviderComponent>(_actionOwner->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 	_animControlComp = Cast<UAnimControlComponent>(_actionOwner->GetComponentByClass(UAnimControlComponent::StaticClass()));
+	_cameraInterface = Cast<ICharacterCameraInterface>(GetActionOwner());
 
-	_bDataIsSet = true;
+	_bDataSettingIsFinished = true;
 }
 
 
@@ -59,7 +59,7 @@ FORCEINLINE void UActionBase::VTMExecute()
 FORCEINLINE bool UActionBase::VCanExecute()
 {
 	if (!Super::VCanExecute()) return false;
-	if(!_bDataIsSet) return false;
+	if(!_bDataSettingIsFinished) return false;
 
 	return _statusComp && _statusComp->IsRemainingPointEnough(_costData);
 }
@@ -119,6 +119,11 @@ FORCEINLINE_DEBUGGABLE UStatusComponent* UActionBase::GetStatusComp()
 FORCEINLINE_DEBUGGABLE UExTransformProviderComponent* UActionBase::GetExTransformProviderComp()
 {
 	return _exTransformProviderComp;
+}
+
+ICharacterCameraInterface* UActionBase::GetCameraInterface()
+{
+	return _cameraInterface;
 }
 
 

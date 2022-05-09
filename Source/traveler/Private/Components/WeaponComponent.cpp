@@ -4,6 +4,7 @@
 #include "Components/AnimControlComponent.h"
 #include "Components/ExTransformProviderComponent.h"
 #include "Components/EventBrokerComponent.h"
+#include "Components/ActionComponent.h"
 #include "Data/AnimationModelBase.h"
 #include "Weapon/WeaponBase.h"
 #include "Weapon/BowBase.h"
@@ -26,16 +27,9 @@ void UWeaponComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
 
-	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
-}
-
-void UWeaponComponent::OnReceiveEvent_LifeStateChanged(UObject* baseData)
-{
-	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
-	if (eventData && eventData->Value == false)
-	{
-		StopAllWeaponProcesses();
-	}
+	_actionComp = Cast<UActionComponent>(GetOwner()->GetComponentByClass(UActionComponent::StaticClass()));
+	_animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
+	_ownerExTransformProviderComp = Cast<UExTransformProviderComponent>(GetOwner()->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 }
 
 void UWeaponComponent::BindInputs(UInputComponent* PlayerInputComponent)
@@ -54,13 +48,6 @@ void UWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	_ownerExTransformProviderComp = Cast<UExTransformProviderComponent>(GetOwner()->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
-
-	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
-	if (animControlComp)
-	{
-		_animationViewModel = animControlComp->GetAnimationModel();
-	}
 
 	if (DefaultWeaponClass)
 	{
@@ -68,17 +55,6 @@ void UWeaponComponent::BeginPlay()
 		AWeaponBase* bow = GetWorld()->SpawnActor<AWeaponBase>(DefaultWeaponClass);
 		bow->VInitialize(GetOwner<ACreatureCharacter>());
 		EquipWeapon(bow);
-	}
-
-	if (animControlComp)
-	{
-		OnAnimationStateChanged(animControlComp->GetAnimationState(), animControlComp->GetAnimationState());
-		animControlComp->GetAnimationStateChangedDelegate().AddDynamic(this, &UWeaponComponent::OnAnimationStateChanged);
-	}
-	
-	if (_eventBrokerComp)
-	{
-		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name,this, &UWeaponComponent::OnReceiveEvent_LifeStateChanged);
 	}
 }
 
@@ -89,47 +65,6 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-UProcessBase* UWeaponComponent::GetWeaponProcess(FName processName)
-{
-	return _weaponIns ? _weaponIns->GetProcess(processName) : nullptr;
-}
-
-bool UWeaponComponent::ExecuteWeaponProcess(FName processName)
-{
-	if (_weaponIns)
-	{
-		_weaponIns->ExecuteProcess(processName);
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-void UWeaponComponent::TickWeaponProcess(FName processName, float deltaTime)
-{
-	if (_weaponIns)
-	{
-		_weaponIns->TickProcess(processName,deltaTime);
-	}
-}
-
-void UWeaponComponent::StopWeaponProcess(FName processName)
-{
-	if (_weaponIns)
-	{
-		_weaponIns->StopProcess(processName);
-	}
-}
-
-void UWeaponComponent::StopAllWeaponProcesses()
-{
-	if (_weaponIns)
-	{
-		_weaponIns->StopAllProcesses();
-	}
-}
 
 void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 {
@@ -143,9 +78,9 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 		_weaponIns = newWeapon;
 		_weaponIns->VOnEquipped();
 
-		if(_animationViewModel)
+		if(_animControlComp && _animControlComp->GetAnimationModel())
 		{
-			_animationViewModel->SetUObject(NSAnimationDataKey::objWeapon,_weaponIns);
+			_animControlComp->GetAnimationModel()->SetUObject(NSAnimationDataKey::objWeapon,_weaponIns);
 		}
 
 		OnWeaponChanged.Broadcast(_weaponIns);
@@ -230,26 +165,3 @@ AWeaponBase* UWeaponComponent::GetEquipedWeapon()
 {
 	return _weaponIns;
 }
-
-bool UWeaponComponent::IsFiring()
-{
-	return _weaponIns ? _weaponIns->IsProcessRunning(NSNameWeaponActionProcess::FIRE) : false;
-}
-
-bool UWeaponComponent::IsAiming()
-{
-	return _weaponIns ? _weaponIns->IsProcessRunning(NSNameWeaponActionProcess::AIM) : false;
-}
-
-void UWeaponComponent::OnAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
-{
-	if(_weaponIns)
-	{
-		_weaponIns->VOnCharacterAnimationStateChanged(prevState, newState);
-	}
-}
-
-
-
-
-

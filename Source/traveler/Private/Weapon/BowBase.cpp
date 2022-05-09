@@ -48,12 +48,10 @@ void ABowBase::PreInitializeComponents()
 	_processFire = NewObject<UBowActionFire>(this);
 	_processFire->VSetWeapon(this);
 	_processFire->ProcessStateChangedDelegate.AddUObject(this, &ABowBase::OnFireProcessChanged);
-	AddToProcessMap(_processFire);
 
 	_processAim = NewObject<UBowActionAim>(this);
 	_processAim->VSetWeapon(this);
 	_processAim->ProcessStateChangedDelegate.AddUObject(this, &ABowBase::OnAimProcessChanged);
-	AddToProcessMap(_processAim);
 
 	if (GetWeaponAnimationModel())
 	{
@@ -68,6 +66,11 @@ void ABowBase::PreInitializeComponents()
 
 	_wristRollOptionIns = _wristRollOptionClass ?
 		NewObject<UFloatOption>(this, _wristRollOptionClass) : NewObject<UFloatOption>(this);
+}
+
+bool ABowBase::VCanFire()
+{
+	return  _bowState == EBowState::EBS_FullyDrawed || _bowState == EBowState::EBS_OverDrawing;
 }
 
 void ABowBase::VInitialize(ACreatureCharacter* weaponOwner)
@@ -181,8 +184,8 @@ void ABowBase::VOnEquipped()
 		weaponAnimationModel->SetUInt8(NSNameAnimData::byteBowState, (uint8)_bowState);
 		weaponAnimationModel->SetBool(NSNameAnimData::bIsDrawingBow, IsDrawingBow());
 		weaponAnimationModel->SetFloat(NSNameAnimData::fWristRoll, _wristRollOptionIns->GetSelection());
-		weaponAnimationModel->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponActionProcess::FIRE));
-		weaponAnimationModel->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponActionProcess::AIM));
+//		weaponAnimationModel->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponActionProcess::FIRE));
+//		weaponAnimationModel->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponActionProcess::AIM));
 	}
 }
 
@@ -331,7 +334,7 @@ void ABowBase::OnFireProcessChanged(EProcessState processState)
 {
 	if (GetWeaponAnimationModel())
 	{
-		GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponActionProcess::FIRE));
+	//	GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponActionProcess::FIRE));
 	}
 }
 
@@ -339,7 +342,7 @@ void ABowBase::OnAimProcessChanged(EProcessState processState)
 {
 	if (GetWeaponAnimationModel())
 	{
-		GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponActionProcess::AIM));
+	//	GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponActionProcess::AIM));
 	}
 }
 
@@ -401,18 +404,6 @@ void ABowBase::DecreaseArrows()
 	SetBowState(EBowState::EBS_Normal);
 }
 
-void ABowBase::VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState)
-{
-	Super::VOnCharacterAnimationStateChanged(prevState, newState);
-
-	if (prevState == EAnimationState::EAnimState_Fall || prevState == EAnimationState::EAnimState_Walk)
-	{
-		if (newState != EAnimationState::EAnimState_Fall && newState != EAnimationState::EAnimState_Walk)
-		{
-			StopAllProcesses();
-		}
-	}
-}
 
 void ABowBase::OnAnim_StartDrawingBowString(UObject* data)
 {

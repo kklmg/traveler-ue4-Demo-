@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Enums/EnumProcessState.h"
+#include "Enums/EnumActionType.h"
 #include "ActionComponent.generated.h"
 
 class UActionBase;
-class UActionPreset;
+class UActionPresetGroup;
 class UCharacterActionPreset;
 class UActionBlackBoard;
 class UEventBrokerComponent;
@@ -36,38 +38,42 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void AbortAllActions();
-	bool IsActionRunning(EActionType actionType);
-	void SwitchActionSet(UActionPreset* actionSet);
+	void SwitchActionPresetGroup(EActionPrestGroup presetGroupType);
 
 public:
 	UFUNCTION(BlueprintCallable)
-	UActionBase* ExecuteAction(EActionType actionType);
+	bool IsActionAlive(EActionType actionType);
 
 	UFUNCTION(BlueprintCallable)
-	UActionBase* AbortAction(EActionType actionType);
+	EProcessState GetActionState(EActionType actionType);
+
+	UFUNCTION(BlueprintCallable)
+	void ExecuteAction(EActionType actionType);
+
+	UFUNCTION(BlueprintCallable)
+	void AbortAction(EActionType actionType);
 
 	UFUNCTION(BlueprintCallable)
 	UActionBlackBoard* GetActionBlackBoard();
 
 private:
-
 	UPROPERTY()
 	ACharacter* _character;
 
 	UPROPERTY()
+	UEventBrokerComponent* _eventBrokerComp;
+
+	UPROPERTY()
 	UActionBlackBoard* _actionBlackBoard;
 
-	UPROPERTY(EditDefaultsOnly, Category = ActionSetTriggerClasses)
-	TArray<TSubclassOf<UActionPreset>> _actionPresetClasses;
+	UPROPERTY(EditDefaultsOnly, Category = ActionPresetGroup)
+	TSubclassOf<UActionPresetGroup> _defaultActionPresetGroupClass;
 
 	UPROPERTY()
-	TArray<UActionPreset*> _actionPresetInstances;
+	TMap<EActionPrestGroup, UActionPresetGroup*> _mapActionPresetGroup;
 
 	UPROPERTY()
-	UActionPreset* _curActionSet;
-
-	UPROPERTY()
-	UEventBrokerComponent* _eventBrokerComp;
+	UActionPresetGroup* _curActionPresetGroup;
 
 	bool _bActorAlive;
 };

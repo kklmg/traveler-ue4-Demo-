@@ -4,9 +4,9 @@
 #include "Actions/ActionPreset/CharacterActionPreset.h"
 
 
-void UCharacterActionPreset::VInitialize(ACharacter* character, UActionComponent* actionComp)
+void UCharacterActionPreset::VInitialize(ACharacter* character, UActionComponent* actionComp, UActionPresetGroup* actionPresetGroup)
 {
-	Super::VInitialize(character, actionComp);
+	Super::VInitialize(character, actionComp, actionPresetGroup);
 
 	MakeActionIns(ActionMoveClass, character, actionComp);
 	MakeActionIns(ActionSprintClass, character, actionComp);

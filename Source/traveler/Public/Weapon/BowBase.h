@@ -40,6 +40,7 @@ class TRAVELER_API ABowBase : public AWeaponBase
 public:
 	ABowBase(const FObjectInitializer& ObjectInitializer);
 
+	virtual bool VCanFire() override;
 protected:
 	virtual void PreInitializeComponents() override;
 
@@ -68,8 +69,6 @@ public:
 	virtual void VWeaponControlButtonF() override;
 
 	//animation event -------------------------------------------------------------------------
-
-	virtual void VOnCharacterAnimationStateChanged(EAnimationState prevState, EAnimationState newState) override;
 
 	FDelegateHandle _delegateHandle_StartDrawingBowString;
 	void OnAnim_StartDrawingBowString(UObject* data);

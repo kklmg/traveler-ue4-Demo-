@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Enums/EnumActionType.h"
+#include "Enums/EnumProcessState.h"
 #include "ActionPreset.generated.h"
 
 class UActionBase;
 class UActionComponent;
+class UActionPresetGroup;
 class UCompositeActorCondition;
 class ACharacter;
 
@@ -21,15 +23,16 @@ class TRAVELER_API UActionPreset : public UObject
 	GENERATED_BODY()
 
 public:
-	void virtual VInitialize(ACharacter* character, UActionComponent* actionComp);
+	void virtual VInitialize(ACharacter* character, UActionComponent* actionComp,UActionPresetGroup* actionPresetGroup);
 	void virtual VEnter();
 	void virtual VLeave();
 
 	void Tick(float deltaTime);
 
-	bool IsActionRunning(EActionType actionType);
-	UActionBase* ExecuteAction(EActionType actionType);
-	UActionBase* AbortAction(EActionType actionType);
+	bool IsActionAlive(EActionType actionType);
+	EProcessState GetActionState(EActionType actionType);
+	void ExecuteAction(EActionType actionType);
+	void AbortAction(EActionType actionType);
 	void AbortAllActions();
 
 protected:
@@ -51,5 +54,5 @@ private:
 	UCompositeActorCondition* _conditionIns;
 
 	UPROPERTY()
-	UActionComponent* _actionComp;
+	UActionPresetGroup* _actionPresetGroup;
 };

@@ -2,6 +2,7 @@
 
 
 #include "Weapon/WeaponAction/BowAction/BowActionFire.h"
+#include "Components/AnimControlComponent.h"
 #include "Enums/EnumAnimation.h"
 
 UBowActionFire::UBowActionFire()
@@ -12,35 +13,21 @@ UBowActionFire::UBowActionFire()
 bool UBowActionFire::VCanExecute()
 {
 	if (!Super::VCanExecute()) return false;
-	if (!GetBow()) return false;
-	
-	EAnimationState animationState = GetBow()->GetOwnerAnimationState();
-	EBowState bowState = GetBow()->GetBowState();
-	
-	bool bCharacterCanFire = animationState == EAnimationState::EAnimState_Walk || animationState == EAnimationState::EAnimState_Fall;
-	bool bIsAimingMode = GetBow()->IsProcessRunning(NSNameWeaponActionProcess::AIM);
-	bool bBowCanFire = bowState == EBowState::EBS_FullyDrawed || bowState == EBowState::EBS_OverDrawing;
 
-	//todo: firing in normal mode
-	return bIsAimingMode ? bCharacterCanFire && bBowCanFire : false;
+	return GetBow()->VCanFire();
 }
 
 void UBowActionFire::VTMExecute()
 {
 	Super::VTMExecute();
-	if (!GetBow()) return;
 
-	bool bIsAimingMode = GetBow()->IsProcessRunning(NSNameWeaponActionProcess::AIM);
+	EAnimationState animationState = GetAnimControlComp()->GetAnimationState();
+	if (animationState != EAnimationState::EAnimState_Walk && animationState != EAnimationState::EAnimState_Fall)
+	{
+		SetProcessAborted();
+	}
 
-	if(bIsAimingMode)
-	{
-		GetBow()->SetBowState(EBowState::EBS_ReleaseStart);
-	}
-	//todo: firing in normal mode
-	else
-	{
-		
-	}
+	GetBow()->SetBowState(EBowState::EBS_ReleaseStart);
 }
 
 void UBowActionFire::VTMTick(float deltaTime)
