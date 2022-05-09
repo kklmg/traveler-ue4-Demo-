@@ -1,15 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Weapon/WeaponProcess/BowProcess/BowProcessFire.h"
+#include "Weapon/WeaponAction/BowAction/BowActionFire.h"
 #include "Enums/EnumAnimation.h"
 
-UBowProcessFire::UBowProcessFire()
+UBowActionFire::UBowActionFire()
 {
-	_processName = NSNameWeaponProcess::FIRE;
+	_processName = NSNameWeaponActionProcess::FIRE;
 }
 
-bool UBowProcessFire::VCanExecute()
+bool UBowActionFire::VCanExecute()
 {
 	if (!Super::VCanExecute()) return false;
 	if (!GetBow()) return false;
@@ -18,19 +18,19 @@ bool UBowProcessFire::VCanExecute()
 	EBowState bowState = GetBow()->GetBowState();
 	
 	bool bCharacterCanFire = animationState == EAnimationState::EAnimState_Walk || animationState == EAnimationState::EAnimState_Fall;
-	bool bIsAimingMode = GetBow()->IsProcessRunning(NSNameWeaponProcess::AIM);
+	bool bIsAimingMode = GetBow()->IsProcessRunning(NSNameWeaponActionProcess::AIM);
 	bool bBowCanFire = bowState == EBowState::EBS_FullyDrawed || bowState == EBowState::EBS_OverDrawing;
 
 	//todo: firing in normal mode
 	return bIsAimingMode ? bCharacterCanFire && bBowCanFire : false;
 }
 
-void UBowProcessFire::VTMExecute()
+void UBowActionFire::VTMExecute()
 {
 	Super::VTMExecute();
 	if (!GetBow()) return;
 
-	bool bIsAimingMode = GetBow()->IsProcessRunning(NSNameWeaponProcess::AIM);
+	bool bIsAimingMode = GetBow()->IsProcessRunning(NSNameWeaponActionProcess::AIM);
 
 	if(bIsAimingMode)
 	{
@@ -43,12 +43,12 @@ void UBowProcessFire::VTMExecute()
 	}
 }
 
-void UBowProcessFire::VTMTick(float deltaTime)
+void UBowActionFire::VTMTick(float deltaTime)
 {
 	Super::VTMTick(deltaTime);
 }
 
-void UBowProcessFire::VTMOnDead()
+void UBowActionFire::VTMOnDead()
 {
 	Super::VTMOnDead();
 }

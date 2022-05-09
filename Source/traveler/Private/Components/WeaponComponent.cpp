@@ -94,11 +94,16 @@ UProcessBase* UWeaponComponent::GetWeaponProcess(FName processName)
 	return _weaponIns ? _weaponIns->GetProcess(processName) : nullptr;
 }
 
-void UWeaponComponent::ExecuteWeaponProcess(FName processName)
+bool UWeaponComponent::ExecuteWeaponProcess(FName processName)
 {
 	if (_weaponIns)
 	{
 		_weaponIns->ExecuteProcess(processName);
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
@@ -228,12 +233,12 @@ AWeaponBase* UWeaponComponent::GetEquipedWeapon()
 
 bool UWeaponComponent::IsFiring()
 {
-	return _weaponIns ? _weaponIns->IsProcessRunning(NSNameWeaponProcess::FIRE) : false;
+	return _weaponIns ? _weaponIns->IsProcessRunning(NSNameWeaponActionProcess::FIRE) : false;
 }
 
 bool UWeaponComponent::IsAiming()
 {
-	return _weaponIns ? _weaponIns->IsProcessRunning(NSNameWeaponProcess::AIM) : false;
+	return _weaponIns ? _weaponIns->IsProcessRunning(NSNameWeaponActionProcess::AIM) : false;
 }
 
 void UWeaponComponent::OnAnimationStateChanged(EAnimationState prevState, EAnimationState newState)

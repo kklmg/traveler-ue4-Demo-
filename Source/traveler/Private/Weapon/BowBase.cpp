@@ -19,8 +19,8 @@
 #include "GameSystem/OptionBase.h"
 #include "Enums/EnumAnimation.h"
 
-#include "Weapon/WeaponProcess/BowProcess/BowProcessFire.h"
-#include "Weapon/WeaponProcess/BowProcess/BowProcessAim.h"
+#include "Weapon/WeaponAction/BowAction/BowActionFire.h"
+#include "Weapon/WeaponAction/BowAction/BowActionAim.h"
 
 ABowBase::ABowBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -45,12 +45,12 @@ void ABowBase::PreInitializeComponents()
 {
 	Super::PreInitializeComponents();
 
-	_processFire = NewObject<UBowProcessFire>(this);
+	_processFire = NewObject<UBowActionFire>(this);
 	_processFire->VSetWeapon(this);
 	_processFire->ProcessStateChangedDelegate.AddUObject(this, &ABowBase::OnFireProcessChanged);
 	AddToProcessMap(_processFire);
 
-	_processAim = NewObject<UBowProcessAim>(this);
+	_processAim = NewObject<UBowActionAim>(this);
 	_processAim->VSetWeapon(this);
 	_processAim->ProcessStateChangedDelegate.AddUObject(this, &ABowBase::OnAimProcessChanged);
 	AddToProcessMap(_processAim);
@@ -181,8 +181,8 @@ void ABowBase::VOnEquipped()
 		weaponAnimationModel->SetUInt8(NSNameAnimData::byteBowState, (uint8)_bowState);
 		weaponAnimationModel->SetBool(NSNameAnimData::bIsDrawingBow, IsDrawingBow());
 		weaponAnimationModel->SetFloat(NSNameAnimData::fWristRoll, _wristRollOptionIns->GetSelection());
-		weaponAnimationModel->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponProcess::FIRE));
-		weaponAnimationModel->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponProcess::AIM));
+		weaponAnimationModel->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponActionProcess::FIRE));
+		weaponAnimationModel->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponActionProcess::AIM));
 	}
 }
 
@@ -331,7 +331,7 @@ void ABowBase::OnFireProcessChanged(EProcessState processState)
 {
 	if (GetWeaponAnimationModel())
 	{
-		GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponProcess::FIRE));
+		GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponActionProcess::FIRE));
 	}
 }
 
@@ -339,7 +339,7 @@ void ABowBase::OnAimProcessChanged(EProcessState processState)
 {
 	if (GetWeaponAnimationModel())
 	{
-		GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponProcess::AIM));
+		GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponActionProcess::AIM));
 	}
 }
 

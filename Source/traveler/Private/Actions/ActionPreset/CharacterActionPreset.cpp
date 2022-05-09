@@ -11,7 +11,6 @@ void UCharacterActionPreset::VInitialize(ACharacter* character, UActionComponent
 	MakeActionIns(ActionMoveClass, character, actionComp);
 	MakeActionIns(ActionSprintClass, character, actionComp);
 	MakeActionIns(ActionJumpClass, character, actionComp);
-	MakeActionIns(ActionAimClass, character, actionComp);
 	MakeActionIns(ActionDodgeClass, character, actionComp);
 }
 

@@ -21,9 +21,6 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, Category = ActionClass)
-	TSubclassOf<class UActionBase> ActionIdleClass;
-
-	UPROPERTY(EditAnywhere, Category = ActionClass)
 	TSubclassOf<class UActionBase> ActionMoveClass;
 
 	UPROPERTY(EditAnywhere, Category = ActionClass)
@@ -31,9 +28,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = ActionClass)
 	TSubclassOf<class UActionBase> ActionJumpClass;
-
-	UPROPERTY(EditAnywhere, Category = ActionClass)
-	TSubclassOf<class UActionBase> ActionAimClass;
 
 	UPROPERTY(EditAnywhere, Category = ActionClass)
 	TSubclassOf<class UActionBase> ActionDodgeClass;

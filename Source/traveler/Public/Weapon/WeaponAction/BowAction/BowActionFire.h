@@ -3,19 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Weapon/WeaponProcess/BowProcess/BowProcessBase.h"
-#include "BowProcessAim.generated.h"
+#include "Weapon/WeaponAction/BowAction/BowActionBase.h"
+#include "BowActionFire.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UBowProcessAim : public UBowProcessBase
+class TRAVELER_API UBowActionFire : public UBowActionBase
 {
 	GENERATED_BODY()
+
 public:
-	UBowProcessAim();
-	
+	UBowActionFire();
+
 	virtual bool VCanExecute() override;
 	virtual void VTMExecute() override;
 	virtual void VTMTick(float deltaTime) override;

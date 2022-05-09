@@ -18,8 +18,8 @@ class UCrosshairWidgetBase;
 class UIntOption;
 class UFloatOption;
 
-class UBowProcessFire;
-class UBowProcessAim;
+class UBowActionFire;
+class UBowActionAim;
 
 namespace NSNameBowAnimEvent
 {
@@ -158,10 +158,10 @@ private:
 	TArray<FDelegateHandleData> _delegateHandles;
 
 	UPROPERTY()
-	UBowProcessFire* _processFire;
+	UBowActionFire* _processFire;
 
 	UPROPERTY()
-	UBowProcessAim* _processAim;
+	UBowActionAim* _processAim;
 
 	float _strength;
 };

@@ -1,19 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Weapon/WeaponProcess/BowProcess/BowProcessAim.h"
+#include "Weapon/WeaponAction/BowAction/BowActionAim.h"
 #include "Components/ActionComponent.h"
 #include "Enums/EnumActionType.h"
 #include "Enums/EnumAnimation.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Character/CreatureCharacter.h"
 
-UBowProcessAim::UBowProcessAim()
+UBowActionAim::UBowActionAim()
 {
-	_processName = NSNameWeaponProcess::AIM;
+	_processName = NSNameWeaponActionProcess::AIM;
 }
 
-bool UBowProcessAim::VCanExecute()
+bool UBowActionAim::VCanExecute()
 {
 	if (!Super::VCanExecute()) return false;
 	if (!GetBow()) return false;
@@ -24,7 +24,7 @@ bool UBowProcessAim::VCanExecute()
 		&& (GetBow()->GetOwnerActionComp()->IsActionRunning(EActionType::EACT_Dodge) == false);
 }
 
-void UBowProcessAim::VTMExecute()
+void UBowActionAim::VTMExecute()
 {
 	Super::VTMExecute();
 
@@ -43,7 +43,7 @@ void UBowProcessAim::VTMExecute()
 	}
 }
 
-void UBowProcessAim::VTMTick(float deltaTime)
+void UBowActionAim::VTMTick(float deltaTime)
 {
 	Super::VTMTick(deltaTime);
 	if (!GetBow()) return;
@@ -63,7 +63,7 @@ void UBowProcessAim::VTMTick(float deltaTime)
 	}
 }
 
-void UBowProcessAim::VTMOnDead()
+void UBowActionAim::VTMOnDead()
 {
 	Super::VTMOnDead();
 	if (!GetBow()) return;

@@ -42,7 +42,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UProcessBase* GetWeaponProcess(FName processName);
-	void ExecuteWeaponProcess(FName processName);
+	bool ExecuteWeaponProcess(FName processName);
 	void TickWeaponProcess(FName processName,float deltaTime);
 	void StopWeaponProcess(FName processName);
 	void StopAllWeaponProcesses();

@@ -8,7 +8,7 @@
 
 UActionWeapon::UActionWeapon()
 {
-	_processName = NSNameWeaponProcess::FIRE;
+	_processName = NSNameWeaponActionProcess::FIRE;
 	_actionType = EActionType::EACT_Aim;
 	_bIsInstantProcess = false;
 }

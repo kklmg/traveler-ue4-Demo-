@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Weapon/WeaponProcess/BowProcess/BowProcessBase.h"
+#include "Weapon/WeaponAction/BowAction/BowActionBase.h"
 
 
 
-void UBowProcessBase::VSetWeapon(AWeaponBase* weapon)
+void UBowActionBase::VSetWeapon(AWeaponBase* weapon)
 {
 	Super::VSetWeapon(weapon);
 
@@ -16,7 +16,7 @@ void UBowProcessBase::VSetWeapon(AWeaponBase* weapon)
 	}
 }
 
-FORCEINLINE_DEBUGGABLE ABowBase* UBowProcessBase::GetBow()
+FORCEINLINE_DEBUGGABLE ABowBase* UBowActionBase::GetBow()
 {
 	return _bow;
 }

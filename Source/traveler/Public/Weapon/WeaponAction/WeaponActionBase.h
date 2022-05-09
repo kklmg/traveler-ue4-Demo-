@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Process/ProcessBase.h"
-#include "WeaponProcessBase.generated.h"
+#include "Actions/ActionBase.h"
+#include "WeaponActionBase.generated.h"
 
 class AWeaponBase;
 
@@ -12,7 +13,7 @@ class AWeaponBase;
  * 
  */
 UCLASS()
-class TRAVELER_API UWeaponProcessBase : public UProcessBase
+class TRAVELER_API UWeaponActionBase : public UActionBase
 {
 	GENERATED_BODY()
 
@@ -22,11 +23,7 @@ public:
 
 	virtual void VSetWeapon(AWeaponBase* weapon);
 
-	float GetElapsedTime();
-
 private:
-	float _elapsedTime;
-
 	UPROPERTY()
 	AWeaponBase* _weapon;
 };

@@ -26,7 +26,7 @@ class UEventDataBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponSignal, AWeaponBase*, weaponIns);
 
-namespace NSNameWeaponProcess
+namespace NSNameWeaponActionProcess
 {
 	const FName FIRE = FName(TEXT("FIRE"));
 	const FName AIM = FName(TEXT("AIM"));
