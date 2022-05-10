@@ -173,8 +173,8 @@ void ABowBase::VOnEquipped()
 		weaponAnimationModel->SetUInt8(NSNameAnimData::byteBowState, (uint8)_bowState);
 		weaponAnimationModel->SetBool(NSNameAnimData::bIsDrawingBow, IsDrawingBow());
 		weaponAnimationModel->SetFloat(NSNameAnimData::fWristRoll, _wristRollOptionIns->GetSelection());
-//		weaponAnimationModel->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponActionProcess::FIRE));
-//		weaponAnimationModel->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponActionProcess::AIM));
+		//		weaponAnimationModel->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponActionProcess::FIRE));
+		//		weaponAnimationModel->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponActionProcess::AIM));
 	}
 }
 
@@ -189,10 +189,10 @@ void ABowBase::VOnUnEquipped()
 		FMD_UObjectSignature outEventPublishedDelegate;
 		for (auto delegateHandleData : _delegateHandles)
 		{
-			if (eventBrokerComp->GetEventDelegate(delegateHandleData.EventName)) 
+			if (eventBrokerComp->GetEventDelegate(delegateHandleData.EventName))
 			{
 				eventBrokerComp->GetEventDelegate(delegateHandleData.EventName)->Remove(delegateHandleData.DelegateHandle);
-			}	
+			}
 		}
 	}
 
@@ -451,12 +451,24 @@ bool ABowBase::SetBowState(EBowState bowState)
 {
 	if (_bowState == bowState) return false;
 
-	_bowState = bowState;
-	if (GetWeaponAnimationModel())
+	switch (bowState)
 	{
-		GetWeaponAnimationModel()->SetUInt8(NSNameAnimData::byteBowState, (uint8)_bowState);
-		GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsDrawingBow, IsDrawingBow());
+		case EBowState::EBS_Drawing:
+		case EBowState::EBS_FullyDrawed:
+		case EBowState::EBS_OverDrawing:
+		case EBowState::EBS_ReleaseStart:
+		{
+			if (GetWeaponAnimationModel()->GetData_Bool(NSNameAnimData::bIsAiming) &&
+				GetWeaponAnimationModel()->GetData_Bool(NSNameAnimData::bIsAiming)->GetValue() == false)
+			{
+				return false;
+			}
+		}
 	}
+
+	_bowState = bowState;
+	GetWeaponAnimationModel()->SetUInt8(NSNameAnimData::byteBowState, (uint8)_bowState);
+	GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsDrawingBow, IsDrawingBow());
 	return true;
 }
 
