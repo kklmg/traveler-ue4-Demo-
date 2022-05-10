@@ -6,6 +6,7 @@
 #include "Input/AxisInputBase.h"
 #include "Components/ActionComponent.h"
 #include "Components/EventBrokerComponent.h"
+#include "Components/WeaponComponent.h"
 #include "Interface/CharacterCameraInterface.h"
 
 void UInputPresetBase::VInit(AActor* owner)
@@ -14,6 +15,7 @@ void UInputPresetBase::VInit(AActor* owner)
 
 	_owner = owner; 
 	_actionComp = Cast<UActionComponent>(owner->GetComponentByClass(UActionComponent::StaticClass()));
+	_weaponComp = Cast<UWeaponComponent>(owner->GetComponentByClass(UWeaponComponent::StaticClass()));
 	_eventBrokerComp = Cast<UEventBrokerComponent>(owner->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 	_cameraInterface = Cast<ICharacterCameraInterface>(owner);
 
@@ -63,7 +65,7 @@ void UInputPresetBase::VTick(float deltaTime)
 	{
 		if (buttonInput.Value)
 		{
-			buttonInput.Value->OnPressing(deltaTime);
+			buttonInput.Value->Pressing(deltaTime);
 		}
 	}
 }
@@ -80,7 +82,7 @@ void UInputPresetBase::HandleButtonPressed(FName inputBindingName)
 {
 	if (_mapButtonIns.Contains(inputBindingName))
 	{
-		_mapButtonIns[inputBindingName]->OnPressed();
+		_mapButtonIns[inputBindingName]->Press();
 	}
 }
 
@@ -88,7 +90,7 @@ void UInputPresetBase::HandleButtonReleased(FName inputBindingName)
 {
 	if (_mapButtonIns.Contains(inputBindingName))
 	{
-		_mapButtonIns[inputBindingName]->OnReleased();
+		_mapButtonIns[inputBindingName]->Release();
 	}
 }
 
@@ -115,6 +117,11 @@ void UInputPresetBase::RegisterButtonInput(UButtonInputBase* buttonInput)
 FORCEINLINE_DEBUGGABLE UActionComponent* UInputPresetBase::GetActionComp()
 {
 	return _actionComp;
+}
+
+FORCEINLINE_DEBUGGABLE UWeaponComponent* UInputPresetBase::GetWeaponComp()
+{
+	return _weaponComp;
 }
 
 FORCEINLINE_DEBUGGABLE UEventBrokerComponent* UInputPresetBase::GetEventBrokerComp()

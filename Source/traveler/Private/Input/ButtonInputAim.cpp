@@ -9,7 +9,7 @@ UButtonInputAim::UButtonInputAim()
 	_bindingName = NSInputBindingName::Aim;
 }
 
-void UButtonInputAim::VTMOnPressed()
+void UButtonInputAim::VOnPressed()
 {
 	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if (actionComp)
@@ -18,7 +18,7 @@ void UButtonInputAim::VTMOnPressed()
 	}
 }
 
-void UButtonInputAim::VTMOnPressing(float deltaTime)
+void UButtonInputAim::VOnPressing(float deltaTime)
 {
 	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	{
@@ -26,7 +26,7 @@ void UButtonInputAim::VTMOnPressing(float deltaTime)
 	}
 }
 
-void UButtonInputAim::VTMOnReleased()
+void UButtonInputAim::VOnReleased()
 {
 	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if (actionComp)

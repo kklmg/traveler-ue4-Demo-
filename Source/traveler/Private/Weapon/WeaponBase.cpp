@@ -134,27 +134,27 @@ FORCEINLINE_DEBUGGABLE UEventBrokerComponent* AWeaponBase::GetOwnerEventBrokerCo
 	return _ownerEventBrokerComp;
 }
 
-void AWeaponBase::VWeaponControlButtonA()
+void AWeaponBase::VWeaponControlA()
 {
 }
 
-void AWeaponBase::VWeaponControlButtonB()
+void AWeaponBase::VWeaponControlB()
 {
 }
 
-void AWeaponBase::VWeaponControlButtonC()
+void AWeaponBase::VWeaponControlC()
 {
 }
 
-void AWeaponBase::VWeaponControlButtonD()
+void AWeaponBase::VWeaponControlD()
 {
 }
 
-void AWeaponBase::VWeaponControlButtonE()
+void AWeaponBase::VWeaponControlE()
 {
 }
 
-void AWeaponBase::VWeaponControlButtonF()
+void AWeaponBase::VWeaponControlF()
 {
 }
 

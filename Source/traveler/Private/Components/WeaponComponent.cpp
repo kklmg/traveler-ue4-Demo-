@@ -32,16 +32,6 @@ void UWeaponComponent::InitializeComponent()
 	_ownerExTransformProviderComp = Cast<UExTransformProviderComponent>(GetOwner()->GetComponentByClass(UExTransformProviderComponent::StaticClass()));
 }
 
-void UWeaponComponent::BindInputs(UInputComponent* PlayerInputComponent)
-{
-	PlayerInputComponent->BindAction("WeaponButtonA", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonA);
-	PlayerInputComponent->BindAction("WeaponButtonB", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonB);
-	PlayerInputComponent->BindAction("WeaponButtonC", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonC);
-	PlayerInputComponent->BindAction("WeaponButtonD", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonD);
-	PlayerInputComponent->BindAction("WeaponButtonE", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonE);
-	PlayerInputComponent->BindAction("WeaponButtonF", IE_Pressed, this, &UWeaponComponent::WeaponControlButtonF);
-}
-
 // Called when the game starts
 void UWeaponComponent::BeginPlay()
 {
@@ -126,51 +116,51 @@ void UWeaponComponent::TakeOutWeapon(bool isTakeOut)
 }
 
 
-void UWeaponComponent::WeaponControlButtonA()
+void UWeaponComponent::WeaponControlA()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->VWeaponControlButtonA();
+		_weaponIns->VWeaponControlA();
 	}
 }
 
-void UWeaponComponent::WeaponControlButtonB()
+void UWeaponComponent::WeaponControlB()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->VWeaponControlButtonB();
+		_weaponIns->VWeaponControlB();
 	}
 }
 
-void UWeaponComponent::WeaponControlButtonC()
+void UWeaponComponent::WeaponControlC()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->VWeaponControlButtonC();
+		_weaponIns->VWeaponControlC();
 	}
 }
 
-void UWeaponComponent::WeaponControlButtonD()
+void UWeaponComponent::WeaponControlD()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->VWeaponControlButtonD();
+		_weaponIns->VWeaponControlD();
 	}
 }
 
-void UWeaponComponent::WeaponControlButtonE()
+void UWeaponComponent::WeaponControlE()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->VWeaponControlButtonE();
+		_weaponIns->VWeaponControlE();
 	}
 }
 
-void UWeaponComponent::WeaponControlButtonF()
+void UWeaponComponent::WeaponControlF()
 {
 	if (_weaponIns)
 	{
-		_weaponIns->VWeaponControlButtonF();
+		_weaponIns->VWeaponControlF();
 	}
 }
 

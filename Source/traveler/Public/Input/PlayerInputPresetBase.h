@@ -28,6 +28,13 @@ protected:
 	void Axis_CameraArmPitch(float value);
 	void Axis_CameraZoomInOut(float value);
 
+	void Button_WeaponControlA();
+	void Button_WeaponControlB();
+	void Button_WeaponControlC();
+	void Button_WeaponControlD();
+	void Button_WeaponControlE();
+	void Button_WeaponControlF();
+
 private:
 	FVector _movementInput;
 };

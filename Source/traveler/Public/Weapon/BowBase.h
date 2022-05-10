@@ -61,12 +61,12 @@ public:
 	virtual void VOnEquipped() override;
 	virtual void VOnUnEquipped() override;
 
-	virtual void VWeaponControlButtonA() override;
-	virtual void VWeaponControlButtonB() override;
-	virtual void VWeaponControlButtonC() override;
-	virtual void VWeaponControlButtonD() override;
-	virtual void VWeaponControlButtonE() override;
-	virtual void VWeaponControlButtonF() override;
+	virtual void VWeaponControlA() override;
+	virtual void VWeaponControlB() override;
+	virtual void VWeaponControlC() override;
+	virtual void VWeaponControlD() override;
+	virtual void VWeaponControlE() override;
+	virtual void VWeaponControlF() override;
 
 	//animation event -------------------------------------------------------------------------
 

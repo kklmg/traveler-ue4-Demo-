@@ -9,7 +9,7 @@
 
 class UAxisInputBase;
 class UButtonInputBase;
-
+class UWeaponComponent;
 class UEventBrokerComponent;
 class UActionComponent;
 class ICharacterCameraInterface;
@@ -32,6 +32,7 @@ public:
 	void HandleButtonReleased(FName inputBindingName);
 
 	UActionComponent* GetActionComp();
+	UWeaponComponent* GetWeaponComp();
 	UEventBrokerComponent* GetEventBrokerComp();
 	ICharacterCameraInterface* GetCameraInterface();
 
@@ -57,6 +58,9 @@ private:
 
 	UPROPERTY()
 	UActionComponent* _actionComp;
+
+	UPROPERTY()
+	UWeaponComponent* _weaponComp;
 
 	UPROPERTY()
 	UEventBrokerComponent* _eventBrokerComp;

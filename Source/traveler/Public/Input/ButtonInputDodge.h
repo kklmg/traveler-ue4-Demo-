@@ -16,7 +16,7 @@ class TRAVELER_API UButtonInputDodge : public UButtonInputBase
 public:
 	UButtonInputDodge();
 protected:
-	void VTMOnPressed() override;
-	void VTMOnPressing(float deltaTime) override;
-	void VTMOnReleased() override;
+	void VOnPressed() override;
+	void VOnPressing(float deltaTime) override;
+	void VOnReleased() override;
 };

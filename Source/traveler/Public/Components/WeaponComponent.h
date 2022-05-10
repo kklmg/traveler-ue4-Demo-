@@ -26,8 +26,6 @@ public:
 	// Sets default values for this component's properties
 	UWeaponComponent();
 
-	void BindInputs(UInputComponent* PlayerInputComponent);
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -41,12 +39,12 @@ public:
 
 	void TakeOutWeapon(bool isTakeOut);
 
-	void WeaponControlButtonA();
-	void WeaponControlButtonB();
-	void WeaponControlButtonC();
-	void WeaponControlButtonD();
-	void WeaponControlButtonE();
-	void WeaponControlButtonF();
+	void WeaponControlA();
+	void WeaponControlB();
+	void WeaponControlC();
+	void WeaponControlD();
+	void WeaponControlE();
+	void WeaponControlF();
 public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable, Category = "Event")
 	FDelegateWeapon OnWeaponChanged;

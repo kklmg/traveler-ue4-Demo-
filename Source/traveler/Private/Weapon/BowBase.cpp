@@ -398,34 +398,34 @@ void ABowBase::OnAnim_FullyDrawed(UObject* data)
 	SetBowState(EBowState::EBS_FullyDrawed);
 }
 
-void ABowBase::VWeaponControlButtonA()
+void ABowBase::VWeaponControlA()
 {
 	IncreaseArrows();
 }
 
-void ABowBase::VWeaponControlButtonB()
+void ABowBase::VWeaponControlB()
 {
 	DecreaseArrows();
 }
 
-void ABowBase::VWeaponControlButtonC()
+void ABowBase::VWeaponControlC()
 {
 	AdjustHandRotation();
 }
 
-void ABowBase::VWeaponControlButtonD()
+void ABowBase::VWeaponControlD()
 {
 	AdjustArrowIntervals();
 }
 
-void ABowBase::VWeaponControlButtonE()
+void ABowBase::VWeaponControlE()
 {
 	_quiverComponent->ScrollArrowOption(-1);
 	ClearHoldingArrows(true);
 	SetBowState(EBowState::EBS_Normal);
 }
 
-void ABowBase::VWeaponControlButtonF()
+void ABowBase::VWeaponControlF()
 {
 	_quiverComponent->ScrollArrowOption(1);
 	ClearHoldingArrows(true);

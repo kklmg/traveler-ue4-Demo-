@@ -4,10 +4,11 @@
 #include "Input/PlayerInputPresetBase.h"
 #include "Components/ActionComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
+#include "Components/WeaponComponent.h"
 #include "Components/EventBrokerComponent.h"
 #include "Interface/CharacterCameraInterface.h"
 #include "Input/AxisInputDelegate.h"
-
+#include "Input/ButtonInputDelegate.h"
 
 
 void UPlayerInputPresetBase::VInit(AActor* owner)
@@ -20,6 +21,13 @@ void UPlayerInputPresetBase::VInit(AActor* owner)
 	RegisterAxisInput(UAxisInputDelegate::MakeInstance(this, NSInputBindingName::CameraYaw, this, &UPlayerInputPresetBase::Axis_CameraArmYaw));
 	RegisterAxisInput(UAxisInputDelegate::MakeInstance(this, NSInputBindingName::CameraPitch, this, &UPlayerInputPresetBase::Axis_CameraArmPitch));
 	RegisterAxisInput(UAxisInputDelegate::MakeInstance(this, NSInputBindingName::CameraZoomInOut, this, &UPlayerInputPresetBase::Axis_CameraZoomInOut));
+
+	RegisterButtonInput(UButtonInputDelegate::MakeInstance<UPlayerInputPresetBase>(this,NSInputBindingName::WeaponControlA,this, &UPlayerInputPresetBase::Button_WeaponControlA));
+	RegisterButtonInput(UButtonInputDelegate::MakeInstance<UPlayerInputPresetBase>(this,NSInputBindingName::WeaponControlB,this, &UPlayerInputPresetBase::Button_WeaponControlB));
+	RegisterButtonInput(UButtonInputDelegate::MakeInstance<UPlayerInputPresetBase>(this,NSInputBindingName::WeaponControlC,this, &UPlayerInputPresetBase::Button_WeaponControlC));
+	RegisterButtonInput(UButtonInputDelegate::MakeInstance<UPlayerInputPresetBase>(this,NSInputBindingName::WeaponControlD,this, &UPlayerInputPresetBase::Button_WeaponControlD));
+	RegisterButtonInput(UButtonInputDelegate::MakeInstance<UPlayerInputPresetBase>(this,NSInputBindingName::WeaponControlE,this, &UPlayerInputPresetBase::Button_WeaponControlE));
+	RegisterButtonInput(UButtonInputDelegate::MakeInstance<UPlayerInputPresetBase>(this,NSInputBindingName::WeaponControlF,this, &UPlayerInputPresetBase::Button_WeaponControlF));
 }
 
 void UPlayerInputPresetBase::VTick(float deltaTime)
@@ -83,5 +91,53 @@ void UPlayerInputPresetBase::Axis_CameraZoomInOut(float value)
 	if (GetCameraInterface())
 	{
 		GetCameraInterface()->VCameraZoomInOut(value);
+	}
+}
+
+void UPlayerInputPresetBase::Button_WeaponControlA()
+{
+	if (GetWeaponComp()) 
+	{
+		GetWeaponComp()->WeaponControlA();
+	}
+}
+
+void UPlayerInputPresetBase::Button_WeaponControlB()
+{
+	if (GetWeaponComp())
+	{
+		GetWeaponComp()->WeaponControlB();
+	}
+}
+
+void UPlayerInputPresetBase::Button_WeaponControlC()
+{
+	if (GetWeaponComp())
+	{
+		GetWeaponComp()->WeaponControlC();
+	}
+}
+
+void UPlayerInputPresetBase::Button_WeaponControlD()
+{
+	if (GetWeaponComp())
+	{
+		GetWeaponComp()->WeaponControlD();
+	}
+}
+
+void UPlayerInputPresetBase::Button_WeaponControlE()
+{
+	if (GetWeaponComp())
+	{
+		GetWeaponComp()->WeaponControlE();
+	}
+}
+
+void UPlayerInputPresetBase::Button_WeaponControlF()
+{
+	if (GetWeaponComp())
+	{
+		GetWeaponComp()->WeaponControlF();
 	}
 }

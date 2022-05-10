@@ -27,13 +27,13 @@ public:
 	float GetPressingTime();
 	bool IsPressing();
 
-	void OnPressed();
-	void OnPressing(float deltaTime);
-	void OnReleased();
+	void Press();
+	void Pressing(float deltaTime);
+	void Release();
 protected:
-	virtual void VTMOnPressed();
-	virtual void VTMOnPressing(float deltaTime);
-	virtual void VTMOnReleased();
+	virtual void VOnPressed();
+	virtual void VOnPressing(float deltaTime);
+	virtual void VOnReleased();
 
 private:
 	float _pressingTime;

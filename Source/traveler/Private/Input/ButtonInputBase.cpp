@@ -10,24 +10,24 @@ UButtonInputBase::UButtonInputBase()
 {
 }
 
-void UButtonInputBase::OnPressed()
+void UButtonInputBase::Press()
 {
 	_isPressing = true;
-	VTMOnPressed();
+	VOnPressed();
 }
 
-void UButtonInputBase::OnPressing(float deltaTime)
+void UButtonInputBase::Pressing(float deltaTime)
 {
 	if (_isPressing)
 	{
 		_pressingTime += deltaTime;
-		VTMOnPressing(deltaTime);
+		VOnPressing(deltaTime);
 	}
 }
 
-void UButtonInputBase::OnReleased()
+void UButtonInputBase::Release()
 {
-	VTMOnReleased();
+	VOnReleased();
 	_isPressing = false;
 }
 
@@ -41,14 +41,14 @@ bool UButtonInputBase::IsPressing()
 	return _isPressing;
 }
 
-void UButtonInputBase::VTMOnPressed()
+void UButtonInputBase::VOnPressed()
 {
 }
 
-void UButtonInputBase::VTMOnPressing(float deltaTime)
+void UButtonInputBase::VOnPressing(float deltaTime)
 {
 }
 
-void UButtonInputBase::VTMOnReleased()
+void UButtonInputBase::VOnReleased()
 {
 }

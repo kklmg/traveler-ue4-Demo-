@@ -46,11 +46,17 @@ void UInputHandlerComponent::BindInputs(UInputComponent* PlayerInputComponent)
 	RegisterAxisInput<NSInputBindingName::CameraZoomInOut>(PlayerInputComponent);
 
 	//bind Button inputs	
-	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::Fire);
-	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::Aim);
 	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::Dodge);
 	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::Sprint);
 	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::Jump);
+	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::Fire);
+	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::Aim);
+	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::WeaponControlA);
+	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::WeaponControlB);
+	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::WeaponControlC);
+	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::WeaponControlD);
+	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::WeaponControlE);
+	RegisterButtonInput(PlayerInputComponent,NSInputBindingName::WeaponControlF);
 }
 
 void UInputHandlerComponent::HandleButtonPressed(FName inputName)

@@ -10,7 +10,7 @@ UButtonInputFire::UButtonInputFire()
 }
 
 
-void UButtonInputFire::VTMOnPressed()
+void UButtonInputFire::VOnPressed()
 {
 	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if(actionComp)
@@ -19,11 +19,11 @@ void UButtonInputFire::VTMOnPressed()
 	}
 }
 
-void UButtonInputFire::VTMOnPressing(float deltaTime)
+void UButtonInputFire::VOnPressing(float deltaTime)
 {
 }
 
-void UButtonInputFire::VTMOnReleased()
+void UButtonInputFire::VOnReleased()
 {
 	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if(actionComp)

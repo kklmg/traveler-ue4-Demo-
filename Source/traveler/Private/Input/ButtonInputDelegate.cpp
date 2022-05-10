@@ -7,17 +7,17 @@ UButtonInputDelegate::UButtonInputDelegate()
 {
 }
 
-void UButtonInputDelegate::VTMPress()
+void UButtonInputDelegate::VOnPressed()
 {
-	OnButtonPressed.ExecuteIfBound(this);
+	_onButtonPressed.ExecuteIfBound();
 }
 
-void UButtonInputDelegate::VTMPressing(float deltaTime)
+void UButtonInputDelegate::VOnPressing(float deltaTime)
 {
-	OnButtonPressing.ExecuteIfBound(this);
+	_onButtonPressing.ExecuteIfBound(deltaTime);
 }
 
-void UButtonInputDelegate::VTMRelease()
+void UButtonInputDelegate::VOnReleased()
 {
-	OnButtonReleased.ExecuteIfBound(this);
+	_onButtonReleased.ExecuteIfBound();
 }
