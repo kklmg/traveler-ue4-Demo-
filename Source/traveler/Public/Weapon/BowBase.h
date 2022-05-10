@@ -108,6 +108,8 @@ private:
 	void OnAimProcessChanged(EProcessState processState);
 
 private:
+	//UPROPERTY(EditAnyWhere, Category = UI)
+	//TSubclassOf<UCrosshairWidgetBase> _crosshairWidgetClass;
 
 	// crosshair class to spawn.
 	UPROPERTY(EditAnyWhere, Category = UI)

@@ -32,12 +32,15 @@ protected:
 	virtual void BeginPlay() override;
 
 	void OnReceiveEvent_LifeStateChanged(UObject* baseData);
+	UFUNCTION()
+	void OnMovementModeChanged(ACharacter* character, EMovementMode prevMovementMode, uint8 previousCustomMode);
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void AbortAllActions();
+	void RegisterActionPresetGroup(EActionPrestGroup presetGroupType,TSubclassOf<UActionPresetGroup> actionPresetGroupClass);
 	void SwitchActionPresetGroup(EActionPrestGroup presetGroupType);
 
 public:
@@ -55,6 +58,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UActionBlackBoard* GetActionBlackBoard();
+protected:
+	UActionPresetGroup* GetCurActionPresetGroup();
 
 private:
 	UPROPERTY()
@@ -73,7 +78,7 @@ private:
 	TMap<EActionPrestGroup, UActionPresetGroup*> _mapActionPresetGroup;
 
 	UPROPERTY()
-	UActionPresetGroup* _curActionPresetGroup;
+	EActionPrestGroup _curActionPrestGroupType;
 
 	bool _bActorAlive;
 };

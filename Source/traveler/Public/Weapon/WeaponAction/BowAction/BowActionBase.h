@@ -16,8 +16,9 @@ class TRAVELER_API UBowActionBase : public UWeaponActionBase
 	GENERATED_BODY()
 
 public:
+	virtual void VSetUpActionData(ACharacter* character, UActionComponent* actionComp);
 	virtual bool VCanExecute() override;
-	virtual void VSetWeapon(AWeaponBase* weapon) override;
+	virtual void VTMExecute() override;
 
 protected:
 	ABowBase* GetBow();

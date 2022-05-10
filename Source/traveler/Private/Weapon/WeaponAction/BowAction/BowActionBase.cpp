@@ -5,7 +5,17 @@
 #include "Components/ActionComponent.h"
 #include "Enums/EnumAnimation.h"
 #include "Components/AnimControlComponent.h"
+#include "Components/WeaponComponent.h"
 
+
+void UBowActionBase::VSetUpActionData(ACharacter* character, UActionComponent* actionComp)
+{
+	Super::VSetUpActionData(character, actionComp);
+	if(GetWeaponComp())
+	{
+		_bow = Cast<ABowBase>(GetWeaponComp()->GetEquipedWeapon());
+	}
+}
 
 bool UBowActionBase::VCanExecute()
 {
@@ -18,15 +28,10 @@ bool UBowActionBase::VCanExecute()
 	return (animationState == EAnimationState::EAnimState_Walk || animationState == EAnimationState::EAnimState_Fall);
 }
 
-void UBowActionBase::VSetWeapon(AWeaponBase* weapon)
+void UBowActionBase::VTMExecute()
 {
-	Super::VSetWeapon(weapon);
+	Super::VTMExecute();
 
-	if(weapon->GetWeaponType() == EWeaponType::EWT_Bow)
-	{
-		_bow = Cast<ABowBase>(weapon);
-		check(_bow);
-	}
 }
 
 FORCEINLINE_DEBUGGABLE ABowBase* UBowActionBase::GetBow()

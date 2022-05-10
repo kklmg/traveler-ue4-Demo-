@@ -49,7 +49,7 @@ class TRAVELER_API UActionBase : public UProcessBase
 public:
 	UActionBase();
 
-	void SetUpActionData(ACharacter* character, UActionComponent* actionComp);
+	virtual void VSetUpActionData(ACharacter* character, UActionComponent* actionComp);
 
 	UFUNCTION(BlueprintCallable)
 	EActionType GetActionType();

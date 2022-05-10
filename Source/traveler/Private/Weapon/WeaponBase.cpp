@@ -11,6 +11,7 @@
 #include "Process/ProcessManagerBase.h"
 #include "Process/ProcessBase.h"
 #include "Interface/CharacterCameraInterface.h"
+#include "Actions/ActionPreset/ActionPresetGroup.h"
 
 
 // Sets default values
@@ -87,6 +88,11 @@ void AWeaponBase::VOnUnEquipped()
 {
 	OnWeaponUnequipped.Broadcast(this);
 	_weaponAnimationModel->ClearData();
+}
+
+TSubclassOf<UActionPresetGroup> AWeaponBase::GetActionPresetGroupClass()
+{
+	return _actionPresetGroupClass;
 }
 
 

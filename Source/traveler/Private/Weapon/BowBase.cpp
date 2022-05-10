@@ -45,14 +45,6 @@ void ABowBase::PreInitializeComponents()
 {
 	Super::PreInitializeComponents();
 
-	_processFire = NewObject<UBowActionFire>(this);
-	_processFire->VSetWeapon(this);
-	_processFire->ProcessStateChangedDelegate.AddUObject(this, &ABowBase::OnFireProcessChanged);
-
-	_processAim = NewObject<UBowActionAim>(this);
-	_processAim->VSetWeapon(this);
-	_processAim->ProcessStateChangedDelegate.AddUObject(this, &ABowBase::OnAimProcessChanged);
-
 	if (GetWeaponAnimationModel())
 	{
 		GetWeaponAnimationModel()->WeaponType = _weaponType;

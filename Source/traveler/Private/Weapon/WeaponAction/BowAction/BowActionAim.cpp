@@ -8,10 +8,13 @@
 #include "Components/AnimControlComponent.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Character/CreatureCharacter.h"
+#include "Data/WeaponAnimationModelBase.h"
 
 UBowActionAim::UBowActionAim()
 {
 	_processName = NSNameWeaponActionProcess::AIM;
+	_actionType = EActionType::EACT_Aim;
+	_bIsInstantProcess = false;
 }
 
 
@@ -27,7 +30,12 @@ void UBowActionAim::VTMExecute()
 
 	//Rotation
 	GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, false);
+
+	//Animation
+	GetBow()->GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsAiming, true);
 }
+
+
 
 void UBowActionAim::VTMTick(float deltaTime)
 {
@@ -65,4 +73,7 @@ void UBowActionAim::VTMOnDead()
 
 	//Movement
 	GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, true);
+
+	//Animation
+	GetBow()->GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsAiming, false);
 }

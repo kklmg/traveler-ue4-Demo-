@@ -23,7 +23,7 @@ class TRAVELER_API UActionPreset : public UObject
 	GENERATED_BODY()
 
 public:
-	void virtual VInitialize(ACharacter* character, UActionComponent* actionComp,UActionPresetGroup* actionPresetGroup);
+	void virtual VInitialize(ACharacter* character, UActionComponent* actionComp);
 	void virtual VEnter();
 	void virtual VLeave();
 
@@ -38,21 +38,10 @@ public:
 protected:
 	void MakeActionIns(TSubclassOf<UActionBase> actionClass,ACharacter* character, UActionComponent* actionComp);
 
-	void ActivateThisActionSet(bool result);
-
 private:
 	UPROPERTY()
 	TMap<EActionType, UActionBase*> _mapActionIns;
 
 	UPROPERTY(EditDefaultsOnly,Category = ActionClass)
 	TArray<TSubclassOf<UActionBase>> _arrayActionClasses;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UCompositeActorCondition> _conditionClass;
-
-	UPROPERTY()
-	UCompositeActorCondition* _conditionIns;
-
-	UPROPERTY()
-	UActionPresetGroup* _actionPresetGroup;
 };

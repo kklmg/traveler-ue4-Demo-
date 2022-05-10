@@ -33,7 +33,6 @@ public:
 	virtual bool VCanExecute();
 	
 protected:	
-	//Internal  functions ---------------------------
 	virtual void VTMInit();
 	virtual void VTMExecute();
 	virtual void VTMTick(float deltaTime);

@@ -18,9 +18,7 @@ class UEventBrokerComponent;
 class UWeaponAnimationModelBase;
 class UProcessManagerBase;
 class ICharacterCameraInterface;
-class IProcessInterface;
-class IEventBrokerInterface;
-
+class UActionPresetGroup;
 class UEventDataBase;
 
 
@@ -58,6 +56,8 @@ public:
 	virtual bool VCanFire();
 	virtual void VOnEquipped();
 	virtual void VOnUnEquipped();
+
+	TSubclassOf<UActionPresetGroup> GetActionPresetGroupClass();
 
 	virtual void VReset();
 
@@ -110,9 +110,6 @@ private:
 	ACreatureCharacter* _weaponOwner;
 
 	UPROPERTY()
-	TMap<FName, UProcessBase*> _processMap;
-
-	UPROPERTY()
 	UWeaponAnimationModelBase* _weaponAnimationModel;
 
 	UPROPERTY()
@@ -120,6 +117,9 @@ private:
 
 	UPROPERTY()
 	UEventBrokerComponent* _ownerEventBrokerComp;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UActionPresetGroup> _actionPresetGroupClass;
 
 	ICharacterCameraInterface* _ownerCameraInterface;
 

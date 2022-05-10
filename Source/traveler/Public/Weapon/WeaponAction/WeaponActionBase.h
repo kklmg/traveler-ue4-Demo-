@@ -7,7 +7,7 @@
 #include "Actions/ActionBase.h"
 #include "WeaponActionBase.generated.h"
 
-class AWeaponBase;
+class UWeaponComponent;
 
 /**
  * 
@@ -18,9 +18,13 @@ class TRAVELER_API UWeaponActionBase : public UActionBase
 	GENERATED_BODY()
 
 public:
-	virtual void VSetWeapon(AWeaponBase* weapon);
+	virtual void VSetUpActionData(ACharacter* character, UActionComponent* actionComp) override;
+	virtual bool VCanExecute() override;
+
+protected:
+	UWeaponComponent* GetWeaponComp();
 
 private:
 	UPROPERTY()
-	AWeaponBase* _weapon;
+	UWeaponComponent* _weaponComp;
 };

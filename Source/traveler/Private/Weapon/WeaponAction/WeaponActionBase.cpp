@@ -2,10 +2,22 @@
 
 
 #include "Weapon/WeaponAction/WeaponActionBase.h"
-#include "Weapon/WeaponBase.h"
+#include "GameFramework/Character.h"
+#include "Components/WeaponComponent.h"
 
-void UWeaponActionBase::VSetWeapon(AWeaponBase* weapon)
+void UWeaponActionBase::VSetUpActionData(ACharacter* character, UActionComponent* actionComp)
 {
-	check(weapon);
-	_weapon = weapon;
+	Super::VSetUpActionData(character, actionComp);
+	_weaponComp = Cast<UWeaponComponent>(character->GetComponentByClass(UWeaponComponent::StaticClass()));
+}
+
+bool UWeaponActionBase::VCanExecute()
+{
+	if (!Super::VCanExecute()) return false;
+	return _weaponComp != nullptr && _weaponComp->GetEquipedWeapon() != nullptr;
+}
+
+UWeaponComponent* UWeaponActionBase::GetWeaponComp()
+{
+	return _weaponComp;
 }

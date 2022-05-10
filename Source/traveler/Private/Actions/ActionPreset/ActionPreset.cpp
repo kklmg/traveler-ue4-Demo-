@@ -10,25 +10,14 @@
 #include "GameFramework/Character.h"
 
 
-void UActionPreset::VInitialize(ACharacter* character, UActionComponent* actionComp, UActionPresetGroup* actionPresetGroup)
+void UActionPreset::VInitialize(ACharacter* character, UActionComponent* actionComp)
 {
 	check(character);
 	check(actionComp);
 
-	_actionPresetGroup = actionPresetGroup;
-
 	for (TSubclassOf<UActionBase> actionClass : _arrayActionClasses)
 	{
 		MakeActionIns(actionClass, character, actionComp);
-	}
-
-	if (_conditionClass)
-	{
-		_conditionIns = NewObject<UCompositeActorCondition>(this, _conditionClass);
-		_conditionIns->SetActor(actionComp->GetOwner());
-		_conditionIns->Initialize();
-		_conditionIns->Subscribe(this, &UActionPreset::ActivateThisActionSet);
-		_conditionIns->Validate();
 	}
 }
 
@@ -101,15 +90,7 @@ void UActionPreset::MakeActionIns(TSubclassOf<UActionBase> actionClass, ACharact
 	}
 
 	UActionBase* actionIns = NewObject<UActionBase>(this, actionClass);
-	actionIns->SetUpActionData(character, actionComp);
+	actionIns->VSetUpActionData(character, actionComp);
 
 	_mapActionIns.Add(actionType, actionIns);
-}
-
-void UActionPreset::ActivateThisActionSet(bool result)
-{
-	if (_actionPresetGroup && result)
-	{
-		_actionPresetGroup->SwitchActionSet(this);
-	}
 }

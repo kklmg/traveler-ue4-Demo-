@@ -78,6 +78,19 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 		_weaponIns = newWeapon;
 		_weaponIns->VOnEquipped();
 
+		if(_actionComp)
+		{
+			if (_weaponIns)
+			{
+				_actionComp->RegisterActionPresetGroup(EActionPrestGroup::EACTPresetGroup_WeaponActions,_weaponIns->GetActionPresetGroupClass());
+				_actionComp->SwitchActionPresetGroup(EActionPrestGroup::EACTPresetGroup_WeaponActions);
+			}
+			else
+			{
+				_actionComp->SwitchActionPresetGroup(EActionPrestGroup::EACTPresetGroup_BasicActions);
+			}
+		}
+
 		if(_animControlComp && _animControlComp->GetAnimationModel())
 		{
 			_animControlComp->GetAnimationModel()->SetUObject(NSAnimationDataKey::objWeapon,_weaponIns);

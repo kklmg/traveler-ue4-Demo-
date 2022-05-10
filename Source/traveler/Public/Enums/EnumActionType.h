@@ -52,6 +52,5 @@ enum class EActionPrestGroup : uint8
 {
 	EACTPresetGroup_None UMETA(DisplayName = "None"),
 	EACTPresetGroup_BasicActions UMETA(DisplayName = "BasicActions"),
-	EACTPresetGroup_BowActions UMETA(DisplayName = "BowActions"),
-	EACTPresetGroup_SwordActions UMETA(DisplayName = "SwordActions"),
+	EACTPresetGroup_WeaponActions UMETA(DisplayName = "WeaponActions"),
 };

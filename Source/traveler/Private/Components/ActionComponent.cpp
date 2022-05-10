@@ -31,7 +31,7 @@ UActionComponent::UActionComponent()
 void UActionComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
-	
+
 	_character = GetOwner<ACharacter>();
 	check(_character);
 
@@ -39,15 +39,8 @@ void UActionComponent::InitializeComponent()
 	check(_actionBlackBoard);
 
 	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
-
-	if(_defaultActionPresetGroupClass)
-	{
-		_curActionPresetGroup = NewObject<UActionPresetGroup>(this,_defaultActionPresetGroupClass);
-		check(_curActionPresetGroup)
-		_curActionPresetGroup->Init(_character, this);
-		_mapActionPresetGroup.Add(EActionPrestGroup::EACTPresetGroup_BasicActions, _curActionPresetGroup);
-	}
 }
+
 
 // Called when the game starts
 void UActionComponent::BeginPlay()
@@ -57,7 +50,27 @@ void UActionComponent::BeginPlay()
 	// ...
 	if (_eventBrokerComp)
 	{
-		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name,this, &UActionComponent::OnReceiveEvent_LifeStateChanged);
+		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name, this, &UActionComponent::OnReceiveEvent_LifeStateChanged);
+	}
+
+	if (_defaultActionPresetGroupClass)
+	{
+		UActionPresetGroup* defaultActionPresetGroup = NewObject<UActionPresetGroup>(this, _defaultActionPresetGroupClass);
+		check(defaultActionPresetGroup)
+			defaultActionPresetGroup->Init(_character, this, _character->GetCharacterMovement()->MovementMode);
+		_mapActionPresetGroup.Add(EActionPrestGroup::EACTPresetGroup_BasicActions, defaultActionPresetGroup);
+		_curActionPrestGroupType = EActionPrestGroup::EACTPresetGroup_BasicActions;
+	}
+
+	//
+	_character->MovementModeChangedDelegate.AddDynamic(this, &UActionComponent::OnMovementModeChanged);
+}
+
+void UActionComponent::OnMovementModeChanged(ACharacter* character, EMovementMode prevMovementMode, uint8 previousCustomMode)
+{
+	if (GetCurActionPresetGroup())
+	{
+		GetCurActionPresetGroup()->SwitchActionPreset(character->GetCharacterMovement()->MovementMode);
 	}
 }
 
@@ -68,72 +81,99 @@ void UActionComponent::OnReceiveEvent_LifeStateChanged(UObject* baseData)
 	if (_bActorAlive == eventData->Value) return;
 
 	_bActorAlive = eventData->Value;
-	if(_bActorAlive == false)
+	if (_bActorAlive == false)
 	{
 		AbortAllActions();
 	}
 }
 
-
 // Called every frame
 void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if(_curActionPresetGroup)
+	if (GetCurActionPresetGroup())
 	{
-		_curActionPresetGroup->Tick(DeltaTime);
+		GetCurActionPresetGroup()->Tick(DeltaTime);
 	}
 }
 
 void UActionComponent::ExecuteAction(EActionType actionType)
 {
-	if (_bActorAlive == false || _curActionPresetGroup == nullptr)
+	if (_bActorAlive == false || GetCurActionPresetGroup() == nullptr)
 	{
 		return;
 	}
-	_curActionPresetGroup->ExecuteAction(actionType);
+	GetCurActionPresetGroup()->ExecuteAction(actionType);
 }
 
 void UActionComponent::AbortAction(EActionType actionType)
 {
-	return _curActionPresetGroup ? _curActionPresetGroup->AbortAction(actionType) : nullptr;
+	return GetCurActionPresetGroup() ? GetCurActionPresetGroup()->AbortAction(actionType) : nullptr;
 }
 
-UActionBlackBoard* UActionComponent::GetActionBlackBoard()
+FORCEINLINE_DEBUGGABLE UActionBlackBoard* UActionComponent::GetActionBlackBoard()
 {
 	return _actionBlackBoard;
 }
 
-void UActionComponent::SwitchActionPresetGroup(EActionPrestGroup presetGroupType)
+FORCEINLINE_DEBUGGABLE UActionPresetGroup* UActionComponent::GetCurActionPresetGroup()
 {
-	if (_mapActionPresetGroup.Contains(presetGroupType)) 
-	{	
-		if(_curActionPresetGroup)
-		{
-			_curActionPresetGroup->AbortAllActions();
-		}
-		_curActionPresetGroup = _mapActionPresetGroup[presetGroupType];
-	}
+	return _mapActionPresetGroup.Contains(_curActionPrestGroupType) ?
+		_mapActionPresetGroup[_curActionPrestGroupType] : nullptr;
 }
 
 void UActionComponent::AbortAllActions()
 {
-	if (_curActionPresetGroup) 
+	if (GetCurActionPresetGroup())
 	{
-		_curActionPresetGroup->AbortAllActions();
+		GetCurActionPresetGroup()->AbortAllActions();
+	}
+}
+
+void UActionComponent::RegisterActionPresetGroup(EActionPrestGroup presetGroupType, TSubclassOf<UActionPresetGroup> actionPresetGroupClass)
+{
+	if (!actionPresetGroupClass) return;
+
+	if (_curActionPrestGroupType == presetGroupType && GetCurActionPresetGroup())
+	{
+		GetCurActionPresetGroup()->AbortAllActions();
+	}
+
+	//make instance
+	UActionPresetGroup* newActionPresetGroup = NewObject<UActionPresetGroup>(this, actionPresetGroupClass);
+	newActionPresetGroup->Init(_character, this, _character->GetCharacterMovement()->MovementMode);
+
+	if (_mapActionPresetGroup.Contains(presetGroupType))
+	{
+		_mapActionPresetGroup[presetGroupType] = newActionPresetGroup;
+	}
+	else
+	{
+		_mapActionPresetGroup.Add(presetGroupType, newActionPresetGroup);
+	}
+}
+
+void UActionComponent::SwitchActionPresetGroup(EActionPrestGroup presetGroupType)
+{
+	if (_curActionPrestGroupType == presetGroupType) return;
+	if (_mapActionPresetGroup.Contains(presetGroupType))
+	{
+		if (GetCurActionPresetGroup())
+		{
+			GetCurActionPresetGroup()->AbortAllActions();
+		}
+
+		_curActionPrestGroupType = presetGroupType;
 	}
 }
 
 bool UActionComponent::IsActionAlive(EActionType actionType)
 {
-	return _curActionPresetGroup ? _curActionPresetGroup->IsActionAlive(actionType) : false;
+	return GetCurActionPresetGroup() ? GetCurActionPresetGroup()->IsActionAlive(actionType) : false;
 }
 
 EProcessState UActionComponent::GetActionState(EActionType actionType)
 {
-	return  _curActionPresetGroup ?
-		_curActionPresetGroup->GetActionState(actionType) : EProcessState::EPS_None;
+	return  GetCurActionPresetGroup() ?
+		GetCurActionPresetGroup()->GetActionState(actionType) : EProcessState::EPS_None;
 }
-
-
-

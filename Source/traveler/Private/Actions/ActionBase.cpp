@@ -23,7 +23,7 @@ UActionBase::UActionBase()
 	_costData = CreateDefaultSubobject<UCostData>(TEXT("CostData"));
 }
 
-void UActionBase::SetUpActionData(ACharacter* character, UActionComponent* actionComp)
+void UActionBase::VSetUpActionData(ACharacter* character, UActionComponent* actionComp)
 {
 	check(character);
 	check(actionComp);

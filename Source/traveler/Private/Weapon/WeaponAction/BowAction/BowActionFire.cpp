@@ -3,11 +3,13 @@
 
 #include "Weapon/WeaponAction/BowAction/BowActionFire.h"
 #include "Components/AnimControlComponent.h"
+#include "Data/WeaponAnimationModelBase.h"
 #include "Enums/EnumAnimation.h"
 
 UBowActionFire::UBowActionFire()
 {
 	_processName = NSNameWeaponActionProcess::FIRE;
+	_actionType = EActionType::EACT_Fire;
 }
 
 bool UBowActionFire::VCanExecute()
@@ -28,6 +30,9 @@ void UBowActionFire::VTMExecute()
 	}
 
 	GetBow()->SetBowState(EBowState::EBS_ReleaseStart);
+
+	//Animation
+	GetBow()->GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsFiring, true);
 }
 
 void UBowActionFire::VTMTick(float deltaTime)
@@ -38,4 +43,7 @@ void UBowActionFire::VTMTick(float deltaTime)
 void UBowActionFire::VTMOnDead()
 {
 	Super::VTMOnDead();
+
+	//Animation
+	GetBow()->GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsFiring, false);
 }

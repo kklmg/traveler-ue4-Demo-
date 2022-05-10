@@ -8,78 +8,83 @@
 
 
 
-void UActionPresetGroup::Init(ACharacter* character, UActionComponent* actionComp)
+void UActionPresetGroup::Init(ACharacter* character, UActionComponent* actionComp, EMovementMode movementMode)
 {
-	for (auto presetClass : _actionPresetClasses)
+	_movementMode = movementMode;
+	for (auto Element : _mapActionPresetClass)
 	{
-		if (presetClass)
+		if (Element.Value)
 		{
-			auto actionPreset = NewObject<UActionPreset>(this, presetClass);
-			actionPreset->VInitialize(character, actionComp, this);
-			_actionPresetInstances.Add(actionPreset);
+			auto actionPreset = NewObject<UActionPreset>(this, Element.Value);
+			actionPreset->VInitialize(character, actionComp);
+			_mapActionPresetIns.Add(Element.Key, actionPreset);
 		}
 	}
 }
 
 void UActionPresetGroup::Tick(float deltaTime)
 {
-	if (_curActionSet)
+	if (GetCurActionPreset())
 	{
-		_curActionSet->Tick(deltaTime);
+		GetCurActionPreset()->Tick(deltaTime);
 	}
 }
 
 bool UActionPresetGroup::IsActionAlive(EActionType actionType)
 {
-	return _curActionSet ? _curActionSet->IsActionAlive(actionType) : false;
+	return GetCurActionPreset() ? GetCurActionPreset()->IsActionAlive(actionType) : false;
 }
 
 EProcessState UActionPresetGroup::GetActionState(EActionType actionType)
 {
-	return  _curActionSet ?
-		_curActionSet->GetActionState(actionType) : EProcessState::EPS_None;
+	return  GetCurActionPreset() ?
+		GetCurActionPreset()->GetActionState(actionType) : EProcessState::EPS_None;
 }
 
 void UActionPresetGroup::ExecuteAction(EActionType actionType)
 {
-	if (_curActionSet)
+	if (GetCurActionPreset())
 	{
-	 _curActionSet->ExecuteAction(actionType);
-	 }
+		GetCurActionPreset()->ExecuteAction(actionType);
+	}
 }
 
 void UActionPresetGroup::AbortAction(EActionType actionType)
 {
-	if (_curActionSet)
+	if (GetCurActionPreset())
 	{
-		_curActionSet->AbortAction(actionType);
+		GetCurActionPreset()->AbortAction(actionType);
 	}
 }
 
 void UActionPresetGroup::AbortAllActions()
 {
-	if (_curActionSet)
+	if (GetCurActionPreset())
 	{
-		_curActionSet->AbortAllActions();
+		GetCurActionPreset()->AbortAllActions();
 	}
 }
 
-void UActionPresetGroup::SwitchActionSet(UActionPreset* actionSet)
+void UActionPresetGroup::SwitchActionPreset(EMovementMode movementMode)
 {
-	if (_curActionSet == actionSet) return;
-
-	if (_curActionSet)
+	if (_movementMode != movementMode)
 	{
-		_curActionSet->VLeave();
+		if(_mapActionPresetIns.Contains(_movementMode))
+		{
+			_mapActionPresetIns[_movementMode]->VLeave();
+		}
+	
+		_movementMode = movementMode;
+
+		if (_mapActionPresetIns.Contains(_movementMode))
+		{
+			_mapActionPresetIns[_movementMode]->VEnter();
+		}
 	}
+}
 
-	_curActionSet = actionSet;
-
-	if (_curActionSet)
-	{
-		_curActionSet->VEnter();
-	}
-
-	UDebugMessageHelper::Messsage_String(TEXT("ActionComp"), TEXT("ActionSetChanged"));
+FORCEINLINE_DEBUGGABLE UActionPreset* UActionPresetGroup::GetCurActionPreset()
+{
+	return _mapActionPresetIns.Contains(_movementMode) ? _mapActionPresetIns[_movementMode] : nullptr;
 }
 

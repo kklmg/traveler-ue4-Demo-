@@ -20,22 +20,27 @@ class TRAVELER_API UActionPresetGroup : public UObject
 	GENERATED_BODY()
 
 public:
-	void Init(ACharacter* character, UActionComponent* actionComp);
+	void Init(ACharacter* character, UActionComponent* actionComp, EMovementMode movementMode);
+	void Tick(float deltaTime);
+
 	bool IsActionAlive(EActionType actionType);
 	EProcessState GetActionState(EActionType actionType);
+
 	void ExecuteAction(EActionType actionType);
 	void AbortAction(EActionType actionType);
 	void AbortAllActions();
-	void SwitchActionSet(UActionPreset* actionSet);
-	void Tick(float deltaTime);
+
+	void SwitchActionPreset(EMovementMode movementMode);
+	
+protected:
+	UActionPreset* GetCurActionPreset();
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = ActionPresetClasses)
-	TArray<TSubclassOf<UActionPreset>> _actionPresetClasses;
+	TMap<TEnumAsByte<EMovementMode>,TSubclassOf<UActionPreset>> _mapActionPresetClass;
 
 	UPROPERTY()
-	TArray<UActionPreset*> _actionPresetInstances;
+	TMap<TEnumAsByte<EMovementMode>, UActionPreset*> _mapActionPresetIns;
 
-	UPROPERTY()
-	UActionPreset* _curActionSet;
+	EMovementMode _movementMode;
 };
