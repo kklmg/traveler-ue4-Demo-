@@ -19,9 +19,9 @@ UActionThrow::UActionThrow()
 	_throwingSpeed = 100;
 }
 
-void UActionThrow::VTMExecute()
+void UActionThrow::VOnExecute()
 {
-	Super::VTMExecute();
+	Super::VOnExecute();
 
 	if (GetAnimControlComp())
 	{
@@ -36,14 +36,14 @@ void UActionThrow::VTMExecute()
 	}
 }
 
-void UActionThrow::VTMTick(float deltaTime)
+void UActionThrow::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 }
 
-void UActionThrow::VTMOnDead()
+void UActionThrow::VOnDead()
 {
-	Super::VTMOnDead();
+	Super::VOnDead();
 
 	if (GetAnimControlComp())
 	{

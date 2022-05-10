@@ -11,12 +11,12 @@ UActionTakeOff::UActionTakeOff()
 	_actionType = EActionType::EACT_TakeOff;
 }
 
-void UActionTakeOff::VTMExecute()
+void UActionTakeOff::VOnExecute()
 {
 	GetActionOwner()->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 }
 
-void UActionTakeOff::VTMTick(float deltaTime)
+void UActionTakeOff::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 }

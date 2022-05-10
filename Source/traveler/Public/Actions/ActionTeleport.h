@@ -18,7 +18,7 @@ public:
 	UActionTeleport();
 
 public:
-	virtual void VTMExecute() override;
-	virtual void VTMTick(float deltaTime) override;
+	virtual void VOnExecute() override;
+	virtual void VOnTick(float deltaTime) override;
 	
 };

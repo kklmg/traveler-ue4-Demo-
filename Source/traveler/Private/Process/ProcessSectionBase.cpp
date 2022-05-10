@@ -15,7 +15,7 @@ float UProcessSectionBase::GetElapsedTime()
 
 void UProcessSectionBase::VTMInitialize()
 {
-	Super::VTMInit();
+	Super::VOnInit();
 	_elapsedTime = 0;
 }
 
@@ -26,14 +26,14 @@ bool UProcessSectionBase::VCanExecute()
 	return true;
 }
 
-void UProcessSectionBase::VTMExecute()
+void UProcessSectionBase::VOnExecute()
 {
-	Super::VTMExecute();
+	Super::VOnExecute();
 }
 
-void UProcessSectionBase::VTMTick(float deltaTime)
+void UProcessSectionBase::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 
 	_elapsedTime += deltaTime;
 
@@ -44,24 +44,24 @@ void UProcessSectionBase::VTMTick(float deltaTime)
 }
 
 
-void UProcessSectionBase::VTMOnDead()
+void UProcessSectionBase::VOnDead()
 {
-	Super::VTMOnDead();
+	Super::VOnDead();
 
 	_elapsedTime = 0;
 }
 
-void UProcessSectionBase::VTMOnSucceed()
+void UProcessSectionBase::VOnSucceed()
 {
-	Super::VTMOnSucceed();
+	Super::VOnSucceed();
 }
 
-void UProcessSectionBase::VTMOnFailed()
+void UProcessSectionBase::VOnFailed()
 {
-	Super::VTMOnFailed();
+	Super::VOnFailed();
 }
 
-void UProcessSectionBase::VTMOnAborted()
+void UProcessSectionBase::VOnAborted()
 {
-	Super::VTMOnAborted();
+	Super::VOnAborted();
 }

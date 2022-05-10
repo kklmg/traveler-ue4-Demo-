@@ -20,12 +20,12 @@ public:
 	void AddProcess(UProcessBase* process);
 	void setIsLoop(bool isLoop);
 
-	virtual void VTMInit() override;
+	virtual void VOnInit() override;
 	virtual bool VCanExecute() override;
-	virtual void VTMExecute() override;
-	virtual void VTMTick(float deltaTime) override;
-	virtual void VTMOnDead() override;
-	virtual void VTMOnAborted() override;
+	virtual void VOnExecute() override;
+	virtual void VOnTick(float deltaTime) override;
+	virtual void VOnDead() override;
+	virtual void VOnAborted() override;
 
 private:
 	UPROPERTY()

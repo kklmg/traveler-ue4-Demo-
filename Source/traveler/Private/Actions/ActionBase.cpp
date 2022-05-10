@@ -42,14 +42,14 @@ void UActionBase::VSetUpActionData(ACharacter* character, UActionComponent* acti
 
 
 
-void UActionBase::VTMInit()
+void UActionBase::VOnInit()
 {
 	_elapsedTime = 0.0f;
 }
 
-FORCEINLINE void UActionBase::VTMExecute()
+FORCEINLINE void UActionBase::VOnExecute()
 {
-	Super::VTMExecute();
+	Super::VOnExecute();
 	if(_statusComp)
 	{
 		_statusComp->TryApplyCost(_costData);
@@ -64,9 +64,9 @@ FORCEINLINE bool UActionBase::VCanExecute()
 	return _statusComp && _statusComp->IsRemainingPointEnough(_costData);
 }
 
-void UActionBase::VTMTick(float deltaTime)
+void UActionBase::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 
 	_elapsedTime += deltaTime;
 }

@@ -28,9 +28,9 @@ bool UBowActionBase::VCanExecute()
 	return (animationState == EAnimationState::EAnimState_Walk || animationState == EAnimationState::EAnimState_Fall);
 }
 
-void UBowActionBase::VTMExecute()
+void UBowActionBase::VOnExecute()
 {
-	Super::VTMExecute();
+	Super::VOnExecute();
 
 }
 

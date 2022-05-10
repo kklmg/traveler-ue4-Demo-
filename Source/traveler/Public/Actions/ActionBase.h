@@ -64,15 +64,15 @@ public:
 	float GetElapsedTime();
 
 protected:
-	virtual void VTMInit() override;
-	virtual void VTMExecute() override;
+	virtual void VOnInit() override;
+	virtual void VOnExecute() override;
 	virtual bool VCanExecute() override;
-	virtual void VTMTick(float deltaTime) override;
+	virtual void VOnTick(float deltaTime) override;
 
-	//virtual void VTMOnDead() override;
-	//virtual void VTMOnSucceed() override;
-	//virtual void VTMOnFailed() override;
-	//virtual void VTMOnAborted() override;
+	//virtual void VOnDead() override;
+	//virtual void VOnSucceed() override;
+	//virtual void VOnFailed() override;
+	//virtual void VOnAborted() override;
 
 protected:
 

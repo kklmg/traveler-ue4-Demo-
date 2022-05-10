@@ -20,9 +20,9 @@ class TRAVELER_API UActionThrow : public UActionWithAnimMontage
 public:
 	UActionThrow();
 
-	virtual void VTMExecute() override;
-	virtual void VTMTick(float deltaTime) override;
-	virtual void VTMOnDead() override;
+	virtual void VOnExecute() override;
+	virtual void VOnTick(float deltaTime) override;
+	virtual void VOnDead() override;
 
 private:
 

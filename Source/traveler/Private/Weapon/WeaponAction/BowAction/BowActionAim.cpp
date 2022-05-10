@@ -18,9 +18,9 @@ UBowActionAim::UBowActionAim()
 }
 
 
-void UBowActionAim::VTMExecute()
+void UBowActionAim::VOnExecute()
 {
-	Super::VTMExecute();
+	Super::VOnExecute();
 
 	//Camera
 	GetBow()->DragCamera(true);
@@ -37,9 +37,9 @@ void UBowActionAim::VTMExecute()
 
 
 
-void UBowActionAim::VTMTick(float deltaTime)
+void UBowActionAim::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 
 	EAnimationState animationState = GetAnimControlComp()->GetAnimationState();
 	if(animationState != EAnimationState::EAnimState_Walk && animationState != EAnimationState::EAnimState_Fall)
@@ -59,9 +59,9 @@ void UBowActionAim::VTMTick(float deltaTime)
 	}
 }
 
-void UBowActionAim::VTMOnDead()
+void UBowActionAim::VOnDead()
 {
-	Super::VTMOnDead();
+	Super::VOnDead();
 
 	GetBow()->SetBowState(EBowState::EBS_Normal);
 

@@ -113,9 +113,6 @@ private:
 	UWeaponAnimationModelBase* _weaponAnimationModel;
 
 	UPROPERTY()
-	UActionComponent* _ownerActionComp;
-
-	UPROPERTY()
 	UEventBrokerComponent* _ownerEventBrokerComp;
 
 	UPROPERTY(EditDefaultsOnly)

@@ -16,8 +16,8 @@ class TRAVELER_API UBowActionAim : public UBowActionBase
 public:
 	UBowActionAim();
 	
-	virtual void VTMExecute() override;
-	virtual void VTMTick(float deltaTime) override;
+	virtual void VOnExecute() override;
+	virtual void VOnTick(float deltaTime) override;
 
-	virtual void VTMOnDead() override;
+	virtual void VOnDead() override;
 };

@@ -53,14 +53,14 @@ bool UActionCircleAround::VCanExecute()
 	return true;
 }
 
-void UActionCircleAround::VTMExecute()
+void UActionCircleAround::VOnExecute()
 {
-	Super::VTMExecute();
+	Super::VOnExecute();
 }
 
-void UActionCircleAround::VTMTick(float deltaTime)
+void UActionCircleAround::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 
 	if (!TryGetData())
 	{

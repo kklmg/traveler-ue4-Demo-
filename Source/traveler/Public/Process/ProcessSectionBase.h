@@ -19,13 +19,13 @@ public:
 
 	virtual void VTMInitialize();
 	virtual bool VCanExecute() override;
-	virtual void VTMExecute();
-	virtual void VTMTick(float deltaTime);
+	virtual void VOnExecute();
+	virtual void VOnTick(float deltaTime);
 
-	virtual void VTMOnDead();
-	virtual void VTMOnSucceed();
-	virtual void VTMOnFailed();
-	virtual void VTMOnAborted();	
+	virtual void VOnDead();
+	virtual void VOnSucceed();
+	virtual void VOnFailed();
+	virtual void VOnAborted();	
 
 private:
 	float _elapsedTime;

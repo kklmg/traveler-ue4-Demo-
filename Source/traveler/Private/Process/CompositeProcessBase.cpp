@@ -19,9 +19,9 @@ void UCompositeProcessBase::setIsLoop(bool isLoop)
 	_bLoop = isLoop;
 }
 
-void UCompositeProcessBase::VTMInit()
+void UCompositeProcessBase::VOnInit()
 {
-	Super::VTMInit();
+	Super::VOnInit();
 
     for (UProcessBase* process : _procesPool)
     {
@@ -44,12 +44,12 @@ bool UCompositeProcessBase::VCanExecute()
 	return 	_procesPool[_curProcessID]->VCanExecute();
 }
 
-void UCompositeProcessBase::VTMExecute()
+void UCompositeProcessBase::VOnExecute()
 {
 	_procesPool[_curProcessID]->Execute();
 }
 
-void UCompositeProcessBase::VTMTick(float deltaTime)
+void UCompositeProcessBase::VOnTick(float deltaTime)
 {
     _procesPool[_curProcessID]->Tick(deltaTime);
 
@@ -79,14 +79,14 @@ void UCompositeProcessBase::VTMTick(float deltaTime)
     }
 }
 
-void UCompositeProcessBase::VTMOnDead()
+void UCompositeProcessBase::VOnDead()
 {
-	Super::VTMOnDead();
+	Super::VOnDead();
 }
 
-void UCompositeProcessBase::VTMOnAborted()
+void UCompositeProcessBase::VOnAborted()
 {
-	Super::VTMOnAborted();
+	Super::VOnAborted();
 
     for (UProcessBase* process : _procesPool)
     {

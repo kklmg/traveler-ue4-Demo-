@@ -33,9 +33,9 @@ void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCau
 	}
 }
 
-void UStatusEffectProcessBase::VTMInit()
+void UStatusEffectProcessBase::VOnInit()
 {
-	Super::VTMInit();
+	Super::VOnInit();
 
 	_totalElapsedTime = 0;
 	_ElapsedTimeFromLastDamage = 0;
@@ -69,7 +69,7 @@ bool UStatusEffectProcessBase::VCanExecute()
 	return true;
 }
 
-void UStatusEffectProcessBase::VTMExecute()
+void UStatusEffectProcessBase::VOnExecute()
 {
 	if (_actorUIComp)
 	{
@@ -82,7 +82,7 @@ void UStatusEffectProcessBase::VTMExecute()
 	}
 }
 
-void UStatusEffectProcessBase::VTMTick(float deltaTime)
+void UStatusEffectProcessBase::VOnTick(float deltaTime)
 {
 	_totalElapsedTime += deltaTime;
 	_ElapsedTimeFromLastDamage += deltaTime;
@@ -107,7 +107,7 @@ void UStatusEffectProcessBase::VTMTick(float deltaTime)
 	}
 }
 
-void UStatusEffectProcessBase::VTMOnDead()
+void UStatusEffectProcessBase::VOnDead()
 {
 	if(_actorUIComp)
 	{

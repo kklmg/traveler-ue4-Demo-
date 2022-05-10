@@ -10,9 +10,9 @@ UActionWithAnimMontage::UActionWithAnimMontage()
 	_bIsInstantProcess = false;
 }
 
-void UActionWithAnimMontage::VTMExecute()
+void UActionWithAnimMontage::VOnExecute()
 {
-	Super::VTMExecute();
+	Super::VOnExecute();
 
 	check(GetActionOwner());
 
@@ -36,7 +36,7 @@ void UActionWithAnimMontage::VTMExecute()
 	}
 }
 
-void UActionWithAnimMontage::VTMOnDead()
+void UActionWithAnimMontage::VOnDead()
 {
 	check(GetAnimControlComp()->GetAnimInstance());
 

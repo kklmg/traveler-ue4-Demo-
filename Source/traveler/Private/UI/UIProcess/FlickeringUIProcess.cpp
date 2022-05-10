@@ -3,9 +3,9 @@
 
 #include "UI/UIProcess/FlickeringUIProcess.h"
 
-void UFlickeringUIProcess::VTMInit()
+void UFlickeringUIProcess::VOnInit()
 {
-	Super::VTMInit();
+	Super::VOnInit();
 	_elapsedTime = 0.0f;
 }
 
@@ -27,15 +27,15 @@ bool UFlickeringUIProcess::VCanExecute()
 	return (_opacityCurve && _duration > 0.0f);
 }
 
-void UFlickeringUIProcess::VTMExecute()
+void UFlickeringUIProcess::VOnExecute()
 {
-	Super::VTMExecute();
+	Super::VOnExecute();
 
 }
 
-void UFlickeringUIProcess::VTMTick(float deltaTime)
+void UFlickeringUIProcess::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 
 	_elapsedTime += deltaTime;
 
@@ -55,24 +55,24 @@ void UFlickeringUIProcess::VTMTick(float deltaTime)
 }
 
 
-void UFlickeringUIProcess::VTMOnDead()
+void UFlickeringUIProcess::VOnDead()
 {
-	Super::VTMOnDead();
+	Super::VOnDead();
 
 	_elapsedTime = 0;
 }
 
-void UFlickeringUIProcess::VTMOnSucceed()
+void UFlickeringUIProcess::VOnSucceed()
 {
-	Super::VTMOnSucceed();
+	Super::VOnSucceed();
 }
 
-void UFlickeringUIProcess::VTMOnFailed()
+void UFlickeringUIProcess::VOnFailed()
 {
-	Super::VTMOnFailed();
+	Super::VOnFailed();
 }
 
-void UFlickeringUIProcess::VTMOnAborted()
+void UFlickeringUIProcess::VOnAborted()
 {
-	Super::VTMOnAborted();
+	Super::VOnAborted();
 }

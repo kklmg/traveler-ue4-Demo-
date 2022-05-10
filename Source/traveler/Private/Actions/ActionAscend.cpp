@@ -11,12 +11,12 @@ UActionAscend::UActionAscend()
 	_actionType = EActionType::EACT_Ascend;
 }
 
-void UActionAscend::VTMExecute()
+void UActionAscend::VOnExecute()
 {
 	GetActionOwner()->AddMovementInput(FVector(0, 0, 1));
 }
 
-void UActionAscend::VTMTick(float deltaTime)
+void UActionAscend::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 }

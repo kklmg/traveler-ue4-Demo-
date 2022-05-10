@@ -19,9 +19,9 @@ bool UBowActionFire::VCanExecute()
 	return GetBow()->VCanFire();
 }
 
-void UBowActionFire::VTMExecute()
+void UBowActionFire::VOnExecute()
 {
-	Super::VTMExecute();
+	Super::VOnExecute();
 
 	EAnimationState animationState = GetAnimControlComp()->GetAnimationState();
 	if (animationState != EAnimationState::EAnimState_Walk && animationState != EAnimationState::EAnimState_Fall)
@@ -35,14 +35,14 @@ void UBowActionFire::VTMExecute()
 	GetBow()->GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsFiring, true);
 }
 
-void UBowActionFire::VTMTick(float deltaTime)
+void UBowActionFire::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 }
 
-void UBowActionFire::VTMOnDead()
+void UBowActionFire::VOnDead()
 {
-	Super::VTMOnDead();
+	Super::VOnDead();
 
 	//Animation
 	GetBow()->GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsFiring, false);

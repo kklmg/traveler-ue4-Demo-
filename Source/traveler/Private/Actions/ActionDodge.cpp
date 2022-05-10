@@ -31,7 +31,7 @@ bool UActionDodge::VCanExecute()
 	return bIsWalking;
 }
 
-void UActionDodge::VTMExecute()
+void UActionDodge::VOnExecute()
 {
 	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
 
@@ -53,9 +53,9 @@ void UActionDodge::VTMExecute()
 	GetActionOwner()->SetActorRotation(_shiftDirection.Rotation());
 }
 
-void UActionDodge::VTMTick(float deltaTime)
+void UActionDodge::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 
 	GetActionOwner()->AddMovementInput(_shiftDirection, _dodgeSpeed * deltaTime);
 }

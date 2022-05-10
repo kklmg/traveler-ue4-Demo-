@@ -11,7 +11,7 @@ UActionTeleport::UActionTeleport()
 	_actionType = EActionType::EACT_Teleport;
 }
 
-void UActionTeleport::VTMExecute()
+void UActionTeleport::VOnExecute()
 {
 	FVector outLocation;
 	if (GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_TeleportLocation, outLocation)) 
@@ -20,7 +20,7 @@ void UActionTeleport::VTMExecute()
 	}
 }
 
-void UActionTeleport::VTMTick(float deltaTime)
+void UActionTeleport::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 }

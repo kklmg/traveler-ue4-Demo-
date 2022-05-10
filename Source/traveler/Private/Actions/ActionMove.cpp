@@ -26,7 +26,7 @@ bool UActionMove::VCanExecute()
 	return (bIsDodging == false && GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, _movementInput, true));
 }
 
-void UActionMove::VTMExecute()
+void UActionMove::VOnExecute()
 {
 	auto myMovementComp = Cast<UMyCharacterMovementComponent>(GetActionOwner()->GetCharacterMovement());
 
@@ -61,7 +61,7 @@ void UActionMove::VTMExecute()
 	GetActionOwner()->AddMovementInput(_movementInput);
 }
 
-void UActionMove::VTMTick(float deltaTime)
+void UActionMove::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 }

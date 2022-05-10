@@ -18,8 +18,8 @@ class TRAVELER_API UActionWithAnimMontage : public UActionBase
 public:
 	UActionWithAnimMontage();
 
-	virtual void VTMExecute() override;
-	virtual void VTMOnDead() override;
+	virtual void VOnExecute() override;
+	virtual void VOnDead() override;
 
 	UFUNCTION()
 	virtual void VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted);

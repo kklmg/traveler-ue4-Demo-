@@ -31,11 +31,11 @@ public:
 	void CombineEffectData(UStatusEffectData* effectData);
 
 protected:
-	virtual void VTMInit() override;
+	virtual void VOnInit() override;
 	virtual bool VCanExecute() override;
-	virtual void VTMExecute() override;
-	virtual void VTMTick(float deltaTime) override;
-	virtual void VTMOnDead() override;
+	virtual void VOnExecute() override;
+	virtual void VOnTick(float deltaTime) override;
+	virtual void VOnDead() override;
 
 private:
 	bool _bHasDamage;

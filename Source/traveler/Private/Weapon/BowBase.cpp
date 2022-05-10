@@ -19,9 +19,6 @@
 #include "GameSystem/OptionBase.h"
 #include "Enums/EnumAnimation.h"
 
-#include "Weapon/WeaponAction/BowAction/BowActionFire.h"
-#include "Weapon/WeaponAction/BowAction/BowActionAim.h"
-
 ABowBase::ABowBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	//Create quiver component used in projectile management
@@ -322,22 +319,6 @@ void ABowBase::AttachArrowsToBow()
 	}
 }
 
-void ABowBase::OnFireProcessChanged(EProcessState processState)
-{
-	if (GetWeaponAnimationModel())
-	{
-	//	GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponActionProcess::FIRE));
-	}
-}
-
-void ABowBase::OnAimProcessChanged(EProcessState processState)
-{
-	if (GetWeaponAnimationModel())
-	{
-	//	GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponActionProcess::AIM));
-	}
-}
-
 void ABowBase::ClearHoldingArrows(bool bDeactivateArrows)
 {
 	if (_holdingArrows.Num() == 0) return;
@@ -395,7 +376,6 @@ void ABowBase::DecreaseArrows()
 	ClearHoldingArrows(true);
 	SetBowState(EBowState::EBS_Normal);
 }
-
 
 void ABowBase::OnAnim_StartDrawingBowString(UObject* data)
 {

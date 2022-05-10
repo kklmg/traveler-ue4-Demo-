@@ -22,9 +22,9 @@ bool UActionJump::VCanExecute()
 	return GetActionComp()->IsActionAlive(EActionType::EACT_Dodge) == false;
 }
 
-void UActionJump::VTMExecute()
+void UActionJump::VOnExecute()
 {
-	Super::VTMExecute();
+	Super::VOnExecute();
 	if (GetAnimationViewModel())
 	{
 		GetAnimationViewModel()->SetBool(NSAnimationDataKey::bWantToJump, true);
@@ -34,9 +34,9 @@ void UActionJump::VTMExecute()
 	GetActionComp()->AbortAction(EActionType::EACT_Aim);
 }
 
-void UActionJump::VTMTick(float deltaTime)
+void UActionJump::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 
 	if (GetElapsedTime() > _delayTime)
 	{

@@ -11,14 +11,14 @@ void UProcessBase::Init()
 	}
 
 	SetProcessState(EProcessState::EPS_ReadyToExecute);
-	VTMInit();
+	VOnInit();
 }
 
 bool UProcessBase::Execute()
 {
 	if (VCanExecute() && SetProcessState(EProcessState::EPS_Running))
 	{
-		VTMExecute();
+		VOnExecute();
 
 		if(_bIsInstantProcess)
 		{
@@ -48,8 +48,8 @@ bool UProcessBase::SetProcessSucceed()
 {
 	if (IsAlive() && SetProcessState(EProcessState::EPS_SUCCEEDED))
 	{
-		VTMOnSucceed();
-		VTMOnDead();
+		VOnSucceed();
+		VOnDead();
 		return true;
 	}
 	else
@@ -62,8 +62,8 @@ bool UProcessBase::SetProcessFailed()
 {
 	if (IsAlive() && SetProcessState(EProcessState::EPS_FAILED))
 	{
-		VTMOnFailed();
-		VTMOnDead();
+		VOnFailed();
+		VOnDead();
 		return true;
 	}
 	else
@@ -76,8 +76,8 @@ bool UProcessBase::SetProcessAborted()
 {
 	if (IsAlive() && SetProcessState(EProcessState::EPS_Aborted))
 	{
-		VTMOnAborted();
-		VTMOnDead();
+		VOnAborted();
+		VOnDead();
 		return true;
 	}
 	else
@@ -100,7 +100,7 @@ FORCEINLINE_DEBUGGABLE void UProcessBase::Tick(float deltaTime)
 {
 	if (_processState == EProcessState::EPS_Running)
 	{
-		VTMTick(deltaTime);
+		VOnTick(deltaTime);
 	}
 }
 
@@ -132,30 +132,30 @@ FORCEINLINE_DEBUGGABLE FName UProcessBase::GetProcessName()
 
 //Internal Functions -----------------------------------
 
-void UProcessBase::VTMInit()
+void UProcessBase::VOnInit()
 {
 }
 
-void UProcessBase::VTMExecute()
+void UProcessBase::VOnExecute()
 {
 }
 
-void UProcessBase::VTMTick(float deltaTime)
+void UProcessBase::VOnTick(float deltaTime)
 {
 }
 
-void UProcessBase::VTMOnDead()
+void UProcessBase::VOnDead()
 {
 }
 
-void UProcessBase::VTMOnSucceed()
+void UProcessBase::VOnSucceed()
 {
 }
 
-void UProcessBase::VTMOnFailed()
+void UProcessBase::VOnFailed()
 {
 }
 
-void UProcessBase::VTMOnAborted()
+void UProcessBase::VOnAborted()
 {
 }

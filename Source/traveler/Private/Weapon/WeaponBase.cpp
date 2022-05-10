@@ -56,9 +56,6 @@ void AWeaponBase::VInitialize(ACreatureCharacter* weaponOwner)
 	_weaponOwner = weaponOwner;
 	check(_weaponOwner);
 
-	_ownerActionComp = Cast<UActionComponent>(_weaponOwner->GetComponentByClass(UActionComponent::StaticClass()));
-	check(weaponOwner);
-
 	_ownerEventBrokerComp = Cast<UEventBrokerComponent>(_weaponOwner->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 	check(_ownerEventBrokerComp);
 
@@ -161,7 +158,7 @@ void AWeaponBase::VWeaponControlButtonF()
 {
 }
 
-FORCEINLINE UWeaponAnimationModelBase* AWeaponBase::GetWeaponAnimationModel()
+FORCEINLINE_DEBUGGABLE UWeaponAnimationModelBase* AWeaponBase::GetWeaponAnimationModel()
 {
 	return _weaponAnimationModel;
 }

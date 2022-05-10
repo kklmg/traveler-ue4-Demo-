@@ -19,8 +19,8 @@ public:
 	UActionCircleAround();
 
 	virtual bool VCanExecute() override;
-	virtual void VTMExecute() override;
-	virtual void VTMTick(float deltaTime) override;
+	virtual void VOnExecute() override;
+	virtual void VOnTick(float deltaTime) override;
 
 private:
 	bool TryGetData();

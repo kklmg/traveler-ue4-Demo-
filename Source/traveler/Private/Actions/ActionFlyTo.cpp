@@ -36,7 +36,7 @@ bool UActionFlyTo::VCanExecute()
 	return true;
 }
 
-void UActionFlyTo::VTMExecute()
+void UActionFlyTo::VOnExecute()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Execute Fly To"));
 
@@ -67,9 +67,9 @@ void UActionFlyTo::VTMExecute()
 	}
 }
 
-void UActionFlyTo::VTMTick(float deltaTime)
+void UActionFlyTo::VOnTick(float deltaTime)
 {
-	Super::VTMTick(deltaTime);
+	Super::VOnTick(deltaTime);
 
 	if (!TryGetDestData())
 	{

@@ -33,14 +33,14 @@ public:
 	virtual bool VCanExecute();
 	
 protected:	
-	virtual void VTMInit();
-	virtual void VTMExecute();
-	virtual void VTMTick(float deltaTime);
+	virtual void VOnInit();
+	virtual void VOnExecute();
+	virtual void VOnTick(float deltaTime);
 
-	virtual void VTMOnDead();
-	virtual void VTMOnSucceed();
-	virtual void VTMOnFailed();
-	virtual void VTMOnAborted();
+	virtual void VOnDead();
+	virtual void VOnSucceed();
+	virtual void VOnFailed();
+	virtual void VOnAborted();
 
 protected:
 	bool SetProcessSucceed();
