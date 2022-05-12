@@ -54,7 +54,6 @@ void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 		UE_LOG(LogTemp, Warning, TEXT("spawn Widget instance failed"));
 		return;
 	}
-
 	newDamageWidgetIns->SetData(outDamageWidgetData);
 }
 

@@ -48,7 +48,6 @@ void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	SetRenderTranslation(renderLocation + ScrollOffset);
 
-
 	if (ElapsedTime > DamageWidgetData.Life)
 	{
 		VInActivate();

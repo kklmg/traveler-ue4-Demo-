@@ -15,9 +15,9 @@ UExTransformProviderComponent::UExTransformProviderComponent()
 }
 
 
-void UExTransformProviderComponent::Initialize(USkeletalMeshComponent* skeletalMeshComp)
+void UExTransformProviderComponent::Initialize(UMeshComponent* meshComp)
 {
-	_skeletalMeshComp = skeletalMeshComp;
+	_meshComp = meshComp;
 }
 
 // Called when the game starts
@@ -54,9 +54,9 @@ bool UExTransformProviderComponent::TryGetSocketName(ETransform transformType, F
 bool UExTransformProviderComponent::TryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
 {
 	//try get bone Transform
-	if (_skeletalMeshComp && _boneNameMap.Contains(transformType))
+	if (_meshComp && _boneNameMap.Contains(transformType))
 	{
-		outTransform = _skeletalMeshComp->GetSocketTransform(_boneNameMap[transformType], transformSpace);
+		outTransform = _meshComp->GetSocketTransform(_boneNameMap[transformType], transformSpace);
 		return true;
 	}
 

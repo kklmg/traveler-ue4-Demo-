@@ -17,7 +17,7 @@ public:
 	// Sets default values for this component's properties
 	UExTransformProviderComponent();
 
-	void Initialize(USkeletalMeshComponent* skeletalMeshComp);
+	void Initialize(UMeshComponent* meshComp);
 
 protected:
 	// Called when the game starts
@@ -41,5 +41,5 @@ private:
 	TMap<ETransform, FTransform> _relativeTransfromMap;
 
 	UPROPERTY()
-	USkeletalMeshComponent* _skeletalMeshComp;
+	UMeshComponent* _meshComp;
 };
