@@ -11,6 +11,7 @@ class UCompositeProcessBase;
 
 class UFlickeringUIProcess;
 class UProcessSectionBase;
+class UImage;
 
 /**
  * 
@@ -22,7 +23,7 @@ struct FTimeNodeData_Flickering
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
-	float TimePoint;
+	float RemainingTime;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	float FlickeringDuration;
@@ -36,6 +37,11 @@ struct FFlickeringWidgetData
 {
 	GENERATED_USTRUCT_BODY()
 public:
+	FFlickeringWidgetData();
+
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
+	float MaxDuration;
+
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	UCurveFloat* OpacityCurve;
 
@@ -63,9 +69,13 @@ protected:
 	virtual bool Initialize() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	virtual void UpdateFlickering();
 
 
 private:
+	UPROPERTY(EditAnyWhere, meta = (bindwidget))
+	UImage* imgProgressBar;
+
 	UPROPERTY()
 	UFlickeringUIProcess* _flickeringProcess;
 
@@ -79,8 +89,5 @@ private:
 	FFlickeringWidgetData _widgetData;
 
 	int32 _curTimeNodeID;
-
-	float _elapsedTime;
-
-	float _totalDuration;
+	float _remainingTime;
 };

@@ -27,6 +27,9 @@ public:
 	bool IsExistStatusEffect(EStatusEffect statusEffectType);
 
 	void Tick(float deltaTime);
+protected:
+	bool ApplyDurationChange(EStatusEffect statusEffectType,float deltaDuration);
+	bool HandleElementalReaction(UStatusEffectData* statusEffectData);
 
 private:
 	UPROPERTY()

@@ -29,8 +29,6 @@ public:
 	// Sets default values for this component's properties
 	UDamageHandlerComponent();
 
-
-
 	bool IsDamageable();
 	void HandleDamage(float basicDamage, EElementalType elementalType, FVector impactPoint, AActor* causer, APawn* instigator, bool bForce = false);
 	void HandleDamageData(FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator, bool bForce = false);

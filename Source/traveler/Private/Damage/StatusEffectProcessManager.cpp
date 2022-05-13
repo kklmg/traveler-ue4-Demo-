@@ -15,9 +15,12 @@ void UStatusEffectProcessManager::ExecuteProcess(AActor* effectReceiver, AActor*
 {
 	if (!statusEffectData) return;
 
-	if (_processMap.Contains(statusEffectData->StatusEffectType))
+	if (HandleElementalReaction(statusEffectData))
 	{
-		_processMap[statusEffectData->StatusEffectType]->CombineEffectData(statusEffectData);
+	}
+	else if (_processMap.Contains(statusEffectData->StatusEffectType))
+	{
+		_processMap[statusEffectData->StatusEffectType]->ApplyDurationChange(statusEffectData->EffectDuration);
 	}
 	else
 	{
@@ -68,4 +71,61 @@ void UStatusEffectProcessManager::Tick(float deltaTime)
 		_processMap.Remove(deadProcessType);
 	}
 	deadProcesstypes.Empty();
+}
+
+bool UStatusEffectProcessManager::ApplyDurationChange(EStatusEffect statusEffectType, float deltaDuration)
+{
+	if (_processMap.Contains(statusEffectType)) 
+	{
+		_processMap[statusEffectType]->ApplyDurationChange(deltaDuration);
+		if (_processMap[statusEffectType]->GetRemainingTime() <= 0.0f)
+		{
+			StopProcess(statusEffectType);
+		}
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+//todo
+bool UStatusEffectProcessManager::HandleElementalReaction(UStatusEffectData* statusEffectData)
+{
+	switch (statusEffectData->StatusEffectType)
+	{
+		case EStatusEffect::EStatusEffect_Fire:
+		{
+			if (ApplyDurationChange(EStatusEffect::EStatusEffect_Water, -statusEffectData->EffectDuration)) return true;
+			if (ApplyDurationChange(EStatusEffect::EStatusEffect_Ice, -statusEffectData->EffectDuration * 0.5f)) return true;
+		}
+			break;
+		case EStatusEffect::EStatusEffect_Water:
+		{
+			if (ApplyDurationChange(EStatusEffect::EStatusEffect_Fire, -statusEffectData->EffectDuration)) return true;
+			if (ApplyDurationChange(EStatusEffect::EStatusEffect_Electricity, -statusEffectData->EffectDuration * 0.5f)) return true;
+		}
+			break;
+		case EStatusEffect::EStatusEffect_Ice:
+		{
+			if (ApplyDurationChange(EStatusEffect::EStatusEffect_Fire, -statusEffectData->EffectDuration * 1.5f)) return true;
+		}
+			break;
+		case EStatusEffect::EStatusEffect_Electricity:
+		{
+			if (ApplyDurationChange(EStatusEffect::EStatusEffect_Water, -statusEffectData->EffectDuration)) return true;
+		}
+			break;
+		case EStatusEffect::EStatusEffect_Poison:
+			break;
+		case EStatusEffect::EStatusEffect_Stun:
+			break;
+		case EStatusEffect::EStatusEffect_Size:
+			break;
+		default: return false;
+			break;
+	}
+	return false;
 }

@@ -27,8 +27,11 @@ class TRAVELER_API UStatusEffectProcessBase : public UProcessBase
 	GENERATED_BODY()
 
 public:
+	UStatusEffectProcessBase();
+
 	void SetData(AActor* effectReceiver, AActor* effectCauser, APawn* effectInstigator, UStatusEffectData* effectData);
-	void CombineEffectData(UStatusEffectData* effectData);
+	void ApplyDurationChange(float deltaDuration);
+	float GetRemainingTime();
 
 protected:
 	virtual void VOnInit() override;
@@ -40,14 +43,13 @@ protected:
 private:
 	bool _bHasDamage;
 
-	float _totalElapsedTime;
+	float _remainingTime;
 	float _ElapsedTimeFromLastDamage;
 
 	float _damage;
 	EElementalType _elementalType;
 	float _damageInterval;
 
-	float _effectDuration;
 	EStatusEffect _statusEffectType;
 
 	UPROPERTY()
@@ -68,4 +70,6 @@ private:
 	UEffectControllerComponent* _effectControlComp;
 	UPROPERTY()
 	UActorUIComponent* _actorUIComp;
+
+	float _maxDuration;
 };

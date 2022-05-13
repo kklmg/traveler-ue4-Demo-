@@ -5,11 +5,12 @@
 #include "Process/CompositeProcessBase.h"
 #include "Process/ProcessSectionBase.h"
 #include "UI/UIProcess/FlickeringUIProcess.h"
+#include "Components/Image.h"
 
 
 UFlickeringWidget::UFlickeringWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	_totalDuration = 15;
+	_remainingTime = 10.0f;
 }
 
 bool UFlickeringWidget::Initialize()
@@ -40,54 +41,61 @@ void UFlickeringWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (_elapsedTime > _totalDuration) return;
+	if (_remainingTime <= 0.0f) return;
 
-	_elapsedTime += InDeltaTime;
-	float remainingTime = _totalDuration - _elapsedTime;
+	_remainingTime -= InDeltaTime;
 
 	//change flickering rate by remaining time
-	while (_curTimeNodeID < _widgetData.FlickeringTimeLineData.Num()
-		&& remainingTime < _widgetData.FlickeringTimeLineData[_curTimeNodeID].TimePoint)
-	{
-		_flickeringProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].FlickeringDuration);
-		_coolingProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].CoolingDuration);
-
-		++_curTimeNodeID;
-	}
+	UpdateFlickering();
 
 	//Run processes
 	_compositeProcess->Tick(InDeltaTime);
+
+	//update progress bar
+	imgProgressBar->GetDynamicMaterial()->SetScalarParameterValue(FName(TEXT("Alpha")), _remainingTime / _widgetData.MaxDuration);
+}
+
+void UFlickeringWidget::UpdateFlickering()
+{
+	while (_curTimeNodeID < _widgetData.FlickeringTimeLineData.Num()
+		&& _remainingTime < _widgetData.FlickeringTimeLineData[_curTimeNodeID].RemainingTime)
+	{
+		_flickeringProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].FlickeringDuration);
+		_coolingProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].CoolingDuration);
+		++_curTimeNodeID;
+	}
 }
 
 void UFlickeringWidget::SetData(FFlickeringWidgetData& widgetData)
 {
 	_widgetData = widgetData;
+	_flickeringProcess->SetOpacityCurve(_widgetData.OpacityCurve);
 }
 
 void UFlickeringWidget::SetDuration(float duration)
 {
-	_totalDuration = duration;
+	_remainingTime = duration;
+
+	_curTimeNodeID = 0;
+	UpdateFlickering();
 }
 
 
 void UFlickeringWidget::ExecuteFlickeringProcess()
 {
-	if (_curTimeNodeID < _widgetData.FlickeringTimeLineData.Num())
-	{
-		_flickeringProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].FlickeringDuration);
-		_flickeringProcess->SetOpacityCurve(_widgetData.OpacityCurve);
-
-		_coolingProcess->SetDuration(_widgetData.FlickeringTimeLineData[_curTimeNodeID].CoolingDuration);
-
-		_compositeProcess->Init();
-		_compositeProcess->Execute();
-	}
+	_compositeProcess->Init();
+	_compositeProcess->Execute();
 }
 
 void UFlickeringWidget::Reset()
 {
 	_curTimeNodeID = 0;
-	_elapsedTime = 0.0f;
+	_remainingTime = 0.0f;
 
 	_compositeProcess->Init();
+}
+
+FFlickeringWidgetData::FFlickeringWidgetData()
+{
+	MaxDuration = 10.0f;
 }

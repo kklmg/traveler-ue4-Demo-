@@ -6,12 +6,13 @@
 void UFlickeringUIProcess::VOnInit()
 {
 	Super::VOnInit();
-	_elapsedTime = 0.0f;
+	_remainingTime = _duration;
 }
 
 void UFlickeringUIProcess::SetDuration(float duration)
 {
 	_duration = duration;
+	_remainingTime = duration;
 }
 
 void UFlickeringUIProcess::SetOpacityCurve(UCurveFloat* opacityCurve)
@@ -37,9 +38,9 @@ void UFlickeringUIProcess::VOnTick(float deltaTime)
 {
 	Super::VOnTick(deltaTime);
 
-	_elapsedTime += deltaTime;
+	_remainingTime -= deltaTime;
 
-	float normalizedElapsedTime = _elapsedTime / _duration;
+	float normalizedElapsedTime = (_duration - _remainingTime) / _duration;
 	float opacityValue = _opacityCurve->GetFloatValue(normalizedElapsedTime);
 	UWidget* widget = GetWidget();
 
@@ -48,7 +49,7 @@ void UFlickeringUIProcess::VOnTick(float deltaTime)
 		widget->SetRenderOpacity(opacityValue);
 	}
 
-	if (_elapsedTime > _duration)
+	if (_remainingTime <= 0.0f)
 	{
 		SetProcessSucceed();
 	}
@@ -58,8 +59,6 @@ void UFlickeringUIProcess::VOnTick(float deltaTime)
 void UFlickeringUIProcess::VOnDead()
 {
 	Super::VOnDead();
-
-	_elapsedTime = 0;
 }
 
 void UFlickeringUIProcess::VOnSucceed()

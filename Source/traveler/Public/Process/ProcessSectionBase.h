@@ -15,7 +15,7 @@ class TRAVELER_API UProcessSectionBase : public UProcessBase
 	GENERATED_BODY()
 public:
 	void SetDuration(float duration);
-	float GetElapsedTime();
+	float GetRemainingTime();
 
 	virtual void VTMInitialize();
 	virtual bool VCanExecute() override;
@@ -28,6 +28,6 @@ public:
 	virtual void VOnAborted();	
 
 private:
-	float _elapsedTime;
+	float _remainingTime;
 	float _duration;
 };

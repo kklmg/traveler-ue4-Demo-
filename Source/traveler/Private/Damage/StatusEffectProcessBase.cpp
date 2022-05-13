@@ -11,6 +11,11 @@
 
 
 
+UStatusEffectProcessBase::UStatusEffectProcessBase()
+{
+	_maxDuration = 10.0f;
+}
+
 void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCauser, APawn* effectInstigator, UStatusEffectData* effectData)
 {
 	check(effectReceiver);
@@ -23,11 +28,11 @@ void UStatusEffectProcessBase::SetData(AActor* effectReceiver, AActor* effectCau
 	_effectControlComp = Cast<UEffectControllerComponent>(effectReceiver->GetComponentByClass(UEffectControllerComponent::StaticClass()));
 	_damageHandlerComp = Cast<UDamageHandlerComponent>(effectReceiver->GetComponentByClass(UDamageHandlerComponent::StaticClass()));
 
-	if(effectData)
+	if (effectData)
 	{
 		_damage = effectData->Damage;
 		_damageInterval = effectData->DamageInterval;
-		_effectDuration = effectData->EffectDuration;
+		_remainingTime = effectData->EffectDuration;
 		_elementalType = effectData->ElementalType;
 		_statusEffectType = effectData->StatusEffectType;
 	}
@@ -37,35 +42,31 @@ void UStatusEffectProcessBase::VOnInit()
 {
 	Super::VOnInit();
 
-	_totalElapsedTime = 0;
 	_ElapsedTimeFromLastDamage = 0;
 }
 
-
-void UStatusEffectProcessBase::CombineEffectData(UStatusEffectData* statusEffectData)
+void UStatusEffectProcessBase::ApplyDurationChange(float deltaDuration)
 {
-	if (statusEffectData)
-	{
-		_damage = FMath::Max(_damage, statusEffectData->Damage);
-		_damageInterval = FMath::Min(_damageInterval, statusEffectData->DamageInterval);
-		_effectDuration = FMath::Max(_effectDuration, statusEffectData->EffectDuration);
-
-		_totalElapsedTime = 0;
-		_ElapsedTimeFromLastDamage = 0;
-	}
+	_remainingTime = FMath::Min(_remainingTime + deltaDuration, _maxDuration);
 
 	if (_actorUIComp)
 	{
-		_actorUIComp->ShowActorStatusEffectUI(_statusEffectType, _effectDuration);
+		_actorUIComp->ShowActorStatusEffectUI(_statusEffectType, _remainingTime);
 	}
+
+}
+
+float UStatusEffectProcessBase::GetRemainingTime()
+{
+	return _remainingTime;
 }
 
 bool UStatusEffectProcessBase::VCanExecute()
 {
 	if (!Super::VCanExecute()) return false;
 
-	if (_effectDuration <= 0.0f) return false;
-   
+	if (_remainingTime <= 0.0f) return false;
+
 	return true;
 }
 
@@ -73,10 +74,10 @@ void UStatusEffectProcessBase::VOnExecute()
 {
 	if (_actorUIComp)
 	{
-		_actorUIComp->ShowActorStatusEffectUI(_statusEffectType, _effectDuration);
+		_actorUIComp->ShowActorStatusEffectUI(_statusEffectType, _remainingTime);
 	}
 
-	if(_effectControlComp)
+	if (_effectControlComp)
 	{
 		_effectControlComp->PlayEffect(EEffectType::EEffectType_StatusEffect, (uint8)_statusEffectType);
 	}
@@ -84,7 +85,7 @@ void UStatusEffectProcessBase::VOnExecute()
 
 void UStatusEffectProcessBase::VOnTick(float deltaTime)
 {
-	_totalElapsedTime += deltaTime;
+	_remainingTime -= deltaTime;
 	_ElapsedTimeFromLastDamage += deltaTime;
 
 
@@ -93,7 +94,7 @@ void UStatusEffectProcessBase::VOnTick(float deltaTime)
 		if (_damage != 0.0f && _damageHandlerComp)
 		{
 			_damageHandlerComp->HandleDamage(_damage, _elementalType, _effectReceiver->GetActorLocation(),
-				_effectCauser, _effectInstigator,true);
+				_effectCauser, _effectInstigator, true);
 		}
 
 
@@ -101,7 +102,7 @@ void UStatusEffectProcessBase::VOnTick(float deltaTime)
 	}
 
 
-	if (_totalElapsedTime > _effectDuration)
+	if (_remainingTime <= 0.0f)
 	{
 		SetProcessSucceed();
 	}
@@ -109,7 +110,7 @@ void UStatusEffectProcessBase::VOnTick(float deltaTime)
 
 void UStatusEffectProcessBase::VOnDead()
 {
-	if(_actorUIComp)
+	if (_actorUIComp)
 	{
 		_actorUIComp->HideActorStatusEffectUI(_statusEffectType);
 	}

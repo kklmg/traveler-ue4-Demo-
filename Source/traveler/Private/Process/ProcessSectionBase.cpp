@@ -6,17 +6,18 @@
 void UProcessSectionBase::SetDuration(float duration)
 {
 	_duration = duration;
+	_remainingTime= _duration;
 }
 
-float UProcessSectionBase::GetElapsedTime()
+float UProcessSectionBase::GetRemainingTime()
 {
-	return _elapsedTime;
+	return _remainingTime;
 }
 
 void UProcessSectionBase::VTMInitialize()
 {
 	Super::VOnInit();
-	_elapsedTime = 0;
+	_remainingTime = _duration;
 }
 
 bool UProcessSectionBase::VCanExecute()
@@ -35,9 +36,9 @@ void UProcessSectionBase::VOnTick(float deltaTime)
 {
 	Super::VOnTick(deltaTime);
 
-	_elapsedTime += deltaTime;
+	_remainingTime -= deltaTime;
 
-	if (_elapsedTime > _duration)
+	if (_remainingTime <0.0f)
 	{
 		SetProcessSucceed();
 	}
@@ -47,8 +48,6 @@ void UProcessSectionBase::VOnTick(float deltaTime)
 void UProcessSectionBase::VOnDead()
 {
 	Super::VOnDead();
-
-	_elapsedTime = 0;
 }
 
 void UProcessSectionBase::VOnSucceed()

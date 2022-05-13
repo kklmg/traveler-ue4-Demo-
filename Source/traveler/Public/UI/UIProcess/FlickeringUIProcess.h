@@ -33,5 +33,5 @@ private:
 	UCurveFloat* _opacityCurve;
 
 	float _duration;
-	float _elapsedTime;
+	float _remainingTime;
 };
