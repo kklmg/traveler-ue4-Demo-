@@ -67,9 +67,16 @@ bool UDamageHandlerComponent::IsDamageable()
 	return _bIsActorAlive;
 }
 
-void UDamageHandlerComponent::HandleDamage(float basicDamage, EElementalType elementalType, FVector impactPoint, AActor* causer, APawn* instigator)
+void UDamageHandlerComponent::HandleDamage(float basicDamage, EElementalType elementalType, FVector impactPoint, AActor* causer, APawn* instigator, bool bForce)
 {
-	if (IsDamageable() == false) return;
+	if (bForce)
+	{
+		if (_bIsActorAlive == false) return;
+	}
+	else
+	{
+		if (IsDamageable() == false) return;
+	}
 
 	float finalDamage = CalculateDamage(basicDamage, elementalType, GetOwner(), causer, instigator);
 
@@ -91,18 +98,25 @@ void UDamageHandlerComponent::HandleDamage(float basicDamage, EElementalType ele
 	}
 }
 
-void UDamageHandlerComponent::HandleDamageData(FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator)
+void UDamageHandlerComponent::HandleDamageData(FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator, bool bForce)
 {
-	if (IsDamageable() == false) return;
+	if (bForce)
+	{
+		if (_bIsActorAlive == false) return;
+	}
+	else
+	{
+		if (IsDamageable() == false) return;
+	}
 
 	//handle basic damage
-	HandleDamage(damageData.Damage, damageData.ElementalType, impactPoint, causer, instigator);
+	HandleDamage(damageData.Damage, damageData.ElementalType, impactPoint, causer, instigator, bForce);
 
 	//handle status effect
 	if (damageData.StatusEffectDataClass)
 	{
 		UStatusEffectData* statusEffectDataIns = NewObject<UStatusEffectData>(this, damageData.StatusEffectDataClass);
-		HandleStatusEffect(statusEffectDataIns, impactPoint, causer, instigator);
+		HandleStatusEffect(statusEffectDataIns, impactPoint, causer, instigator, bForce);
 	}
 
 	//show status UI
@@ -115,9 +129,16 @@ void UDamageHandlerComponent::HandleDamageData(FDamageData& damageData, FVector 
 		causer, damageData.DamageTypeClass);
 }
 
-void UDamageHandlerComponent::HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator)
+void UDamageHandlerComponent::HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator, bool bForce)
 {
-	if (IsDamageable() == false) return;
+	if (bForce)
+	{
+		if (_bIsActorAlive == false) return;
+	}
+	else
+	{
+		if (IsDamageable() == false) return;
+	}
 
 	if (_StatusEffectProcessManager)
 	{

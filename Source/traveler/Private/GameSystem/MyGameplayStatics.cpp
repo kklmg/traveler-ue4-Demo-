@@ -57,7 +57,7 @@ float UMyGameplayStatics::ComputeDistance(FVector from, FVector to, EPlane plane
 	return dirFromTo.Size();
 }
 
-bool UMyGameplayStatics::CauseDamage(AActor* damagedActor, FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator)
+bool UMyGameplayStatics::CauseDamage(AActor* damagedActor, FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator, bool bForce)
 {
 	if (!damagedActor) return false;
 
@@ -66,7 +66,7 @@ bool UMyGameplayStatics::CauseDamage(AActor* damagedActor, FDamageData& damageDa
 
 	if (damageHandlerComp)
 	{
-		damageHandlerComp->HandleDamageData(damageData, impactPoint, causer, instigator);
+		damageHandlerComp->HandleDamageData(damageData, impactPoint, causer, instigator, bForce);
 	}
 
 	else

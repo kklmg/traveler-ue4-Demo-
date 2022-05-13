@@ -93,7 +93,7 @@ void UStatusEffectProcessBase::VOnTick(float deltaTime)
 		if (_damage != 0.0f && _damageHandlerComp)
 		{
 			_damageHandlerComp->HandleDamage(_damage, _elementalType, _effectReceiver->GetActorLocation(),
-				_effectCauser, _effectInstigator);
+				_effectCauser, _effectInstigator,true);
 		}
 
 

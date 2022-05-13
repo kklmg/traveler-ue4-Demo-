@@ -27,7 +27,7 @@ bool UActionDodge::VCanExecute()
 	EMovementMode movementMode = GetActionOwner()->GetCharacterMovement()->MovementMode;
 	bool bIsWalking = (movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking);
 
-	return bIsWalking;
+	return bIsWalking && GetActionComp()->IsActionAlive(EActionType::EACT_Jumping) == false;
 }
 
 void UActionDodge::VOnExecute()

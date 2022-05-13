@@ -33,5 +33,5 @@ public:
 
 	static float ComputeDistance(FVector from, FVector to, EPlane plane = Plane_None);
 
-	static bool CauseDamage(AActor* damagedActor, FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator);
+	static bool CauseDamage(AActor* damagedActor, FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator, bool bForce = false);
 };

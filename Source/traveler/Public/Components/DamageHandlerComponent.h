@@ -32,9 +32,9 @@ public:
 
 
 	bool IsDamageable();
-	void HandleDamage(float basicDamage, EElementalType elementalType, FVector impactPoint, AActor* causer, APawn* instigator);
-	void HandleDamageData(FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator);
-	void HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator);
+	void HandleDamage(float basicDamage, EElementalType elementalType, FVector impactPoint, AActor* causer, APawn* instigator, bool bForce = false);
+	void HandleDamageData(FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator, bool bForce = false);
+	void HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator, bool bForce = false);
 
 
 protected:
