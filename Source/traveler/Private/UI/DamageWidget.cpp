@@ -50,7 +50,7 @@ void UDamageWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	if (ElapsedTime > DamageWidgetData.Life)
 	{
-		VInActivate();
+		VDeactivate();
 	}
 }
 
@@ -83,7 +83,7 @@ bool UDamageWidget::VActivate()
 	}
 }
 
-bool UDamageWidget::VInActivate()
+bool UDamageWidget::VDeactivate()
 {
 	if (_bIsActive)
 	{

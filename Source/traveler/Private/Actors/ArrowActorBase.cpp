@@ -84,7 +84,7 @@ void AArrowActorBase::Tick(float DeltaTime)
 		//inactivate 
 		if(_elapsedTimeFromLaunch > _lifeAfterLaunch)
 		{
-			VInActivate();
+			VDeactivate();
 		}
 	}
 
@@ -95,7 +95,7 @@ void AArrowActorBase::Tick(float DeltaTime)
 		//inactivate 
 		if (_elapsedTimeFromHit > _lifeAfterHit)
 		{
-			VInActivate();
+			VDeactivate();
 		}
 	}
 }

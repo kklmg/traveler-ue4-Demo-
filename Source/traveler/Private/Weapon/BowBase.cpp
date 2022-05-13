@@ -327,7 +327,7 @@ void ABowBase::ClearHoldingArrows(bool bDeactivateArrows)
 	{
 		for (AArrowActorBase* arrow : _holdingArrows)
 		{
-			arrow->VInActivate();
+			arrow->VDeactivate();
 		}
 	}
 	_holdingArrows.Empty();

@@ -72,7 +72,7 @@ void ASphereProjectile::Tick(float DeltaTime)
 
 	if (_elapsedLifeTime > _lifeTime)
 	{
-		VInActivate();
+		VDeactivate();
 	}
 
 	DrawDebugSphere(GetWorld(), GetActorLocation(), _sphereComp->GetScaledSphereRadius(), 10.0f, FColor::Red);
@@ -107,7 +107,7 @@ void ASphereProjectile::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent
 	}
 	if (OtherComp->GetCollisionObjectType() == ECollisionChannel::ECC_WorldStatic)
 	{
-		VInActivate();
+		VDeactivate();
 	}
 }
 
@@ -136,9 +136,9 @@ bool ASphereProjectile::VActivate()
 }
 
 
-bool ASphereProjectile::VInActivate()
+bool ASphereProjectile::VDeactivate()
 {
-	if (Super::VInActivate())
+	if (Super::VDeactivate())
 	{
 		_shift = 0.0f;
 		return true;

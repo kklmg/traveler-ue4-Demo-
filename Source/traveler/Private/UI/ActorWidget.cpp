@@ -70,17 +70,14 @@ void UActorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			}
 		}
 
-
-		_elapsedTime_LeaveScreen = 0;
 		float viewportScale = UWidgetLayoutLibrary::GetViewportScale(this);
 		screenPosition /= viewportScale;
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, RenderTransformPivot.ToString());
-
-		SetVisibility(ESlateVisibility::Visible);
-
-		
 		SetRenderTranslation(screenPosition);
 		SetRenderScale(FVector2D(renderScale,renderScale));
+
+
+		_elapsedTime_LeaveScreen = 0;
+		SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{

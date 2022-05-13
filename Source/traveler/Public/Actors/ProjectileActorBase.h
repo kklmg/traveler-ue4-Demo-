@@ -33,7 +33,7 @@ public:
 	//IPoolableInterface
 	virtual bool VIsActive() final;
 	virtual bool VActivate() override;
-	virtual bool VInActivate() override;
+	virtual bool VDeactivate() override;
 	virtual int VGetPoolId() final;
 	virtual void VSetPoolId(int poolId) final;
 	virtual FOnObjectInactive* VGetObjectInactiveDelegate() final;
@@ -47,6 +47,7 @@ public:
 
 protected:
 	virtual void VReset();
+	virtual void FellOutOfWorld(const UDamageType& damageType) override;
 
 protected:
 	UPROPERTY(VisibleAnywhere)

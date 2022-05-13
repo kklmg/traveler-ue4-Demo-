@@ -26,7 +26,7 @@ class TRAVELER_API IPoolableInterface
 public:
 	virtual bool VIsActive() PURE_VIRTUAL(IPoolableInterface::VIsActive, return false; );
 	virtual bool VActivate() PURE_VIRTUAL(IPoolableInterface::VActivate, return false; );
-	virtual bool VInActivate() PURE_VIRTUAL(IPoolableInterface::VInActivate, return false; );
+	virtual bool VDeactivate() PURE_VIRTUAL(IPoolableInterface::VDeactivate, return false; );
 
 	virtual int VGetPoolId() PURE_VIRTUAL(IPoolableInterface::VGetPoolId, return 0;);
 	virtual void VSetPoolId(int32 poolId) PURE_VIRTUAL(IPoolableInterface::VSetPoolId, );

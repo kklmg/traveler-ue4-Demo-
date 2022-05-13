@@ -63,7 +63,7 @@ public:
 
 	virtual bool VIsActive() override;
 	virtual bool VActivate() override;
-	virtual bool VInActivate() override;
+	virtual bool VDeactivate() override;
 	virtual void VMarkDestroy() override;
 
 	virtual int VGetPoolId()  override;

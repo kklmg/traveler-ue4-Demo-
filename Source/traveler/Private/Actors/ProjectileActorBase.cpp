@@ -45,7 +45,7 @@ void AProjectileActorBase::Tick(float DeltaTime)
 	_elapsedLifeTime += DeltaTime;
 	if (_bHasLife && _elapsedLifeTime > _lifeTime)
 	{
-		VInActivate();
+		VDeactivate();
 	}
 }
 
@@ -77,7 +77,7 @@ bool AProjectileActorBase::VActivate()
 	}
 }
 
-bool AProjectileActorBase::VInActivate()
+bool AProjectileActorBase::VDeactivate()
 {
 	if (_bIsActive)
 	{
@@ -114,6 +114,11 @@ void AProjectileActorBase::VReset()
 		_primitiveComp->IgnoreActorWhenMoving(GetInstigator(), true);
 		GetInstigator()->MoveIgnoreActorAdd(this);
 	}
+}
+
+void AProjectileActorBase::FellOutOfWorld(const UDamageType& damageType)
+{
+	VDeactivate();
 }
 
 int AProjectileActorBase::VGetPoolId()
