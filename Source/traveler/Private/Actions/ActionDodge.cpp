@@ -18,7 +18,6 @@ UActionDodge::UActionDodge()
 	_dodgeSpeed = 250;
 
 	GetCostData()->AddCost(EStatusType::EStatus_Stamina,20);
-	
 }
 
 
@@ -33,6 +32,7 @@ bool UActionDodge::VCanExecute()
 
 void UActionDodge::VOnExecute()
 {
+	Super::VOnExecute();
 	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
 
 	GetActionComp()->AbortAction(EActionType::EACT_Aim);

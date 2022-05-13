@@ -10,6 +10,8 @@
 
 class UStatusEffectProcessManager;
 
+class UActionComponent;
+class UEventBrokerComponent;
 class UActorUIComponent;
 class UStatusComponent;
 
@@ -27,18 +29,22 @@ public:
 	// Sets default values for this component's properties
 	UDamageHandlerComponent();
 
+
+
+	bool IsDamageable();
 	void HandleDamage(float basicDamage, EElementalType elementalType, FVector impactPoint, AActor* causer, APawn* instigator);
 	void HandleDamageData(FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator);
 	void HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator);
 
-	UFUNCTION()
-	void OnHealthChanged(float preValue, float newValue);
 
 protected:
+	virtual void InitializeComponent() override;
+
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	float CalculateDamage(float basicDamage, EElementalType damageType, AActor* damageReceiver, AActor* causer, APawn* instigator);
+	void OnReceiveEvent_LifeStateChanged(UObject* eventBaseData);
 
 public:	
 	// Called every frame
@@ -55,4 +61,12 @@ private:
 
 	UPROPERTY()
 	UStatusComponent* _statusComp;
+
+	UPROPERTY()
+	UActionComponent* _actionComp;
+
+	UPROPERTY()
+	UEventBrokerComponent* _eventBrokerComp;
+
+	bool _bIsActorAlive;
 };

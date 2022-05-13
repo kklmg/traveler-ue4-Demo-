@@ -2,6 +2,8 @@
 
 
 #include "Components/DamageHandlerComponent.h"
+#include "Components/ActionComponent.h"
+#include "Components/EventBrokerComponent.h"
 #include "Damage/StatusEffectProcessManager.h"
 #include "Components/StatusComponent.h"
 #include "Components/ActorUIComponent.h"
@@ -18,6 +20,19 @@ UDamageHandlerComponent::UDamageHandlerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	_bIsActorAlive = true;
+	bWantsInitializeComponent = true;
+}
+
+
+
+void UDamageHandlerComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+	_actorUIComp = Cast<UActorUIComponent>(GetOwner()->GetComponentByClass(UActorUIComponent::StaticClass()));
+	_statusComp = Cast<UStatusComponent>(GetOwner()->GetComponentByClass(UStatusComponent::StaticClass()));
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
+	_actionComp = Cast<UActionComponent>(GetOwner()->GetComponentByClass(UActionComponent::StaticClass()));
 }
 
 // Called when the game starts
@@ -25,17 +40,37 @@ void UDamageHandlerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if(UGameplayStatics::GetPlayerController(this, 0))
+	{
+		_hud = Cast<AMyHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	}
+	
+	if(_eventBrokerComp)
+	{
+		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name, this, &UDamageHandlerComponent::OnReceiveEvent_LifeStateChanged);
+	}
+
 	// ...
 	_StatusEffectProcessManager = NewObject<UStatusEffectProcessManager>(this);
 	check(_StatusEffectProcessManager);
+}
 
-	_actorUIComp = Cast<UActorUIComponent>(GetOwner()->GetComponentByClass(UActorUIComponent::StaticClass()));
-	_statusComp = Cast<UStatusComponent>(GetOwner()->GetComponentByClass(UStatusComponent::StaticClass()));
-	_hud = Cast<AMyHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+bool UDamageHandlerComponent::IsDamageable()
+{
+	if (_actionComp) 
+	{
+		if (_actionComp->IsActionAlive(EActionType::EACT_Dodge) || _actionComp->IsActionAlive(EActionType::EACT_Teleport))
+		{
+			return false;
+		}
+	}
+	return _bIsActorAlive;
 }
 
 void UDamageHandlerComponent::HandleDamage(float basicDamage, EElementalType elementalType, FVector impactPoint, AActor* causer, APawn* instigator)
 {
+	if (IsDamageable() == false) return;
+
 	float finalDamage = CalculateDamage(basicDamage, elementalType, GetOwner(), causer, instigator);
 
 	//apply damage
@@ -58,6 +93,8 @@ void UDamageHandlerComponent::HandleDamage(float basicDamage, EElementalType ele
 
 void UDamageHandlerComponent::HandleDamageData(FDamageData& damageData, FVector impactPoint, AActor* causer, APawn* instigator)
 {
+	if (IsDamageable() == false) return;
+
 	//handle basic damage
 	HandleDamage(damageData.Damage, damageData.ElementalType, impactPoint, causer, instigator);
 
@@ -80,15 +117,12 @@ void UDamageHandlerComponent::HandleDamageData(FDamageData& damageData, FVector 
 
 void UDamageHandlerComponent::HandleStatusEffect(UStatusEffectData* statusEffectData, FVector impactPoint, AActor* causer, APawn* instigator)
 {
+	if (IsDamageable() == false) return;
+
 	if (_StatusEffectProcessManager)
 	{
 		_StatusEffectProcessManager->ExecuteProcess(GetOwner(), causer, instigator, statusEffectData);
 	}
-}
-
-void UDamageHandlerComponent::OnHealthChanged(float preValue, float newValue)
-{
-
 }
 
 //todo
@@ -97,6 +131,14 @@ float UDamageHandlerComponent::CalculateDamage(float basicDamage, EElementalType
 	return basicDamage;
 }
 
+void UDamageHandlerComponent::OnReceiveEvent_LifeStateChanged(UObject* eventBaseData)
+{
+	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(eventBaseData);
+	if (!eventData) return;
+	if (_bIsActorAlive == eventData->Value) return;
+
+	_bIsActorAlive = eventData->Value;
+}
 
 // Called every frame
 void UDamageHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -104,7 +146,7 @@ void UDamageHandlerComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-	if(_StatusEffectProcessManager)
+	if (_StatusEffectProcessManager)
 	{
 		_StatusEffectProcessManager->Tick(DeltaTime);
 	}

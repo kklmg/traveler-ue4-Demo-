@@ -26,6 +26,7 @@ enum class EActionType : uint8
 	EACT_Ascend UMETA(DisplayName = "Ascend"),
 	EACT_Fire UMETA(DisplayName = "Fire"),
 	EACT_Aim UMETA(DisplayName = "Aim"),
+	EACT_Guard UMETA(DisplayName = "Guard"),
 	EACT_Max UMETA(DisplayName = "Max"),
 };
 
