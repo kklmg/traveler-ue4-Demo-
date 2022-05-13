@@ -10,6 +10,9 @@
 UActorWidget::UActorWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	_timeCollapse = 5.0f;
+	_distVisible = 10000.0f;
+	_renderScaleMax = 1.4f;
+	_renderScaleMin = 0.2f;
 }
 
 void UActorWidget::SetData(AActor* widgetOwner, ETransform transformType)
@@ -32,60 +35,52 @@ void UActorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	if (!controller) return;
 
 	//Get Drawing Transform
-	FTransform drawingTransform;
+	FTransform destTransform;
 	if(_exTransformProviderComp
-		&& _exTransformProviderComp->TryGetTransform(_transformType,ERelativeTransformSpace::RTS_World,drawingTransform))
+		&& _exTransformProviderComp->TryGetTransform(_transformType,ERelativeTransformSpace::RTS_World,destTransform))
 	{
 	}
 	else
 	{
-		drawingTransform = _widgetOwner->GetActorTransform();
+		destTransform = _widgetOwner->GetActorTransform();
 	}
 	
 	FVector2D viewportSize;
 	GetWorld()->GetGameViewport()->GetViewportSize(viewportSize);
 
-	//
 	FVector2D screenPosition;
-	bool isOnScreen = UGameplayStatics::ProjectWorldToScreen(controller, drawingTransform.GetLocation(), screenPosition);
+	float renderScale = _renderScaleMax;
+	bool isOnScreen = UGameplayStatics::ProjectWorldToScreen(controller, destTransform.GetLocation(), screenPosition);
 	if (isOnScreen)
 	{
-		//float tests = 1.0f;
-		//if (GetWorld()->GetFirstPlayerController())
-		//{
-		//	APlayerCameraManager* cameraMng = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
-		//	if (cameraMng)
-		//	{
-		//		auto what = cameraMng->GetCameraCachePOV();
-		//		what.OrthoFarClipPlane;
+		if (GetWorld()->GetFirstPlayerController())
+		{
+			APlayerCameraManager* cameraMng = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
+			if (cameraMng)
+			{
+				_distFromCamera = FVector::Dist(destTransform.GetLocation(), cameraMng->GetCameraLocation());
 
-		//		//float dis = (drawingTransform.GetLocation() - cameraMng->GetCameraLocation()).Size();
-		//		//tests = dis / 2048;
-		//		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("viewportScale : %f"), sss));
-		//		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("dis : %f"), dis));
-		//		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("what.OrthoFarClipPlane; : %f"), what.OrthoFarClipPlane));
-		//	}
-		//}
+				float normalizedDistFromCamera = FMath::Clamp(_distFromCamera / _distVisible, 0.0f, 1.0f);
+				renderScale = FMath::Lerp(_renderScaleMin, _renderScaleMax, 1.0f - normalizedDistFromCamera);
+
+				//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_distFromCamera: %f"), _distFromCamera));
+				//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_distVisible: %f"), _distVisible));
+				//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("normalize dist from camera: %f"), normalizedDistFromCamera));
+				//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("renderScale: %f"), renderScale));
+			}
+		}
 
 
 		_elapsedTime_LeaveScreen = 0;
-		float scale = UWidgetLayoutLibrary::GetViewportScale(this);
-		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Screen position" + screenPosition.ToString());
-		screenPosition /= scale;
-		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("viewportScale 2: %f"), scale));
-		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, "Screen position / Scale " + screenPosition.ToString());
-		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Yellow, "viewport size" + viewportSize.ToString());
+		float viewportScale = UWidgetLayoutLibrary::GetViewportScale(this);
+		screenPosition /= viewportScale;
 		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, RenderTransformPivot.ToString());
 
 		SetVisibility(ESlateVisibility::Visible);
 
 		
 		SetRenderTranslation(screenPosition);
-
-		RenderTransformPivot = FVector2D::ZeroVector;
-		//setrenderi
-		SetRenderScale(FVector2D(0.5f, 0.5f));
-		//SetRenderScale();
+		SetRenderScale(FVector2D(renderScale,renderScale));
 	}
 	else
 	{
@@ -95,19 +90,6 @@ void UActorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
-
-	DrawDebugSphere(GetWorld(), drawingTransform.GetLocation(),5,2,FColor::Black);
-
-
-
-
-	//
-	//FVector2D Resolution = FVector2D(GSystemResolution.ResX, GSystemResolution.ResY);
-
-
-	FVector Ground(drawingTransform.GetLocation());
-	Ground.Z = 0;
-	DrawDebugLine(GetWorld(), drawingTransform.GetLocation(), Ground, FColor::Black,false,-1.0f,0U,5.0f);
 }
 
 AActor* UActorWidget::GetWidgetOwner()

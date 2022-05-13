@@ -22,7 +22,7 @@ void UActorStatusWidgetBase::HideStatus(EStatusEffect statusEffectType)
 {
 	if (_widgetInsMap.Contains(statusEffectType))
 	{
-		_widgetInsMap[statusEffectType]->SetVisibility(ESlateVisibility::Collapsed);
+		_widgetInsMap[statusEffectType]->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 

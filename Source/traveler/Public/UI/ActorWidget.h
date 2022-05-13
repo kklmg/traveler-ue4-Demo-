@@ -41,8 +41,17 @@ private:
 	float _timeCollapse;
 	float _elapsedTime_LeaveScreen;
 
+	UPROPERTY(EditDefaultsOnly)
+	float _renderScaleMax;
+	UPROPERTY(EditDefaultsOnly)
+	float _renderScaleMin;
+	UPROPERTY(EditDefaultsOnly)
+	float _distVisible;
+	float _distFromCamera;
+
 	UPROPERTY()
 	UExTransformProviderComponent* _exTransformProviderComp;
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FDMD_OnActorChanged OnWidgetOwnerChangedDelegate;
