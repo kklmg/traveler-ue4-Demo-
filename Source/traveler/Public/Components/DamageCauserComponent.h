@@ -28,7 +28,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CauseDamageTo(AActor* actor);
 
+	UFUNCTION(BlueprintCallable)
+	void CauseContinousDamageTo(AActor* actor);
+
+	UFUNCTION(BlueprintCallable)
+	void StopContinousDamage(AActor* actor);
 private:
 	UPROPERTY(EditDefaultsOnly)
+	float _applyDamageRate;
+
+	UPROPERTY(EditDefaultsOnly)
 	FDamageData _damageData;
+
+	UPROPERTY()
+	TMap<AActor*,FTimerHandle> _damageTimerHandlers;
 };

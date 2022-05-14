@@ -13,6 +13,7 @@ UDamageCauserComponent::UDamageCauserComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	_applyDamageRate = 0.5f;
 }
 
 
@@ -39,4 +40,37 @@ void UDamageCauserComponent::CauseDamageTo(AActor* damagedActor)
 
 	UMyGameplayStatics::CauseDamage(damagedActor, _damageData, damagedActor->GetActorLocation(), GetOwner(), nullptr);
 }
+
+void UDamageCauserComponent::CauseContinousDamageTo(AActor* damagedActor)
+{
+	UMyGameplayStatics::CauseDamage(damagedActor, _damageData, damagedActor->GetActorLocation(), GetOwner(), nullptr);
+
+	FTimerHandle timerHandle;
+	GetWorld()->GetTimerManager().SetTimer(timerHandle,
+		FTimerDelegate::CreateLambda([this, damagedActor]
+	{
+		if (damagedActor)
+		{
+			UMyGameplayStatics::CauseDamage(damagedActor, _damageData, damagedActor->GetActorLocation(), GetOwner(), nullptr);
+		}
+	}), _applyDamageRate, true);
+	_damageTimerHandlers.Add(damagedActor, timerHandle);
+}
+
+void UDamageCauserComponent::StopContinousDamage(AActor* actor)
+{
+	if (_damageTimerHandlers.Contains(actor))
+	{
+		if (_damageTimerHandlers[actor].IsValid())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(_damageTimerHandlers[actor]);
+			_damageTimerHandlers[actor].Invalidate();
+		}
+		_damageTimerHandlers.Remove(actor);
+	}
+}
+
+
+
+
 
