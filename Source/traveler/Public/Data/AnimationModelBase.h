@@ -19,6 +19,7 @@ namespace NSAnimationDataKey
 	const FName bIsAlive = FName(TEXT("bIsAlive"));
 
 	//float
+	const FName fMaxSpeed = FName(TEXT("fMaxSpeed"));
 	const FName fWalkingSpeed = FName(TEXT("fWalkingSpeed"));
 	const FName fSprintingSpeed = FName(TEXT("fSprintingSpeed"));
 	const FName fCameraPitch = FName(TEXT("fCameraPitch"));
@@ -39,7 +40,7 @@ namespace NSAnimationDataKey
 };
 
 
-UCLASS()
+UCLASS(BlueprintType)
 class TRAVELER_API UAnimationModelBase : public UViewModelBase
 {
 	GENERATED_BODY()

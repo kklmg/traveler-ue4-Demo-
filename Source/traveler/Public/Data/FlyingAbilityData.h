@@ -24,5 +24,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	float PitchLimit;
 	UPROPERTY(EditDefaultsOnly)
+	float RollAngSpeed;
+	UPROPERTY(EditDefaultsOnly)
 	float RollLimit;
 };

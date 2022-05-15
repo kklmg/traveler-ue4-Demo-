@@ -24,7 +24,7 @@ void UMyCharacterMovementComponent::InitializeComponent()
 	_actionComp = Cast<UActionComponent>(GetOwner()->GetComponentByClass(UActionComponent::StaticClass()));
 	_statusComp = Cast<UStatusComponent>(GetOwner()->GetComponentByClass(UStatusComponent::StaticClass()));
 	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
-	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
+	_animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
 
 	if (_eventBrokerComp)
 	{
@@ -32,6 +32,12 @@ void UMyCharacterMovementComponent::InitializeComponent()
 		_eventBrokerComp->RegisterEvent(NSEvent::VelocityChanged::Name);
 		_eventData_MovementModeChanged = NewObject<UDataUInt8>(this);
 		_eventData_VelocityChanged = NewObject<UDataVector>(this);
+
+		//publish event 
+		_eventData_VelocityChanged->Value = Velocity;
+		_eventBrokerComp->PublishEvent(NSEvent::VelocityChanged::Name, _eventData_VelocityChanged);
+		_eventData_MovementModeChanged->Value = MovementMode;
+		_eventBrokerComp->PublishEvent(NSEvent::MovementModeChanged::Name, _eventData_MovementModeChanged);
 	}
 }
 
@@ -39,29 +45,43 @@ void UMyCharacterMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (_animControlComp)
+	{
+		_animViewModel = _animControlComp->GetAnimationModel();
+		if (_animViewModel)
+		{
+			_animViewModel->SetUInt8(NSAnimationDataKey::byteMovementMode, MovementMode);
+			_animViewModel->SetFloat(NSAnimationDataKey::fMaxSpeed, GetMaxSpeed());
+			_animViewModel->SetVector(NSAnimationDataKey::vMovingVelocity, Velocity);
+		}
+	}
+
 	if (_statusComp)
 	{
 		//set walking speed 
 		MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_WalkingSpeed);
 	}
 
-	PublishEvent_MovementModeChanged();
 }
 
 void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (_inputDeltaPitch != 0.0f || _inputDeltaYaw != 0.0f)
+	RollControl(DeltaTime);
+
+	if (_inputDeltaPitch != 0.0f || _inputDeltaYaw != 0.0f || _inputDeltaRoll != 0.0f)
 	{
 		FRotator rotator = GetOwner()->GetActorRotation();
 		rotator.Yaw += _inputDeltaYaw;
 		rotator.Pitch += _inputDeltaPitch;
+		rotator.Roll += _inputDeltaRoll;
 
 		GetOwner()->SetActorRotation(rotator);
 
 		_inputDeltaPitch = 0.0f;
 		_inputDeltaYaw = 0.0f;
+		_inputDeltaRoll = 0.0f;
 	}
 }
 
@@ -120,6 +140,8 @@ void UMyCharacterMovementComponent::RotateYaw(bool bPositive, float deltaTime, f
 	{
 		_inputDeltaYaw = bPositive ? _FlyingAbilityData.YawAngSpeed * deltaTime * scale :
 			-_FlyingAbilityData.YawAngSpeed * deltaTime * scale;
+
+
 	}
 	//todo
 	else
@@ -219,18 +241,12 @@ void UMyCharacterMovementComponent::OnMovementModeChanged(EMovementMode Previous
 {
 	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
 
-	PublishEvent_MovementModeChanged();
-}
+	if (_animViewModel)
+	{
+		_animViewModel->SetUInt8(NSAnimationDataKey::byteMovementMode, MovementMode);
+		_animViewModel->SetFloat(NSAnimationDataKey::fMaxSpeed, GetMaxSpeed());
+	}
 
-void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity)
-{
-	Super::OnMovementUpdated(DeltaSeconds, OldLocation, OldVelocity);
-
-	PublishEvent_VelocityModeChanged();
-}
-
-void UMyCharacterMovementComponent::PublishEvent_MovementModeChanged()
-{
 	if (_eventBrokerComp)
 	{
 		_eventData_MovementModeChanged->Value = MovementMode;
@@ -238,8 +254,15 @@ void UMyCharacterMovementComponent::PublishEvent_MovementModeChanged()
 	}
 }
 
-void UMyCharacterMovementComponent::PublishEvent_VelocityModeChanged()
+void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity)
 {
+	Super::OnMovementUpdated(DeltaSeconds, OldLocation, OldVelocity);
+
+	if (_animViewModel)
+	{
+		_animViewModel->SetVector(NSAnimationDataKey::vMovingVelocity, Velocity);
+	}
+
 	if (_eventBrokerComp)
 	{
 		_eventData_VelocityChanged->Value = Velocity;
@@ -247,4 +270,23 @@ void UMyCharacterMovementComponent::PublishEvent_VelocityModeChanged()
 	}
 }
 
+void UMyCharacterMovementComponent::RollControl(float deltaTime)
+{
+	float curRoll = GetOwner()->GetActorRotation().Roll;
 
+	if (_inputDeltaYaw > 0)
+	{
+		_inputDeltaRoll = FMath::Min(_inputDeltaYaw, _FlyingAbilityData.RollLimit - curRoll);
+	}
+	else if (_inputDeltaYaw < 0)
+	{
+		_inputDeltaRoll = FMath::Max(-_inputDeltaYaw, -_FlyingAbilityData.RollLimit - curRoll);
+	}
+	else if (curRoll != 0)
+	{
+		_inputDeltaRoll = curRoll > 0 ? FMath::Max(-_FlyingAbilityData.RollAngSpeed * deltaTime, 0 - curRoll) 
+		: FMath::Min(_FlyingAbilityData.RollAngSpeed * deltaTime, curRoll - 0);
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_inputDeltaRoll : %f"), _inputDeltaRoll));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_inputDeltaYaw : %f"), _inputDeltaYaw));
+}

@@ -17,6 +17,8 @@ class UStatusComponent;
 class UEventBrokerComponent;
 class UDataUInt8;
 class UDataVector;
+class UAnimControlComponent;
+class UAnimationModelBase;
 
 /**
  * 
@@ -42,24 +44,27 @@ public:
 	float ComputeDistTraveledDuringPitch0();
 	void Accelerate(bool bPositive, float deltaTime);
 	void RotateYaw(bool bPositive, float deltaTime, float scale = 1.0f);
-	void RotateToYaw(float destYaw, float deltaTime);
+	void RotateToYaw(float deltaAngle, float deltaTime);
 	void Ascend(bool bPositive, float deltaTime);
 	void KeepHorizontal(float deltaTime);
 	void KeepSpeed(float normalizedSpeed, float deltaTime);
 	void ToggleSprint(bool bSprint);
+
 protected:
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
 	virtual void OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity) override;
 
-	void PublishEvent_MovementModeChanged();
-	void PublishEvent_VelocityModeChanged();
+	void RollControl(float deltaTime);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = FlyingAbility)
 	FFlyingAbilityData _FlyingAbilityData;
 
-	//UPROPERTY()
-	//UAnimationModelBase* _animationViewModel;
+	UPROPERTY()
+	UAnimControlComponent* _animControlComp;
+
+	UPROPERTY()
+	UAnimationModelBase* _animViewModel;
 
 	UPROPERTY()
 	UActionComponent* _actionComp;
@@ -78,5 +83,8 @@ private:
 
 	float _inputDeltaPitch;
 	float _inputDeltaYaw;
+	float _inputDeltaRoll;
 	bool _bToggleSprint;
+
+	float _curYawSpeed;
 };

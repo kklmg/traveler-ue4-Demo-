@@ -30,11 +30,7 @@ void UAnimControlComponent::InitializeComponent()
 	if (_eventBrokerComp)
 	{
 		_eventBrokerComp->SubscribeEvent<UAnimControlComponent>
-			(NSEvent::ActorLifeStateChanged::Name, this, &UAnimControlComponent::OnActorLifeStateChanged);
-		_eventBrokerComp->SubscribeEvent<UAnimControlComponent>
-			(NSEvent::MovementModeChanged::Name, this, &UAnimControlComponent::OnMovementModeChanged);
-		_eventBrokerComp->SubscribeEvent<UAnimControlComponent>
-			(NSEvent::VelocityChanged::Name, this, &UAnimControlComponent::OnVelocityChanged);
+			(NSEvent::ActorLifeStateChanged::Name, this, &UAnimControlComponent::OnReceiveEvent_ActorLifeStateChanged);
 	}
 
 	_character = GetOwner<ACharacter>();
@@ -151,30 +147,11 @@ bool UAnimControlComponent::PlayAnimMontage(EAnimMontage animMontageType)
 	}
 }
 
-void UAnimControlComponent::OnActorLifeStateChanged(UObject* baseData)
+void UAnimControlComponent::OnReceiveEvent_ActorLifeStateChanged(UObject* baseData)
 {
 	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
 	if (eventData)
 	{
 		_animViewModelIns->SetBool(NSAnimationDataKey::bIsAlive, eventData->Value);
-	}
-}
-
-void UAnimControlComponent::OnVelocityChanged(UObject* baseData)
-{
-	auto eventData = Cast<NSEvent::VelocityChanged::DataType>(baseData);
-	if (eventData)
-	{
-		_animViewModelIns->SetVector(NSAnimationDataKey::vMovingVelocity, eventData->Value);
-	}
-
-}
-
-void UAnimControlComponent::OnMovementModeChanged(UObject* baseData)
-{
-	auto eventData = Cast<NSEvent::MovementModeChanged::DataType>(baseData);
-	if (eventData)
-	{
-		_animViewModelIns->SetUInt8(NSAnimationDataKey::byteMovementMode, eventData->Value);
 	}
 }

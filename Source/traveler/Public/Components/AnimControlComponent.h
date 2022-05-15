@@ -62,9 +62,8 @@ public:
 	bool PlayAnimMontage(EAnimMontage animMontageType);
 
 protected:
-	void OnActorLifeStateChanged(UObject* baseData);
-	void OnVelocityChanged(UObject* baseData);
-	void OnMovementModeChanged(UObject* baseData);
+	void OnReceiveEvent_ActorLifeStateChanged(UObject* baseData);
+
 
 private:
 	UPROPERTY()
