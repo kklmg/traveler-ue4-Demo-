@@ -18,7 +18,9 @@ public:
 	FFlyingAbilityData();
 
 	UPROPERTY(EditDefaultsOnly)
-	float YawAngSpeed;
+	float YawAngSpeedMax;
+	UPROPERTY(EditDefaultsOnly)
+	float YawAcc;
 	UPROPERTY(EditDefaultsOnly)
 	float PitchAngSpeed;
 	UPROPERTY(EditDefaultsOnly)

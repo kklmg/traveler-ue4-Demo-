@@ -68,14 +68,15 @@ void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTi
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	RollControl(DeltaTime);
-
 	if (_inputDeltaPitch != 0.0f || _inputDeltaYaw != 0.0f || _inputDeltaRoll != 0.0f)
 	{
 		FRotator rotator = GetOwner()->GetActorRotation();
 		rotator.Yaw += _inputDeltaYaw;
 		rotator.Pitch += _inputDeltaPitch;
-		rotator.Roll += _inputDeltaRoll;
+		rotator.Roll = FMath::Lerp(-60, 60, (_curYawSpeed + _FlyingAbilityData.YawAngSpeedMax) / (_FlyingAbilityData.YawAngSpeedMax * 2));
+
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, rotator.ToString());
+		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_inputDeltaYaw : %f"), _inputDeltaYaw));
 
 		GetOwner()->SetActorRotation(rotator);
 
@@ -138,10 +139,20 @@ void UMyCharacterMovementComponent::RotateYaw(bool bPositive, float deltaTime, f
 {
 	if (MovementMode == EMovementMode::MOVE_Flying)
 	{
-		_inputDeltaYaw = bPositive ? _FlyingAbilityData.YawAngSpeed * deltaTime * scale :
-			-_FlyingAbilityData.YawAngSpeed * deltaTime * scale;
+		_curYawSpeed = bPositive ?
+			FMath::Min(_curYawSpeed + _FlyingAbilityData.YawAcc * deltaTime * scale, _FlyingAbilityData.YawAngSpeedMax) :
+			FMath::Max(_curYawSpeed - _FlyingAbilityData.YawAcc * deltaTime * scale, -_FlyingAbilityData.YawAngSpeedMax);
 
+		_inputDeltaYaw = _curYawSpeed * deltaTime;
 
+		if (bPositive)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("turn right"));
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("turn left"));
+		}
 	}
 	//todo
 	else
@@ -149,16 +160,59 @@ void UMyCharacterMovementComponent::RotateYaw(bool bPositive, float deltaTime, f
 	}
 }
 
-void UMyCharacterMovementComponent::RotateToYaw(float destYaw, float deltaTime)
+void UMyCharacterMovementComponent::RotateToYaw(float deltaYawAngDegree, float deltaTime)
 {
 	if (MovementMode == EMovementMode::MOVE_Flying)
 	{
-		float deltaYaw = _FlyingAbilityData.YawAngSpeed * deltaTime;
-		deltaYaw = destYaw > 0 ?
-			FMath::Min(deltaYaw, destYaw) : FMath::Max(-deltaYaw, destYaw);
+		float acceleratedYawSpeed = FMath::Min(_curYawSpeed + _FlyingAbilityData.YawAcc * deltaTime, _FlyingAbilityData.YawAngSpeedMax);
+		float deceleratedYawSpeed = FMath::Max(_curYawSpeed - _FlyingAbilityData.YawAcc * deltaTime, -_FlyingAbilityData.YawAngSpeedMax);
 
-		_inputDeltaYaw = deltaYaw;
+		//-------------------------------------------------------
+		//v0: Desired Angular Speed(Initial Angular Speed) 
+		//s: Braking Shift,
+		//t: Braking Time,
+		//acc: angular acceleration
+		// 
+		//s = v0 * t - 0.5 * acc * t * t, t = v0 / a 
+		//=> s = v0 * v0 = 2 * acc
+		//=> v0 = sqrt(s * acc * 2)
+		//---------------------------------------------------------
+
+		float desiredYawSpeed = deltaYawAngDegree > 0 ? 
+			FMath::Sqrt(deltaYawAngDegree * _FlyingAbilityData.YawAcc * 2) : FMath::Sqrt(deltaYawAngDegree * -_FlyingAbilityData.YawAcc * 2);
+
+
+		if (_curYawSpeed < desiredYawSpeed)
+		{
+			if (acceleratedYawSpeed > desiredYawSpeed)
+			{
+				_curYawSpeed = desiredYawSpeed;
+				_inputDeltaYaw = (desiredYawSpeed)*deltaTime;
+			}
+			else
+			{
+				_curYawSpeed = acceleratedYawSpeed;
+				_inputDeltaYaw = acceleratedYawSpeed * deltaTime;
+			}
+		}
+		else
+		{
+			if (deceleratedYawSpeed < desiredYawSpeed)
+			{
+				_curYawSpeed = desiredYawSpeed;
+				_inputDeltaYaw = (desiredYawSpeed)*deltaTime;
+			}
+			else
+			{
+				_curYawSpeed = deceleratedYawSpeed;
+				_inputDeltaYaw = deceleratedYawSpeed * deltaTime;
+			}
+		}
 	}
+
+
+
+
 	//todo
 	else
 	{
@@ -237,6 +291,11 @@ void UMyCharacterMovementComponent::ToggleSprint(bool bSprint)
 	MaxWalkSpeed = _statusComp->GetFinalValue(_bToggleSprint ? EStatusType::EStatus_SprintingSpeed : EStatusType::EStatus_WalkingSpeed);
 }
 
+float UMyCharacterMovementComponent::GetCurrentYawSpeed()
+{
+	return _curYawSpeed;
+}
+
 void UMyCharacterMovementComponent::OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode)
 {
 	Super::OnMovementModeChanged(PreviousMovementMode, PreviousCustomMode);
@@ -270,23 +329,4 @@ void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const 
 	}
 }
 
-void UMyCharacterMovementComponent::RollControl(float deltaTime)
-{
-	float curRoll = GetOwner()->GetActorRotation().Roll;
 
-	if (_inputDeltaYaw > 0)
-	{
-		_inputDeltaRoll = FMath::Min(_inputDeltaYaw, _FlyingAbilityData.RollLimit - curRoll);
-	}
-	else if (_inputDeltaYaw < 0)
-	{
-		_inputDeltaRoll = FMath::Max(-_inputDeltaYaw, -_FlyingAbilityData.RollLimit - curRoll);
-	}
-	else if (curRoll != 0)
-	{
-		_inputDeltaRoll = curRoll > 0 ? FMath::Max(-_FlyingAbilityData.RollAngSpeed * deltaTime, 0 - curRoll) 
-		: FMath::Min(_FlyingAbilityData.RollAngSpeed * deltaTime, curRoll - 0);
-	}
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_inputDeltaRoll : %f"), _inputDeltaRoll));
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_inputDeltaYaw : %f"), _inputDeltaYaw));
-}

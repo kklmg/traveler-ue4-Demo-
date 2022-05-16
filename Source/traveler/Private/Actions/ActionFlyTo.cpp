@@ -104,10 +104,10 @@ void UActionFlyTo::VOnTick(float deltaTime)
 
 	if (distXY < _destRadius + _horizontalTolerance 
 		&& distZ < _verticalTolerance 
-		&& FMath::Abs(deltaAngleDegreeH_Forward_ToDest) < 2.0f 
+		&& FMath::Abs(deltaAngleDegreeH_Forward_ToDest) < 1.0f
 		&& FMath::Abs(curRotation.Pitch) < 2.0f)
 	{
-		//GetActionOwner()->GetCharacterMovement()->StopMovementImmediately();
+		GetActionOwner()->GetCharacterMovement()->StopMovementImmediately();
 		SetProcessSucceed();
 	}
 
@@ -117,36 +117,32 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	FVector curVelocity = GetActionOwner()->GetVelocity();
 
 
-	//Rotation Yaw 
+	//Yaw Rotation  
 	//-------------------------------------------------------------------------------------------------------------
 
-	if (FMath::IsNearlyZero(deltaAngleDegreeH_Forward_ToDest) == false)
+	//Compute Track Radius
+	//v = W * R => R = V / W 
+	float trackRadius = curVelocity.Size2D() / FMath::DegreesToRadians((flyingAbility.YawAngSpeedMax * 0.4f));
+
+	//Compute Track Center
+	FVector dirRight = GetActionOwner()->GetActorRightVector();
+	dirRight.Z = 0;
+	dirRight.Normalize();
+
+	FVector trackCenter = deltaAngleDegreeH_Forward_ToDest < 0
+		? curLocation - dirRight * trackRadius : curLocation + dirRight * trackRadius;
+
+	//Compute distance from trackcenter to destination
+	float dist_TrackCenter_Dest = FVector::Dist2D(_destLocation, trackCenter);
+
+
+	if (dist_TrackCenter_Dest > trackRadius)
 	{
-		//Compute Track Radius
-		//v = W * R => R = V / W 
-		float trackRadius = curVelocity.Size2D() / FMath::DegreesToRadians(flyingAbility.YawAngSpeed);
-
-		//Compute Track Center
-		FVector dirRight = GetActionOwner()->GetActorRightVector();
-		dirRight.Z = 0;
-		dirRight.Normalize();
-
-		FVector trackCenter = deltaAngleDegreeH_Forward_ToDest < 0
-			? curLocation - dirRight * trackRadius : curLocation + dirRight * trackRadius;
-
-		//Compute distance from trackcenter to destination
-		float dist_TrackCenter_Dest = FVector::Dist2D(_destLocation, trackCenter);
-
-
-		if (dist_TrackCenter_Dest > trackRadius && curVelocity.Size2D() > 50.0f)
-		{
-			_myMovementComp->RotateToYaw(deltaAngleDegreeH_Forward_ToDest,deltaTime);
-		}
+		_myMovementComp->RotateToYaw(deltaAngleDegreeH_Forward_ToDest, deltaTime);
 	}
+	
 
-	//float tolerance;
-
-	//Rotation Pitch 
+	//Pitch Rotation  
 	//-------------------------------------------------------------------------------------------------------------
 	float offset_Z = _destAltitude - curLocation.Z;
 	float DistTraveledDuringKeepHorizontal = _myMovementComp->ComputeDistTraveledDuringPitch0();
@@ -167,8 +163,9 @@ void UActionFlyTo::VOnTick(float deltaTime)
 		}
 	}
 
-	//Movement Horizontal 
+	//Horizontal Movement  
 	//-------------------------------------------------------------------------------------------------------------
+	
 	if (FMath::IsNearlyZero(deltaAngleDegreeH_Forward_ToDest))
 	{
 		_myMovementComp->Accelerate(true, deltaTime);
@@ -176,17 +173,17 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	else
 	{
 		float breakingDistance = _myMovementComp->ComputeBrakingDistance();
-		
+
 		if (distXY > breakingDistance)
 		{
 			_myMovementComp->Accelerate(true, deltaTime);
 		}
 		else
 		{
-			_myMovementComp->Accelerate(false, deltaTime);			
+			_myMovementComp->Accelerate(false, deltaTime);
 		}
 	}
-
+	
 	//debug message
 	//-------------------------------------------------------------------------------------------------------------
 	//DrawDebugLine(GetWorld(), curLocation, FVector(curLocation.X, curLocation.Y, _destAltitude), FColor::Blue, false, -1.0f, 0U, 30.0f);

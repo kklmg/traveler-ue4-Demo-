@@ -49,12 +49,11 @@ public:
 	void KeepHorizontal(float deltaTime);
 	void KeepSpeed(float normalizedSpeed, float deltaTime);
 	void ToggleSprint(bool bSprint);
+	float GetCurrentYawSpeed();
 
 protected:
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
 	virtual void OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity) override;
-
-	void RollControl(float deltaTime);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = FlyingAbility)
@@ -87,4 +86,6 @@ private:
 	bool _bToggleSprint;
 
 	float _curYawSpeed;
+
+	bool _test;
 };
