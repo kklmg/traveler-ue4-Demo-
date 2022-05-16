@@ -16,8 +16,9 @@ class TRAVELER_API UBasicStatus : public UStatusBase
 public:
 
 	virtual void VInitialize(const FStatusTableRow& tableRow, int32 level = 1) override;
-
 	void Tick(float deltaTime);
+	void SetCanRecover(bool bCanRecover);
+	void ApplyValueChange(float deltaValue, bool bResetRecoveryTimer = true);
 
 	UFUNCTION(BlueprintPure)
 	float GetRemainingValue();
@@ -25,8 +26,8 @@ public:
 	UFUNCTION(BlueprintPure)
 	float GetPercentage();
 
-	void ApplyValueChange(float deltaValue, bool bResetRecoveryTimer = true);
-
+	
+protected:
 	virtual void VOnLevelUp(int32 level);
 private:
 
@@ -36,8 +37,11 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float _recovery;
 
+	bool _bCanRecover;
 	float _elapsedTimeFromLastRecover;
 	float _elapsedTimeFromLastValueChanged;
+
+	
 
 public:
 	UPROPERTY(BlueprintAssignable)

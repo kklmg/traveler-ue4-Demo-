@@ -8,6 +8,8 @@
 #include "Components/AnimControlComponent.h"
 #include "Status/StatusTableRow.h"
 #include "Status/LevelStatus.h"
+#include "Components/EventBrokerComponent.h"
+#include "Event/EventData.h"
 
 // Sets default values for this component's properties
 UStatusComponent::UStatusComponent()
@@ -24,6 +26,7 @@ UStatusComponent::UStatusComponent()
 
 void UStatusComponent::InitializeComponent()
 {
+	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
 	if (animControlComp)
 	{
@@ -39,6 +42,11 @@ void UStatusComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	if(_eventBrokerComp)
+	{
+		_eventBrokerComp->SubscribeEvent<UStatusComponent>
+			(NSEvent::ActorLifeStateChanged::Name, this, &UStatusComponent::OnReceiveEvent_ActorLifeStateChanged);
+	}
 }
 
 
@@ -211,6 +219,17 @@ void UStatusComponent::InitializeStatusData()
 	}
 }
 
+void UStatusComponent::OnReceiveEvent_ActorLifeStateChanged(UObject* baseData)
+{
+	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	if (eventData)
+	{
+		for (auto basicStatus : _basicStatusMap)
+		{
+			basicStatus.Value->SetCanRecover(eventData->Value);
+		}
+	}
+}
 
 
 

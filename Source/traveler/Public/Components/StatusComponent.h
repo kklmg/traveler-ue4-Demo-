@@ -14,6 +14,7 @@ class UCostData;
 class UBasicStatus;
 class UAnimationModelBase;
 class ULevelStatus;
+class UEventBrokerComponent;
 
 
 
@@ -58,7 +59,8 @@ public:
 	void ApplyRemainingPointChange(EStatusType statusType, float value);
 	bool IsRemainingPointEnough(UCostData* costData);
 	bool TryApplyCost(UCostData* costData);
-
+protected:
+	void OnReceiveEvent_ActorLifeStateChanged(UObject* baseData);
 private:
 	void InitializeStatusData();
 
@@ -74,4 +76,6 @@ private:
 	TMap<EStatusType, UStatusBase*> _statusMap;
 	UPROPERTY()
 	TMap<EStatusType, UBasicStatus*> _basicStatusMap;
+	UPROPERTY()
+	UEventBrokerComponent* _eventBrokerComp;
 };

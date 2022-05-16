@@ -158,7 +158,7 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
-		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity, Hit.ImpactPoint);
+		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 0.1f, Hit.ImpactPoint);
 	}
 
 	//Todo

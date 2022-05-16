@@ -10,6 +10,8 @@
 #include "Event/EventData.h"
 #include "Data/AnimationModelBase.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
+#include "GameFramework/Character.h"
+#include "Components/CapsuleComponent.h"
 
 UMyCharacterMovementComponent::UMyCharacterMovementComponent()
 {
@@ -62,6 +64,12 @@ void UMyCharacterMovementComponent::BeginPlay()
 		MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_WalkingSpeed);
 	}
 
+	if (_eventBrokerComp)
+	{
+		_eventBrokerComp->SubscribeEvent<UMyCharacterMovementComponent>
+			(NSEvent::ActorLifeStateChanged::Name, this, &UMyCharacterMovementComponent::OnReceiveEvent_ActorLifeStateChanged);
+	}
+
 }
 
 void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -75,8 +83,8 @@ void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTi
 		rotator.Pitch += _inputDeltaPitch;
 		rotator.Roll = FMath::Lerp(-60, 60, (_curYawSpeed + _FlyingAbilityData.YawAngSpeedMax) / (_FlyingAbilityData.YawAngSpeedMax * 2));
 
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, rotator.ToString());
-		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_inputDeltaYaw : %f"), _inputDeltaYaw));
+		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, rotator.ToString());
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_inputDeltaYaw : %f"), _inputDeltaYaw));
 
 		GetOwner()->SetActorRotation(rotator);
 
@@ -179,8 +187,9 @@ void UMyCharacterMovementComponent::RotateToYaw(float deltaYawAngDegree, float d
 		//---------------------------------------------------------
 
 		float desiredYawSpeed = deltaYawAngDegree > 0 ? 
-			FMath::Sqrt(deltaYawAngDegree * _FlyingAbilityData.YawAcc * 2) : FMath::Sqrt(deltaYawAngDegree * -_FlyingAbilityData.YawAcc * 2);
+			FMath::Sqrt(deltaYawAngDegree * _FlyingAbilityData.YawAcc * 2) : -FMath::Sqrt(deltaYawAngDegree * -_FlyingAbilityData.YawAcc * 2);
 
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("desiredYawSpeed : %f"), desiredYawSpeed));
 
 		if (_curYawSpeed < desiredYawSpeed)
 		{
@@ -209,10 +218,6 @@ void UMyCharacterMovementComponent::RotateToYaw(float deltaYawAngDegree, float d
 			}
 		}
 	}
-
-
-
-
 	//todo
 	else
 	{
@@ -327,6 +332,26 @@ void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const 
 		_eventData_VelocityChanged->Value = Velocity;
 		_eventBrokerComp->PublishEvent(NSEvent::VelocityChanged::Name, _eventData_VelocityChanged);
 	}
+	
 }
 
-
+void UMyCharacterMovementComponent::OnReceiveEvent_ActorLifeStateChanged(UObject* baseData)
+{
+	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	if (eventData)
+	{
+		if (eventData->Value == false)
+		{
+			if (MovementMode == EMovementMode::MOVE_Flying)
+			{
+				//GetCharacterOwner()->GetCapsuleComponent()->SetSimulatePhysics(true);
+				SetMovementMode(EMovementMode::MOVE_Falling);
+			}
+		}
+		else
+		{
+			//GetCharacterOwner()->GetCapsuleComponent()->SetSimulatePhysics(false);
+			//GetCharacterOwner()->GetMesh()->SetSimulatePhysics(false);
+		}
+	}
+}

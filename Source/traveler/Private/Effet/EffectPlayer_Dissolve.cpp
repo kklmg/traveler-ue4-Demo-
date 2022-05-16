@@ -10,7 +10,7 @@ UEffectPlayer_Dissolve::UEffectPlayer_Dissolve(const FObjectInitializer& ObjectI
 	_matParamInfo_DissolveAmount.Index = 2;
 
 	_dissolveAmount = 0;
-	_duration = 2.0f;
+	_duration = 5.0f;
 }
 
 void UEffectPlayer_Dissolve::VInitialize(AActor * owner, UMaterialInstanceDynamic * mid)

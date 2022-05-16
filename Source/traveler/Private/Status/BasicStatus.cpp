@@ -16,6 +16,8 @@ void UBasicStatus::VInitialize(const FStatusTableRow& tableRow, int32 level)
 
 void UBasicStatus::Tick(float deltaTime)
 {
+	if (_bCanRecover == false) return;
+
 	_elapsedTimeFromLastValueChanged += deltaTime;
 
 	if (_remainingValue < GetFinalValue() && _recovery > 0.0f && _elapsedTimeFromLastValueChanged > 1.0f)
@@ -37,6 +39,17 @@ void UBasicStatus::Tick(float deltaTime)
 			_elapsedTimeFromLastRecover = 0.0f;
 		}
 	}
+}
+
+void UBasicStatus::SetCanRecover(bool bCanRecover)
+{
+	_bCanRecover = bCanRecover;
+	if (bCanRecover == false)
+	{
+		_elapsedTimeFromLastRecover = 0.0f;
+		_elapsedTimeFromLastValueChanged = 0.0f;
+	}
+
 }
 
 float UBasicStatus::GetRemainingValue()
