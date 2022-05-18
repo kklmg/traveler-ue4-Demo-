@@ -29,7 +29,7 @@ void UBowActionAim::VOnExecute()
 	GetBow()->AnimateCrosshair(true);
 
 	//Rotation
-	GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, false);
+	GetActionBlackBoard()->WriteData_Bool(NSActionData::FaceToDest::Name, false);
 
 	//Animation
 	GetBow()->GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsAiming, true);
@@ -72,7 +72,7 @@ void UBowActionAim::VOnDead()
 	GetBow()->AnimateCrosshair(false);
 
 	//Movement
-	GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, true);
+	GetActionBlackBoard()->WriteData_Bool(NSActionData::FaceToDest::Name, true);
 
 	//Animation
 	GetBow()->GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsAiming, false);

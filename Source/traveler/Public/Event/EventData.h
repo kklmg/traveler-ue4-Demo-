@@ -10,7 +10,7 @@
  * 
  */
 
-namespace NSEvent
+namespace NSEventData
 {
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(ActorDeathEffectFinished,UDataBool);
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(MovementModeChanged,UDataUInt8);

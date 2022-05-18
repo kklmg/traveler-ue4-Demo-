@@ -50,7 +50,7 @@ void UActionComponent::BeginPlay()
 	// ...
 	if (_eventBrokerComp)
 	{
-		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name, this, &UActionComponent::OnReceiveEvent_LifeStateChanged);
+		_eventBrokerComp->SubscribeEvent(NSEventData::ActorLifeStateChanged::Name, this, &UActionComponent::OnReceiveEvent_LifeStateChanged);
 	}
 
 	if (_defaultActionPresetGroupClass)
@@ -76,7 +76,7 @@ void UActionComponent::OnMovementModeChanged(ACharacter* character, EMovementMod
 
 void UActionComponent::OnReceiveEvent_LifeStateChanged(UObject* baseData)
 {
-	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	auto eventData = Cast<NSEventData::ActorLifeStateChanged::Type>(baseData);
 	if (!eventData) return;
 	if (_bActorAlive == eventData->Value) return;
 

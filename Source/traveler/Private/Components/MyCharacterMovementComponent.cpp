@@ -30,16 +30,16 @@ void UMyCharacterMovementComponent::InitializeComponent()
 
 	if (_eventBrokerComp)
 	{
-		_eventBrokerComp->RegisterEvent(NSEvent::MovementModeChanged::Name);
-		_eventBrokerComp->RegisterEvent(NSEvent::VelocityChanged::Name);
+		_eventBrokerComp->RegisterEvent(NSEventData::MovementModeChanged::Name);
+		_eventBrokerComp->RegisterEvent(NSEventData::VelocityChanged::Name);
 		_eventData_MovementModeChanged = NewObject<UDataUInt8>(this);
 		_eventData_VelocityChanged = NewObject<UDataVector>(this);
 
 		//publish event 
 		_eventData_VelocityChanged->Value = Velocity;
-		_eventBrokerComp->PublishEvent(NSEvent::VelocityChanged::Name, _eventData_VelocityChanged);
+		_eventBrokerComp->PublishEvent(NSEventData::VelocityChanged::Name, _eventData_VelocityChanged);
 		_eventData_MovementModeChanged->Value = MovementMode;
-		_eventBrokerComp->PublishEvent(NSEvent::MovementModeChanged::Name, _eventData_MovementModeChanged);
+		_eventBrokerComp->PublishEvent(NSEventData::MovementModeChanged::Name, _eventData_MovementModeChanged);
 	}
 }
 
@@ -67,7 +67,7 @@ void UMyCharacterMovementComponent::BeginPlay()
 	if (_eventBrokerComp)
 	{
 		_eventBrokerComp->SubscribeEvent<UMyCharacterMovementComponent>
-			(NSEvent::ActorLifeStateChanged::Name, this, &UMyCharacterMovementComponent::OnReceiveEvent_ActorLifeStateChanged);
+			(NSEventData::ActorLifeStateChanged::Name, this, &UMyCharacterMovementComponent::OnReceiveEvent_ActorLifeStateChanged);
 	}
 
 }
@@ -314,7 +314,7 @@ void UMyCharacterMovementComponent::OnMovementModeChanged(EMovementMode Previous
 	if (_eventBrokerComp)
 	{
 		_eventData_MovementModeChanged->Value = MovementMode;
-		_eventBrokerComp->PublishEvent(NSEvent::MovementModeChanged::Name, _eventData_MovementModeChanged);
+		_eventBrokerComp->PublishEvent(NSEventData::MovementModeChanged::Name, _eventData_MovementModeChanged);
 	}
 }
 
@@ -330,14 +330,14 @@ void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const 
 	if (_eventBrokerComp)
 	{
 		_eventData_VelocityChanged->Value = Velocity;
-		_eventBrokerComp->PublishEvent(NSEvent::VelocityChanged::Name, _eventData_VelocityChanged);
+		_eventBrokerComp->PublishEvent(NSEventData::VelocityChanged::Name, _eventData_VelocityChanged);
 	}
 	
 }
 
 void UMyCharacterMovementComponent::OnReceiveEvent_ActorLifeStateChanged(UObject* baseData)
 {
-	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	auto eventData = Cast<NSEventData::ActorLifeStateChanged::Type>(baseData);
 	if (eventData)
 	{
 		if (eventData->Value == false)

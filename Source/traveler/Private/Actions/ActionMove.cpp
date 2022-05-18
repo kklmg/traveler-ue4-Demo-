@@ -23,7 +23,7 @@ bool UActionMove::VCanExecute()
 {
 	if (!Super::VCanExecute()) return false;
 	bool bIsDodging = GetActionComp()->IsActionAlive(EActionType::EACT_Dodge);
-	return (bIsDodging == false && GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_MovementInput, _movementInput, true));
+	return (bIsDodging == false && GetActionBlackBoard()->TryGetData_FVector(NSActionData::MovementInput::Name, _movementInput, true));
 }
 
 void UActionMove::VOnExecute()
@@ -33,7 +33,7 @@ void UActionMove::VOnExecute()
 	bool out_bTurnToMovingDirection = true;
 	bool out_bWantToSprint = false;
 
-	GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_TurnToMovingDirection, out_bTurnToMovingDirection);
+	GetActionBlackBoard()->TryGetData_Bool(NSActionData::FaceToDest::Name, out_bTurnToMovingDirection);
 
 	//apply rotation
 	if (out_bTurnToMovingDirection)
@@ -43,7 +43,7 @@ void UActionMove::VOnExecute()
 		GetActionOwner()->SetActorRotation(_movementInput.ToOrientationQuat());
 	}
 
-	GetActionBlackBoard()->TryGetData_Bool(EActionDataKey::EACTD_WantToSprint, out_bWantToSprint);
+	GetActionBlackBoard()->TryGetData_Bool(NSActionData::WantToSprint::Name, out_bWantToSprint);
 
 	if(myMovementComp && GetStatusComp())
 	{

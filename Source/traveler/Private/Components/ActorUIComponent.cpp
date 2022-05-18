@@ -27,7 +27,7 @@ void UActorUIComponent::BeginPlay()
 
 	if (_eventBrokerComp)
 	{
-		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name, this, &UActorUIComponent::OnReceiveEvent_LifeStateChanged);
+		_eventBrokerComp->SubscribeEvent(NSEventData::ActorLifeStateChanged::Name, this, &UActorUIComponent::OnReceiveEvent_LifeStateChanged);
 	}
 	
 	if(_bShowStatusDefault)
@@ -117,7 +117,7 @@ void UActorUIComponent::HideActorStatusEffectUI(EStatusEffect StatusType)
 
 void UActorUIComponent::OnReceiveEvent_LifeStateChanged(UObject* baseData)
 {
-	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	auto eventData = Cast<NSEventData::ActorLifeStateChanged::Type>(baseData);
 	if (eventData && eventData->Value == false)
 	{
 		RemoveAllUI();

@@ -34,13 +34,13 @@ void UEffectControllerComponent::InitializeComponent()
 	}
 
 	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
-	if (_eventBrokerComp && _eventBrokerComp->ContainsRegisteredEvent(NSEvent::ActorLifeStateChanged::Name))
+	if (_eventBrokerComp && _eventBrokerComp->ContainsRegisteredEvent(NSEventData::ActorLifeStateChanged::Name))
 	{
-		_eventBrokerComp->GetEventDelegate(NSEvent::ActorLifeStateChanged::Name)->AddUObject(this, &UEffectControllerComponent::OnActorLifeStateChanged);
+		_eventBrokerComp->GetEventDelegate(NSEventData::ActorLifeStateChanged::Name)->AddUObject(this, &UEffectControllerComponent::OnActorLifeStateChanged);
 		_eventData_DeathEffectFinished = NewObject<UDataBool>(this);
 
-		_eventBrokerComp->RegisterEvent(NSEvent::ActorDeathEffectFinished::Name);
-		_eventBrokerComp->RegisterEvent(NSEvent::VelocityChanged::Name);
+		_eventBrokerComp->RegisterEvent(NSEventData::ActorDeathEffectFinished::Name);
+		_eventBrokerComp->RegisterEvent(NSEventData::VelocityChanged::Name);
 	}
 }
 
@@ -125,7 +125,7 @@ void UEffectControllerComponent::TickComponent(float DeltaTime, ELevelTick TickT
 
 void UEffectControllerComponent::OnActorLifeStateChanged(UObject* data)
 {
-	auto isAliveData = Cast<NSEvent::ActorLifeStateChanged::DataType>(data);
+	auto isAliveData = Cast<NSEventData::ActorLifeStateChanged::Type>(data);
 
 	if (isAliveData)
 	{
@@ -138,7 +138,7 @@ void UEffectControllerComponent::OnActorDeathEffectFinished(bool bForward)
 	if(_eventBrokerComp)
 	{
 		_eventData_DeathEffectFinished->Value = bForward;
-		_eventBrokerComp->PublishEvent(NSEvent::ActorDeathEffectFinished::Name,_eventData_DeathEffectFinished);
+		_eventBrokerComp->PublishEvent(NSEventData::ActorDeathEffectFinished::Name,_eventData_DeathEffectFinished);
 	}
 }
 

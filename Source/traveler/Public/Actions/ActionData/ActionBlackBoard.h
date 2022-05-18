@@ -18,57 +18,57 @@ class TRAVELER_API UActionBlackBoard : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void WriteData_Bool(EActionDataKey key, bool value);
+	void WriteData_Bool(FName key, bool value);
 
 	UFUNCTION(BlueprintCallable)
-	void WriteData_Int32(EActionDataKey key, int32 value);
+	void WriteData_Int32(FName key, int32 value);
 
 	UFUNCTION(BlueprintCallable)
-	void WriteData_Float(EActionDataKey key, float value);
+	void WriteData_Float(FName key, float value);
 
 	UFUNCTION(BlueprintCallable)
-	void WriteData_FVector(EActionDataKey key, FVector value);
+	void WriteData_FVector(FName key, FVector value);
 
 	UFUNCTION(BlueprintCallable)
-	void WriteData_UObject(EActionDataKey key, UObject* value);
+	void WriteData_UObject(FName key, UObject* value);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_Bool(EActionDataKey key, bool& outValue,bool bConsumeData = false);
+	bool TryGetData_Bool(FName key, bool& outValue,bool bConsumeData = false);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_Int32(EActionDataKey key, int32& outValue, bool bConsumeData = false);
+	bool TryGetData_Int32(FName key, int32& outValue, bool bConsumeData = false);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_Float(EActionDataKey key, float& outValue, bool bConsumeData = false);
+	bool TryGetData_Float(FName key, float& outValue, bool bConsumeData = false);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetData_FVector(EActionDataKey key, FVector& outValue, bool bConsumeData = false);
+	bool TryGetData_FVector(FName key, FVector& outValue, bool bConsumeData = false);
 
 	UFUNCTION(BlueprintCallable)
-	UObject* GetData_UObject(EActionDataKey key, bool bConsumeData = false);
+	UObject* GetData_UObject(FName key, bool bConsumeData = false);
 
 	template<typename TUObject>
-	TUObject* GetDataAs(EActionDataKey key);
+	TUObject* GetDataAs(FName key);
 
 	template<typename TUObject>
-	FDelegateHandle Subscribe(EActionDataKey key, TUObject* inUserObj, void (TUObject::* InFunc)(UObject*));
+	FDelegateHandle Subscribe(FName key, TUObject* inUserObj, void (TUObject::* InFunc)(UObject*));
 
-	void DeleteData(EActionDataKey key);
+	void DeleteData(FName key);
 
 protected:
-	void NotifyData(EActionDataKey key);
+	void NotifyData(FName key);
 
 	template<typename TUObject>
-	TUObject* GetOrCreateDataAs(EActionDataKey key);
+	TUObject* GetOrCreateDataAs(FName key);
 
 private:
 	UPROPERTY()
-	TMap<EActionDataKey, UObject*> _mapData;
-	TMap<EActionDataKey, FMD_UObjectSignature> _mapDataDelegates;
+	TMap<FName, UObject*> _mapData;
+	TMap<FName, FMD_UObjectSignature> _mapDataDelegates;
 };
 
 template<typename TUObject>
-TUObject* UActionBlackBoard::GetDataAs(EActionDataKey key)
+TUObject* UActionBlackBoard::GetDataAs(FName key)
 {
 	if (_mapData.Contains(key))
 	{
@@ -81,7 +81,7 @@ TUObject* UActionBlackBoard::GetDataAs(EActionDataKey key)
 }
 
 template<typename TUObject>
-TUObject* UActionBlackBoard::GetOrCreateDataAs(EActionDataKey key)
+TUObject* UActionBlackBoard::GetOrCreateDataAs(FName key)
 {
 	if (_mapData.Contains(key))
 	{
@@ -96,7 +96,7 @@ TUObject* UActionBlackBoard::GetOrCreateDataAs(EActionDataKey key)
 }
 
 template<typename TUObject>
-FDelegateHandle UActionBlackBoard::Subscribe(EActionDataKey key, TUObject* inUserObj, void (TUObject::* InFunc)(UObject*))
+FDelegateHandle UActionBlackBoard::Subscribe(FName key, TUObject* inUserObj, void (TUObject::* InFunc)(UObject*))
 {
 	if (_mapDataDelegates.Contains(key))
 	{

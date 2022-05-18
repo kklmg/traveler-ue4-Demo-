@@ -47,7 +47,7 @@ void UDamageHandlerComponent::BeginPlay()
 	
 	if(_eventBrokerComp)
 	{
-		_eventBrokerComp->SubscribeEvent(NSEvent::ActorLifeStateChanged::Name, this, &UDamageHandlerComponent::OnReceiveEvent_LifeStateChanged);
+		_eventBrokerComp->SubscribeEvent(NSEventData::ActorLifeStateChanged::Name, this, &UDamageHandlerComponent::OnReceiveEvent_LifeStateChanged);
 	}
 
 	// ...
@@ -154,7 +154,7 @@ float UDamageHandlerComponent::CalculateDamage(float basicDamage, EElementalType
 
 void UDamageHandlerComponent::OnReceiveEvent_LifeStateChanged(UObject* eventBaseData)
 {
-	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(eventBaseData);
+	auto eventData = Cast<NSEventData::ActorLifeStateChanged::Type>(eventBaseData);
 	if (!eventData) return;
 	if (_bIsActorAlive == eventData->Value) return;
 

@@ -14,7 +14,7 @@ UActionTeleport::UActionTeleport()
 void UActionTeleport::VOnExecute()
 {
 	FVector outLocation;
-	if (GetActionBlackBoard()->TryGetData_FVector(EActionDataKey::EACTD_TeleportLocation, outLocation)) 
+	if (GetActionBlackBoard()->TryGetData_FVector(NSActionData::TeleportLocation::Name, outLocation))
 	{
 		GetActionOwner()->SetActorLocation(outLocation);
 	}

@@ -24,7 +24,7 @@ public:
 	virtual void VOnTick(float deltaTime) override;
 
 private:
-	bool TryGetDestData();
+	bool TryGetRequiredData();
 
 	UPROPERTY()
 	UMyCharacterMovementComponent* _myMovementComp;
@@ -39,6 +39,8 @@ private:
 	float _verticalTolerance;
 
 	FVector _destLocation;
-	float _destRadius;
+	float _keepingDistanceXY;
 	float _destAltitude;
+	bool _bFaceToDest;
+	bool _bBrakeAtDest;
 };

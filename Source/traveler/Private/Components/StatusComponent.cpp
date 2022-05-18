@@ -45,7 +45,7 @@ void UStatusComponent::BeginPlay()
 	if(_eventBrokerComp)
 	{
 		_eventBrokerComp->SubscribeEvent<UStatusComponent>
-			(NSEvent::ActorLifeStateChanged::Name, this, &UStatusComponent::OnReceiveEvent_ActorLifeStateChanged);
+			(NSEventData::ActorLifeStateChanged::Name, this, &UStatusComponent::OnReceiveEvent_ActorLifeStateChanged);
 	}
 }
 
@@ -221,7 +221,7 @@ void UStatusComponent::InitializeStatusData()
 
 void UStatusComponent::OnReceiveEvent_ActorLifeStateChanged(UObject* baseData)
 {
-	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	auto eventData = Cast<NSEventData::ActorLifeStateChanged::Type>(baseData);
 	if (eventData)
 	{
 		for (auto basicStatus : _basicStatusMap)

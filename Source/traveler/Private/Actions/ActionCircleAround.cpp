@@ -75,5 +75,5 @@ void UActionCircleAround::VOnTick(float deltaTime)
 
 bool UActionCircleAround::TryGetData()
 {
-	return GetActionBlackBoard()->TryGetData_Float(EActionDataKey::EACTD_NormalizedSpeed, _normalizedSpeed);
+	return GetActionBlackBoard()->TryGetData_Float(NSActionData::NormalizedSpeed::Name, _normalizedSpeed);
 }

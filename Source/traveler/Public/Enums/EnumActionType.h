@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/ObjectData.h"
+#include "MyMacros.h"
 
 /**
  * 
@@ -30,23 +32,30 @@ enum class EActionType : uint8
 	EACT_Max UMETA(DisplayName = "Max"),
 };
 
-UENUM(BlueprintType)
-enum class EActionDataKey : uint8
+namespace NSActionData
 {
-	EACTD_None UMETA(DisplayName = "None"),
-	EACTD_TeleportLocation UMETA(DisplayName = " TeleportLocation"),
-	EACTD_MovementInput UMETA(DisplayName = "MovementInput"),
-	EACTD_RotationCenter UMETA(DisplayName = "RotationCenter"),
-	EACTD_NormalizedSpeed UMETA(DisplayName = "NormalizedSpeed"),
-	EACTD_Peojectile_SpawnedLocation UMETA(DisplayName = "Peojectile_SpawnedLocation"),
-	EACTD_Peojectile_FlyingDirection UMETA(DisplayName = "Peojectile_FlyingDirection"),
-	EACTD_Peojectile_FlyingSpeed UMETA(DisplayName = "Peojectile_FlyingSpeed"),
-	EACTD_DestLocation UMETA(DisplayName = "DestLocation"),
-	EACTD_DestRadius UMETA(DisplayName = "DestRadius"),
-	EACTD_DestAltitude UMETA(DisplayName = "DestAltitude"),
-	EACTD_WantToSprint UMETA(DisplayName = "WantToSprint"),
-	EACTD_TurnToMovingDirection UMETA(DisplayName = "TurnToMovingDirection"),
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(WantToSprint, UDataBool)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(FaceToDest, UDataBool)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(BrakeAtDest, UDataBool)
+
+
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(MovementInput, UDataVector)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(RotationCenter, UDataVector)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(TeleportLocation, UDataVector)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(DestLocation, UDataVector)
+
+
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(DestAltitude, UDataFloat)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(DestRadius, UDataFloat)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(keepDistanceXY, UDataFloat)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(keepDistance_Ver, UDataFloat)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(NormalizedSpeed, UDataFloat)
 };
+
+
+
+
+
 
 UENUM(BlueprintType)
 enum class EActionPrestGroup : uint8

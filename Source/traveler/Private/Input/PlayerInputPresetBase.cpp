@@ -50,7 +50,7 @@ void UPlayerInputPresetBase::ConsumeMovementInput()
 		movingDir.Normalize();
 
 		//Execute Moving Action
-		GetActionComp()->GetActionBlackBoard()->WriteData_FVector(EActionDataKey::EACTD_MovementInput, movingDir);
+		GetActionComp()->GetActionBlackBoard()->WriteData_FVector(NSActionData::MovementInput::Name, movingDir);
 		GetActionComp()->ExecuteAction(EActionType::EACT_Moving);
 	}
 }

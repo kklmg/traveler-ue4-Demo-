@@ -30,7 +30,7 @@ void UAnimControlComponent::InitializeComponent()
 	if (_eventBrokerComp)
 	{
 		_eventBrokerComp->SubscribeEvent<UAnimControlComponent>
-			(NSEvent::ActorLifeStateChanged::Name, this, &UAnimControlComponent::OnReceiveEvent_ActorLifeStateChanged);
+			(NSEventData::ActorLifeStateChanged::Name, this, &UAnimControlComponent::OnReceiveEvent_ActorLifeStateChanged);
 	}
 
 	_character = GetOwner<ACharacter>();
@@ -149,7 +149,7 @@ bool UAnimControlComponent::PlayAnimMontage(EAnimMontage animMontageType)
 
 void UAnimControlComponent::OnReceiveEvent_ActorLifeStateChanged(UObject* baseData)
 {
-	auto eventData = Cast<NSEvent::ActorLifeStateChanged::DataType>(baseData);
+	auto eventData = Cast<NSEventData::ActorLifeStateChanged::Type>(baseData);
 	if (eventData)
 	{
 		_animViewModelIns->SetBool(NSAnimationDataKey::bIsAlive, eventData->Value);

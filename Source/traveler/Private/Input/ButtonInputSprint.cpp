@@ -16,7 +16,7 @@ void UButtonInputSprint::VOnPressed()
 	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if (actionComp)
 	{
-		actionComp->GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, true);
+		actionComp->GetActionBlackBoard()->WriteData_Bool(NSActionData::WantToSprint::Name, true);
 	}
 }
 
@@ -29,6 +29,6 @@ void UButtonInputSprint::VOnReleased()
 	UActionComponent* actionComp = GetInputPreset()->GetActionComp();
 	if (actionComp)
 	{
-		actionComp->GetActionBlackBoard()->WriteData_Bool(EActionDataKey::EACTD_WantToSprint, false);
+		actionComp->GetActionBlackBoard()->WriteData_Bool(NSActionData::WantToSprint::Name, false);
 	}
 }

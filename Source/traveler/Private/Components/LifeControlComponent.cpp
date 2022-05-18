@@ -25,8 +25,8 @@ void ULifeControlComponent::InitializeComponent()
 	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 	if (_eventBrokerComp)
 	{
-		_eventBrokerComp->RegisterEvent(NSEvent::ActorLifeStateChanged::Name);
-		_lifeStateChangedData = NewObject<NSEvent::ActorLifeStateChanged::DataType>(this);
+		_eventBrokerComp->RegisterEvent(NSEventData::ActorLifeStateChanged::Name);
+		_lifeStateChangedData = NewObject<NSEventData::ActorLifeStateChanged::Type>(this);
 		check(_lifeStateChangedData);
 	}
 
@@ -47,7 +47,7 @@ void ULifeControlComponent::BeginPlay()
 	{
 		//destroy actor after death effect finished
 		_eventBrokerComp->SubscribeEvent<ULifeControlComponent>
-			(NSEvent::ActorDeathEffectFinished::Name, this, &ULifeControlComponent::OnActorDeathEffectFinished);
+			(NSEventData::ActorDeathEffectFinished::Name, this, &ULifeControlComponent::OnActorDeathEffectFinished);
 	}
 
 	_ConditionIsAliveIns->SetActor(GetOwner());
@@ -62,7 +62,7 @@ void ULifeControlComponent::OnLifeStateChanged(bool isAlive)
 	if (_eventBrokerComp)
 	{
 		_lifeStateChangedData->Value = isAlive;
-		_eventBrokerComp->PublishEvent(NSEvent::ActorLifeStateChanged::Name, _lifeStateChangedData);
+		_eventBrokerComp->PublishEvent(NSEventData::ActorLifeStateChanged::Name, _lifeStateChangedData);
 	}
 
 	if (_bDestroyAfterDead)
@@ -71,7 +71,7 @@ void ULifeControlComponent::OnLifeStateChanged(bool isAlive)
 		{
 			GetOwner()->Destroy();
 		}
-		else if (_eventBrokerComp->ContainsRegisteredEvent(NSEvent::ActorDeathEffectFinished::Name) == false)
+		else if (_eventBrokerComp->ContainsRegisteredEvent(NSEventData::ActorDeathEffectFinished::Name) == false)
 		{
 			GetOwner()->Destroy();
 		}
@@ -80,7 +80,7 @@ void ULifeControlComponent::OnLifeStateChanged(bool isAlive)
 
 void ULifeControlComponent::OnActorDeathEffectFinished(UObject* baseData)
 {
-	auto eventData = Cast<NSEvent::ActorDeathEffectFinished::DataType>(baseData);
+	auto eventData = Cast<NSEventData::ActorDeathEffectFinished::Type>(baseData);
 	if (_bDestroyAfterDead && eventData && eventData->Value == true)
 	{
 		GetOwner()->Destroy();
