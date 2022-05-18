@@ -83,10 +83,7 @@ private:
 
 	float _inputDeltaPitch;
 	float _inputDeltaYaw;
-	float _inputDeltaRoll;
 	bool _bToggleSprint;
 
 	float _curYawSpeed;
-
-	bool _test;
 };

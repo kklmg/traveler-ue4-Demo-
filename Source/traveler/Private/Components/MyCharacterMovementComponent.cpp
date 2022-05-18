@@ -76,21 +76,18 @@ void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTi
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (_inputDeltaPitch != 0.0f || _inputDeltaYaw != 0.0f || _inputDeltaRoll != 0.0f)
+	if (_inputDeltaPitch != 0.0f || _inputDeltaYaw != 0.0f)
 	{
 		FRotator rotator = GetOwner()->GetActorRotation();
 		rotator.Yaw += _inputDeltaYaw;
 		rotator.Pitch += _inputDeltaPitch;
 		rotator.Roll = FMath::Lerp(-60, 60, (_curYawSpeed + _FlyingAbilityData.YawAngSpeedMax) / (_FlyingAbilityData.YawAngSpeedMax * 2));
 
-		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, rotator.ToString());
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_inputDeltaYaw : %f"), _inputDeltaYaw));
-
 		GetOwner()->SetActorRotation(rotator);
+		Velocity = rotator.Vector().GetSafeNormal() * Velocity.Size();
 
 		_inputDeltaPitch = 0.0f;
 		_inputDeltaYaw = 0.0f;
-		_inputDeltaRoll = 0.0f;
 	}
 }
 
@@ -170,6 +167,7 @@ void UMyCharacterMovementComponent::RotateYaw(bool bPositive, float deltaTime, f
 
 void UMyCharacterMovementComponent::RotateToYaw(float deltaYawAngDegree, float deltaTime)
 {
+
 	if (MovementMode == EMovementMode::MOVE_Flying)
 	{
 		float acceleratedYawSpeed = FMath::Min(_curYawSpeed + _FlyingAbilityData.YawAcc * deltaTime, _FlyingAbilityData.YawAngSpeedMax);
@@ -187,9 +185,9 @@ void UMyCharacterMovementComponent::RotateToYaw(float deltaYawAngDegree, float d
 		//---------------------------------------------------------
 
 		float desiredYawSpeed = deltaYawAngDegree > 0 ? 
-			FMath::Sqrt(deltaYawAngDegree * _FlyingAbilityData.YawAcc * 2) : -FMath::Sqrt(deltaYawAngDegree * -_FlyingAbilityData.YawAcc * 2);
+			FMath::Sqrt(deltaYawAngDegree * _FlyingAbilityData.YawAcc * 2) : -FMath::Sqrt(deltaYawAngDegree * -_FlyingAbilityData.YawAcc * 2) + 2.0f;
 
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("desiredYawSpeed : %f"), desiredYawSpeed));
+		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("desiredYawSpeed : %f"), desiredYawSpeed));
 
 		if (_curYawSpeed < desiredYawSpeed)
 		{
@@ -202,6 +200,7 @@ void UMyCharacterMovementComponent::RotateToYaw(float deltaYawAngDegree, float d
 			{
 				_curYawSpeed = acceleratedYawSpeed;
 				_inputDeltaYaw = acceleratedYawSpeed * deltaTime;
+			
 			}
 		}
 		else
@@ -217,6 +216,7 @@ void UMyCharacterMovementComponent::RotateToYaw(float deltaYawAngDegree, float d
 				_inputDeltaYaw = deceleratedYawSpeed * deltaTime;
 			}
 		}
+		
 	}
 	//todo
 	else
