@@ -147,7 +147,7 @@ void AProjectileActorBase::VMarkDestroy()
 
 void AProjectileActorBase::VSetScale(float scale)
 {
-	_basicScale = scale;
+	SetActorScale3D(FVector(scale,scale,scale));
 }
 
 void AProjectileActorBase::VSetDamage(float damage)
@@ -157,5 +157,6 @@ void AProjectileActorBase::VSetDamage(float damage)
 
 void AProjectileActorBase::VSetVelocity(FVector velocity)
 {
+	_projectileMovementComp->MaxSpeed = velocity.Size();
 	_projectileMovementComp->Velocity = velocity;
 }

@@ -46,7 +46,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	float _shift;
 	UPROPERTY(VisibleAnywhere)
-	FVector _initialMeshScale;
+	FVector _primaryScale;
 
 	UPROPERTY(EditDefaultsOnly)
 	UCurveFloat* _scaleCurve;

@@ -87,9 +87,6 @@ protected:
 	int _poolId;
 
 	UPROPERTY(VisibleAnywhere)
-	float _basicScale;
-
-	UPROPERTY(VisibleAnywhere)
 	float _damage;
 
 	FOnObjectInactive _OnObjectInactiveDelegate;

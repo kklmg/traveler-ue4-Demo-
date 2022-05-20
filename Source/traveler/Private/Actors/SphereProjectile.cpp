@@ -25,7 +25,6 @@ ASphereProjectile::ASphereProjectile()
 		_primitiveComp->SetCollisionProfileName(FName("Particle"));
 	}
 
-	_basicScale = 1.0f; 
 	_coneAngle = 5.0f;
 	_shift = 0.0f;
 	_damage = 1.0f;
@@ -36,7 +35,7 @@ void ASphereProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_initialMeshScale = _primitiveComp->GetComponentScale();
+	_primaryScale = _primitiveComp->GetComponentScale();
 	if(_primitiveComp)
 	{
 		//OnHit 
@@ -55,18 +54,18 @@ void ASphereProjectile::Tick(float DeltaTime)
 	float speed = _projectileMovementComp->Velocity.Size();
 	_shift += speed * DeltaTime;
 
-	float scale = _shift * FMath::Tan(FMath::DegreesToRadians(_coneAngle));
+	float scale = _shift * FMath::Tan(FMath::DegreesToRadians(_coneAngle))*2;
 
 	if (_scaleCurve)
 	{
 		float normalizedElapsedTime = FMath::Clamp(_elapsedLifeTime / _lifeTime, 0.0f, 1.0f);
-		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime) * _basicScale * 0.1;
+		scale += _scaleCurve->GetFloatValue(normalizedElapsedTime);
 	}
 	
 	//SetActorScale3D(FVector(scale, scale, scale));
 	//_primitiveComp->SetWorldScale3D(FVector(scale, scale, scale)* _initialMeshScale);
 
-	_sphereComp->SetSphereRadius(scale);
+	SetActorScale3D(_primaryScale * scale);
 
 	VApplyDamageToOverlapedActor();
 
@@ -75,7 +74,7 @@ void ASphereProjectile::Tick(float DeltaTime)
 		VDeactivate();
 	}
 
-	DrawDebugSphere(GetWorld(), GetActorLocation(), _sphereComp->GetScaledSphereRadius(), 10.0f, FColor::Red);
+	DrawDebugSphere(GetWorld(), GetActorLocation(), _primaryScale.X * scale, 10.0f, FColor::Blue);
 }
 
 
@@ -141,6 +140,7 @@ bool ASphereProjectile::VDeactivate()
 	if (Super::VDeactivate())
 	{
 		_shift = 0.0f;
+		SetActorScale3D(_primaryScale);
 		return true;
 	}
 	else
