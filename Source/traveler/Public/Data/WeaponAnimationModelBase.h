@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Data/AnimationModelBase.h"
 #include "Enums/EnumWeaponType.h"
+#include "MyMacros.h"
 #include "WeaponAnimationModelBase.generated.h"
 
 /**
@@ -13,12 +14,12 @@
 
 namespace NSNameAnimData
 {
-	const FName bIsFiring = FName(TEXT("bIsFiring"));
-	const FName bIsAiming = FName(TEXT("bIsAiming"));
-	const FName fWristRoll = FName(TEXT("fWristRoll"));
-	const FName bArrowsSpawned = FName(TEXT("bArrowsSpawned"));
-	const FName bIsDrawingBow = FName(TEXT("bDrawingBow"));
-	const FName byteBowState = FName(TEXT("byteBowState"));
+	DECLARE_CONST_FNAME(bIsFiring)
+	DECLARE_CONST_FNAME(bIsAiming)
+	DECLARE_CONST_FNAME(fWristRoll)
+	DECLARE_CONST_FNAME(bArrowsSpawned)
+	DECLARE_CONST_FNAME(bDrawingBow)
+	DECLARE_CONST_FNAME(byteBowState)
 }
 
 UCLASS(BlueprintType)

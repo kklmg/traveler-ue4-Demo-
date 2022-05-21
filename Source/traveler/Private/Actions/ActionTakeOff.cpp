@@ -7,7 +7,7 @@
 
 UActionTakeOff::UActionTakeOff()
 {
-	_processName = NSNameAction::TAKEOFF;
+	_processName = NSNameAction::takeoff;
 	_actionType = EActionType::EACT_TakeOff;
 }
 

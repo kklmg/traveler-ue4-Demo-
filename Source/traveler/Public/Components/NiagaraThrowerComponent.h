@@ -5,18 +5,19 @@
 #include "CoreMinimal.h"
 #include "NiagaraComponent.h"
 #include "Interface/ThrowerInterface.h"
+#include "MyMacros.h"
 #include "NiagaraThrowerComponent.generated.h"
 
 namespace NSNameNiagaraParams
 {
-	const FName SpeedMax(TEXT("SpeedMax"));
-	const FName SpeedMin(TEXT("SpeedMin"));
-	const FName Gravity(TEXT("Gravity"));
-	const FName ConeAngle(TEXT("ConeAngle"));
-	const FName Life(TEXT("ParticleLife"));
-	const FName SizeCurve(TEXT("sizeCurve"));
-	const FName SpriteScaleMin(TEXT("SpriteScaleMin"));
-	const FName SpriteScaleMax(TEXT("SpriteScaleMax"));
+	DECLARE_CONST_FNAME(SpeedMax)
+	DECLARE_CONST_FNAME(SpeedMin)
+	DECLARE_CONST_FNAME(Gravity)
+	DECLARE_CONST_FNAME(ConeAngle)
+	DECLARE_CONST_FNAME(ParticleLife)
+	DECLARE_CONST_FNAME(sizeCurve)
+	DECLARE_CONST_FNAME(SpriteScaleMin)
+	DECLARE_CONST_FNAME(SpriteScaleMax)
 }
 
 /**

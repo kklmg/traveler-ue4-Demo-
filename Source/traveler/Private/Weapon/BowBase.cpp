@@ -150,20 +150,20 @@ void ABowBase::VOnEquipped()
 		FDelegateHandle delegateHandle;
 
 		delegateHandle = eventBrokerComp->
-			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Bow_DrawingBowString).AddUObject(this, &ABowBase::OnAnim_StartDrawingBowString);
-		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Bow_DrawingBowString, delegateHandle));
+			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Anim_Bow_DrawingBowString).AddUObject(this, &ABowBase::OnAnim_StartDrawingBowString);
+		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Anim_Bow_DrawingBowString, delegateHandle));
 
 		delegateHandle = eventBrokerComp->
-			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Bow_TakeOutArrows).AddUObject(this, &ABowBase::OnAnim_TakeOutArrows);
-		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Bow_TakeOutArrows, delegateHandle));
+			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Anim_Bow_TakeOutArrows).AddUObject(this, &ABowBase::OnAnim_TakeOutArrows);
+		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Anim_Bow_TakeOutArrows, delegateHandle));
 
 		delegateHandle = eventBrokerComp->
-			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Bow_FullyDrawed).AddUObject(this, &ABowBase::OnAnim_FullyDrawed);
-		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Bow_FullyDrawed, delegateHandle));
+			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Anim_Bow_FullyDrawed).AddUObject(this, &ABowBase::OnAnim_FullyDrawed);
+		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Anim_Bow_FullyDrawed, delegateHandle));
 
 		delegateHandle = eventBrokerComp->
-			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Bow_ReleasedBowString).AddUObject(this, &ABowBase::OnAnim_ReleaseBowString);
-		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Bow_ReleasedBowString, delegateHandle));
+			RegisterAndGetEventDelegate(NSNameBowAnimEvent::Anim_Bow_ReleasedBowString).AddUObject(this, &ABowBase::OnAnim_ReleaseBowString);
+		_delegateHandles.Add(FDelegateHandleData(NSNameBowAnimEvent::Anim_Bow_ReleasedBowString, delegateHandle));
 	}
 
 	auto weaponAnimationModel = GetWeaponAnimationModel();
@@ -171,7 +171,7 @@ void ABowBase::VOnEquipped()
 	{
 		weaponAnimationModel->SetBool(NSNameAnimData::bArrowsSpawned, false);
 		weaponAnimationModel->SetUInt8(NSNameAnimData::byteBowState, (uint8)_bowState);
-		weaponAnimationModel->SetBool(NSNameAnimData::bIsDrawingBow, IsDrawingBow());
+		weaponAnimationModel->SetBool(NSNameAnimData::bDrawingBow, IsDrawingBow());
 		weaponAnimationModel->SetFloat(NSNameAnimData::fWristRoll, _wristRollOptionIns->GetSelection());
 		//		weaponAnimationModel->SetBool(NSNameAnimData::bIsFiring, IsProcessRunning(NSNameWeaponActionProcess::FIRE));
 		//		weaponAnimationModel->SetBool(NSNameAnimData::bIsAiming, IsProcessRunning(NSNameWeaponActionProcess::AIM));
@@ -468,7 +468,7 @@ bool ABowBase::SetBowState(EBowState bowState)
 
 	_bowState = bowState;
 	GetWeaponAnimationModel()->SetUInt8(NSNameAnimData::byteBowState, (uint8)_bowState);
-	GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsDrawingBow, IsDrawingBow());
+	GetWeaponAnimationModel()->SetBool(NSNameAnimData::bDrawingBow, IsDrawingBow());
 	return true;
 }
 

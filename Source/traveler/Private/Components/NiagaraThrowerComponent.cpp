@@ -26,7 +26,7 @@ void UNiagaraThrowerComponent::VSetSpeed(float speed)
 
 void UNiagaraThrowerComponent::VSetLife(float life)
 {
-	SetFloatParameter(NSNameNiagaraParams::Life, life);
+	SetFloatParameter(NSNameNiagaraParams::ParticleLife, life);
 }
 
 void UNiagaraThrowerComponent::VSetSpawningLocation(FVector location)

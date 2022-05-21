@@ -7,7 +7,7 @@
 
 UActionAscend::UActionAscend()
 {
-	_processName = NSNameAction::ASCEND;
+	_processName = NSNameAction::ascend;
 	_actionType = EActionType::EACT_Ascend;
 }
 

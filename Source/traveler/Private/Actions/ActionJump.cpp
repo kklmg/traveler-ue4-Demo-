@@ -10,7 +10,7 @@
 
 UActionJump::UActionJump()
 {
-	_processName = NSNameAction::JUMP;
+	_processName = NSNameAction::jump;
 	_actionType = EActionType::EACT_Jumping;
 	_bIsInstantProcess = false;
 	_delayTime = 0.2f;

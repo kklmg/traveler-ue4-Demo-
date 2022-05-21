@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Data/ViewModelBase.h"
+#include "MyMacros.h"
 #include "AnimationModelBase.generated.h"
 
 /**
@@ -14,29 +15,29 @@
 namespace NSAnimationDataKey
 {	
 	//bool
-	const FName bIsSprinting = FName(TEXT("bIsSprinting"));
-	const FName bWantToJump = FName(TEXT("bWantToJump"));
-	const FName bIsAlive = FName(TEXT("bIsAlive"));
+	DECLARE_CONST_FNAME(bIsSprinting)
+	DECLARE_CONST_FNAME(bWantToJump)
+	DECLARE_CONST_FNAME(bIsAlive)
 
 	//float
-	const FName fMaxSpeed = FName(TEXT("fMaxSpeed"));
-	const FName fWalkingSpeed = FName(TEXT("fWalkingSpeed"));
-	const FName fSprintingSpeed = FName(TEXT("fSprintingSpeed"));
-	const FName fCameraPitch = FName(TEXT("fCameraPitch"));
-	const FName fCameraPitchMax = FName(TEXT("fCameraPitchMax"));
-	const FName fCameraPitchMin = FName(TEXT("fCameraPitchMin"));
+	DECLARE_CONST_FNAME(fMaxSpeed)
+	DECLARE_CONST_FNAME(fWalkingSpeed)
+	DECLARE_CONST_FNAME(fSprintingSpeed)
+	DECLARE_CONST_FNAME(fCameraPitch)
+	DECLARE_CONST_FNAME(fCameraPitchMax)
+	DECLARE_CONST_FNAME(fCameraPitchMin)
 
 	//vector
-	const FName vMovingDirection = FName(TEXT("vMovingDirection"));
-	const FName vPendingInput = FName(TEXT("vPendingInput"));
-	const FName vMovingVelocity = FName(TEXT("vMovingVelocity"));
+	DECLARE_CONST_FNAME(vMovingDirection)
+	DECLARE_CONST_FNAME(vPendingInput)
+	DECLARE_CONST_FNAME(vMovingVelocity)
 
 	//byte
-	const FName byteMovementMode = FName(TEXT("byteMovementMode"));
+	DECLARE_CONST_FNAME(byteMovementMode)
 
 	//object
-	const FName objWeapon = FName(TEXT("objWeapon"));
-	const FName objFootIKData = FName(TEXT("objFootIKData"));
+	DECLARE_CONST_FNAME(objWeapon)
+	DECLARE_CONST_FNAME(objFootIKData)
 };
 
 

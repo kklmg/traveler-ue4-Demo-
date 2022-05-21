@@ -12,7 +12,7 @@
 
 UActionDodge::UActionDodge()
 {
-	_processName = NSNameAction::DODGE;
+	_processName = NSNameAction::dodge;
 	_actionType = EActionType::EACT_Dodge;
 	_bIsInstantProcess = false;
 	_dodgeSpeed = 250;

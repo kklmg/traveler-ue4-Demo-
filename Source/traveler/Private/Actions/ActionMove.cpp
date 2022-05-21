@@ -12,7 +12,7 @@
 
 UActionMove::UActionMove() 
 {
-	_processName = NSNameAction::MOVE;
+	_processName = NSNameAction::move;
 	_actionType = EActionType::EACT_Moving;
 
 	_sprintCost = CreateDefaultSubobject<UCostData>(TEXT("SprintCost"));

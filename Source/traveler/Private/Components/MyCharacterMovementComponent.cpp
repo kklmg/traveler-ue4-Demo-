@@ -62,6 +62,7 @@ void UMyCharacterMovementComponent::BeginPlay()
 	{
 		//set walking speed 
 		MaxWalkSpeed = _statusComp->GetFinalValue(EStatusType::EStatus_WalkingSpeed);
+		MaxFlySpeed = _statusComp->GetFinalValue(EStatusType::EStatus_FlyingSpeed);
 	}
 
 	if (_eventBrokerComp)
@@ -293,7 +294,9 @@ void UMyCharacterMovementComponent::ToggleSprint(bool bSprint)
 	if (_bToggleSprint == bSprint) return;
 	if (_statusComp == nullptr) return;
 	_bToggleSprint = bSprint;
+
 	MaxWalkSpeed = _statusComp->GetFinalValue(_bToggleSprint ? EStatusType::EStatus_SprintingSpeed : EStatusType::EStatus_WalkingSpeed);
+	MaxFlySpeed = _statusComp->GetFinalValue(EStatusType::EStatus_FlyingSpeed) * (_bToggleSprint ? 2.5f : 1.0f);
 }
 
 float UMyCharacterMovementComponent::GetCurrentYawSpeed()

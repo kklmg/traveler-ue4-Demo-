@@ -6,6 +6,7 @@
 #include "Process/ProcessBase.h"
 #include "Enums/EnumActionType.h"
 #include "Enums/EnumProcessState.h"
+#include "MyMacros.h"
 #include "ActionBase.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogAction, Log, All);
@@ -22,21 +23,21 @@ class ICharacterCameraInterface;
 
 namespace NSNameAction
 {
-	const FName Throw = FName(TEXT("Throw"));
-	const FName JUMP = FName(TEXT("jump"));
-	const FName SPRINT = FName(TEXT("sprint"));
-	const FName DODGE = FName(TEXT("dodge"));
-	const FName MOVE = FName(TEXT("move"));
-	const FName IDLE = FName(TEXT("idle"));
-	const FName AIM = FName(TEXT("aim"));
-	const FName ASCEND = FName(TEXT("ascend"));
-	const FName FLY = FName(TEXT("fly"));
-	const FName TAKEOFF = FName(TEXT("takeoff"));
-	const FName TELEPORT = FName(TEXT("teleport"));
-	const FName FlyTo = FName(TEXT("FlyTo"));
-	const FName FlyAroundPoint = FName(TEXT("FlyAroundPoint"));
-	const FName WeaponFire = FName(TEXT("WeaponFire"));
-	const FName WeaponAim = FName(TEXT("WeaponAim"));
+	DECLARE_CONST_FNAME(Throw)
+	DECLARE_CONST_FNAME(jump)
+	DECLARE_CONST_FNAME(sprint)
+	DECLARE_CONST_FNAME(dodge)
+	DECLARE_CONST_FNAME(move)
+	DECLARE_CONST_FNAME(idle)
+	DECLARE_CONST_FNAME(aim)
+	DECLARE_CONST_FNAME(ascend)
+	DECLARE_CONST_FNAME(fly)
+	DECLARE_CONST_FNAME(takeoff)
+	DECLARE_CONST_FNAME(teleport)
+	DECLARE_CONST_FNAME(FlyTo)
+	DECLARE_CONST_FNAME(FlyAroundPoint)
+	DECLARE_CONST_FNAME(WeaponFire)
+	DECLARE_CONST_FNAME(WeaponAim)
 }
 
 /**

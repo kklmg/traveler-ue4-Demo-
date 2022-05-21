@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Enums/EnumProcessState.h"
 #include "Enums/EnumWeaponType.h"
+#include "MyMacros.h"
 #include "WeaponBase.generated.h"
 
 class ACreatureCharacter;
@@ -26,8 +27,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponSignal, AWeaponBase*, weaponI
 
 namespace NSNameWeaponActionProcess
 {
-	const FName FIRE = FName(TEXT("FIRE"));
-	const FName AIM = FName(TEXT("AIM"));
+	DECLARE_CONST_FNAME(FIRE)
+	DECLARE_CONST_FNAME(AIM)
 }
 
 UCLASS()

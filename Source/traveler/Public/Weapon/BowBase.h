@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "WeaponBase.h"
 #include "Event/EventBroker.h"
+#include "MyMacros.h"
 #include "BowBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
@@ -23,10 +24,10 @@ class UBowActionAim;
 
 namespace NSNameBowAnimEvent
 {
-	const FName Bow_FullyDrawed = FName(TEXT("Anim_Bow_FullyDrawed"));
-	const FName Bow_DrawingBowString = FName(TEXT("Anim_Bow_DrawingBowString"));
-	const FName Bow_TakeOutArrows = FName(TEXT("Anim_Bow_TakeOutArrows"));
-	const FName Bow_ReleasedBowString = FName(TEXT("Anim_Bow_ReleasedBowString"));
+	DECLARE_CONST_FNAME(Anim_Bow_FullyDrawed)
+	DECLARE_CONST_FNAME(Anim_Bow_DrawingBowString)
+	DECLARE_CONST_FNAME(Anim_Bow_TakeOutArrows)
+	DECLARE_CONST_FNAME(Anim_Bow_ReleasedBowString)
 };
 
 /**
