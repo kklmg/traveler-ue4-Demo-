@@ -21,7 +21,7 @@ bool UActionCircleAround::VCanExecute()
 {
 	if (!Super::VCanExecute()) return false;
 
-	if (!TryGetData())
+	if (!TryGetRequiredData())
 	{
 		SetProcessFailed();
 		UE_LOG(LogAction, Warning, TEXT("Fly to: No Action Data"));
@@ -37,19 +37,6 @@ bool UActionCircleAround::VCanExecute()
 		return false;
 	}
 
-	if (GetStatusComp() == nullptr)
-	{
-		SetProcessFailed();
-		UE_LOG(LogAction, Warning, TEXT("Fly to: no Status Component"));
-		return false;
-	}
-
-	if (GetStatusComp()->GetFinalValue(EStatusType::EStatus_FlyingSpeed) == 0.0f)
-	{
-		SetProcessFailed();
-		UE_LOG(LogAction, Warning, TEXT("Fly to: Flying speed is zero"));
-		return false;
-	}
 	return true;
 }
 
@@ -62,18 +49,59 @@ void UActionCircleAround::VOnTick(float deltaTime)
 {
 	Super::VOnTick(deltaTime);
 
-	if (!TryGetData())
-	{
-		SetProcessFailed();
-	}
+	//Update data
+	TryGetRequiredData();
 
-	//apply new velocity, Rotation
-	//-------------------------------------------------------------------------------------------------------------
-	_myMovementComp->RotateYaw(true, deltaTime, 1.0f);
-	_myMovementComp->KeepSpeed(_normalizedSpeed, deltaTime);
+	FVector curLoc = GetActionOwner()->GetActorLocation();
+	float distXY_Cur_TrackCenter = FVector::Dist2D(curLoc, _trackCenter);
+
+	FVector dirToTrackCenter = (_trackCenter - curLoc).GetSafeNormal();
+	float DeltaAngleH_Forward_ToTrackCenter= FMath::FindDeltaAngleDegrees(GetActionOwner()->GetActorRotation().Yaw, dirToTrackCenter.Rotation().Yaw);
+
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("distXY_Cur_TrackCenter : %f"), distXY_Cur_TrackCenter));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("DeltaAngleH_Forward_ToTrackCenter : %f"), DeltaAngleH_Forward_ToTrackCenter));
+
+	float DistTolerance = 1000;
+
+
+	if (distXY_Cur_TrackCenter > _trackRadius + DistTolerance)
+	{
+		_myMovementComp->RotateToYaw(DeltaAngleH_Forward_ToTrackCenter,deltaTime);
+
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("approch "));
+	}
+	else if (distXY_Cur_TrackCenter < _trackRadius - DistTolerance)
+	{
+		_myMovementComp->RotateToYaw(DeltaAngleH_Forward_ToTrackCenter + 180, deltaTime);
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("Leave "));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("done!"));
+	}
+	//GetActionOwner()->AddMovementInput(GetActionOwner()->GetActorForwardVector());
+
+	//--------------------------------------
+	//v: Velocity
+	//w: Yaw Angular Speed
+	//R: Track Radius
+	//   V = W * R 
+	//=> W = V / R 
+	//--------------------------------------
+	float desiredYawSpeed = _trackRadius / _myMovementComp->GetMaxSpeed();
 }
 
-bool UActionCircleAround::TryGetData()
+bool UActionCircleAround::TryGetRequiredData()
 {
-	return GetActionBlackBoard()->TryGetData_Float(NSActionData::NormalizedSpeed::Name, _normalizedSpeed);
+
+	if (GetActionBlackBoard()->TryGetData_Float(NSActionData::TrackRadius::Name, _trackRadius) &&
+		GetActionBlackBoard()->TryGetData_FVector(NSActionData::TrackCenter::Name, _trackCenter))
+	{
+	
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

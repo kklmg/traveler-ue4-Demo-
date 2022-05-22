@@ -23,10 +23,12 @@ public:
 	virtual void VOnTick(float deltaTime) override;
 
 private:
-	bool TryGetData();
+	bool TryGetRequiredData();
 
 	UPROPERTY()
 	UMyCharacterMovementComponent* _myMovementComp;
 
-	float _normalizedSpeed;
+	float _trackRadius;
+	FVector _trackCenter;
+
 };
