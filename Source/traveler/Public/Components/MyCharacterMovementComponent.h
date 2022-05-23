@@ -44,6 +44,7 @@ public:
 	float ComputeDistTraveledDuringPitch0();
 	void Accelerate(bool bPositive, float deltaTime);
 	void RotateYaw(bool bPositive, float deltaTime, float scale = 1.0f);
+	void KeepYawSpeed(float yawSpeed, float deltaTime);
 	void RotateToYaw(float deltaAngle, float deltaTime);
 	void Ascend(bool bPositive, float deltaTime);
 	void KeepHorizontal(float deltaTime);

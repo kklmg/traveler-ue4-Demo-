@@ -53,42 +53,67 @@ void UActionCircleAround::VOnTick(float deltaTime)
 	TryGetRequiredData();
 
 	FVector curLoc = GetActionOwner()->GetActorLocation();
+	FRotator curRotator = GetActionOwner()->GetActorRotation();
 	float distXY_Cur_TrackCenter = FVector::Dist2D(curLoc, _trackCenter);
 
 	FVector dirToTrackCenter = (_trackCenter - curLoc).GetSafeNormal();
-	float DeltaAngleH_Forward_ToTrackCenter= FMath::FindDeltaAngleDegrees(GetActionOwner()->GetActorRotation().Yaw, dirToTrackCenter.Rotation().Yaw);
+	float yaw_dirToTrackCenter = dirToTrackCenter.Rotation().Yaw;
 
+	float DeltaAngleH_Forward_ToTrackCenter = FMath::FindDeltaAngleDegrees(curRotator.Yaw, yaw_dirToTrackCenter);
+
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_trackRadius : %f"), _trackRadius));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("distXY_Cur_TrackCenter : %f"), distXY_Cur_TrackCenter));
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("DeltaAngleH_Forward_ToTrackCenter : %f"), DeltaAngleH_Forward_ToTrackCenter));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT(" dirToTrackCenter.Rotation().Yaw : %f"), dirToTrackCenter.Rotation().Yaw));
+	DrawDebugLine(GetWorld(), curLoc, _trackCenter, FColor::Blue, false, -1.0f, 0U, 30.0f);
+	
+
+	DrawDebugCircle(GetWorld(), FVector(_trackCenter.X, _trackCenter.Y, curLoc.Z), _trackRadius, 10, FColor::Black, false, -1.0f, 0U, 10.0f, FVector::ForwardVector, FVector::RightVector);
 
 	float DistTolerance = 1000;
-
 
 	if (distXY_Cur_TrackCenter > _trackRadius + DistTolerance)
 	{
 		_myMovementComp->RotateToYaw(DeltaAngleH_Forward_ToTrackCenter,deltaTime);
 
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("approch "));
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, TEXT("approch "));
 	}
 	else if (distXY_Cur_TrackCenter < _trackRadius - DistTolerance)
 	{
-		_myMovementComp->RotateToYaw(DeltaAngleH_Forward_ToTrackCenter + 180, deltaTime);
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("Leave "));
+		_myMovementComp->RotateToYaw(FMath::UnwindDegrees(DeltaAngleH_Forward_ToTrackCenter + 180), deltaTime);
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, TEXT("Leave "));
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("done!"));
-	}
-	//GetActionOwner()->AddMovementInput(GetActionOwner()->GetActorForwardVector());
+		//GetActionOwner()->GetActorForwardVector().DotProduct()
 
-	//--------------------------------------
-	//v: Velocity
-	//w: Yaw Angular Speed
-	//R: Track Radius
-	//   V = W * R 
-	//=> W = V / R 
-	//--------------------------------------
-	float desiredYawSpeed = _trackRadius / _myMovementComp->GetMaxSpeed();
+		float deltaYaw = FMath::FindDeltaAngleDegrees(curRotator.Yaw, yaw_dirToTrackCenter + 90.0f);
+
+
+		float desiredForwardYaw = yaw_dirToTrackCenter + 90.0f;
+
+		if (FMath::Abs(desiredForwardYaw - curRotator.Yaw) > 1.0f)
+		{
+			_myMovementComp->RotateToYaw(desiredForwardYaw - curRotator.Yaw, deltaTime);
+			GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, TEXT("forward adjustment "));
+		}
+		else
+		{
+			//--------------------------------------
+			//v: Velocity
+			//w: Yaw Angular Speed
+			//R: Track Radius
+			//   V = W * R 
+			//=> W = V / R 
+			//--------------------------------------
+			float desiredYawSpeed = (_myMovementComp->GetMaxSpeed() / _trackRadius);
+			GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Cyan, FString::Printf(TEXT("desiredYawSpeed: %f"), desiredYawSpeed));
+			_myMovementComp->KeepYawSpeed(desiredYawSpeed, deltaTime);
+		}
+
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, TEXT("done!"));
+	}
+	GetActionOwner()->AddMovementInput(GetActionOwner()->GetActorForwardVector());
 }
 
 bool UActionCircleAround::TryGetRequiredData()
