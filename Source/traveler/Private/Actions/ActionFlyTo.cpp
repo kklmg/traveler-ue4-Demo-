@@ -49,6 +49,8 @@ bool UActionFlyTo::VCanExecute()
 
 void UActionFlyTo::VOnExecute()
 {
+	Super::VOnExecute();
+
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Execute Fly To"));
 
 	if (!TryGetRequiredData())
@@ -136,7 +138,9 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	bool bMaxYawSpeed = deltaAngleDegreeH_Forward_ToDest > 0 ? 
 		curYawSpeed == flyingAbility.YawAngSpeedMax : curYawSpeed == -flyingAbility.YawAngSpeedMax;
 
-	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Current Yaw Speed: " + FString::SanitizeFloat(curYawSpeed));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "delta Angle Degree: " + FString::SanitizeFloat(deltaAngleDegreeH_Forward_ToDest));
+
+
 
 	if (dist_TrackCenter_Dest > trackRadius + _keepingDistanceXY)
 	{
@@ -218,7 +222,6 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "current Altitude: " + FString::SanitizeFloat(curLocation.Z));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "dest Altitude: " + FString::SanitizeFloat(_destAltitude));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "distance xy: " + FString::SanitizeFloat(distXY));
-	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "dest Radius: " + FString::SanitizeFloat(_destRadius));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, "deltaAngleDegreeH_Forward_ToDest: " + FString::SanitizeFloat(deltaAngleDegreeH_Forward_ToDest));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "KeepDistanceXY: " + FString::SanitizeFloat(_keepingDistanceXY));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "distXY: " + FString::SanitizeFloat(distXY));

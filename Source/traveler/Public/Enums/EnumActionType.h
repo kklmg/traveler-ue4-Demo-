@@ -22,6 +22,7 @@ enum class EActionType : uint8
 	EACT_Aiming UMETA(DisplayName = "Aiming"),
 	EACT_Flying UMETA(DisplayName = "Flying"),
 	EACT_FlyAround UMETA(DisplayName = "FlyAround"),
+	EACT_FaceTo UMETA(DisplayName = "FaceTo"),
 	EACT_TakeOff UMETA(DisplayName = "TakeOff"),
 	EACT_Teleport UMETA(DisplayName = "Teleport"),
 	EACT_Throw UMETA(DisplayName = "Throw"),
@@ -43,7 +44,8 @@ namespace NSActionData
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(RotationCenter, UDataVector)
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(TeleportLocation, UDataVector)
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(DestLocation, UDataVector)
-	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(TrackCenter, UDataVector)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(TrackCenter, UDataVector)	
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(FaceToDirection, UDataVector)
 
 
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(DestAltitude, UDataFloat)
@@ -53,6 +55,8 @@ namespace NSActionData
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(NormalizedSpeed, UDataFloat)
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(DashDistance, UDataFloat)
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(TrackRadius, UDataFloat)
+
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(FaceToActor, AActor)
 };
 
 
