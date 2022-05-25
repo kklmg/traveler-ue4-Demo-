@@ -32,12 +32,6 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	bool _bUpdateDestination;
 
-	UPROPERTY(EditDefaultsOnly, Category = Tolerance)
-	float _horizontalTolerance;
-
-	UPROPERTY(EditDefaultsOnly, Category = Tolerance)
-	float _verticalTolerance;
-
 	FVector _destLocation;
 	float _keepingDistanceXY;
 	float _destAltitude;

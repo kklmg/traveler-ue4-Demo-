@@ -166,12 +166,12 @@ void UMyCharacterMovementComponent::RotateYaw(bool bPositive, float deltaTime, f
 	}
 }
 
-void UMyCharacterMovementComponent::KeepYawSpeed(float desiredYawSpeed,float deltaTime)
+void UMyCharacterMovementComponent::KeepYawSpeed(float desiredYawSpeed, float deltaTime)
 {
 	if (MovementMode == EMovementMode::MOVE_Flying)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("curYawSpeed : %f"), _curYawSpeed));
-		desiredYawSpeed = desiredYawSpeed > 0 ? 
+		desiredYawSpeed = desiredYawSpeed > 0 ?
 			FMath::Min(desiredYawSpeed, _FlyingAbilityData.YawAngSpeedMax) : FMath::Max(desiredYawSpeed, -_FlyingAbilityData.YawAngSpeedMax);
 
 		if (desiredYawSpeed > _curYawSpeed)
@@ -191,8 +191,9 @@ void UMyCharacterMovementComponent::KeepYawSpeed(float desiredYawSpeed,float del
 	}
 }
 
-void UMyCharacterMovementComponent::RotateToYaw(float deltaYawAngDegree, float deltaTime)
+void UMyCharacterMovementComponent::RotateDeltaYaw(float deltaYawAng, float deltaTime)
 {
+	if (deltaYawAng == 0.0f) return;
 
 	if (MovementMode == EMovementMode::MOVE_Flying)
 	{
@@ -209,39 +210,56 @@ void UMyCharacterMovementComponent::RotateToYaw(float deltaYawAngDegree, float d
 		//=> s = v0 * v0 = 2 * acc
 		//=> v0 = sqrt(s * acc * 2)
 		//---------------------------------------------------------
-		float desiredYawSpeed = deltaYawAngDegree > 0 ? 
-			FMath::Sqrt(deltaYawAngDegree * _FlyingAbilityData.YawAcc * 2) : -FMath::Sqrt(deltaYawAngDegree * -_FlyingAbilityData.YawAcc * 2) + 2.0f;
+		float desiredYawSpeed = deltaYawAng > 0 ?
+			FMath::Sqrt(deltaYawAng * _FlyingAbilityData.YawAcc * 2) : -FMath::Sqrt(deltaYawAng * -_FlyingAbilityData.YawAcc * 2);
 
 		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("curYawSpeed : %f"), _curYawSpeed));
 		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("desiredYawSpeed : %f"), desiredYawSpeed));
 
-		if (_curYawSpeed < desiredYawSpeed)
+
 		{
-			if (acceleratedYawSpeed > desiredYawSpeed)
+			if (_curYawSpeed < desiredYawSpeed)
 			{
-				_curYawSpeed = desiredYawSpeed;
-				_inputDeltaYaw = (desiredYawSpeed)*deltaTime;
+				if (acceleratedYawSpeed > desiredYawSpeed)
+				{
+					_curYawSpeed = desiredYawSpeed;
+					_inputDeltaYaw = (desiredYawSpeed) * deltaTime;
+				}
+				else
+				{
+					_curYawSpeed = acceleratedYawSpeed;
+					_inputDeltaYaw = acceleratedYawSpeed * deltaTime;
+
+				}
 			}
 			else
 			{
-				_curYawSpeed = acceleratedYawSpeed;
-				_inputDeltaYaw = acceleratedYawSpeed * deltaTime;
-			
+				if (deceleratedYawSpeed < desiredYawSpeed)
+				{
+					_curYawSpeed = desiredYawSpeed;
+					_inputDeltaYaw = (desiredYawSpeed)*deltaTime;
+				}
+				else
+				{
+					_curYawSpeed = deceleratedYawSpeed;
+					_inputDeltaYaw = deceleratedYawSpeed * deltaTime;
+				}
 			}
 		}
-		else
+
+	/*	if (deltaYawAng > 0 && _inputDeltaYaw > deltaYawAng)
 		{
-			if (deceleratedYawSpeed < desiredYawSpeed)
-			{
-				_curYawSpeed = desiredYawSpeed;
-				_inputDeltaYaw = (desiredYawSpeed)*deltaTime;
-			}
-			else
-			{
-				_curYawSpeed = deceleratedYawSpeed;
-				_inputDeltaYaw = deceleratedYawSpeed * deltaTime;
-			}
+			_inputDeltaYaw = deltaYawAng;
+			_curYawSpeed = 0;
+			GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("000000000000000000000000000000")));
 		}
+		if (deltaYawAng < 0 && _inputDeltaYaw < deltaYawAng)
+		{
+			_inputDeltaYaw = deltaYawAng;
+			_curYawSpeed = 0;
+			GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("0000000000000000000000000000000")));
+		}*/
+
 
 	}
 	//todo
@@ -360,7 +378,7 @@ void UMyCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const 
 		_eventData_VelocityChanged->Value = Velocity;
 		_eventBrokerComp->PublishEvent(NSEventData::VelocityChanged::Name, _eventData_VelocityChanged);
 	}
-	
+
 }
 
 void UMyCharacterMovementComponent::OnReceiveEvent_ActorLifeStateChanged(UObject* baseData)

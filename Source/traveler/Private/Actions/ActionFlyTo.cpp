@@ -20,9 +20,6 @@ UActionFlyTo::UActionFlyTo()
 
 	_bIsInstantProcess = false;
 	_bUpdateDestination = true;
-
-	_horizontalTolerance = 1500.0f;
-	_verticalTolerance = 1500.0f;
 }
 
 
@@ -89,21 +86,23 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	dirToDestXY.Normalize();
 
 	//angle degree between forward with dest
-	float deltaAngleDegreeH_Forward_ToDest = FMath::FindDeltaAngleDegrees(actorForwardXY.Rotation().Yaw, dirToDestXY.Rotation().Yaw);
+	float deltaAngleH_Forward_ToDest = FMath::FindDeltaAngleDegrees(actorForwardXY.Rotation().Yaw, dirToDestXY.Rotation().Yaw);
 	//float deltaAngleDegreeV_Forward_ToDest = FMath::FindDeltaAngleDegrees(actorForwardXY.Rotation().Pitch, dirToDestXY.Rotation().Pitch);
 	
 	//action completed
 	//-------------------------------------------------------------------------------------------------------------
 
-	if (distXY < _horizontalTolerance + _keepingDistanceXY
-		&& distZ < _verticalTolerance 
-		&& (_bFaceToDest == false || FMath::Abs(deltaAngleDegreeH_Forward_ToDest) < 1.0f)
+	float tolerance = _myMovementComp->GetMaxSpeed() * deltaTime * 2.0f;
+
+	if (FMath::Abs(distXY - _keepingDistanceXY) <= tolerance
+		&& distZ < tolerance
+		&& (_bFaceToDest == false || FMath::Abs(deltaAngleH_Forward_ToDest) < 1.0f)
 		&& FMath::Abs(curRotation.Pitch) < 1.0f
 		&& FMath::Abs(curRotation.Roll) < 1.0f)
 	{
 		if (_bBrakeAtDest)
 		{
-			GetActionOwner()->GetCharacterMovement()->StopMovementImmediately();
+			//GetActionOwner()->GetCharacterMovement()->StopMovementImmediately();
 		}
 		SetProcessSucceed();
 	}
@@ -121,44 +120,34 @@ void UActionFlyTo::VOnTick(float deltaTime)
 
 	//Compute Track Radius
 	//v = W * R => R = V / W 
-	float trackRadius = curVelocity.Size2D() / FMath::DegreesToRadians((flyingAbility.YawAngSpeedMax * 0.4f));
-	//float trackRadius = curVelocity.Size2D() / FMath::DegreesToRadians(_myMovementComp->GetCurrentYawSpeed() + 0.00001f);
+	float trackRadius = curVelocity.Size2D() / FMath::DegreesToRadians((flyingAbility.YawAngSpeedMax))+3000;
+	//float trackRadius = curVelocity.Size2D() / FMath::DegreesToRadians(curYawSpeed + 0.00001f);
+
 
 	//Compute Track Center
 	FVector dirRight = GetActionOwner()->GetActorRightVector();
 	dirRight.Z = 0;
 	dirRight.Normalize();
 
-	FVector trackCenter = deltaAngleDegreeH_Forward_ToDest < 0
+	FVector trackCenter = deltaAngleH_Forward_ToDest < 0
 		? curLocation - dirRight * trackRadius : curLocation + dirRight * trackRadius;
 
 	//Compute distance from trackcenter to destination
 	float dist_TrackCenter_Dest = FVector::Dist2D(_destLocation, trackCenter);
 
-	bool bMaxYawSpeed = deltaAngleDegreeH_Forward_ToDest > 0 ? 
-		curYawSpeed == flyingAbility.YawAngSpeedMax : curYawSpeed == -flyingAbility.YawAngSpeedMax;
 
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "delta Angle Degree: " + FString::SanitizeFloat(deltaAngleDegreeH_Forward_ToDest));
+	float distXY_Safe = FMath::Max(trackRadius, _keepingDistanceXY + tolerance);
 
 
-
-	if (dist_TrackCenter_Dest > trackRadius + _keepingDistanceXY)
+	if (dist_TrackCenter_Dest < distXY_Safe)
 	{
-		_myMovementComp->RotateToYaw(deltaAngleDegreeH_Forward_ToDest, deltaTime);
-		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Desision: Yaw to dest ");
+		_myMovementComp->RotateDeltaYaw(FMath::UnwindDegrees(deltaAngleH_Forward_ToDest + 180), deltaTime);
+		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Move Out ");
 	}
 	else
 	{
-		if (bMaxYawSpeed) 
-		{
-			_myMovementComp->RotateYaw(deltaAngleDegreeH_Forward_ToDest>=0, deltaTime);
-			//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Desision: Yaw Acceleraion : ");
-		}
-		else
-		{
-			_myMovementComp->Accelerate(false, deltaTime);
-			//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Desision: braking: ");
-		}
+		_myMovementComp->RotateDeltaYaw(deltaAngleH_Forward_ToDest, deltaTime);
+		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Move In");
 	}
 
 	//Pitch Rotation  
@@ -166,7 +155,7 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	float offset_Z = _destAltitude - curLocation.Z;
 	float DistTraveledDuringKeepHorizontal = _myMovementComp->ComputeDistTraveledDuringPitch0();
 
-	if (distZ < _verticalTolerance)
+	if (distZ < tolerance)
 	{
 		_myMovementComp->KeepHorizontal(deltaTime);
 	}
@@ -184,8 +173,8 @@ void UActionFlyTo::VOnTick(float deltaTime)
 
 	//Horizontal Movement  
 	//-------------------------------------------------------------------------------------------------------------
-
-	if (FMath::Abs(deltaAngleDegreeH_Forward_ToDest) > 1.0f)
+		
+	if (FMath::Abs(deltaAngleH_Forward_ToDest) > 1.0f)
 	{
 		_myMovementComp->Accelerate(true, deltaTime);
 	}

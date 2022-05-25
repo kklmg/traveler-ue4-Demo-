@@ -72,7 +72,7 @@ void UActionFaceTo::VOnTick(float deltaTime)
 		SetProcessSucceed();
 	}
 
-	_myMovementComp->RotateToYaw(deltaAngleH_Forward_FaceTo, deltaTime);
+	_myMovementComp->RotateDeltaYaw(deltaAngleH_Forward_FaceTo, deltaTime);
 	_myMovementComp->Accelerate(true,deltaTime);
 }
 
