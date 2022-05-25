@@ -22,7 +22,7 @@ class TRAVELER_API UActorWidget : public UUserWidget
 public:
 	UActorWidget(const FObjectInitializer& ObjectInitializer);
 
-	void SetData(AActor* widgetOwner,ETransform transformType);
+	void SetData(AActor* widgetOwner,ETransformType transformType);
 
 	UFUNCTION(BlueprintPure)
 	AActor* GetWidgetOwner();
@@ -35,7 +35,7 @@ private:
 	AActor* _widgetOwner;
 
 	UPROPERTY()
-	ETransform _transformType;
+	ETransformType _transformType;
 
 	UPROPERTY(EditDefaultsOnly)
 	float _timeCollapse;

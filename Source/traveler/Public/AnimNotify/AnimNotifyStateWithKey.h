@@ -23,7 +23,7 @@ class TRAVELER_API UAnimNotifyStateWithKey : public UAnimNotifyState
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "key")
-	EAnimNotifyKey NotifyKey;
+	EAnimNotifyKeyType NotifyKey;
 
 private:
 	UPROPERTY()

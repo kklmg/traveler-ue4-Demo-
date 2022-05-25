@@ -62,8 +62,8 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 		if ((movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking))
 		{ 
 			//calculate ik data
-			_footIKData->SetLeft(FootTrace(ETransform::ETransform_LeftFoot));
-			_footIKData->SetRight(FootTrace(ETransform::ETransform_RightFoot));
+			_footIKData->SetLeft(FootTrace(ETransformType::ETransform_LeftFoot));
+			_footIKData->SetRight(FootTrace(ETransformType::ETransform_RightFoot));
 
 			//notify ik data
 			_animationViewModel->SetUObject(NSAnimationDataKey::objFootIKData, _footIKData);
@@ -71,7 +71,7 @@ void UIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	}
 }
 
-FIKData UIKComponent::FootTrace(ETransform meshSocketType)
+FIKData UIKComponent::FootTrace(ETransformType meshSocketType)
 {
 	if (!_exTransformProviderComp) return FIKData();
 	if (!_animationViewModel) return FIKData();

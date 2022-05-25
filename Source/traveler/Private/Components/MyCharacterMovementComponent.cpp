@@ -298,7 +298,7 @@ void UMyCharacterMovementComponent::Ascend(bool bPositive, float deltaTime)
 void UMyCharacterMovementComponent::KeepHorizontal(float deltaTime)
 {
 	check(GetOwner())
-		FRotator curRotator = GetOwner()->GetActorRotation();
+	FRotator curRotator = GetOwner()->GetActorRotation();
 
 	if (curRotator.Pitch == 0.0f)
 	{
@@ -309,7 +309,7 @@ void UMyCharacterMovementComponent::KeepHorizontal(float deltaTime)
 	{
 		float deltaPitch = _FlyingAbilityData.PitchAngSpeed * deltaTime;
 
-		_inputDeltaPitch = curRotator.Pitch > 0 ?
+		deltaPitch = curRotator.Pitch > 0 ?
 			FMath::Max(-deltaPitch, 0.0f - curRotator.Pitch) :
 			FMath::Min(deltaPitch, 0.0f - curRotator.Pitch);
 		_inputDeltaPitch += deltaPitch;

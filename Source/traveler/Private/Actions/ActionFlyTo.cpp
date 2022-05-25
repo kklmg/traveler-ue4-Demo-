@@ -92,17 +92,17 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	//action completed
 	//-------------------------------------------------------------------------------------------------------------
 
-	float tolerance = _myMovementComp->GetMaxSpeed() * deltaTime * 2.0f;
+	float tolerance = _myMovementComp->GetMaxSpeed() * deltaTime * 3.0f;
 
-	if (FMath::Abs(distXY - _keepingDistanceXY) <= tolerance
+	if (FMath::Abs(distXY - _keepingDistanceXY) < tolerance
 		&& distZ < tolerance
 		&& (_bFaceToDest == false || FMath::Abs(deltaAngleH_Forward_ToDest) < 1.0f)
-		&& FMath::Abs(curRotation.Pitch) < 1.0f
+		&& FMath::Abs(curRotation.Pitch) == 0.0f
 		&& FMath::Abs(curRotation.Roll) < 1.0f)
 	{
 		if (_bBrakeAtDest)
 		{
-			//GetActionOwner()->GetCharacterMovement()->StopMovementImmediately();
+			GetActionOwner()->GetCharacterMovement()->StopMovementImmediately();
 		}
 		SetProcessSucceed();
 	}
@@ -214,6 +214,7 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, "deltaAngleDegreeH_Forward_ToDest: " + FString::SanitizeFloat(deltaAngleDegreeH_Forward_ToDest));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "KeepDistanceXY: " + FString::SanitizeFloat(_keepingDistanceXY));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "distXY: " + FString::SanitizeFloat(distXY));
+	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "pitch: " + FString::SanitizeFloat(curRotation.Pitch));
 }
 
 bool UActionFlyTo::TryGetRequiredData()

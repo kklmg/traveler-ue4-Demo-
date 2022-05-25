@@ -38,7 +38,7 @@ void UExTransformProviderComponent::TickComponent(float DeltaTime, ELevelTick Ti
 	// ...
 }
 
-bool UExTransformProviderComponent::TryGetSocketName(ETransform transformType, FName& outSocketName)
+bool UExTransformProviderComponent::TryGetSocketName(ETransformType transformType, FName& outSocketName)
 {
 	if (_boneNameMap.Contains(transformType))
 	{
@@ -51,7 +51,7 @@ bool UExTransformProviderComponent::TryGetSocketName(ETransform transformType, F
 	}
 }
 
-bool UExTransformProviderComponent::TryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
+bool UExTransformProviderComponent::TryGetTransform(ETransformType transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform)
 {
 	//try get bone Transform
 	if (_meshComp && _boneNameMap.Contains(transformType))

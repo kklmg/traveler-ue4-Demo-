@@ -32,7 +32,7 @@ public:
 	TSubclassOf<UActorWidget> WidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
-	ETransform TransformType;
+	ETransformType TransformType;
 
 	UPROPERTY(EditDefaultsOnly)
 	float ZOrder;

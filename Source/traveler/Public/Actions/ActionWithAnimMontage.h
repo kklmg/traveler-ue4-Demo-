@@ -26,5 +26,5 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = animation)
-	EAnimMontage _animMontageType;
+	EAnimMontageKey _animMontageType;
 };

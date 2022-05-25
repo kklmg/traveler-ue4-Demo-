@@ -51,15 +51,17 @@ public:
 
 	//animation Notify ------------------------------------------------------------------
 
-	void NotifyAnimStateBegin(EAnimNotifyKey notifyKey, float totalTime);
-	void NotifyAnimStateTick(EAnimNotifyKey notifyKey, float frameDeltaTime);
-	void NotifyAnimStateEnd(EAnimNotifyKey notifyKey);
+	void NotifyAnimStateBegin(EAnimNotifyKeyType notifyKey, float totalTime);
+	void NotifyAnimStateTick(EAnimNotifyKeyType notifyKey, float frameDeltaTime);
+	void NotifyAnimStateEnd(EAnimNotifyKeyType notifyKey);
 
-	UAnimNotifier* GetNotifer(EAnimNotifyKey notifyKey);
-	UAnimNotifier* GetOrCreateNotifer(EAnimNotifyKey notifyKey);
+	UAnimNotifier* GetNotifer(EAnimNotifyKeyType notifyKey);
+	UAnimNotifier* GetOrCreateNotifer(EAnimNotifyKeyType notifyKey);
 
 	//animation Montage ------------------------------------------------------------------
-	bool PlayAnimMontage(EAnimMontage animMontageType);
+	bool PlayAnimMontage(EAnimMontageKey animMontageType);
+	bool StopAnimMontage(EAnimMontageKey animMontageType);
+
 
 protected:
 	void OnReceiveEvent_ActorLifeStateChanged(UObject* baseData);
@@ -79,13 +81,13 @@ private:
 	EAnimationState _animationState;
 
 	UPROPERTY(EditDefaultsOnly,Category = animMontage)
-	TMap<EAnimMontage, UAnimMontage*> _montageMap;
+	TMap<EAnimMontageKey, UAnimMontage*> _montageMap;
 
 	UPROPERTY()
 	UEventBrokerComponent* _eventBrokerComp;
 
 	UPROPERTY()
-	TMap<EAnimNotifyKey, UAnimNotifier*> _mapNotifiers;
+	TMap<EAnimNotifyKeyType, UAnimNotifier*> _mapNotifiers;
 
 	FOnAnimationStateChanged _animationStateChangedDelegate;
 };

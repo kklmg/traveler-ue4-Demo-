@@ -95,7 +95,7 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 		FName outLeftHandSocketName;
 		if(_ownerExTransformProviderComp)
 		{
-			_ownerExTransformProviderComp->TryGetSocketName(ETransform::ETransform_LeftHand, outLeftHandSocketName);
+			_ownerExTransformProviderComp->TryGetSocketName(ETransformType::ETransform_LeftHand, outLeftHandSocketName);
 		}
 
 		//Get Character

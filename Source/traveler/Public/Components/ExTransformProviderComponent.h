@@ -28,17 +28,17 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual bool TryGetSocketName(ETransform transfomType, FName& outSocketName);
+	virtual bool TryGetSocketName(ETransformType transfomType, FName& outSocketName);
 
 	UFUNCTION(BlueprintCallable)
-	bool TryGetTransform(ETransform transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform);
+	bool TryGetTransform(ETransformType transformType, ERelativeTransformSpace transformSpace, FTransform& outTransform);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = Sockets)
-	TMap<ETransform, FName> _boneNameMap;
+	TMap<ETransformType, FName> _boneNameMap;
 
 	UPROPERTY(EditDefaultsOnly, Category = Sockets)
-	TMap<ETransform, FTransform> _relativeTransfromMap;
+	TMap<ETransformType, FTransform> _relativeTransfromMap;
 
 	UPROPERTY()
 	UMeshComponent* _meshComp;

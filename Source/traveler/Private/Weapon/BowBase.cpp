@@ -245,11 +245,11 @@ void ABowBase::AttachArrowsToHand()
 	FTransform rightHandTransform;
 	if (GetOwnerExTransformProviderComp())
 	{
-		GetOwnerExTransformProviderComp()->TryGetTransform(ETransform::ETransform_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
+		GetOwnerExTransformProviderComp()->TryGetTransform(ETransformType::ETransform_RightHandDraw, ERelativeTransformSpace::RTS_World, rightHandTransform);
 	}
 	//get muzzle transform
 	FTransform muzzleTransform;
-	GetExTransformProviderComp()->TryGetTransform(ETransform::ETransform_Muzzle, RTS_World, muzzleTransform);
+	GetExTransformProviderComp()->TryGetTransform(ETransformType::ETransform_Muzzle, RTS_World, muzzleTransform);
 
 	//compute Projectile Transform
 	FVector projectileForward = muzzleTransform.GetLocation() - rightHandTransform.GetLocation();
@@ -290,8 +290,8 @@ void ABowBase::AttachArrowsToBow()
 	FTransform muzzleTransform;
 	FTransform bowStringTransform;
 
-	GetExTransformProviderComp()->TryGetTransform(ETransform::ETransform_Muzzle, RTS_World, muzzleTransform);
-	GetExTransformProviderComp()->TryGetTransform(ETransform::ETransform_BowString, RTS_World, bowStringTransform);
+	GetExTransformProviderComp()->TryGetTransform(ETransformType::ETransform_Muzzle, RTS_World, muzzleTransform);
+	GetExTransformProviderComp()->TryGetTransform(ETransformType::ETransform_BowString, RTS_World, bowStringTransform);
 
 	FVector arrowForward = (muzzleTransform.GetLocation() - bowStringTransform.GetLocation()).GetSafeNormal();
 	FQuat arrowQuat = arrowForward.ToOrientationQuat();

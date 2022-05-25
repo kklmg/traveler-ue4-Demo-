@@ -21,7 +21,7 @@ public:
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "key")
-	EAnimNotifyKey NotifyKey;
+	EAnimNotifyKeyType NotifyKey;
 private:
 	UPROPERTY()
 	UAnimControlComponent* _animControlComp;

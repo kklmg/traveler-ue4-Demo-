@@ -27,7 +27,7 @@ public:
 private:
 
 	UPROPERTY(EditDefaultsOnly)
-	ETransform _transformType;
+	ETransformType _transformType;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AThrowerActorBase> _throwerClass;

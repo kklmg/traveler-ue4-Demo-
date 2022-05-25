@@ -15,7 +15,7 @@ UActorWidget::UActorWidget(const FObjectInitializer& ObjectInitializer) : Super(
 	_renderScaleMin = 0.2f;
 }
 
-void UActorWidget::SetData(AActor* widgetOwner, ETransform transformType)
+void UActorWidget::SetData(AActor* widgetOwner, ETransformType transformType)
 {
 	check(widgetOwner);
 	_widgetOwner = widgetOwner;

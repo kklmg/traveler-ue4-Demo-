@@ -83,7 +83,7 @@ FORCEINLINE_DEBUGGABLE UAnimInstance* UAnimControlComponent::GetAnimInstance()
 	return _character->GetMesh()->GetAnimInstance();
 }
 
-void UAnimControlComponent::NotifyAnimStateBegin(EAnimNotifyKey notifyKey, float totalTime)
+void UAnimControlComponent::NotifyAnimStateBegin(EAnimNotifyKeyType notifyKey, float totalTime)
 {
 	if (_mapNotifiers.Contains(notifyKey))
 	{
@@ -91,7 +91,7 @@ void UAnimControlComponent::NotifyAnimStateBegin(EAnimNotifyKey notifyKey, float
 	}
 }
 
-void UAnimControlComponent::NotifyAnimStateTick(EAnimNotifyKey notifyKey, float frameDeltaTime)
+void UAnimControlComponent::NotifyAnimStateTick(EAnimNotifyKeyType notifyKey, float frameDeltaTime)
 {
 	if (_mapNotifiers.Contains(notifyKey))
 	{
@@ -99,7 +99,7 @@ void UAnimControlComponent::NotifyAnimStateTick(EAnimNotifyKey notifyKey, float 
 	}
 }
 
-void UAnimControlComponent::NotifyAnimStateEnd(EAnimNotifyKey notifyKey)
+void UAnimControlComponent::NotifyAnimStateEnd(EAnimNotifyKeyType notifyKey)
 {
 	if (_mapNotifiers.Contains(notifyKey))
 	{
@@ -107,12 +107,12 @@ void UAnimControlComponent::NotifyAnimStateEnd(EAnimNotifyKey notifyKey)
 	}
 }
 
-UAnimNotifier* UAnimControlComponent::GetNotifer(EAnimNotifyKey notifyKey)
+UAnimNotifier* UAnimControlComponent::GetNotifer(EAnimNotifyKeyType notifyKey)
 {
 	return _mapNotifiers.Contains(notifyKey) ? _mapNotifiers[notifyKey] : nullptr;
 }
 
-UAnimNotifier* UAnimControlComponent::GetOrCreateNotifer(EAnimNotifyKey notifyKey)
+UAnimNotifier* UAnimControlComponent::GetOrCreateNotifer(EAnimNotifyKeyType notifyKey)
 {
 	if (_mapNotifiers.Contains(notifyKey))
 	{
@@ -126,7 +126,7 @@ UAnimNotifier* UAnimControlComponent::GetOrCreateNotifer(EAnimNotifyKey notifyKe
 	}
 }
 
-bool UAnimControlComponent::PlayAnimMontage(EAnimMontage animMontageType)
+bool UAnimControlComponent::PlayAnimMontage(EAnimMontageKey animMontageType)
 {
 	check(_character);
 	if(_montageMap.Contains(animMontageType) && _montageMap[animMontageType])
@@ -139,6 +139,27 @@ bool UAnimControlComponent::PlayAnimMontage(EAnimMontage animMontageType)
 		{
 			_character->PlayAnimMontage(_montageMap[animMontageType]);
 			return true;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool UAnimControlComponent::StopAnimMontage(EAnimMontageKey animMontageType)
+{
+	check(_character);
+	if (_montageMap.Contains(animMontageType) && _montageMap[animMontageType])
+	{
+		if (GetAnimInstance()->Montage_IsPlaying(_montageMap[animMontageType]))
+		{
+			_character->StopAnimMontage(_montageMap[animMontageType]);
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 	else

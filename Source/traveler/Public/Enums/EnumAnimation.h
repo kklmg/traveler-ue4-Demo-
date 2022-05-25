@@ -20,7 +20,7 @@ enum class EAnimationState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EAnimMontage : uint8
+enum class EAnimMontageKey : uint8
 {
 	EAnimMontage_None UMETA(DisplayName = "None"),
 	EAnimMontage_Throw UMETA(DisplayName = "Throw"),

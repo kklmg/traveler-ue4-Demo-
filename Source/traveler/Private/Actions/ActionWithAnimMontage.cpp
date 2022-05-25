@@ -38,10 +38,15 @@ void UActionWithAnimMontage::VOnExecute()
 
 void UActionWithAnimMontage::VOnDead()
 {
+	Super::VOnDead();
+
 	check(GetAnimControlComp()->GetAnimInstance());
 
 	GetAnimControlComp()->GetAnimInstance()->OnMontageEnded
 		.RemoveDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
+
+	
+	GetAnimControlComp()->StopAnimMontage(_animMontageType);
 }
 
 void UActionWithAnimMontage::VOnAnimMontageFinished(UAnimMontage* montage, bool interrupted)

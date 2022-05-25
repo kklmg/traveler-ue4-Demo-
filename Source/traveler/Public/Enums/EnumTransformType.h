@@ -9,7 +9,7 @@
  */
 
 UENUM(BlueprintType)
-enum class ETransform : uint8
+enum class ETransformType : uint8
 {
 	ETransform_None UMETA(DisplayName = "None"),
 	ETransform_LeftHand UMETA(DisplayName = "LeftHand"),

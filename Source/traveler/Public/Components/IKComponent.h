@@ -32,7 +32,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	FIKData FootTrace(ETransform meshSocketType);
+	FIKData FootTrace(ETransformType meshSocketType);
 	
 private:
 	UPROPERTY(EditAnywhere)
