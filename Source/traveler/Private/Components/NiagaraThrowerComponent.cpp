@@ -22,6 +22,7 @@ void UNiagaraThrowerComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 void UNiagaraThrowerComponent::VSetSpeed(float speed)
 {
 	SetFloatParameter(NSNameNiagaraParams::SpeedMax, speed);
+	SetFloatParameter(NSNameNiagaraParams::SpeedMin, speed * 0.9f);
 }
 
 void UNiagaraThrowerComponent::VSetLife(float life)

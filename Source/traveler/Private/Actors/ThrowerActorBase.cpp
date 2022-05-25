@@ -35,6 +35,8 @@ void AThrowerActorBase::BeginPlay()
 void AThrowerActorBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+
+
 }
 
 // Called every frame
@@ -42,6 +44,16 @@ void AThrowerActorBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AThrowerActorBase::AddThrowingSpeed(float deltaSpeed)
+{
+	VSetSpeed(_throwerData.Speed + deltaSpeed);
+}
+
+void AThrowerActorBase::ResetThrowingSpeed()
+{
+	VSetSpeed(_throwerData.Speed);
 }
 
 void AThrowerActorBase::VSetSpawningLocation(FVector location)
@@ -73,7 +85,6 @@ void AThrowerActorBase::VSetSpawningActorScale(float scale)
 
 void AThrowerActorBase::VSetSpeed(float speed)
 {
-	_throwerData.Speed = speed;
 	for (auto throwerIntreface : _throwerInterfaces)
 	{
 		throwerIntreface->VSetSpeed(speed);

@@ -28,6 +28,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void AddThrowingSpeed(float deltaSpeed);
+	void ResetThrowingSpeed();
+	
+	//-----------------------------------
+	// IThrowerInterface
+	//-----------------------------------
+
 	virtual void VSetSpawningLocation(FVector location) override;
 	virtual void VSetThrowingDirection(FVector direction) override;
 	virtual void VSetSpawningActorScale(float scale) override;

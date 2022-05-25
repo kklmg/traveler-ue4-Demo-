@@ -339,7 +339,7 @@ void UMyCharacterMovementComponent::ToggleSprint(bool bSprint)
 	_bToggleSprint = bSprint;
 
 	MaxWalkSpeed = _statusComp->GetFinalValue(_bToggleSprint ? EStatusType::EStatus_SprintingSpeed : EStatusType::EStatus_WalkingSpeed);
-	MaxFlySpeed = _statusComp->GetFinalValue(EStatusType::EStatus_FlyingSpeed) * (_bToggleSprint ? 2.5f : 1.0f);
+	MaxFlySpeed = _statusComp->GetFinalValue(EStatusType::EStatus_FlyingSpeed) * (_bToggleSprint ? 4.0f : 1.0f);
 }
 
 float UMyCharacterMovementComponent::GetCurrentYawSpeed()

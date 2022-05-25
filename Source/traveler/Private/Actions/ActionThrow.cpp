@@ -102,7 +102,12 @@ void UActionThrow::OnAttackNotifyTick(float frameDeltaTime)
 		if (_throwerIns)
 		{
 			_throwerIns->VSetSpawningLocation(outTransform.GetLocation());
-			//_throwerIns->VSetThrowingDirection(outTransform.GetRotation().Vector());
+			_throwerIns->AddThrowingSpeed(GetActionOwner()->GetVelocity().Size());
+
+			FRotator rotator = GetActionOwner()->GetActorRotation();
+			rotator.Pitch -= 15.0f;
+			_throwerIns->VSetThrowingDirection(rotator.Vector());
+
 		}
 	}
 }
