@@ -30,6 +30,7 @@ enum class EActionType : uint8
 	EACT_Fire UMETA(DisplayName = "Fire"),
 	EACT_Aim UMETA(DisplayName = "Aim"),
 	EACT_Guard UMETA(DisplayName = "Guard"),
+	EACT_Shoot UMETA(DisplayName = "Shoot"),
 	EACT_Max UMETA(DisplayName = "Max"),
 };
 
@@ -46,6 +47,8 @@ namespace NSActionData
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(DestLocation, UDataVector)
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(TrackCenter, UDataVector)	
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(FaceToDirection, UDataVector)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(ShootingDirection, UDataVector)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(ShootingTargetLocation, UDataVector)
 
 
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(DestAltitude, UDataFloat)
@@ -55,6 +58,7 @@ namespace NSActionData
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(NormalizedSpeed, UDataFloat)
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(DashDistance, UDataFloat)
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(TrackRadius, UDataFloat)
+	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(ShootingSpeed, UDataFloat)
 
 	DECLARE_NAMESPACE_CONST_FNAME_DATACLASS(FaceToActor, AActor)
 };

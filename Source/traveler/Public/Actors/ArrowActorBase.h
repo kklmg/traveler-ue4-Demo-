@@ -44,8 +44,7 @@ public:
 	void SetLaunchDirection(FVector direction);
 	void VReset();
 
-	UFUNCTION()
-	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit) override;
 
 private:
 	UPROPERTY(VisibleAnywhere)

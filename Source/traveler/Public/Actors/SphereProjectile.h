@@ -29,16 +29,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	virtual void VSetScaleCurve(UCurveFloat* curve) override;
-
-	UFUNCTION()
-	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
-	UFUNCTION()
-	virtual void VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 	virtual void VApplyDamageToOverlapedActor();
-
 	virtual bool VActivate() override;
 	virtual bool VDeactivate() override;
+
+	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit) override;
+	virtual void VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
 private:
 	UPROPERTY(VisibleAnywhere)

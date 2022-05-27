@@ -45,6 +45,13 @@ public:
 	virtual void VSetLife(float life) override;
 	virtual void VSetDamage(float damage) override;
 
+	//virtual
+
+	UFUNCTION()
+	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	UFUNCTION()
+	virtual void VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 protected:
 	virtual void VReset();
 	virtual void FellOutOfWorld(const UDamageType& damageType) override;
@@ -85,9 +92,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	int _poolId;
-
-	UPROPERTY(VisibleAnywhere)
-	float _damage;
 
 	FOnObjectInactive _OnObjectInactiveDelegate;
 };

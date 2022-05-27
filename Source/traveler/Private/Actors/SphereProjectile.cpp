@@ -27,7 +27,6 @@ ASphereProjectile::ASphereProjectile()
 
 	_coneAngle = 5.0f;
 	_shift = 0.0f;
-	_damage = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -36,12 +35,6 @@ void ASphereProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	_primaryScale = _primitiveComp->GetComponentScale();
-	if(_primitiveComp)
-	{
-		//OnHit 
-		_primitiveComp->OnComponentHit.AddDynamic(this, &ASphereProjectile::VOnHit);
-		_primitiveComp->OnComponentBeginOverlap.AddDynamic(this, &ASphereProjectile::VOnOverlapBegin);
-	}
 }
 
 // Called every frame
@@ -124,7 +117,7 @@ void ASphereProjectile::VApplyDamageToOverlapedActor()
 		
 		for (AActor* actor : _actors)
 		{
-			actor->TakeDamage(_damage, damageEvent, nullptr, nullptr);
+			actor->TakeDamage(_damageData.Damage, damageEvent, nullptr, nullptr);
 		}
 	}
 }

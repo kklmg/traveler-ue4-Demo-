@@ -33,6 +33,21 @@ AProjectileActorBase::AProjectileActorBase()
 void AProjectileActorBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (_primitiveComp)
+	{
+		//On Hit 
+		_primitiveComp->OnComponentHit.AddDynamic(this, &AProjectileActorBase::VOnHit);
+
+		//On Overlap
+		_primitiveComp->OnComponentBeginOverlap.AddDynamic(this, &AProjectileActorBase::VOnOverlapBegin);
+
+		if(GetInstigator())
+		{
+			_primitiveComp->MoveIgnoreActors.Add(GetInstigator());
+			GetInstigator()->MoveIgnoreActorAdd(this);
+		}
+	}
 }
 
 // Called every frame
@@ -152,7 +167,15 @@ void AProjectileActorBase::VSetScale(float scale)
 
 void AProjectileActorBase::VSetDamage(float damage)
 {
-	_damage = damage;
+	_damageData.Damage = damage;
+}
+
+void AProjectileActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+}
+
+void AProjectileActorBase::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
 }
 
 void AProjectileActorBase::VSetVelocity(FVector velocity)

@@ -168,6 +168,11 @@ bool UAnimControlComponent::StopAnimMontage(EAnimMontageKey animMontageType)
 	}
 }
 
+bool UAnimControlComponent::ContainsAnimMontage(EAnimMontageKey animMontageType)
+{
+	return _montageMap.Contains(animMontageType);
+}
+
 void UAnimControlComponent::OnReceiveEvent_ActorLifeStateChanged(UObject* baseData)
 {
 	auto eventData = Cast<NSEventData::ActorLifeStateChanged::Type>(baseData);

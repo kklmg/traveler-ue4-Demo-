@@ -61,6 +61,7 @@ public:
 	//animation Montage ------------------------------------------------------------------
 	bool PlayAnimMontage(EAnimMontageKey animMontageType);
 	bool StopAnimMontage(EAnimMontageKey animMontageType);
+	bool ContainsAnimMontage(EAnimMontageKey animMontageType);
 
 
 protected:

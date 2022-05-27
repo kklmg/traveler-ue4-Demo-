@@ -24,6 +24,7 @@ enum class EAnimMontageKey : uint8
 {
 	EAnimMontage_None UMETA(DisplayName = "None"),
 	EAnimMontage_Throw UMETA(DisplayName = "Throw"),
+	EAnimMontage_Shoot UMETA(DisplayName = "Shoot"),
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnimationStateChanged, EAnimationState, prevState, EAnimationState, newState);

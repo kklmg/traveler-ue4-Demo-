@@ -17,6 +17,7 @@ AArrowActorBase::AArrowActorBase()
 		check(_primitiveComp);
 		SetRootComponent(_primitiveComp);
 		_primitiveComp->SetCollisionProfileName(FName("Projectile"));
+		_primitiveComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	if (!_headEffect)
@@ -48,7 +49,6 @@ AArrowActorBase::AArrowActorBase()
 	_lifeAfterLaunch = 20.0f;
 	_lifeAfterHit = 5.0f;
 	_basicSpeed = 2000.0f;
-	_damage = 5.0f;
 
 	_elapsedTimeFromLaunch = 0.0f;
 	_elapsedTimeFromHit = 0.0f;
@@ -57,14 +57,6 @@ AArrowActorBase::AArrowActorBase()
 void AArrowActorBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (_primitiveComp)
-	{
-		_primitiveComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-		//OnHit 
-		_primitiveComp->OnComponentHit.AddDynamic(this, &AArrowActorBase::VOnHit);
-	}
 }
 
 void AArrowActorBase::Tick(float DeltaTime)

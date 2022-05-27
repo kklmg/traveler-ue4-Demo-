@@ -39,6 +39,7 @@ namespace NSNameAction
 	DECLARE_CONST_FNAME(FaceTo)
 	DECLARE_CONST_FNAME(WeaponFire)
 	DECLARE_CONST_FNAME(WeaponAim)
+	DECLARE_CONST_FNAME(Shoot)
 }
 
 /**

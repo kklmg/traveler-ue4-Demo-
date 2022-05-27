@@ -10,37 +10,42 @@ UActionWithAnimMontage::UActionWithAnimMontage()
 	_bIsInstantProcess = false;
 }
 
+bool UActionWithAnimMontage::VCanExecute()
+{
+	if (!Super::VCanExecute()) return false;
+
+	if (GetAnimControlComp() == nullptr)
+	{
+		UE_LOG(LogAction, Warning, TEXT("ActionWithAnimMontage: No AnimControlComponent"));
+		return false;
+	}
+	else if (GetAnimControlComp()->GetAnimInstance() == nullptr)
+	{
+		UE_LOG(LogAction, Warning, TEXT("ActionWithAnimMontage: No AnimInstance"));
+		return false;
+	}
+	else if(GetAnimControlComp()->ContainsAnimMontage(_animMontageType) == false)
+	{
+		UE_LOG(LogAction, Warning, TEXT("ActionWithAnimMontage: No Registered AnimMontageType"));
+		return false;
+	}
+
+	return true;
+}
+
 void UActionWithAnimMontage::VOnExecute()
 {
 	Super::VOnExecute();
 
-	check(GetActionOwner());
+	UAnimInstance* animInstance = GetAnimControlComp()->GetAnimInstance();
+	animInstance->OnMontageEnded.AddDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
 
-	if(GetAnimControlComp() && GetAnimControlComp()->GetAnimInstance())
-	{
-		UAnimInstance* animInstance = GetAnimControlComp()->GetAnimInstance();
-	
-		if(animInstance && GetAnimControlComp()->PlayAnimMontage(_animMontageType))
-		{
-			//subscribe montageEnded event
-			animInstance->OnMontageEnded.AddDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
-		}
-		else
-		{
-			SetProcessFailed();
-		}
-	}
-	else
-	{
-		SetProcessFailed();
-	}
+	GetAnimControlComp()->PlayAnimMontage(_animMontageType);
 }
 
 void UActionWithAnimMontage::VOnDead()
 {
 	Super::VOnDead();
-
-	check(GetAnimControlComp()->GetAnimInstance());
 
 	GetAnimControlComp()->GetAnimInstance()->OnMontageEnded
 		.RemoveDynamic(this, &UActionWithAnimMontage::VOnAnimMontageFinished);
