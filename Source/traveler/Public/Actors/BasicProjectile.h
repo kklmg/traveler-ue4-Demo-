@@ -24,4 +24,7 @@ private:
 
 	UPROPERTY(EditDefaultsonly)
 	TSubclassOf<AActor> _hitEffectActorClass;
+
+	UPROPERTY(EditDefaultsonly)
+	TSubclassOf<AActor> _groundEffectActorClass;
 };

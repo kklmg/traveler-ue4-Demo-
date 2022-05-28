@@ -41,14 +41,24 @@ void ABasicProjectile::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 		UMyGameplayStatics::CauseDamage(OtherActor, _damageData, Hit.ImpactPoint, this, GetInstigator());
 	}
 
-	if(_hitEffectActorClass)
+	if (_hitEffectActorClass)
 	{
-		Hit.Location;
 		FActorSpawnParameters spawnParams;
 		spawnParams.Owner = this;
 		spawnParams.Instigator = GetInstigator();
 
-		GetWorld()->SpawnActor<AActor>(_hitEffectActorClass, Hit.Location, Hit.Normal.Rotation(), spawnParams);
+		FQuat quat = FQuat::FindBetweenVectors(FVector::UpVector, Hit.Normal);
+		GetWorld()->SpawnActor<AActor>(_hitEffectActorClass, Hit.Location, quat.Rotator(), spawnParams);
+	}
+
+	if(OtherActor->Tags.Contains(FName(TEXT("Ground"))) && _groundEffectActorClass)
+	{
+		FActorSpawnParameters spawnParams;
+		spawnParams.Owner = this;
+		spawnParams.Instigator = GetInstigator();
+
+		FQuat quat = FQuat::FindBetweenVectors(FVector::UpVector, Hit.Normal);
+		GetWorld()->SpawnActor<AActor>(_groundEffectActorClass, Hit.Location, quat.Rotator(), spawnParams);
 	}
 	
 	Destroy();
