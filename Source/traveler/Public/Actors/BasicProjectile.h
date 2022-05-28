@@ -21,4 +21,7 @@ private:
 
 	UPROPERTY()
 	UStaticMeshComponent* _staticMeshComp;
+
+	UPROPERTY(EditDefaultsonly)
+	TSubclassOf<AActor> _hitEffectActorClass;
 };

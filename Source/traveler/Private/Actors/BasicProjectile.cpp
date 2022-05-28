@@ -40,6 +40,16 @@ void ABasicProjectile::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 		//apply damagge
 		UMyGameplayStatics::CauseDamage(OtherActor, _damageData, Hit.ImpactPoint, this, GetInstigator());
 	}
+
+	if(_hitEffectActorClass)
+	{
+		Hit.Location;
+		FActorSpawnParameters spawnParams;
+		spawnParams.Owner = this;
+		spawnParams.Instigator = GetInstigator();
+
+		GetWorld()->SpawnActor<AActor>(_hitEffectActorClass, Hit.Location, Hit.Normal.Rotation(), spawnParams);
+	}
 	
 	Destroy();
 }
