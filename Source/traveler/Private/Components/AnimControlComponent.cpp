@@ -134,6 +134,7 @@ bool UAnimControlComponent::PlayAnimMontage(EAnimMontageKey animMontageType)
 		if(GetAnimInstance()->Montage_IsPlaying(_montageMap[animMontageType]))
 		{
 			return false;
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("montage is playing"));
 		}
 		else
 		{
@@ -152,15 +153,8 @@ bool UAnimControlComponent::StopAnimMontage(EAnimMontageKey animMontageType)
 	check(_character);
 	if (_montageMap.Contains(animMontageType) && _montageMap[animMontageType])
 	{
-		if (GetAnimInstance()->Montage_IsPlaying(_montageMap[animMontageType]))
-		{
-			_character->StopAnimMontage(_montageMap[animMontageType]);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		_character->StopAnimMontage(_montageMap[animMontageType]);
+		return true;
 	}
 	else
 	{

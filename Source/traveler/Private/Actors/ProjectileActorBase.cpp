@@ -41,6 +41,7 @@ void AProjectileActorBase::BeginPlay()
 
 		//On Overlap
 		_primitiveComp->OnComponentBeginOverlap.AddDynamic(this, &AProjectileActorBase::VOnOverlapBegin);
+		_primitiveComp->OnComponentEndOverlap.AddDynamic(this, &AProjectileActorBase::VOnOverlapEnd);
 
 		if(GetInstigator())
 		{
@@ -175,6 +176,10 @@ void AProjectileActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* Oth
 }
 
 void AProjectileActorBase::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+}
+
+void AProjectileActorBase::VOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 }
 

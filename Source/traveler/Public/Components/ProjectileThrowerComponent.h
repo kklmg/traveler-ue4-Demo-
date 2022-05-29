@@ -68,5 +68,6 @@ private:
 
 	FTimerHandle _timerHandle;
 	FThrowerData _throwerData;
+
 	float _elapsedTime;
 };

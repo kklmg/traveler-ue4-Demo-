@@ -38,4 +38,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FVector Gravity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float SpawnEffectRate;
 };

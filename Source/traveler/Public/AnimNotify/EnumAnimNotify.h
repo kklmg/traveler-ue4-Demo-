@@ -13,6 +13,6 @@ enum class EAnimNotifyKeyType : uint8
 {
 	ANK_SpreadAttack UMETA(DisplayName = "SpreadAttack"),
 	ANK_MeleeAttack UMETA(DisplayName = "MeleeAttack"),
-	ANK_SpitAttack UMETA(DisplayName = "SpitAttack"),
+	ANK_ShootAttack UMETA(DisplayName = "ShootAttack"),
 };
 

@@ -43,13 +43,13 @@ bool UActionCircleAround::VCanExecute()
 void UActionCircleAround::VOnExecute()
 {
 	Super::VOnExecute();
+
+	//GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT("circle around execute")));
 }
 
 void UActionCircleAround::VOnTick(float deltaTime)
 {
 	Super::VOnTick(deltaTime);
-
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("circle around Tick")));
 
 	//Update data
 	TryGetRequiredData();
@@ -105,6 +105,12 @@ void UActionCircleAround::VOnTick(float deltaTime)
 	}
 	GetActionOwner()->AddMovementInput(GetActionOwner()->GetActorForwardVector());
 
+	if (GetElapsedTime() > _duration)
+	{
+		SetProcessSucceed();
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("elapsed time : %f"), GetElapsedTime()));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_trackRadius : %f"), _trackRadius));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("distXY_Cur_TrackCenter : %f"), distXY_Cur_TrackCenter));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("DeltaAngleH_Forward_ToTrackCenter : %f"), DeltaAngleH_Forward_ToTrackCenter));
@@ -115,10 +121,14 @@ void UActionCircleAround::VOnTick(float deltaTime)
 
 bool UActionCircleAround::TryGetRequiredData()
 {
-
 	if (GetActionBlackBoard()->TryGetData_Float(NSActionData::TrackRadius::Name, _trackRadius) &&
 		GetActionBlackBoard()->TryGetData_FVector(NSActionData::TrackCenter::Name, _trackCenter))
 	{
+		if (GetActionBlackBoard()->TryGetData_Float(NSActionData::CircleAroundDuration::Name, _duration) == false)
+		{
+			_duration = -1.0f;
+		}
+
 		return true;
 	}
 	else

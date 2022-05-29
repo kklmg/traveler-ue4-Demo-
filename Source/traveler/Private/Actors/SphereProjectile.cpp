@@ -8,6 +8,7 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "GameSystem/MyGameplayStatics.h"
+#include "Data/TagNames.h"
 
 // Sets default values
 ASphereProjectile::ASphereProjectile()
@@ -74,9 +75,7 @@ void ASphereProjectile::Tick(float DeltaTime)
 
 void ASphereProjectile::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	APawn* instigator = GetInstigator();
-
-	if (OtherActor != instigator)
+	if (OtherActor != GetInstigator())
 	{
 		//apply damagge
 		UMyGameplayStatics::CauseDamage(OtherActor, _damageData, Hit.ImpactPoint, this, GetInstigator());
@@ -90,13 +89,25 @@ void ASphereProjectile::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent
 		OverlappedComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 100.0f, SweepResult.ImpactPoint);
 	}
 
-	APawn* instigator = GetInstigator();
-
-	if (OtherActor != instigator)
+	if (OtherActor != GetInstigator())
 	{
 		//apply damagge
 		UMyGameplayStatics::CauseDamage(OtherActor, _damageData, OtherActor->GetActorLocation(), this, GetInstigator());
 	}
+	
+	if (OtherActor->Tags.Contains(NSTagName::Ground) && _groundEffectActorClass)
+	{
+		FActorSpawnParameters spawnParams;
+		spawnParams.Owner = this;
+		spawnParams.Instigator = GetInstigator();
+
+		FQuat quat = FQuat::FindBetweenVectors(FVector::UpVector, SweepResult.Normal);
+		GetWorld()->SpawnActor<AActor>(_groundEffectActorClass, SweepResult.ImpactPoint, quat.Rotator(), spawnParams);
+	}	
+}
+
+void ASphereProjectile::VOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
 	if (OtherComp->GetCollisionObjectType() == ECollisionChannel::ECC_WorldStatic)
 	{
 		VDeactivate();

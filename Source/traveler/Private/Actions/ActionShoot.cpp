@@ -39,7 +39,7 @@ void UActionShoot::VOnExecute()
 {
 	Super::VOnExecute();
 
-	UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKeyType::ANK_SpreadAttack);
+	UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKeyType::ANK_ShootAttack);
 	notifier->NotifyBeginDelegate.AddDynamic(this, &UActionShoot::OnAttackNotifyBegin);
 
 	GetActionBlackBoard()->TryGetData_FVector(NSActionData::ShootingTargetLocation::Name, _targetLocation);
@@ -57,7 +57,7 @@ void UActionShoot::VOnDead()
 {
 	Super::VOnDead();
 
-	UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKeyType::ANK_SpreadAttack);
+	UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKeyType::ANK_ShootAttack);
 	notifier->NotifyBeginDelegate.RemoveDynamic(this, &UActionShoot::OnAttackNotifyBegin);
 }
 
@@ -80,4 +80,6 @@ void UActionShoot::OnAttackNotifyBegin(float durationTime)
 	//spawn projectile
 	AProjectileActorBase* projectileIns = GetWorld()->SpawnActor<AProjectileActorBase>(_projectileClass,outTransform, spawnParams);
 	projectileIns->VSetVelocity(shootingDirection * _shootingSpeed);
+
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("shoot notify!"));
 }

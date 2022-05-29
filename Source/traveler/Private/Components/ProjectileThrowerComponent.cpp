@@ -67,6 +67,8 @@ void UProjectileThrowerComponent::TickComponent(float DeltaTime, ELevelTick Tick
 
 	// ...
 	_elapsedTime += DeltaTime;
+
+
 }
 
 void UProjectileThrowerComponent::VSetSpawningLocation(FVector location)

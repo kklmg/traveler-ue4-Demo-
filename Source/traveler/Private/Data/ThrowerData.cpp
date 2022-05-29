@@ -13,4 +13,5 @@ FThrowerData::FThrowerData()
 	Life = 5.0f;
 	Damage = 1.0f;
 	Gravity = FVector(0, 0, 0);
+	//SpawnEffectRate = 1.0f;
 }

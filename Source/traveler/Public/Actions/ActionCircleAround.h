@@ -29,6 +29,7 @@ private:
 	UMyCharacterMovementComponent* _myMovementComp;
 
 	float _trackRadius;
+	float _duration;
 	FVector _trackCenter;
 
 };

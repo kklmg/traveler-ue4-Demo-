@@ -4,6 +4,7 @@
 #include "Actors/BasicProjectile.h"
 #include "GameSystem/MyGameplayStatics.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Data/TagNames.h"
 
 
 ABasicProjectile::ABasicProjectile()
@@ -51,7 +52,7 @@ void ABasicProjectile::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 		GetWorld()->SpawnActor<AActor>(_hitEffectActorClass, Hit.Location, quat.Rotator(), spawnParams);
 	}
 
-	if(OtherActor->Tags.Contains(FName(TEXT("Ground"))) && _groundEffectActorClass)
+	if(OtherActor->Tags.Contains(NSTagName::Ground) && _groundEffectActorClass)
 	{
 		FActorSpawnParameters spawnParams;
 		spawnParams.Owner = this;

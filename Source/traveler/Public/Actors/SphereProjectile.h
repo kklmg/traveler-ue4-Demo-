@@ -35,7 +35,7 @@ public:
 
 	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit) override;
 	virtual void VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
-
+	virtual void VOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 private:
 	UPROPERTY(VisibleAnywhere)
 	float _coneAngle;
@@ -46,4 +46,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	UCurveFloat* _scaleCurve;
+
+	UPROPERTY(EditDefaultsonly)
+	TSubclassOf<AActor> _groundEffectActorClass;
 };

@@ -29,7 +29,6 @@ bool UActionWithAnimMontage::VCanExecute()
 		UE_LOG(LogAction, Warning, TEXT("ActionWithAnimMontage: No Registered AnimMontageType"));
 		return false;
 	}
-
 	return true;
 }
 
