@@ -94,7 +94,9 @@ void UActionFlyTo::VOnTick(float deltaTime)
 
 	float tolerance = _myMovementComp->GetMaxSpeed() * deltaTime * 3.0f;
 
-	if (FMath::Abs(distXY - _keepingDistanceXY) < tolerance
+	
+
+	if (distXY > _keepingDistanceXY_Min && distXY < _keepingDistanceXY_Max
 		&& distZ < tolerance
 		&& (_bFaceToDest == false || FMath::Abs(deltaAngleH_Forward_ToDest) < 1.0f)
 		&& FMath::Abs(curRotation.Pitch) == 0.0f
@@ -136,7 +138,7 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	float dist_TrackCenter_Dest = FVector::Dist2D(_destLocation, trackCenter);
 
 
-	float distXY_Safe = FMath::Max(trackRadius, _keepingDistanceXY + tolerance);
+	float distXY_Safe = FMath::Max(trackRadius, _keepingDistanceXY_Max + tolerance);
 
 
 	if (dist_TrackCenter_Dest < distXY_Safe)
@@ -224,8 +226,11 @@ bool UActionFlyTo::TryGetRequiredData()
 		return false;
 	}
 
-	_keepingDistanceXY = 0;
-	GetActionBlackBoard()->TryGetData_Float(NSActionData::keepDistanceXY::Name, _keepingDistanceXY);
+	_keepingDistanceXY_Min= 0;
+	GetActionBlackBoard()->TryGetData_Float(NSActionData::keepDistanceXY_Min::Name, _keepingDistanceXY_Min);
+
+	_keepingDistanceXY_Max = 0;
+	GetActionBlackBoard()->TryGetData_Float(NSActionData::keepDistanceXY_Max::Name, _keepingDistanceXY_Max);
 
 	_destAltitude = _destLocation.Z;
 	GetActionBlackBoard()->TryGetData_Float(NSActionData::DestAltitude::Name, _destAltitude);

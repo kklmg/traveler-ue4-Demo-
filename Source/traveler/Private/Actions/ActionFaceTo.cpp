@@ -70,6 +70,7 @@ void UActionFaceTo::VOnTick(float deltaTime)
 	if (FMath::Abs(deltaAngleH_Forward_FaceTo) < 1.0f)
 	{
 		SetProcessSucceed();
+		return;
 	}
 
 	_myMovementComp->RotateDeltaYaw(deltaAngleH_Forward_FaceTo, deltaTime);

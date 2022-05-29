@@ -33,7 +33,8 @@ private:
 	bool _bUpdateDestination;
 
 	FVector _destLocation;
-	float _keepingDistanceXY;
+	float _keepingDistanceXY_Min;
+	float _keepingDistanceXY_Max;
 	float _destAltitude;
 	bool _bFaceToDest;
 	bool _bBrakeAtDest;
