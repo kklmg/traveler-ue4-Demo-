@@ -365,6 +365,8 @@ void ABowBase::AdjustArrowIntervals()
 
 void ABowBase::IncreaseArrows()
 {
+	if (_bowState == EBowState::EBS_Drawing || _bowState == EBowState::EBS_ReleaseStart || _bowState == EBowState::EBS_ReleaseEnd) return;
+	
 	_arrowCountOptionIns->Scroll(1);
 	ClearHoldingArrows(true);
 	SetBowState(EBowState::EBS_Normal);
@@ -372,6 +374,8 @@ void ABowBase::IncreaseArrows()
 
 void ABowBase::DecreaseArrows()
 {
+	if (_bowState == EBowState::EBS_Drawing || _bowState == EBowState::EBS_ReleaseStart || _bowState == EBowState::EBS_ReleaseEnd) return;
+
 	_arrowCountOptionIns->Scroll(-1);
 	ClearHoldingArrows(true);
 	SetBowState(EBowState::EBS_Normal);
@@ -420,6 +424,8 @@ void ABowBase::VWeaponControlD()
 
 void ABowBase::VWeaponControlE()
 {
+	if (_bowState == EBowState::EBS_Drawing || _bowState == EBowState::EBS_ReleaseStart || _bowState == EBowState::EBS_ReleaseEnd) return;
+
 	_quiverComponent->ScrollArrowOption(-1);
 	ClearHoldingArrows(true);
 	SetBowState(EBowState::EBS_Normal);
@@ -427,6 +433,8 @@ void ABowBase::VWeaponControlE()
 
 void ABowBase::VWeaponControlF()
 {
+	if (_bowState == EBowState::EBS_Drawing || _bowState == EBowState::EBS_ReleaseStart || _bowState == EBowState::EBS_ReleaseEnd) return;
+
 	_quiverComponent->ScrollArrowOption(1);
 	ClearHoldingArrows(true);
 	SetBowState(EBowState::EBS_Normal);
