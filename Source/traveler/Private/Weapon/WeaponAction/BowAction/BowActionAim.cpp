@@ -12,13 +12,20 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/MyCharacterMovementComponent.h"
+#include "GameSystem/travelerGameModeBase.h"
+#include "GameSystem/PostProcessControlBase.h"
+#include "Components/StatusComponent.h"
+#include "Data/CostData.h"
 
 UBowActionAim::UBowActionAim()
 {
 	_processName = NSNameWeaponActionProcess::AIM;
 	_actionType = EActionType::EACT_Aim;
 	_bIsInstantProcess = false;
-	_timeDilation = 0.1f;
+	
+	_slowMotionCost = CreateDefaultSubobject<UCostData>(TEXT("Cost"));
+	_slowMotionCost->AddCost(EStatusType::EStatus_Mana, 0.25f);
+	_slowMotion_timeDilation = 0.1f;
 }
 
 
@@ -38,10 +45,15 @@ void UBowActionAim::VOnExecute()
 	//Animation
 	GetBow()->GetWeaponAnimationModel()->SetBool(NSNameAnimData::bIsAiming, true);
 
+	_delegateHandle = GetBow()->OnBowStateChangedDelegate.AddUObject(this, &UBowActionAim::OnBowStateChanged);
+
 	//Slow Motion
-	if (GetActionOwner()->GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Falling)
+	if (GetActionOwner()->GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Falling && GetStatusComp())
 	{
-		ActivateSlowMotion(true);
+		if (GetStatusComp()->GetRemainingValue(EStatusType::EStatus_Mana) > 20.0f && GetStatusComp()->TryApplyCost(_slowMotionCost))
+		{
+			ActivateSlowMotion(true);
+		}
 	}
 }
 
@@ -68,7 +80,18 @@ void UBowActionAim::VOnTick(float deltaTime)
 		GetActionOwner()->SetActorRotation(forward.ToOrientationQuat());
 	}
 
-	_delegateHandle = GetBow()->OnBowStateChangedDelegate.AddUObject(this, &UBowActionAim::OnBowStateChanged);
+	//Slow Motion
+	if (_bActiveSlowMotion)
+	{
+		if (GetStatusComp()->TryApplyCost(_slowMotionCost))
+		{
+			ActivateSlowMotion(true);
+		}
+		else
+		{
+			ActivateSlowMotion(false);
+		}
+	}
 }
 
 void UBowActionAim::VOnDead()
@@ -97,24 +120,29 @@ void UBowActionAim::VOnDead()
 
 void UBowActionAim::OnBowStateChanged(EBowState bowState)
 {
-
-
-
-
 }
 
 void UBowActionAim::ActivateSlowMotion(bool bActive)
 {
+	if (_bActiveSlowMotion == bActive) return;
+
+	_bActiveSlowMotion = bActive;
 	//Apply Time Dilation
-	if (bActive)
+	if (_bActiveSlowMotion)
 	{
-		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), _timeDilation); //Global slow motions
-		GetActionOwner()->CustomTimeDilation = 1.0f / _timeDilation;
+		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), _slowMotion_timeDilation); //Global slow motions
+		GetActionOwner()->CustomTimeDilation = 1.0f / _slowMotion_timeDilation;
 		
 		UMyCharacterMovementComponent* myMovementComp = Cast<UMyCharacterMovementComponent>(GetActionOwner()->GetCharacterMovement());
 		if(myMovementComp)
 		{
-			myMovementComp->SetTimeDilation(_timeDilation);
+			myMovementComp->SetTimeDilation(_slowMotion_timeDilation);
+		}
+
+		auto gameMode = Cast<AtravelerGameModeBase>(GetWorld()->GetAuthGameMode());
+		if(gameMode)
+		{
+			gameMode->GetPostProcessControl()->ActivateBlurEffect(true);
 		}
 	}
 	//Recover Time Dilation
@@ -128,6 +156,12 @@ void UBowActionAim::ActivateSlowMotion(bool bActive)
 		if (myMovementComp)
 		{
 			myMovementComp->SetTimeDilation(1.0f);
+		}
+
+		auto gameMode = Cast<AtravelerGameModeBase>(GetWorld()->GetAuthGameMode());
+		if (gameMode)
+		{
+			gameMode->GetPostProcessControl()->ActivateBlurEffect(false);
 		}
 	}
 }

@@ -25,6 +25,10 @@ private:
 	void OnBowStateChanged(EBowState bowState);
 	void ActivateSlowMotion(bool bActive);
 
-	float _timeDilation;
+	UPROPERTY(EditDefaultsOnly)
+	UCostData* _slowMotionCost;
+
+	bool _bActiveSlowMotion;
+	float _slowMotion_timeDilation;
 	FDelegateHandle _delegateHandle;
 };

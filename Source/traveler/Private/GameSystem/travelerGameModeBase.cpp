@@ -2,10 +2,22 @@
 
 
 #include "GameSystem/travelerGameModeBase.h"
+#include "GameSystem/PostProcessControlBase.h"
 
-void AtravelerGameModeBase::StartPlay() 
+AtravelerGameModeBase::AtravelerGameModeBase()
+{
+	PostProcessControlClass = APostProcessControlBase::StaticClass();
+}
+
+FORCEINLINE_DEBUGGABLE APostProcessControlBase* AtravelerGameModeBase::GetPostProcessControl()
+{
+	return _postProcessControlIns;
+}
+
+void AtravelerGameModeBase::StartPlay()
 {
 	Super::StartPlay();
 
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, "AtravelerGameModeBase::StartPlay");
+	_postProcessControlIns = GetWorld()->SpawnActor<APostProcessControlBase>(PostProcessControlClass);
+	check(_postProcessControlIns);
 }
