@@ -16,6 +16,7 @@
 UMyCharacterMovementComponent::UMyCharacterMovementComponent()
 {
 	BrakingDecelerationFlying = 2000.0f;
+	_timeDilation = 1.0f;
 	bWantsInitializeComponent = true;
 }
 
@@ -75,6 +76,8 @@ void UMyCharacterMovementComponent::BeginPlay()
 
 void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	DeltaTime = _timeDilation * DeltaTime;
+
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (_inputDeltaPitch != 0.0f || _inputDeltaYaw != 0.0f)
@@ -345,6 +348,11 @@ void UMyCharacterMovementComponent::ToggleSprint(bool bSprint)
 float UMyCharacterMovementComponent::GetCurrentYawSpeed()
 {
 	return _curYawSpeed;
+}
+
+void UMyCharacterMovementComponent::SetTimeDilation(float timeDilation)
+{
+	_timeDilation = timeDilation;
 }
 
 void UMyCharacterMovementComponent::OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode)

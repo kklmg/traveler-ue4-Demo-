@@ -51,6 +51,7 @@ public:
 	void KeepSpeed(float normalizedSpeed, float deltaTime);
 	void ToggleSprint(bool bSprint);
 	float GetCurrentYawSpeed();
+	void SetTimeDilation(float timeDilation);
 
 protected:
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
@@ -85,6 +86,6 @@ private:
 	float _inputDeltaPitch;
 	float _inputDeltaYaw;
 	bool _bToggleSprint;
-
 	float _curYawSpeed;
+	float _timeDilation;
 };

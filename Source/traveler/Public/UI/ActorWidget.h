@@ -21,14 +21,11 @@ class TRAVELER_API UActorWidget : public UUserWidget
 
 public:
 	UActorWidget(const FObjectInitializer& ObjectInitializer);
-
 	void SetData(AActor* widgetOwner,ETransformType transformType);
+	virtual bool Tick(float deltaTime);
 
 	UFUNCTION(BlueprintPure)
 	AActor* GetWidgetOwner();
-
-protected:
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
 	UPROPERTY()

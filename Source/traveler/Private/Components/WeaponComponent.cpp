@@ -53,6 +53,11 @@ void UWeaponComponent::BeginPlay()
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (_weaponIns)
+	{
+		_weaponIns->OnWeaponCompTick(DeltaTime);
+	}
 }
 
 

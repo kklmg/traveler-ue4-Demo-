@@ -24,10 +24,12 @@ class TRAVELER_API UActorStatusWidgetBase : public UActorWidget
 public:
 	void ShowStatus(EStatusEffect statusEffectType, float duration);
 	void HideStatus(EStatusEffect statusEffectType);
+	virtual bool Tick(float deltaTime) override;
 
 protected:
 	virtual void NativeConstruct() override;
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+	
 
 private:
 

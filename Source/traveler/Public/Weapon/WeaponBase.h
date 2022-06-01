@@ -49,10 +49,9 @@ protected:
 public:	
 	virtual void VInitialize(ACreatureCharacter* weaponOwner);
 
-
-
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void OnWeaponCompTick(float deltaTime);
 
 	virtual bool VCanFire();
 	virtual void VOnEquipped();

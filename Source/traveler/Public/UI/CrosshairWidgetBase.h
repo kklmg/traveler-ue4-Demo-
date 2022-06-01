@@ -94,4 +94,6 @@ private:
 
 	bool _bIsAnimForward;
 	bool _bIsOnTarget;
+
+	float _timeDilation;
 };

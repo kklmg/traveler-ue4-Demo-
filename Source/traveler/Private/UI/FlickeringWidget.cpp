@@ -37,19 +37,17 @@ void UFlickeringWidget::NativeConstruct()
 }
 
 
-void UFlickeringWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UFlickeringWidget::Tick(float deltaTime)
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
-
 	if (_remainingTime <= 0.0f) return;
 
-	_remainingTime -= InDeltaTime;
+	_remainingTime -= deltaTime;
 
 	//change flickering rate by remaining time
 	UpdateFlickering();
 
 	//Run processes
-	_compositeProcess->Tick(InDeltaTime);
+	_compositeProcess->Tick(deltaTime);
 
 	//update progress bar
 	imgProgressBar->GetDynamicMaterial()->SetScalarParameterValue(FName(TEXT("Alpha")), _remainingTime / _widgetData.MaxDuration);

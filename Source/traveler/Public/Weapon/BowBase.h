@@ -8,6 +8,7 @@
 #include "MyMacros.h"
 #include "BowBase.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnBowStateChanged,EBowState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBoolChanged, bool, isTrue);
 
 class UCommandActor;
@@ -48,6 +49,7 @@ protected:
 	void VInitialize(ACreatureCharacter* weaponOwner) override;
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
+	void OnWeaponCompTick(float deltaTime) override;
 
 public:
 
@@ -57,6 +59,7 @@ public:
 	bool SetBowState(EBowState bowState);
 	void DragCamera(bool bDrag);
 	void AnimateCrosshair(bool bForward);
+
 	bool IsDrawingBow();
 	
 	virtual void VOnEquipped() override;
@@ -161,4 +164,7 @@ private:
 	UBowActionAim* _processAim;
 
 	float _strength;
+
+public:
+	FOnBowStateChanged OnBowStateChangedDelegate;
 };

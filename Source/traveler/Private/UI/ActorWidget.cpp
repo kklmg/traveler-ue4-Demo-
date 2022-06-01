@@ -25,14 +25,13 @@ void UActorWidget::SetData(AActor* widgetOwner, ETransformType transformType)
 	OnWidgetOwnerChangedDelegate.Broadcast(_widgetOwner);
 }
 
-void UActorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
-{
-	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	if (!_widgetOwner) return;
+bool UActorWidget::Tick(float deltaTime)
+{	
+	if (Visibility != ESlateVisibility::Visible) return false;
+	if (!_widgetOwner) return false;
 
 	APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (!controller) return;
+	if (!controller) return false;
 
 	//Get Drawing Transform
 	FTransform destTransform;
@@ -81,12 +80,14 @@ void UActorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	}
 	else
 	{
-		_elapsedTime_LeaveScreen += InDeltaTime;;
+		_elapsedTime_LeaveScreen += deltaTime;;
 		if (_elapsedTime_LeaveScreen > _timeCollapse)
 		{
 			SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
+
+	return true;
 }
 
 AActor* UActorWidget::GetWidgetOwner()

@@ -48,7 +48,14 @@ void UActorStatusWidgetBase::NativeConstruct()
 	_widgetInsMap.Add(EStatusEffect::EStatusEffect_Stun, statusStun);
 }
 
-void UActorStatusWidgetBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+bool UActorStatusWidgetBase::Tick(float deltaTime)
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
+	if (!Super::Tick(deltaTime)) return false;
+
+	for (auto& element : _widgetInsMap)
+	{
+		check(element.Value);
+		element.Value->Tick(deltaTime);
+	}
+	return true;
 }

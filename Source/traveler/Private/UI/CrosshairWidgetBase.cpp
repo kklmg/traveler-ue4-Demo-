@@ -12,6 +12,7 @@ UCrosshairWidgetBase::UCrosshairWidgetBase(const FObjectInitializer& ObjectIniti
 {
 	_durationTime = 2.0f;
 	_ZOrder = 100.0f;
+	_timeDilation = 1.0f;
 }
 
 
@@ -47,9 +48,10 @@ void UCrosshairWidgetBase::SetIsOnTarget(bool isOnTarget)
 	_bIsOnTarget = isOnTarget;
 }
 
-
 void UCrosshairWidgetBase::Animate(float deltaTime)
 {
+	deltaTime *= _timeDilation;
+
 	if (_widgetOnTarget)
 	{
 		_widgetOnTarget->SetVisibility(_bIsOnTarget && _elapsedTime >= _durationTime ? ESlateVisibility::Visible : ESlateVisibility::Hidden);

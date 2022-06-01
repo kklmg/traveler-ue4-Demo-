@@ -71,6 +71,10 @@ void AWeaponBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AWeaponBase::OnWeaponCompTick(float deltaTime)
+{
+}
+
 bool AWeaponBase::VCanFire()
 {
 	return true;

@@ -128,7 +128,11 @@ void UActorUIComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	//_updateWidgetLocation();
+	for (auto& element : _mapWidgetInstance)
+	{
+		check(element.Value)
+		element.Value->Tick(DeltaTime);
+	}
 }
 
 //void UBillBoardWidgetComponent::_updateWidgetLocation()

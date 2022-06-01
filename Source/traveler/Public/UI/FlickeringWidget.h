@@ -60,6 +60,7 @@ class TRAVELER_API UFlickeringWidget : public UUserWidget
 public:
 	UFlickeringWidget(const FObjectInitializer& ObjectInitializer);
 	
+	void Tick(float deltaTime);
 	void SetData(FFlickeringWidgetData& widgetData);
 	void SetDuration(float duration);
 	void ExecuteFlickeringProcess();
@@ -68,7 +69,7 @@ public:
 protected:
 	virtual bool Initialize() override;
 	virtual void NativeConstruct() override;
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	
 	virtual void UpdateFlickering();
 
 

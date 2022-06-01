@@ -81,11 +81,17 @@ void ABowBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UpdateArrowsTransform();
+}
+
+void ABowBase::OnWeaponCompTick(float deltaTime)
+{
+	Super::OnWeaponCompTick(deltaTime);
+
 	if (_crosshairWidgetIns)
 	{
-		_crosshairWidgetIns->Animate(DeltaTime);
+		_crosshairWidgetIns->Animate(deltaTime);
 	}
-	UpdateArrowsTransform();
 }
 
 void ABowBase::VReset()
@@ -475,8 +481,12 @@ bool ABowBase::SetBowState(EBowState bowState)
 	}
 
 	_bowState = bowState;
+
+	OnBowStateChangedDelegate.Broadcast(_bowState);
 	GetWeaponAnimationModel()->SetUInt8(NSNameAnimData::byteBowState, (uint8)_bowState);
 	GetWeaponAnimationModel()->SetBool(NSNameAnimData::bDrawingBow, IsDrawingBow());
+
+
 	return true;
 }
 
@@ -499,8 +509,10 @@ void ABowBase::DragCamera(bool bDrag)
 
 void ABowBase::AnimateCrosshair(bool bForward)
 {
-	if (!_crosshairWidgetIns) return;
-	_crosshairWidgetIns->SetAnimForward(bForward);
+	if (_crosshairWidgetIns)
+	{
+		_crosshairWidgetIns->SetAnimForward(bForward);
+	}
 }
 
 void ABowBase::TakeOutArrows()

@@ -20,4 +20,11 @@ public:
 	virtual void VOnTick(float deltaTime) override;
 
 	virtual void VOnDead() override;
+
+private:
+	void OnBowStateChanged(EBowState bowState);
+	void ActivateSlowMotion(bool bActive);
+
+	float _timeDilation;
+	FDelegateHandle _delegateHandle;
 };
