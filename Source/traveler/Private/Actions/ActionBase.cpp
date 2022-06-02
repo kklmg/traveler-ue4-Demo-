@@ -103,7 +103,7 @@ FORCEINLINE_DEBUGGABLE UCostData* UActionBase::GetCostData()
 
 FORCEINLINE_DEBUGGABLE UAnimationModelBase* UActionBase::GetAnimationViewModel()
 {
-	return _animControlComp ? _animControlComp->GetAnimationModel() : nullptr;
+	return _animControlComp ? _animControlComp->GetAnimViewModel() : nullptr;
 }
 
 FORCEINLINE_DEBUGGABLE UAnimControlComponent* UActionBase::GetAnimControlComp()

@@ -37,7 +37,7 @@ public:
 	//animation model -----------------------------------------------------------------
 
 	UFUNCTION(BlueprintCallable)
-	UAnimationModelBase* GetAnimationModel();
+	UAnimationModelBase* GetAnimViewModel();
 
 	//animation State ------------------------------------------------------------------
 

@@ -36,7 +36,7 @@ void UCameraSpringArmComponent::BeginPlay()
 	UAnimControlComponent* animControlComp = Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
 	if(animControlComp)
 	{
-		_animationViewModel = animControlComp->GetAnimationModel();
+		_animationViewModel = animControlComp->GetAnimViewModel();
 	}
 }
 

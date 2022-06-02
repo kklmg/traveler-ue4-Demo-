@@ -42,7 +42,7 @@ void UIKComponent::BeginPlay()
 		Cast<UAnimControlComponent>(GetOwner()->GetComponentByClass(UAnimControlComponent::StaticClass()));
 	if(animControlComp)
 	{
-		_animationViewModel = animControlComp->GetAnimationModel();
+		_animationViewModel = animControlComp->GetAnimViewModel();
 	}
 
 	_footIKData = NewObject<UIKFootData>(this);

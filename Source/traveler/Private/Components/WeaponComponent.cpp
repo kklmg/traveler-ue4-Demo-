@@ -86,9 +86,9 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 			}
 		}
 
-		if(_animControlComp && _animControlComp->GetAnimationModel())
+		if(_animControlComp && _animControlComp->GetAnimViewModel())
 		{
-			_animControlComp->GetAnimationModel()->SetUObject(NSAnimationDataKey::objWeapon,_weaponIns);
+			_animControlComp->GetAnimViewModel()->SetUObject(NSAnimationDataKey::objWeapon,_weaponIns);
 		}
 
 		OnWeaponChanged.Broadcast(_weaponIns);

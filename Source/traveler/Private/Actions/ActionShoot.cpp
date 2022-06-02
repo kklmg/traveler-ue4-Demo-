@@ -11,6 +11,7 @@
 #include "Actions/ActionData/ActionBlackBoard.h"
 #include "Actors/ThrowerActorBase.h"
 #include "DrawDebugHelpers.h"
+#include "Data/AnimationModelBase.h"
 
 UActionShoot::UActionShoot()
 {
@@ -51,6 +52,10 @@ void UActionShoot::VOnTick(float deltaTime)
 	Super::VOnTick(deltaTime);
 
 	GetActionBlackBoard()->TryGetData_FVector(NSActionData::ShootingTargetLocation::Name, _targetLocation);
+	if (GetAnimControlComp())
+	{
+		GetAnimControlComp()->GetAnimViewModel()->SetVector(NSAnimationDataKey::vShootingTargetLocation, _targetLocation);
+	}
 }
 
 void UActionShoot::VOnDead()
@@ -78,8 +83,8 @@ void UActionShoot::OnAttackNotifyBegin(float durationTime)
 	FVector shootingDirection = (_targetLocation - outTransform.GetLocation()).GetSafeNormal();
 
 	//spawn projectile
-	AProjectileActorBase* projectileIns = GetWorld()->SpawnActor<AProjectileActorBase>(_projectileClass,outTransform, spawnParams);
-	projectileIns->VSetVelocity(shootingDirection * _shootingSpeed);
+	//AProjectileActorBase* projectileIns = GetWorld()->SpawnActor<AProjectileActorBase>(_projectileClass,outTransform, spawnParams);
+	//projectileIns->VSetVelocity(shootingDirection * _shootingSpeed);
 
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("shoot notify!"));
 }

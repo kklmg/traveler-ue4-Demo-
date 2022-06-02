@@ -50,7 +50,7 @@ void UMyCharacterMovementComponent::BeginPlay()
 
 	if (_animControlComp)
 	{
-		_animViewModel = _animControlComp->GetAnimationModel();
+		_animViewModel = _animControlComp->GetAnimViewModel();
 		if (_animViewModel)
 		{
 			_animViewModel->SetUInt8(NSAnimationDataKey::byteMovementMode, MovementMode);

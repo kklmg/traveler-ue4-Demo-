@@ -31,6 +31,8 @@ namespace NSAnimationDataKey
 	DECLARE_CONST_FNAME(vMovingDirection)
 	DECLARE_CONST_FNAME(vPendingInput)
 	DECLARE_CONST_FNAME(vMovingVelocity)
+	DECLARE_CONST_FNAME(vShootingTargetLocation)
+
 
 	//byte
 	DECLARE_CONST_FNAME(byteMovementMode)

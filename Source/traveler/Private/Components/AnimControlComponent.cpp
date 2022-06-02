@@ -19,12 +19,13 @@ UAnimControlComponent::UAnimControlComponent()
 	bWantsInitializeComponent = true;
 
 	_animationState = EAnimationState::EAnimState_None;
+	_animationModelClass = UAnimationModelBase::StaticClass();
 }
 
 void UAnimControlComponent::InitializeComponent()
 {
-	_animViewModelIns = _animationModelClass ?
-		NewObject<UAnimationModelBase>(this, _animationModelClass) : NewObject<UAnimationModelBase>(this);
+	_animViewModelIns = NewObject<UAnimationModelBase>(this, _animationModelClass);
+	check(_animViewModelIns)
 
 	_eventBrokerComp = Cast<UEventBrokerComponent>(GetOwner()->GetComponentByClass(UEventBrokerComponent::StaticClass()));
 	if (_eventBrokerComp)
@@ -50,7 +51,7 @@ void UAnimControlComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	// ...
 }
 
-UAnimationModelBase* UAnimControlComponent::GetAnimationModel()
+UAnimationModelBase* UAnimControlComponent::GetAnimViewModel()
 {
 	return _animViewModelIns;
 }
