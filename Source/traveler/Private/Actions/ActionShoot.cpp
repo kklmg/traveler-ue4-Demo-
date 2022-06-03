@@ -40,9 +40,13 @@ void UActionShoot::VOnExecute()
 {
 	Super::VOnExecute();
 
-	UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKeyType::ANK_ShootAttack);
-	notifier->NotifyBeginDelegate.AddDynamic(this, &UActionShoot::OnAttackNotifyBegin);
+	if (GetAnimControlComp())
+	{
+		UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKeyType::ANK_ShootAttack);
+		notifier->NotifyBeginDelegate.AddDynamic(this, &UActionShoot::OnAttackNotifyBegin);
 
+		GetAnimControlComp()->GetAnimViewModel()->SetBool(NSAnimationDataKey::bToggleNeckIK, true);
+	}
 	GetActionBlackBoard()->TryGetData_FVector(NSActionData::ShootingTargetLocation::Name, _targetLocation);
 	GetActionBlackBoard()->TryGetData_Float(NSActionData::ShootingDirection::Name, _shootingSpeed);
 }
@@ -55,6 +59,7 @@ void UActionShoot::VOnTick(float deltaTime)
 	if (GetAnimControlComp())
 	{
 		GetAnimControlComp()->GetAnimViewModel()->SetVector(NSAnimationDataKey::vShootingTargetLocation, _targetLocation);
+		GetAnimControlComp()->GetAnimViewModel()->SetBool(NSAnimationDataKey::bToggleNeckIK, false);
 	}
 }
 
@@ -62,8 +67,11 @@ void UActionShoot::VOnDead()
 {
 	Super::VOnDead();
 
-	UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKeyType::ANK_ShootAttack);
-	notifier->NotifyBeginDelegate.RemoveDynamic(this, &UActionShoot::OnAttackNotifyBegin);
+	if(GetAnimControlComp())
+	{
+		UAnimNotifier* notifier = GetAnimControlComp()->GetOrCreateNotifer(EAnimNotifyKeyType::ANK_ShootAttack);
+		notifier->NotifyBeginDelegate.RemoveDynamic(this, &UActionShoot::OnAttackNotifyBegin);
+	}
 }
 
 void UActionShoot::OnAttackNotifyBegin(float durationTime)
@@ -83,8 +91,8 @@ void UActionShoot::OnAttackNotifyBegin(float durationTime)
 	FVector shootingDirection = (_targetLocation - outTransform.GetLocation()).GetSafeNormal();
 
 	//spawn projectile
-	//AProjectileActorBase* projectileIns = GetWorld()->SpawnActor<AProjectileActorBase>(_projectileClass,outTransform, spawnParams);
-	//projectileIns->VSetVelocity(shootingDirection * _shootingSpeed);
+	AProjectileActorBase* projectileIns = GetWorld()->SpawnActor<AProjectileActorBase>(_projectileClass,outTransform, spawnParams);
+	projectileIns->VSetVelocity(shootingDirection * _shootingSpeed);
 
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("shoot notify!"));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("shoot notify!"));
 }

@@ -18,6 +18,7 @@ namespace NSAnimationDataKey
 	DECLARE_CONST_FNAME(bIsSprinting)
 	DECLARE_CONST_FNAME(bWantToJump)
 	DECLARE_CONST_FNAME(bIsAlive)
+	DECLARE_CONST_FNAME(bToggleNeckIK)
 
 	//float
 	DECLARE_CONST_FNAME(fMaxSpeed)
