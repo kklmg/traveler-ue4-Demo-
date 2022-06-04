@@ -58,29 +58,10 @@ AArrowActorBase::AArrowActorBase()
 void AArrowActorBase::BeginPlay()
 {
 	Super::BeginPlay();
-	CustomTimeDilation = 50.0f;
-
-
-	//_headEffect->SetComponentTickEnabled(true);
-	//_headEffect->SetAgeUpdateMode(ENiagaraAgeUpdateMode::TickDeltaTime);
-	//_headEffect->SetAgeUpdateMode(ENiagaraAgeUpdateMode::TickDeltaTime);
-	//_headTrailEffect->SetAgeUpdateMode(ENiagaraAgeUpdateMode::TickDeltaTime);
-	//_tailTrailEffect->SetAgeUpdateMode(ENiagaraAgeUpdateMode::TickDeltaTime);
-	//_headEffect->SetPaused(true);
-	//_headTrailEffect->SetPaused(true);
-	//_tailTrailEffect->SetPaused(true);
 }
 
 void AArrowActorBase::Tick(float DeltaTime)
 {
-	if (GetInstigator())
-	{
-		//CustomTimeDilation = GetInstigator()->CustomTimeDilation;
-		//DeltaTime *= GetInstigator()->CustomTimeDilation;
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("deltatime : %f"), DeltaTime));
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("actor time dilation : %f"), GetInstigator()->CustomTimeDilation));
-	}
-
 	Super::Tick(DeltaTime);
 
 	if (_arrowState == EArrowState::EAS_Launched)
@@ -110,6 +91,23 @@ void AArrowActorBase::Tick(float DeltaTime)
 			VDeactivate();
 		}
 	}
+
+	if (GetInstigator())
+	{
+		CustomTimeDilation = GetInstigator()->CustomTimeDilation;
+	}
+
+	_headEffect->SetPaused(false);
+	_headTrailEffect->SetPaused(false);
+	_tailTrailEffect->SetPaused(false);
+
+	_headTrailEffect->AdvanceSimulation(1,DeltaTime);
+	_headEffect->AdvanceSimulation(1,DeltaTime);
+	_tailTrailEffect->AdvanceSimulation(1,DeltaTime);
+
+	_headEffect->SetPaused(true);
+	_headTrailEffect->SetPaused(true);
+	_tailTrailEffect->SetPaused(true);
 }
 
 void AArrowActorBase::SetArrowData(UArrowData* arrowData)
