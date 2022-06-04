@@ -21,8 +21,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UNiagaraSystem* Effect_Head;
 	UPROPERTY(EditDefaultsOnly)
-	UNiagaraSystem* Effect_HeadTrail;
-	UPROPERTY(EditDefaultsOnly)
 	UNiagaraSystem* Effect_TailTrail;
 	UPROPERTY(EditDefaultsOnly)
 	FDamageData DamageData;

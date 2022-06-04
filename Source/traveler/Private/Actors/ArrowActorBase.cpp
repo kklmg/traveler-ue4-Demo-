@@ -27,14 +27,6 @@ AArrowActorBase::AArrowActorBase()
 		_headEffect->SetupAttachment(_primitiveComp);
 	}
 
-	if (!_headTrailEffect)
-	{
-		_headTrailEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Head Trail Effect"));
-		check(_headTrailEffect);
-		_headTrailEffect->SetupAttachment(_primitiveComp);
-		_headTrailEffect->Deactivate();
-	}
-
 	if (!_tailTrailEffect)
 	{
 		_tailTrailEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Tail Trail Effect"));
@@ -97,28 +89,25 @@ void AArrowActorBase::Tick(float DeltaTime)
 		CustomTimeDilation = GetInstigator()->CustomTimeDilation;
 	}
 
-	_headEffect->SetPaused(false);
-	_headTrailEffect->SetPaused(false);
-	_tailTrailEffect->SetPaused(false);
+	if (CustomTimeDilation != 1.0f)
+	{
+		_headEffect->SetPaused(false);
+		_headEffect->AdvanceSimulation(1, DeltaTime);
+		_headEffect->SetPaused(true);
 
-	_headTrailEffect->AdvanceSimulation(1,DeltaTime);
-	_headEffect->AdvanceSimulation(1,DeltaTime);
-	_tailTrailEffect->AdvanceSimulation(1,DeltaTime);
-
-	_headEffect->SetPaused(true);
-	_headTrailEffect->SetPaused(true);
-	_tailTrailEffect->SetPaused(true);
+		_tailTrailEffect->SetPaused(false);
+		_tailTrailEffect->AdvanceSimulation(1, DeltaTime);
+		_tailTrailEffect->SetPaused(true);
+	}
 }
 
 void AArrowActorBase::SetArrowData(UArrowData* arrowData)
 {
 	check(_headEffect);
-	check(_headTrailEffect);
 	check(_tailTrailEffect);
 	check(arrowData);
 
 	_headEffect->SetAsset(arrowData->Effect_Head);
-	_headTrailEffect->SetAsset(arrowData->Effect_HeadTrail);
 	_tailTrailEffect->SetAsset(arrowData->Effect_TailTrail);
 
 	_damageData = arrowData->DamageData;
@@ -128,10 +117,7 @@ void AArrowActorBase::Launch(float speedScale)
 {
 	_arrowState = EArrowState::EAS_Launched;
 	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-
 	_tailTrailEffect->Activate();
-	_headTrailEffect->Activate();
-
 	VSetVelocity(_launchDirection * _basicSpeed * speedScale);
 }
 
@@ -149,7 +135,6 @@ void AArrowActorBase::VReset()
 	_elapsedTimeFromHit = 0.0f;
 	_projectileMovementComp->ProjectileGravityScale = 0.0f;
 	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	_headTrailEffect->Deactivate();
 	_tailTrailEffect->Deactivate();
 	FDetachmentTransformRules detachRule(EDetachmentRule::KeepWorld,true);
 	DetachFromActor(detachRule);
@@ -165,9 +150,6 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	_projectileMovementComp->StopMovementImmediately();
 	_projectileMovementComp->Activate(false);
-	
-
-	_headTrailEffect->Deactivate();
 	_tailTrailEffect->Deactivate();
 
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())

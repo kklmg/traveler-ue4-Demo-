@@ -52,9 +52,6 @@ private:
 	UNiagaraComponent* _headEffect;
 
 	UPROPERTY(VisibleAnywhere)
-	UNiagaraComponent* _headTrailEffect;
-
-	UPROPERTY(VisibleAnywhere)
 	UNiagaraComponent* _tailTrailEffect;
 
 	UPROPERTY(VisibleAnywhere)
