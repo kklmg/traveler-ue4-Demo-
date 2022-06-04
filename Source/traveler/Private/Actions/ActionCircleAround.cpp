@@ -111,6 +111,8 @@ void UActionCircleAround::VOnTick(float deltaTime)
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("elapsed time : %f"), GetElapsedTime()));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, curLoc.ToString());
+
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_trackRadius : %f"), _trackRadius));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("distXY_Cur_TrackCenter : %f"), distXY_Cur_TrackCenter));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("DeltaAngleH_Forward_ToTrackCenter : %f"), DeltaAngleH_Forward_ToTrackCenter));
@@ -124,10 +126,9 @@ bool UActionCircleAround::TryGetRequiredData()
 	if (GetActionBlackBoard()->TryGetData_Float(NSActionData::TrackRadius::Name, _trackRadius) &&
 		GetActionBlackBoard()->TryGetData_FVector(NSActionData::TrackCenter::Name, _trackCenter))
 	{
-		if (GetActionBlackBoard()->TryGetData_Float(NSActionData::CircleAroundDuration::Name, _duration) == false)
-		{
-			_duration = -1.0f;
-		}
+		_duration = 180.0f;
+		GetActionBlackBoard()->TryGetData_Float(NSActionData::CircleAroundDuration::Name, _duration);
+		
 
 		return true;
 	}

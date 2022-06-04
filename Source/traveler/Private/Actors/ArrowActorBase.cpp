@@ -52,15 +52,35 @@ AArrowActorBase::AArrowActorBase()
 
 	_elapsedTimeFromLaunch = 0.0f;
 	_elapsedTimeFromHit = 0.0f;
+	
 }
 
 void AArrowActorBase::BeginPlay()
 {
 	Super::BeginPlay();
+	CustomTimeDilation = 50.0f;
+
+
+	//_headEffect->SetComponentTickEnabled(true);
+	//_headEffect->SetAgeUpdateMode(ENiagaraAgeUpdateMode::TickDeltaTime);
+	//_headEffect->SetAgeUpdateMode(ENiagaraAgeUpdateMode::TickDeltaTime);
+	//_headTrailEffect->SetAgeUpdateMode(ENiagaraAgeUpdateMode::TickDeltaTime);
+	//_tailTrailEffect->SetAgeUpdateMode(ENiagaraAgeUpdateMode::TickDeltaTime);
+	//_headEffect->SetPaused(true);
+	//_headTrailEffect->SetPaused(true);
+	//_tailTrailEffect->SetPaused(true);
 }
 
 void AArrowActorBase::Tick(float DeltaTime)
 {
+	if (GetInstigator())
+	{
+		//CustomTimeDilation = GetInstigator()->CustomTimeDilation;
+		//DeltaTime *= GetInstigator()->CustomTimeDilation;
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("deltatime : %f"), DeltaTime));
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("actor time dilation : %f"), GetInstigator()->CustomTimeDilation));
+	}
+
 	Super::Tick(DeltaTime);
 
 	if (_arrowState == EArrowState::EAS_Launched)
@@ -106,7 +126,7 @@ void AArrowActorBase::SetArrowData(UArrowData* arrowData)
 	_damageData = arrowData->DamageData;
 }
 
-void AArrowActorBase::Launch(float strength)
+void AArrowActorBase::Launch(float speedScale)
 {
 	_arrowState = EArrowState::EAS_Launched;
 	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
@@ -114,7 +134,7 @@ void AArrowActorBase::Launch(float strength)
 	_tailTrailEffect->Activate();
 	_headTrailEffect->Activate();
 
-	VSetVelocity(_launchDirection * _basicSpeed * strength);
+	VSetVelocity(_launchDirection * _basicSpeed * speedScale);
 }
 
 void AArrowActorBase::SetLaunchDirection(FVector dir)
@@ -135,22 +155,26 @@ void AArrowActorBase::VReset()
 	_tailTrailEffect->Deactivate();
 	FDetachmentTransformRules detachRule(EDetachmentRule::KeepWorld,true);
 	DetachFromActor(detachRule);
+	
+	_projectileMovementComp->Activate(true);
 }
 
 void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (_arrowState == EArrowState::EAS_Hitted) return;
 
-	_projectileMovementComp->Velocity = FVector::ZeroVector;
 	_arrowState = EArrowState::EAS_Hitted;
 	_primitiveComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	_projectileMovementComp->StopMovementImmediately();
+	_projectileMovementComp->Activate(false);
+	
 
 	_headTrailEffect->Deactivate();
 	_tailTrailEffect->Deactivate();
 
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
-		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity * 0.1f, Hit.ImpactPoint);
+		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity, Hit.ImpactPoint);
 	}
 
 	//Todo

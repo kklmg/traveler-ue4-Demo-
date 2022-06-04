@@ -31,7 +31,7 @@ ABowBase::ABowBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectIn
 	_weaponType = EWeaponType::EWT_Bow;
 	_bowState = EBowState::EBS_Normal;
 
-	_strength = 0.0f;
+	_arrowSpeedScale = 1.0f;
 	_maxDamage = 0.0f;
 	_baseProjectileVelocity = 1000.0f;
 	_maxProjectileVelocity = 3000.0f;
@@ -348,7 +348,10 @@ void ABowBase::LaunchArrows()
 {
 	for (AArrowActorBase* arrow : _holdingArrows)
 	{
-		arrow->Launch();
+		if(arrow)
+		{
+			arrow->Launch(_arrowSpeedScale);
+		}
 	}
 
 	ClearHoldingArrows(false);
@@ -446,16 +449,6 @@ void ABowBase::VWeaponControlF()
 	SetBowState(EBowState::EBS_Normal);
 }
 
-float ABowBase::CalculateDamage()
-{
-	return _strength * _maxDamage;
-}
-
-float ABowBase::CalculateProjectileSpeed()
-{
-	return FMath::Clamp(_strength * _maxProjectileVelocity, _baseProjectileVelocity, _maxProjectileVelocity);
-}
-
 EBowState ABowBase::GetBowState()
 {
 	return _bowState;
@@ -513,6 +506,11 @@ void ABowBase::AnimateCrosshair(bool bForward)
 	{
 		_crosshairWidgetIns->SetAnimForward(bForward);
 	}
+}
+
+void ABowBase::SetArrowSpeedScale(float scale)
+{
+	_arrowSpeedScale = scale;
 }
 
 void ABowBase::TakeOutArrows()

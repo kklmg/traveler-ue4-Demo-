@@ -89,10 +89,13 @@ void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTi
 
 		GetOwner()->SetActorRotation(rotator);
 		Velocity = rotator.Vector().GetSafeNormal() * Velocity.Size();
+		UpdateComponentVelocity();
 
 		_inputDeltaPitch = 0.0f;
 		_inputDeltaYaw = 0.0f;
 	}
+
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("velocity : %f"), Velocity.Size()));
 }
 
 FFlyingAbilityData& UMyCharacterMovementComponent::getFlyingAbilityData()
@@ -119,10 +122,11 @@ FORCEINLINE_DEBUGGABLE float UMyCharacterMovementComponent::ComputeDistTraveledD
 	float RequiredTimeToPitch0 = FMath::Abs(curPitch / _FlyingAbilityData.PitchAngSpeed);
 	float angSpeedPitch = curPitch > 0 ? -_FlyingAbilityData.PitchAngSpeed : _FlyingAbilityData.PitchAngSpeed;
 
-	//Desc:
+	//------------------------------------------------------------------------------------------------------------
 	//v = sin(curPitch + pitchAngSpeed * deltaTime) * velocity_Z
 	//Integral => - cos(curPitch + pitchAngSpeed * deltaTime) / pitchAngSpeed * velcocityZ
 	//shift = (VelocityZ* (-cos(curPitch + pitchAngSpeed * RequiredTimeToPitch0) + cos(curPitch))) / pitchAngSpeed
+	//------------------------------------------------------------------------------------------------------------
 
 	float shift = Velocity.Z *
 		(-FMath::Cos(FMath::DegreesToRadians(curPitch + angSpeedPitch * RequiredTimeToPitch0)) + FMath::Cos(FMath::DegreesToRadians(curPitch))) / FMath::DegreesToRadians(angSpeedPitch);
@@ -343,6 +347,11 @@ void UMyCharacterMovementComponent::ToggleSprint(bool bSprint)
 
 	MaxWalkSpeed = _statusComp->GetFinalValue(_bToggleSprint ? EStatusType::EStatus_SprintingSpeed : EStatusType::EStatus_WalkingSpeed);
 	MaxFlySpeed = _statusComp->GetFinalValue(EStatusType::EStatus_FlyingSpeed) * (_bToggleSprint ? 4.0f : 1.0f);
+
+	if (_animViewModel)
+	{
+		_animViewModel->SetBool(NSAnimationDataKey::bToggleSprint, _bToggleSprint);
+	}
 }
 
 float UMyCharacterMovementComponent::GetCurrentYawSpeed()

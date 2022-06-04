@@ -25,7 +25,7 @@ UBowActionAim::UBowActionAim()
 	
 	_slowMotionCost = CreateDefaultSubobject<UCostData>(TEXT("Cost"));
 	_slowMotionCost->AddCost(EStatusType::EStatus_Mana, 0.25f);
-	_slowMotion_timeDilation = 0.1f;
+	_slowMotion_timeDilation = 0.05f;
 }
 
 

@@ -40,8 +40,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SetArrowData(UArrowData* arrowData);
-	void Launch(float strength = 1.0f);
+	void Launch(float speedScale = 1.0f);
 	void SetLaunchDirection(FVector direction);
+
 	void VReset();
 
 	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit) override;
@@ -82,5 +83,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	EArrowState _arrowState;
-
 };

@@ -56,6 +56,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	EBowState GetBowState();
 
+	void SetArrowSpeedScale(float scale);
 	bool SetBowState(EBowState bowState);
 	void DragCamera(bool bDrag);
 	void AnimateCrosshair(bool bForward);
@@ -90,7 +91,6 @@ protected:
 	void TakeOutArrows();
 	void ClearHoldingArrows(bool bDeactivateArrows);
 	void LaunchArrows();
-
 	void AdjustHandRotation();
 	void AdjustArrowIntervals();
 	void IncreaseArrows();
@@ -100,10 +100,6 @@ protected:
 	virtual void VReset() override;
 
 private:
-
-	float CalculateDamage();
-	float CalculateProjectileSpeed();
-
 	void UpdateArrowsTransform();
 	void AttachArrowsToHand();
 	void AttachArrowsToBow();
@@ -163,7 +159,7 @@ private:
 	UPROPERTY()
 	UBowActionAim* _processAim;
 
-	float _strength;
+	float _arrowSpeedScale;
 
 public:
 	FOnBowStateChanged OnBowStateChangedDelegate;
