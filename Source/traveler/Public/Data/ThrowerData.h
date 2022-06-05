@@ -9,7 +9,7 @@
 USTRUCT(BlueprintType)
 struct FThrowerData 
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
 public:
 	

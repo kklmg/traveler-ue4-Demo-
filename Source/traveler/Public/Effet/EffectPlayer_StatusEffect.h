@@ -10,7 +10,7 @@
 USTRUCT(BlueprintType)
 struct FEffectData_StatusEffect
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 public:
 	FEffectData_StatusEffect();
 	FEffectData_StatusEffect(FLinearColor& color);

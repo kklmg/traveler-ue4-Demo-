@@ -20,7 +20,7 @@ bool UProcessBase::Execute()
 	{
 		VOnExecute();
 
-		if(_bIsInstantProcess)
+		if (_bIsInstantProcess)
 		{
 			SetProcessSucceed();
 		}
@@ -86,7 +86,7 @@ bool UProcessBase::SetProcessAborted()
 	}
 }
 
-FORCEINLINE_DEBUGGABLE bool UProcessBase::SetProcessState(EProcessState newState)
+bool UProcessBase::SetProcessState(EProcessState newState)
 {
 	if (_processState == newState) return false;
 
@@ -96,7 +96,7 @@ FORCEINLINE_DEBUGGABLE bool UProcessBase::SetProcessState(EProcessState newState
 	return true;
 }
 
-FORCEINLINE_DEBUGGABLE void UProcessBase::Tick(float deltaTime)
+void UProcessBase::Tick(float deltaTime)
 {
 	if (_processState == EProcessState::EPS_Running)
 	{
@@ -104,27 +104,27 @@ FORCEINLINE_DEBUGGABLE void UProcessBase::Tick(float deltaTime)
 	}
 }
 
-FORCEINLINE_DEBUGGABLE bool UProcessBase::IsAlive()
+bool UProcessBase::IsAlive()
 {
 	return (_processState == EProcessState::EPS_Running || _processState == EProcessState::EPS_Paused);
 }
 
-FORCEINLINE_DEBUGGABLE bool UProcessBase::IsDead()
+bool UProcessBase::IsDead()
 {
 	return (_processState == EProcessState::EPS_SUCCEEDED || _processState == EProcessState::EPS_FAILED || _processState == EProcessState::EPS_Aborted);
 }
 
-FORCEINLINE_DEBUGGABLE EProcessState UProcessBase::GetProcessState()
+EProcessState UProcessBase::GetProcessState()
 {
 	return _processState;
 }
 
-FORCEINLINE_DEBUGGABLE bool UProcessBase::IsInstantProcess()
+bool UProcessBase::IsInstantProcess()
 {
 	return _bIsInstantProcess;
 }
 
-FORCEINLINE_DEBUGGABLE FName UProcessBase::GetProcessName()
+FName UProcessBase::GetProcessName()
 {
 	return _processName;
 }

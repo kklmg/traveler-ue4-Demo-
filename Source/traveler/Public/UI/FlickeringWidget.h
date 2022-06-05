@@ -20,7 +20,7 @@ class UImage;
 USTRUCT(BlueprintType)
 struct FTimeNodeData_Flickering
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	float RemainingTime;

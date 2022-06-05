@@ -11,7 +11,7 @@
 USTRUCT()
 struct TRAVELER_API FDelegateWrapper
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 public:
 	FMD_UObjectSignature OnEventPublished;
 

@@ -47,19 +47,19 @@ void UActionBase::VOnInit()
 	_elapsedTime = 0.0f;
 }
 
-FORCEINLINE void UActionBase::VOnExecute()
+void UActionBase::VOnExecute()
 {
 	Super::VOnExecute();
-	if(_statusComp)
+	if (_statusComp)
 	{
 		_statusComp->TryApplyCost(_costData);
 	}
 }
 
-FORCEINLINE bool UActionBase::VCanExecute()
+bool UActionBase::VCanExecute()
 {
 	if (!Super::VCanExecute()) return false;
-	if(!_bDataSettingIsFinished) return false;
+	if (!_bDataSettingIsFinished) return false;
 
 	return _statusComp && _statusComp->IsRemainingPointEnough(_costData);
 }
@@ -76,12 +76,12 @@ EActionType UActionBase::GetActionType()
 	return _actionType;
 }
 
-FORCEINLINE ACharacter* UActionBase::GetActionOwner()
+ACharacter* UActionBase::GetActionOwner()
 {
 	return _actionOwner;
 }
 
-FORCEINLINE UActionBlackBoard* UActionBase::GetActionBlackBoard()
+UActionBlackBoard* UActionBase::GetActionBlackBoard()
 {
 	return _actionBlackBoard;
 }
@@ -91,32 +91,32 @@ float UActionBase::GetElapsedTime()
 	return _elapsedTime;
 }
 
-FORCEINLINE_DEBUGGABLE UActionComponent* UActionBase::GetActionComp()
+UActionComponent* UActionBase::GetActionComp()
 {
 	return _actionComp;
 }
 
-FORCEINLINE_DEBUGGABLE UCostData* UActionBase::GetCostData()
+UCostData* UActionBase::GetCostData()
 {
 	return _costData;
 }
 
-FORCEINLINE_DEBUGGABLE UAnimationModelBase* UActionBase::GetAnimationViewModel()
+UAnimationModelBase* UActionBase::GetAnimationViewModel()
 {
 	return _animControlComp ? _animControlComp->GetAnimViewModel() : nullptr;
 }
 
-FORCEINLINE_DEBUGGABLE UAnimControlComponent* UActionBase::GetAnimControlComp()
+UAnimControlComponent* UActionBase::GetAnimControlComp()
 {
 	return _animControlComp;
 }
 
-FORCEINLINE_DEBUGGABLE UStatusComponent* UActionBase::GetStatusComp()
+UStatusComponent* UActionBase::GetStatusComp()
 {
 	return _statusComp;
 }
 
-FORCEINLINE_DEBUGGABLE UExTransformProviderComponent* UActionBase::GetExTransformProviderComp()
+UExTransformProviderComponent* UActionBase::GetExTransformProviderComp()
 {
 	return _exTransformProviderComp;
 }

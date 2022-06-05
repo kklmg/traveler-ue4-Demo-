@@ -111,12 +111,12 @@ void UActionComponent::AbortAction(EActionType actionType)
 	return GetCurActionPresetGroup() ? GetCurActionPresetGroup()->AbortAction(actionType) : nullptr;
 }
 
-FORCEINLINE_DEBUGGABLE UActionBlackBoard* UActionComponent::GetActionBlackBoard()
+UActionBlackBoard* UActionComponent::GetActionBlackBoard()
 {
 	return _actionBlackBoard;
 }
 
-FORCEINLINE_DEBUGGABLE UActionPresetGroup* UActionComponent::GetCurActionPresetGroup()
+UActionPresetGroup* UActionComponent::GetCurActionPresetGroup()
 {
 	return _mapActionPresetGroup.Contains(_curActionPrestGroupType) ?
 		_mapActionPresetGroup[_curActionPrestGroupType] : nullptr;

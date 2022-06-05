@@ -98,17 +98,17 @@ TSubclassOf<UActionPresetGroup> AWeaponBase::GetActionPresetGroupClass()
 
 
 
-FORCEINLINE_DEBUGGABLE USkeletalMeshComponent* AWeaponBase::GetMeshComponent()
+USkeletalMeshComponent* AWeaponBase::GetMeshComponent()
 {
 	return _skeletalMeshComponent;
 }
 
-FORCEINLINE_DEBUGGABLE ACreatureCharacter* AWeaponBase::GetWeaponOwner()
+ACreatureCharacter* AWeaponBase::GetWeaponOwner()
 {
 	return _weaponOwner;
 }
 
-FORCEINLINE_DEBUGGABLE EWeaponType AWeaponBase::GetWeaponType()
+EWeaponType AWeaponBase::GetWeaponType()
 {
 	return _weaponType;
 }
@@ -118,22 +118,22 @@ void AWeaponBase::VReset()
 {
 }
 
-FORCEINLINE_DEBUGGABLE UExTransformProviderComponent* AWeaponBase::GetExTransformProviderComp()
+UExTransformProviderComponent* AWeaponBase::GetExTransformProviderComp()
 {
 	return _extraTransformProviderComp;
 }
 
-FORCEINLINE_DEBUGGABLE UExTransformProviderComponent* AWeaponBase::GetOwnerExTransformProviderComp()
+UExTransformProviderComponent* AWeaponBase::GetOwnerExTransformProviderComp()
 {
 	return _ownerExtraTransformProviderComp;
 }
 
-FORCEINLINE_DEBUGGABLE ICharacterCameraInterface* AWeaponBase::GetOwnerCameraInterface()
+ICharacterCameraInterface* AWeaponBase::GetOwnerCameraInterface()
 {
 	return _ownerCameraInterface;
 }
 
-FORCEINLINE_DEBUGGABLE UEventBrokerComponent* AWeaponBase::GetOwnerEventBrokerComp()
+UEventBrokerComponent* AWeaponBase::GetOwnerEventBrokerComp()
 {
 	return _ownerEventBrokerComp;
 }
@@ -162,7 +162,7 @@ void AWeaponBase::VWeaponControlF()
 {
 }
 
-FORCEINLINE_DEBUGGABLE UWeaponAnimationModelBase* AWeaponBase::GetWeaponAnimationModel()
+UWeaponAnimationModelBase* AWeaponBase::GetWeaponAnimationModel()
 {
 	return _weaponAnimationModel;
 }

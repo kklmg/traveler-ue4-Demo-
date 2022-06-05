@@ -10,7 +10,7 @@
 USTRUCT(BlueprintType)
 struct FEffectData_Dissolve
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AActor> EffectActorClass;

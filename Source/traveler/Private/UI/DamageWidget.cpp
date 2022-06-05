@@ -7,6 +7,9 @@
 
 FDamageWidgetData::FDamageWidgetData()
 {
+	Damage = 0.0f;
+	TextOffset = FVector2D::ZeroVector;
+	TextColor = FColor::White;
 	TextScale = 1.0f;
 	ScrollSpeed = 20.0f;
 	ScrollDirection = FVector2D(0.0f, -1.0f);

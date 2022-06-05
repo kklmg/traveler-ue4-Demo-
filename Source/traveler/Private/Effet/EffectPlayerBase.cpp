@@ -33,13 +33,13 @@ void UEffectPlayerBase::VStopEffect(uint8 effectOption)
 {
 }
 
-FORCEINLINE_DEBUGGABLE  UMaterialInstanceDynamic* UEffectPlayerBase::GetMaterial()
+UMaterialInstanceDynamic* UEffectPlayerBase::GetMaterial()
 {
 	return _mid;
 }
 
 
-FORCEINLINE_DEBUGGABLE AActor* UEffectPlayerBase::GetOwner()
+AActor* UEffectPlayerBase::GetOwner()
 {
 	return _owner;
 }

@@ -3,15 +3,11 @@
 
 #include "Actions/ActionFlyTo.h"
 #include "Actions/ActionData/ActionBlackBoard.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "Character/CreatureCharacter.h"
-#include "DrawDebugHelpers.h"
+#include "GameFramework/Character.h"
 #include "GameSystem/MyGameplayStatics.h"
-#include "DrawDebugHelpers.h"
 #include "Components/MyCharacterMovementComponent.h"
 #include "Components/StatusComponent.h"
-#include "AIController.h"
-
+#include "DrawDebugHelpers.h"
 
 UActionFlyTo::UActionFlyTo()
 {

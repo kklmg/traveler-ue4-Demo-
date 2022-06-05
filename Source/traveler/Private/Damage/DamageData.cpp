@@ -6,5 +6,6 @@
 
 FDamageData::FDamageData()
 {
-	ElementalType = EElementalType::EElemental_Physics;
+	ElementalType = EElementalType::EElemental_Physics; 
+	Damage = 0.f;
 }

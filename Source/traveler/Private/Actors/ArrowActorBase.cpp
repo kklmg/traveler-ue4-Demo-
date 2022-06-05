@@ -89,15 +89,16 @@ void AArrowActorBase::Tick(float DeltaTime)
 		CustomTimeDilation = GetInstigator()->CustomTimeDilation;
 	}
 
+
+	//todo: Performance optimization
 	if (CustomTimeDilation != 1.0f)
 	{
-		_headEffect->SetPaused(false);
+		//_headEffect->SetPaused(false);
 		_headEffect->AdvanceSimulation(1, DeltaTime);
-		_headEffect->SetPaused(true);
-
-		_tailTrailEffect->SetPaused(false);
+		//_headEffect->SetPaused(true);
+		//_tailTrailEffect->SetPaused(false);
 		_tailTrailEffect->AdvanceSimulation(1, DeltaTime);
-		_tailTrailEffect->SetPaused(true);
+		//_tailTrailEffect->SetPaused(true);
 	}
 }
 

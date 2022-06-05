@@ -23,13 +23,13 @@ void UOptionBase::Scroll(int32 delta)
 	}
 }
 
-FORCEINLINE_DEBUGGABLE int32 UOptionBase::GetCurID()
+int32 UOptionBase::GetCurID()
 {
 	return _curID;
 }
 
 
-FORCEINLINE_DEBUGGABLE int32 UIntOption::VGetSize()
+int32 UIntOption::VGetSize()
 {
 	return _options.Num();
 }

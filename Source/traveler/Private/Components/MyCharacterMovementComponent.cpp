@@ -95,7 +95,8 @@ void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTi
 		_inputDeltaYaw = 0.0f;
 	}
 
-	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("velocity : %f"), Velocity.Size()));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("Location ZZ : %f"), GetActorLocation().Z));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("velocity ZZ : %f"), Velocity.Z));
 }
 
 FFlyingAbilityData& UMyCharacterMovementComponent::getFlyingAbilityData()
@@ -103,12 +104,12 @@ FFlyingAbilityData& UMyCharacterMovementComponent::getFlyingAbilityData()
 	return _FlyingAbilityData;
 }
 
-FORCEINLINE_DEBUGGABLE float UMyCharacterMovementComponent::ComputeRequiredTimeToBrake()
+float UMyCharacterMovementComponent::ComputeRequiredTimeToBrake()
 {
 	return Velocity.Size() / GetMaxBrakingDeceleration();
 }
 
-FORCEINLINE_DEBUGGABLE float UMyCharacterMovementComponent::ComputeBrakingDistance()
+float UMyCharacterMovementComponent::ComputeBrakingDistance()
 {
 	float requiredTimeToStop = ComputeRequiredTimeToBrake();
 
@@ -116,7 +117,7 @@ FORCEINLINE_DEBUGGABLE float UMyCharacterMovementComponent::ComputeBrakingDistan
 	return  Velocity.Size() * requiredTimeToStop - 0.5 * GetMaxBrakingDeceleration() * requiredTimeToStop * requiredTimeToStop;
 }
 
-FORCEINLINE_DEBUGGABLE float UMyCharacterMovementComponent::ComputeDistTraveledDuringPitch0()
+float UMyCharacterMovementComponent::ComputeDistTraveledDuringPitch0()
 {
 	float curPitch = GetOwner()->GetActorRotation().Pitch;
 	float RequiredTimeToPitch0 = FMath::Abs(curPitch / _FlyingAbilityData.PitchAngSpeed);
@@ -220,8 +221,8 @@ void UMyCharacterMovementComponent::RotateDeltaYaw(float deltaYawAng, float delt
 		float desiredYawSpeed = deltaYawAng > 0 ?
 			FMath::Sqrt(deltaYawAng * _FlyingAbilityData.YawAcc * 2) : -FMath::Sqrt(deltaYawAng * -_FlyingAbilityData.YawAcc * 2);
 
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("curYawSpeed : %f"), _curYawSpeed));
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("desiredYawSpeed : %f"), desiredYawSpeed));
+		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("curYawSpeed : %f"), _curYawSpeed));
+		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("desiredYawSpeed : %f"), desiredYawSpeed));
 
 
 		{
@@ -292,14 +293,14 @@ void UMyCharacterMovementComponent::Ascend(bool bPositive, float deltaTime)
 	}
 
 
-	if (bPositive)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Ascend: ");
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "descend: ");
-	}
+	//if (bPositive)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "Ascend: ");
+	//}
+	//else
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, "descend: ");
+	//}
 }
 
 void UMyCharacterMovementComponent::KeepHorizontal(float deltaTime)

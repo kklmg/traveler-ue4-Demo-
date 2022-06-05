@@ -6,4 +6,5 @@
 FActorUIData::FActorUIData()
 {
 	ZOrder = 100;
+	TransformType = ETransformType::ETransform_None;
 }
