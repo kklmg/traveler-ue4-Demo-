@@ -25,7 +25,6 @@ bool UACon_IsStatusPointRemained::VTMValidate()
 {
 	if (!Super::VTMValidate()) return false;
 	float value = _statusComp->GetRemainingValue(_statusType);
-
 	return value > 0.0f;
 }
 

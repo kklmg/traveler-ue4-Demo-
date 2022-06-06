@@ -65,13 +65,9 @@ void ULifeControlComponent::OnLifeStateChanged(bool isAlive)
 		_eventBrokerComp->PublishEvent(NSEventData::ActorLifeStateChanged::Name, _lifeStateChangedData);
 	}
 
-	if (_bDestroyAfterDead)
+	if (_bDestroyAfterDead && isAlive == false)
 	{
-		if (_eventBrokerComp == nullptr)
-		{
-			GetOwner()->Destroy();
-		}
-		else if (_eventBrokerComp->ContainsRegisteredEvent(NSEventData::ActorDeathEffectFinished::Name) == false)
+		if (_eventBrokerComp == nullptr || _eventBrokerComp->ContainsRegisteredEvent(NSEventData::ActorDeathEffectFinished::Name) == false)
 		{
 			GetOwner()->Destroy();
 		}

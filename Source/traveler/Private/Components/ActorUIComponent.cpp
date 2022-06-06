@@ -55,6 +55,7 @@ void UActorUIComponent::ShowActorUI(EActorUI widgeType)
 			UActorWidget* newWidget = NewObject<UActorWidget>(this, _mapWidgetClass[widgeType].WidgetClass);
 			newWidget->SetData(GetOwner(), _mapWidgetClass[widgeType].TransformType);
 			newWidget->AddToViewport(_mapWidgetClass[widgeType].ZOrder);
+			newWidget->SetVisibility(ESlateVisibility::Visible);
 
 			_mapWidgetInstance.Add(widgeType, newWidget);
 		}
