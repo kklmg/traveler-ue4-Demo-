@@ -110,9 +110,8 @@ void UActionCircleAround::VOnTick(float deltaTime)
 		SetProcessSucceed();
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("elapsed time : %f"), GetElapsedTime()));
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, curLoc.ToString());
-
+	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("elapsed time : %f"), GetElapsedTime()));
+	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, curLoc.ToString());
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("_trackRadius : %f"), _trackRadius));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("distXY_Cur_TrackCenter : %f"), distXY_Cur_TrackCenter));
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("DeltaAngleH_Forward_ToTrackCenter : %f"), DeltaAngleH_Forward_ToTrackCenter));

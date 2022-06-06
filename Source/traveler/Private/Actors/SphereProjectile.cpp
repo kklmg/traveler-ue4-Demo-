@@ -68,7 +68,7 @@ void ASphereProjectile::Tick(float DeltaTime)
 		VDeactivate();
 	}
 
-	DrawDebugSphere(GetWorld(), GetActorLocation(), _primaryScale.X * scale, 10.0f, FColor::Blue);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), _primaryScale.X * scale, 10.0f, FColor::Blue);
 }
 
 

@@ -38,6 +38,8 @@ void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 		return;
 	}
 
+	if (damageDisplayData.Damage == 0.0f) return;
+
 	//Get random offset
 	FVector2D offset = FMath::RandPointInCircle(_spawnInCircleRadius);
 

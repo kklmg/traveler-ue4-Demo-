@@ -9,7 +9,7 @@
 void AMyPlayerController::BeginPlay()
 {
 	//Create Character HUD
-	if (CharacterHUDClass != nullptr)
+	if (CharacterHUDClass != nullptr && GetPawn() != nullptr)
 	{
 		_characterWidget = CreateWidget<UUserWidget>(this, CharacterHUDClass, "Character HUD");
 		if (_characterWidget)

@@ -95,8 +95,8 @@ void UMyCharacterMovementComponent::TickComponent(float DeltaTime, enum ELevelTi
 		_inputDeltaYaw = 0.0f;
 	}
 
-	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("Location ZZ : %f"), GetActorLocation().Z));
-	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("velocity ZZ : %f"), Velocity.Z));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("Altitude : %f"), GetActorLocation().Z));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("velocity Z : %f"), Velocity.Z));
 }
 
 FFlyingAbilityData& UMyCharacterMovementComponent::getFlyingAbilityData()
@@ -159,14 +159,14 @@ void UMyCharacterMovementComponent::RotateYaw(bool bPositive, float deltaTime, f
 
 		_inputDeltaYaw = _curYawSpeed * deltaTime;
 
-		if (bPositive)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("turn right"));
-		}
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("turn left"));
-		}
+		//if (bPositive)
+		//{
+		//	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("turn right"));
+		//}
+		//else
+		//{
+		//	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("turn left"));
+		//}
 	}
 	//todo
 	else
@@ -178,7 +178,7 @@ void UMyCharacterMovementComponent::KeepYawSpeed(float desiredYawSpeed, float de
 {
 	if (MovementMode == EMovementMode::MOVE_Flying)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("curYawSpeed : %f"), _curYawSpeed));
+		//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("curYawSpeed : %f"), _curYawSpeed));
 		desiredYawSpeed = desiredYawSpeed > 0 ?
 			FMath::Min(desiredYawSpeed, _FlyingAbilityData.YawAngSpeedMax) : FMath::Max(desiredYawSpeed, -_FlyingAbilityData.YawAngSpeedMax);
 

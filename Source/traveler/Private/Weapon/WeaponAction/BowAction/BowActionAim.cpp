@@ -50,7 +50,7 @@ void UBowActionAim::VOnExecute()
 	//Slow Motion
 	if (GetActionOwner()->GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Falling && GetStatusComp())
 	{
-		if (GetStatusComp()->GetRemainingValue(EStatusType::EStatus_Mana) > 20.0f && GetStatusComp()->TryApplyCost(_slowMotionCost))
+		if (GetStatusComp()->GetRemainingValue(EStatusType::EStatus_Mana) > 35.0f && GetStatusComp()->TryApplyCost(_slowMotionCost))
 		{
 			ActivateSlowMotion(true);
 		}

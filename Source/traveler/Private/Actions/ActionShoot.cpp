@@ -94,5 +94,5 @@ void UActionShoot::OnAttackNotifyBegin(float durationTime)
 	AProjectileActorBase* projectileIns = GetWorld()->SpawnActor<AProjectileActorBase>(_projectileClass,outTransform, spawnParams);
 	projectileIns->VSetVelocity(shootingDirection * _shootingSpeed);
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("shoot notify!"));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("shoot notify!"));
 }
