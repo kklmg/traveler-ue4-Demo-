@@ -18,11 +18,8 @@ class TRAVELER_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 private:
-
 	virtual void BeginPlay() override;
-
 	void SetupInputComponent() override;
-
 	virtual void SetPawn(APawn* newPawn) override;
 
 private:
@@ -36,15 +33,16 @@ private:
 	UUserWidget* _pauseMenuWidget;
 
 	UPROPERTY()
-	UUserWidget* _characterWidget;
+	UUserWidget* _characterWidgetIns;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnPawnChanged OnPawnChanged;
 
-	void _CreateCharacterHud();
-
 public:
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateCharacterStatusUI(bool bActivate);
 
 };

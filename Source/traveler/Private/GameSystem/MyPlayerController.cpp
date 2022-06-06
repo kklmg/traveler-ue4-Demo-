@@ -8,15 +8,7 @@
 
 void AMyPlayerController::BeginPlay()
 {
-	//Create Character HUD
-	if (CharacterHUDClass != nullptr && GetPawn() != nullptr)
-	{
-		_characterWidget = CreateWidget<UUserWidget>(this, CharacterHUDClass, "Character HUD");
-		if (_characterWidget)
-		{
-			_characterWidget->AddToViewport(100);
-		}
-	}
+	Super::BeginPlay();
 }
 
 void AMyPlayerController::TogglePauseMenu()
@@ -77,10 +69,24 @@ void AMyPlayerController::SetPawn(APawn* newPawn)
 	OnPawnChanged.Broadcast(newPawn);
 }
 
-void AMyPlayerController::_CreateCharacterHud()
+void AMyPlayerController::ActivateCharacterStatusUI(bool bActivate)
 {
-
-
-
+	if(bActivate)
+	{
+		if (CharacterHUDClass != nullptr && GetPawn() != nullptr && _characterWidgetIns == nullptr)
+		{
+			_characterWidgetIns = CreateWidget<UUserWidget>(this, CharacterHUDClass, "Character HUD");
+			check(_characterWidgetIns)
+			_characterWidgetIns->AddToViewport(100);
+		}
+	}
+	else
+	{
+		if(_characterWidgetIns)
+		{
+			_characterWidgetIns->MarkPendingKill();
+			_characterWidgetIns = nullptr;
+		}
+	}
 }
 
