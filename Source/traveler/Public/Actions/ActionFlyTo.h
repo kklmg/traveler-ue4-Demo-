@@ -35,7 +35,8 @@ private:
 	FVector _destLocation;
 	float _keepingDistanceXY_Min;
 	float _keepingDistanceXY_Max;
-	float _destAltitude;
+	float _destAltitude_Min;
+	float _destAltitude_Max;
 	bool _bFaceToDest;
 	bool _bBrakeAtDest;
 };

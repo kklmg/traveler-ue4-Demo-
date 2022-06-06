@@ -44,7 +44,7 @@ void UActionFlyTo::VOnExecute()
 {
 	Super::VOnExecute();
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Execute Fly To"));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Execute Fly To"));
 
 	if (!TryGetRequiredData())
 	{
@@ -66,7 +66,7 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	FRotator curRotation = GetActionOwner()->GetActorRotation();
 	float dist = FVector::Distance(_destLocation, curLocation);
 	float distXY = FVector::DistXY(_destLocation, curLocation);
-	float distZ = FMath::Abs(_destAltitude - curLocation.Z);
+	//float distZ = FMath::Abs(_destAltitude - curLocation.Z);
 
 	//forward planeXY
 	FVector actorForwardXY = GetActionOwner()->GetActorForwardVector();
@@ -88,12 +88,8 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	//action completed
 	//-------------------------------------------------------------------------------------------------------------
 
-	float tolerance = _myMovementComp->GetMaxSpeed() * deltaTime * 3.0f;
-
-	
-
 	if (distXY > _keepingDistanceXY_Min && distXY < _keepingDistanceXY_Max
-		&& distZ < tolerance
+		&& curLocation.Z > _destAltitude_Min && curLocation.Z < _destAltitude_Max
 		&& (_bFaceToDest == false || FMath::Abs(deltaAngleH_Forward_ToDest) < 1.0f)
 		&& FMath::Abs(curRotation.Pitch) == 0.0f
 		&& FMath::Abs(curRotation.Roll) < 1.0f)
@@ -134,7 +130,7 @@ void UActionFlyTo::VOnTick(float deltaTime)
 	float dist_TrackCenter_Dest = FVector::Dist2D(_destLocation, trackCenter);
 
 
-	float distXY_Safe = FMath::Max(trackRadius, _keepingDistanceXY_Max + tolerance);
+	float distXY_Safe = FMath::Max(trackRadius, _keepingDistanceXY_Max);
 
 
 	if (dist_TrackCenter_Dest < distXY_Safe)
@@ -150,23 +146,24 @@ void UActionFlyTo::VOnTick(float deltaTime)
 
 	//Pitch Rotation  
 	//-------------------------------------------------------------------------------------------------------------
-	float offset_Z = _destAltitude - curLocation.Z;
+
+
+	//float offset_Z = _destAltitude - curLocation.Z;
 	float DistTraveledDuringKeepHorizontal = _myMovementComp->ComputeDistTraveledDuringPitch0();
 
-	if (distZ < tolerance)
+	if (curLocation.Z < _destAltitude_Min)
 	{
-		_myMovementComp->KeepHorizontal(deltaTime);
+		DistTraveledDuringKeepHorizontal + curLocation.Z > _destAltitude_Min ?
+			_myMovementComp->Ascend(false, deltaTime) : _myMovementComp->Ascend(true, deltaTime);
+	}
+	else if (curLocation.Z > _destAltitude_Max)
+	{
+		DistTraveledDuringKeepHorizontal + curLocation.Z < _destAltitude_Max ?
+			_myMovementComp->Ascend(true, deltaTime) : _myMovementComp->Ascend(false, deltaTime);
 	}
 	else
 	{
-		if (offset_Z > 0)
-		{
-			_myMovementComp->Ascend(DistTraveledDuringKeepHorizontal + curLocation.Z < _destAltitude, deltaTime);
-		}
-		else
-		{
-			_myMovementComp->Ascend(-DistTraveledDuringKeepHorizontal + curLocation.Z < _destAltitude, deltaTime);
-		}
+		_myMovementComp->KeepHorizontal(deltaTime);
 	}
 
 	//Horizontal Movement  
@@ -228,8 +225,11 @@ bool UActionFlyTo::TryGetRequiredData()
 	_keepingDistanceXY_Max = 0;
 	GetActionBlackBoard()->TryGetData_Float(NSActionData::keepDistanceXY_Max::Name, _keepingDistanceXY_Max);
 
-	_destAltitude = _destLocation.Z;
-	GetActionBlackBoard()->TryGetData_Float(NSActionData::DestAltitude::Name, _destAltitude);
+	_destAltitude_Min = _destLocation.Z;
+	GetActionBlackBoard()->TryGetData_Float(NSActionData::DestAltitude_Min::Name, _destAltitude_Min);
+
+	_destAltitude_Max = _destLocation.Z;
+	GetActionBlackBoard()->TryGetData_Float(NSActionData::DestAltitude_Max::Name, _destAltitude_Max);
 
 	_bFaceToDest = false;
 	GetActionBlackBoard()->TryGetData_Bool(NSActionData::FaceToDest::Name, _bFaceToDest);
