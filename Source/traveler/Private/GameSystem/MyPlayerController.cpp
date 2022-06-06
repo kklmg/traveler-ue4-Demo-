@@ -4,6 +4,7 @@
 #include "GameSystem/MyPlayerController.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Input/InputBindingNames.h"
 
 void AMyPlayerController::BeginPlay()
 {
@@ -60,15 +61,20 @@ void AMyPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("Pause", IE_Pressed, this, &AMyPlayerController::TogglePauseMenu);
+	InputComponent->BindAction(NSInputBindingName::Pause, IE_Pressed, this, &AMyPlayerController::TogglePauseMenu);
+
+#if WITH_EDITOR
+	
+#else
+	InputComponent->BindAction(NSInputBindingName::ESC, IE_Pressed, this, &AMyPlayerController::TogglePauseMenu);
+#endif
+
 }
 
 void AMyPlayerController::SetPawn(APawn* newPawn)
 {
 	Super::SetPawn(newPawn);
-
 	OnPawnChanged.Broadcast(newPawn);
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, TEXT("set pawn"));
 }
 
 void AMyPlayerController::_CreateCharacterHud()
