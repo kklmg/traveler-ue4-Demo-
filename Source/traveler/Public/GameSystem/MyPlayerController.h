@@ -17,27 +17,6 @@ UCLASS()
 class TRAVELER_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-private:
-	virtual void BeginPlay() override;
-	void SetupInputComponent() override;
-	virtual void SetPawn(APawn* newPawn) override;
-
-private:
-	UPROPERTY(EditDefaultsOnly, Category = UI)
-	TSubclassOf<UUserWidget> PauseMenuClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = UI)
-	TSubclassOf<UUserWidget> CharacterHUDClass;
-
-	UPROPERTY()
-	UUserWidget* _pauseMenuWidget;
-
-	UPROPERTY()
-	UUserWidget* _characterWidgetIns;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnPawnChanged OnPawnChanged;
-
 public:
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();
@@ -45,4 +24,35 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ActivateCharacterStatusUI(bool bActivate);
 
+	UFUNCTION(BlueprintCallable)
+	void ToggleControlInfo();
+
+protected:
+	virtual void BeginPlay() override;
+	void SetupInputComponent() override;
+	virtual void SetPawn(APawn* newPawn) override;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = UI)
+	TSubclassOf<UUserWidget> _pauseMenuClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = UI)
+	TSubclassOf<UUserWidget> _characterHUDClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = UI)
+	TSubclassOf<UUserWidget> _controlInfoWidgetClass;
+
+	UPROPERTY()
+	UUserWidget* _controlInfoWidgetIns;
+
+	UPROPERTY()
+	UUserWidget* _pauseMenuWidgetIns;
+
+	UPROPERTY()
+	UUserWidget* _characterWidgetIns;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnPawnChanged OnPawnChanged;
+
+	bool _bShowControlInfo;
 };

@@ -14,10 +14,10 @@ void AMyPlayerController::BeginPlay()
 void AMyPlayerController::TogglePauseMenu()
 {
 	//Hide Pause Menu
-	if (_pauseMenuWidget && _pauseMenuWidget->IsInViewport())
+	if (_pauseMenuWidgetIns && _pauseMenuWidgetIns->IsInViewport())
 	{
-		_pauseMenuWidget->RemoveFromParent();
-		_pauseMenuWidget = nullptr;
+		_pauseMenuWidgetIns->RemoveFromParent();
+		_pauseMenuWidgetIns = nullptr;
 
 		bShowMouseCursor = false;
 		SetInputMode(FInputModeGameOnly());
@@ -32,10 +32,10 @@ void AMyPlayerController::TogglePauseMenu()
 	}
 
 	//Show Pause Menu
-	_pauseMenuWidget = CreateWidget<UUserWidget>(this, PauseMenuClass,"Pause Menu");
-	if (_pauseMenuWidget)
+	_pauseMenuWidgetIns = CreateWidget<UUserWidget>(this, _pauseMenuClass,"Pause Menu");
+	if (_pauseMenuWidgetIns)
 	{
-		_pauseMenuWidget->AddToViewport(100);
+		_pauseMenuWidgetIns->AddToViewport(100);
 
 		bShowMouseCursor = true;
 		SetInputMode(FInputModeUIOnly());
@@ -73,9 +73,9 @@ void AMyPlayerController::ActivateCharacterStatusUI(bool bActivate)
 {
 	if(bActivate)
 	{
-		if (CharacterHUDClass != nullptr && GetPawn() != nullptr && _characterWidgetIns == nullptr)
+		if (_characterHUDClass != nullptr && GetPawn() != nullptr && _characterWidgetIns == nullptr)
 		{
-			_characterWidgetIns = CreateWidget<UUserWidget>(this, CharacterHUDClass, "Character HUD");
+			_characterWidgetIns = CreateWidget<UUserWidget>(this, _characterHUDClass, "Character HUD");
 			check(_characterWidgetIns)
 			_characterWidgetIns->AddToViewport(100);
 		}
@@ -86,6 +86,34 @@ void AMyPlayerController::ActivateCharacterStatusUI(bool bActivate)
 		{
 			_characterWidgetIns->MarkPendingKill();
 			_characterWidgetIns = nullptr;
+		}
+	}
+}
+
+void AMyPlayerController::ToggleControlInfo()
+{
+	if (_controlInfoWidgetClass == nullptr) return;
+
+	_bShowControlInfo = !_bShowControlInfo;
+
+	if (_bShowControlInfo)
+	{
+		if (_controlInfoWidgetIns == nullptr)
+		{
+			_controlInfoWidgetIns = CreateWidget<UUserWidget>(this, _controlInfoWidgetClass, "ControlInfoWidget");
+			check(_controlInfoWidgetIns)
+		}
+
+		if (_controlInfoWidgetIns->IsInViewport() == false)
+		{
+			_controlInfoWidgetIns->AddToViewport(100);
+		}
+	}
+	else
+	{
+		if (_controlInfoWidgetIns)
+		{
+			_controlInfoWidgetIns->RemoveFromViewport();
 		}
 	}
 }
