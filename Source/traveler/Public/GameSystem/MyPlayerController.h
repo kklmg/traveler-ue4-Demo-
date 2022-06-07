@@ -25,6 +25,9 @@ public:
 	void ActivateCharacterStatusUI(bool bActivate);
 
 	UFUNCTION(BlueprintCallable)
+	void ActivateControlInfo(bool bActivate);
+
+	UFUNCTION(BlueprintCallable)
 	void ToggleControlInfo();
 
 protected:

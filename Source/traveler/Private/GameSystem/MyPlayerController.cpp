@@ -90,11 +90,11 @@ void AMyPlayerController::ActivateCharacterStatusUI(bool bActivate)
 	}
 }
 
-void AMyPlayerController::ToggleControlInfo()
+void AMyPlayerController::ActivateControlInfo(bool bActivate)
 {
 	if (_controlInfoWidgetClass == nullptr) return;
 
-	_bShowControlInfo = !_bShowControlInfo;
+	_bShowControlInfo = bActivate;
 
 	if (_bShowControlInfo)
 	{
@@ -116,5 +116,11 @@ void AMyPlayerController::ToggleControlInfo()
 			_controlInfoWidgetIns->RemoveFromViewport();
 		}
 	}
+}
+
+void AMyPlayerController::ToggleControlInfo()
+{
+	_bShowControlInfo = !_bShowControlInfo;
+	ActivateControlInfo(_bShowControlInfo);
 }
 
