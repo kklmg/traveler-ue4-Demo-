@@ -27,4 +27,7 @@ private:
 
 	UPROPERTY(EditDefaultsonly)
 	TSubclassOf<AActor> _groundEffectActorClass;
+
+	UPROPERTY(EditDefaultsonly)
+	TSubclassOf<AActor> _decalActorClass;
 };

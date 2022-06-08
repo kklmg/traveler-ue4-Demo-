@@ -24,4 +24,6 @@ public:
 	UNiagaraSystem* Effect_TailTrail;
 	UPROPERTY(EditDefaultsOnly)
 	FDamageData DamageData;
+	UPROPERTY(EditDefaultsonly)
+	TSubclassOf<AActor> DecalActorClass;
 };

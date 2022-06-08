@@ -110,6 +110,7 @@ void AArrowActorBase::SetArrowData(UArrowData* arrowData)
 
 	_headEffect->SetAsset(arrowData->Effect_Head);
 	_tailTrailEffect->SetAsset(arrowData->Effect_TailTrail);
+	_decalActorClass = arrowData->DecalActorClass;
 
 	_damageData = arrowData->DamageData;
 }
@@ -156,6 +157,13 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
 		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity, Hit.ImpactPoint);
+	}
+
+	if(_decalActorClass)
+	{
+		FActorSpawnParameters spawnParams;
+		FQuat quat = FQuat::FindBetweenVectors(FVector::UpVector, Hit.Normal);
+		GetWorld()->SpawnActor<AActor>(_decalActorClass, Hit.ImpactPoint, quat.Rotator(), spawnParams);
 	}
 
 	//Todo

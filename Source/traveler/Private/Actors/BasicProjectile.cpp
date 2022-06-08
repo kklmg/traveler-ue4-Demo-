@@ -52,7 +52,10 @@ void ABasicProjectile::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 		GetWorld()->SpawnActor<AActor>(_hitEffectActorClass, Hit.Location, quat.Rotator(), spawnParams);
 	}
 
-	if(OtherActor->Tags.Contains(NSTagName::Ground) && _groundEffectActorClass)
+
+
+
+	if(OtherComponent->ComponentHasTag(NSTagName::Ground) && _groundEffectActorClass)
 	{
 		FActorSpawnParameters spawnParams;
 		spawnParams.Owner = this;

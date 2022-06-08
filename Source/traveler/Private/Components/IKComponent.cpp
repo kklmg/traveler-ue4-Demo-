@@ -19,7 +19,7 @@ UIKComponent::UIKComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_traceOffset = 30.0f;
+	_traceOffset = 100.0f;
 }
 
 

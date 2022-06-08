@@ -80,4 +80,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	EArrowState _arrowState;
+
+	UPROPERTY(EditDefaultsonly)
+	TSubclassOf<AActor> _decalActorClass;
 };
