@@ -102,7 +102,8 @@ void ASphereProjectile::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent
 		spawnParams.Instigator = GetInstigator();
 
 		FQuat quat = FQuat::FindBetweenVectors(FVector::UpVector, SweepResult.Normal);
-		GetWorld()->SpawnActor<AActor>(_groundEffectActorClass, SweepResult.ImpactPoint, quat.Rotator(), spawnParams);
+		AActor* groundEffectActor = GetWorld()->SpawnActor<AActor>(_groundEffectActorClass, SweepResult.ImpactPoint, quat.Rotator(), spawnParams);
+		groundEffectActor->AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform);
 	}	
 }
 

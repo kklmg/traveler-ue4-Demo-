@@ -17,7 +17,12 @@ public:
 	ABasicProjectile();
 	
 private:
+	void BeginPlay() override;
+	void EndPlay(EEndPlayReason::Type endPlayReason) override;
+
+	void VSetVelocity(FVector velocity) override;
 	virtual void VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit) override;
+	void UpdatePredictDecal();
 
 	UPROPERTY()
 	UStaticMeshComponent* _staticMeshComp;
@@ -29,5 +34,8 @@ private:
 	TSubclassOf<AActor> _groundEffectActorClass;
 
 	UPROPERTY(EditDefaultsonly)
-	TSubclassOf<AActor> _decalActorClass;
+	TSubclassOf<AActor> _predictDecalActorClass;
+
+	UPROPERTY()
+	AActor* _predictDecalActorIns;
 };

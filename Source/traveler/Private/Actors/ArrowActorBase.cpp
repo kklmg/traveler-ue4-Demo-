@@ -165,7 +165,8 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	{
 		FActorSpawnParameters spawnParams;
 		FQuat quat = FQuat::FindBetweenVectors(FVector::UpVector, Hit.Normal);
-		GetWorld()->SpawnActor<AActor>(_decalActorClass, Hit.ImpactPoint, quat.Rotator(), spawnParams);
+		AActor* decalActor = GetWorld()->SpawnActor<AActor>(_decalActorClass, Hit.ImpactPoint, quat.Rotator(), spawnParams);
+		decalActor->AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform);
 	}
 
 	//Todo

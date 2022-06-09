@@ -134,6 +134,7 @@ void AProjectileActorBase::VReset()
 
 void AProjectileActorBase::FellOutOfWorld(const UDamageType& damageType)
 {
+	Super::FellOutOfWorld(damageType);
 	VDeactivate();
 }
 
