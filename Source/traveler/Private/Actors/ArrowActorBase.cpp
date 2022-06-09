@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Damage/DamageHandlerInterface.h"
 #include "GameSystem/MyGameplayStatics.h"
+#include "Data/TagNames.h"
 
 
 AArrowActorBase::AArrowActorBase()
@@ -159,7 +160,8 @@ void AArrowActorBase::VOnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 		OtherComponent->AddImpulseAtLocation(_projectileMovementComp->Velocity, Hit.ImpactPoint);
 	}
 
-	if(_decalActorClass)
+	if(_decalActorClass && OtherActor && 
+		(OtherActor->ActorHasTag(NSTagName::Ground) || OtherActor->ActorHasTag(NSTagName::Wall)))
 	{
 		FActorSpawnParameters spawnParams;
 		FQuat quat = FQuat::FindBetweenVectors(FVector::UpVector, Hit.Normal);

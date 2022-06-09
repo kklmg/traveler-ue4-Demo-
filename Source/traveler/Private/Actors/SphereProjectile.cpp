@@ -95,7 +95,7 @@ void ASphereProjectile::VOnOverlapBegin(UPrimitiveComponent* OverlappedComponent
 		UMyGameplayStatics::CauseDamage(OtherActor, _damageData, OtherActor->GetActorLocation(), this, GetInstigator());
 	}
 	
-	if (OtherActor->Tags.Contains(NSTagName::Ground) && _groundEffectActorClass)
+	if (OtherActor && _groundEffectActorClass && (OtherActor->Tags.Contains(NSTagName::Ground) || OtherActor->Tags.Contains(NSTagName::Wall)))
 	{
 		FActorSpawnParameters spawnParams;
 		spawnParams.Owner = this;

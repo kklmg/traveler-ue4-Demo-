@@ -12,4 +12,5 @@ namespace NSTagName
 {
 	DECLARE_CONST_FNAME(Player)
 	DECLARE_CONST_FNAME(Ground)
+	DECLARE_CONST_FNAME(Wall)
 }
