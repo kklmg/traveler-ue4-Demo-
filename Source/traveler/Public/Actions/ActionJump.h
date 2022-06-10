@@ -19,7 +19,7 @@ public:
 	virtual bool VCanExecute() override;
 	virtual void VOnExecute() override;
 	virtual void VOnTick(float deltaTime) override;
-
+	virtual void VOnDead() override;
 private:
 
 	UPROPERTY(EditDefaultsOnly)

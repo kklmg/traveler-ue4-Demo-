@@ -19,11 +19,16 @@ UActionJump::UActionJump()
 bool UActionJump::VCanExecute()
 {
 	if (!Super::VCanExecute()) return false;
-	return GetActionComp()->IsActionAlive(EActionType::EACT_Dodge) == false;
+
+	auto movementMode = GetActionOwner()->GetCharacterMovement()->MovementMode;
+	return (movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking) &&
+	  GetActionComp()->IsActionAlive(EActionType::EACT_Dodge) == false;
 }
 
 void UActionJump::VOnExecute()
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("execute jump!"));
+
 	Super::VOnExecute();
 	if (GetAnimationViewModel())
 	{
@@ -38,6 +43,12 @@ void UActionJump::VOnTick(float deltaTime)
 {
 	Super::VOnTick(deltaTime);
 
+	auto movementMode = GetActionOwner()->GetCharacterMovement()->MovementMode;
+	if (movementMode != EMovementMode::MOVE_Walking && movementMode != EMovementMode::MOVE_Walking)
+	{
+		SetProcessAborted();
+	}
+
 	if (GetElapsedTime() > _delayTime)
 	{
 		GetActionOwner()->Jump();
@@ -49,4 +60,15 @@ void UActionJump::VOnTick(float deltaTime)
 
 		SetProcessSucceed();
 	}
+}
+
+void UActionJump::VOnDead() 
+{
+	Super::VOnDead();
+
+	if (GetAnimationViewModel())
+	{
+		GetAnimationViewModel()->SetBool(NSAnimationDataKey::bWantToJump, false);
+	}
+
 }
