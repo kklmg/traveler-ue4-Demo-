@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actions/ActionBase.h"
+#include "Actions/ActionWithAnimMontage.h"
 #include "ActionDodge.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRAVELER_API UActionDodge : public UActionBase
+class TRAVELER_API UActionDodge : public UActionWithAnimMontage
 {
 	GENERATED_BODY()
 public:
@@ -20,15 +20,7 @@ public:
 	virtual void VOnExecute() override;
 	virtual void VOnTick(float deltaTime) override;
 
-	UFUNCTION()
-	void OnAnimMontageFinished(UAnimMontage* montage, bool interrupted);
 private:
-
-	UPROPERTY(EditDefaultsOnly, Category = speed)
-	float _dodgeSpeed;
-
-	UPROPERTY(EditDefaultsOnly, Category = animation)
-	UAnimMontage* _aniMontage;
-
-	FVector _shiftDirection;
+	UPROPERTY(EditDefaultsOnly, Category = Force)
+	float _dodgeForce;
 };

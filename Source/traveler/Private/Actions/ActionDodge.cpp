@@ -14,8 +14,9 @@ UActionDodge::UActionDodge()
 {
 	_processName = NSNameAction::dodge;
 	_actionType = EActionType::EACT_Dodge;
+	_animMontageType = EAnimMontageKey::EAnimMontage_Dodge;
 	_bIsInstantProcess = false;
-	_dodgeSpeed = 250;
+	_dodgeForce = 2000000;
 
 	GetCostData()->AddCost(EStatusType::EStatus_Stamina,20);
 }
@@ -23,7 +24,8 @@ UActionDodge::UActionDodge()
 
 bool UActionDodge::VCanExecute()
 {
-	if (!Super::VCanExecute())return false;
+	if (!Super::VCanExecute()) return false;
+
 	EMovementMode movementMode = GetActionOwner()->GetCharacterMovement()->MovementMode;
 	bool bIsWalking = (movementMode == EMovementMode::MOVE_Walking || movementMode == EMovementMode::MOVE_NavWalking);
 
@@ -33,38 +35,15 @@ bool UActionDodge::VCanExecute()
 void UActionDodge::VOnExecute()
 {
 	Super::VOnExecute();
-	UAnimInstance* animInstance = GetActionOwner()->GetMesh()->GetAnimInstance();
 
 	GetActionComp()->AbortAction(EActionType::EACT_Aim);
 	GetActionComp()->AbortAction(EActionType::EACT_Fire);
-
-	if (_aniMontage && animInstance)
-	{
-		//bind 
-		animInstance->OnMontageBlendingOut.AddDynamic(this, &UActionDodge::OnAnimMontageFinished);
-
-		//play montage
-		GetActionOwner()->PlayAnimMontage(_aniMontage);
-	}
-
-	_shiftDirection = GetActionOwner()->GetVelocity().IsNearlyZero() ?
-		GetActionOwner()->GetActorForwardVector() : GetActionOwner()->GetVelocity().GetSafeNormal();
-
-	GetActionOwner()->SetActorRotation(_shiftDirection.Rotation());
 }
 
 void UActionDodge::VOnTick(float deltaTime)
 {
 	Super::VOnTick(deltaTime);
 
-	GetActionOwner()->AddMovementInput(_shiftDirection, _dodgeSpeed * deltaTime);
-}
-
-
-void UActionDodge::OnAnimMontageFinished(UAnimMontage* montage,bool interrupted)
-{
-	if(montage != _aniMontage)return;
-
-	GetActionOwner()->GetMesh()->GetAnimInstance()->OnMontageBlendingOut.RemoveDynamic(this, &UActionDodge::OnAnimMontageFinished);
-	SetProcessSucceed();
+	GetActionOwner()->GetCharacterMovement()->AddForce(GetActionOwner()->GetActorForwardVector() * _dodgeForce);
+	//GetActionOwner()->GetCharacterMovement()->Mass
 }

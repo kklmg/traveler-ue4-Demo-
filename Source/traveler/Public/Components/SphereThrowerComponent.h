@@ -4,68 +4,44 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Data/ThrowerData.h"
-#include "Interface/ThrowableInterface.h"
 #include "Interface/ThrowerInterface.h"
-#include "ProjectileThrowerComponent.generated.h"
+#include "Data/ThrowerData.h"
+#include "SphereThrowerComponent.generated.h"
 
-class IThrowerDataProviderInterface;
-
-class AProjectileActorBase;
-class ASphereProjectile;
-class UObjectPoolBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class TRAVELER_API UProjectileThrowerComponent : public UActorComponent , public IThrowerInterface
+class TRAVELER_API USphereThrowerComponent : public UActorComponent, public IThrowerInterface
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UProjectileThrowerComponent();
+	USphereThrowerComponent();
 
 protected:
-	virtual void InitializeComponent() override;
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-public:
+public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-public:
 	virtual void VSetSpawningLocation(FVector location) override;
 	virtual void VSetSpawningActorScale(float scale) override;
-	virtual void VSetThrowingDirection(FVector direction)override;
+	virtual void VSetThrowingDirection(FVector direction) override;
 	virtual void VSetSpeed(float speed) override;
 	virtual void VSetLife(float life) override;
 	virtual void VStartThrowing() override;
 	virtual void VStopThrowing() override;
 
-protected:
-	UFUNCTION()
-	void SpawnProjectile();
-
-	UFUNCTION()
-	bool isSpawnable();
-
-	//todo deprecated
+private:
 	void SphereTracing();
 
-private:
 	UPROPERTY(EditDefaultsOnly)
-	bool _bSpawnProjectileOnBeginPlay;
+	float _tracingInterval;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AProjectileActorBase> _spawningActorClass;
-
-	UPROPERTY(EditDefaultsOnly)
-	int32 _poolSize;
-
-	UPROPERTY()
-	UObjectPoolBase* _pool;
-
-	FTimerHandle _timerHandle;
 	FThrowerData _throwerData;
+	float _elapsedTime;
+	float _elapsedTimeFromLastTracing;
+	bool _bIsThrowing;
 };

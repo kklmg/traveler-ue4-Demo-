@@ -4,10 +4,8 @@
 #include "Components/ProjectileThrowerComponent.h"
 #include "GameFramework/Actor.h"
 #include "TimerManager.h"
-#include "Interface/ThrowableInterface.h"
 #include "Interface/ThrowerDataProviderInterface.h"
 #include "Actors/SphereProjectile.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "GameSystem/ObjectPoolBase.h"
 #include "GameSystem/MyGameplayStatics.h"
 
@@ -20,7 +18,6 @@ UProjectileThrowerComponent::UProjectileThrowerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	_elapsedTime = 0.0f;
 	_poolSize = 256;
 }
 
@@ -64,11 +61,6 @@ void UProjectileThrowerComponent::EndPlay(const EEndPlayReason::Type EndPlayReas
 void UProjectileThrowerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-	_elapsedTime += DeltaTime;
-
-
 }
 
 void UProjectileThrowerComponent::VSetSpawningLocation(FVector location)
@@ -137,36 +129,6 @@ void UProjectileThrowerComponent::SpawnProjectile()
 bool UProjectileThrowerComponent::isSpawnable()
 {
 	return _pool ? _pool->IsSpawnable() : false;
-}
-
-void UProjectileThrowerComponent::SphereTracing()
-{
-	float traceDistance = FMath::Clamp(_throwerData.Speed * _elapsedTime, 0.0f, _throwerData.Speed * _throwerData.Life);
-
-	float sphereRadius = _throwerData.ScaleCurve ? _throwerData.ScaleCurve->GetFloatValue(_elapsedTime / _throwerData.Life) : 10.0f;
-
-	FVector traceStart = GetOwner()->GetActorLocation();
-	FVector traceDir = GetOwner()->GetActorQuat().Vector();
-	FVector traceEnd = traceStart + traceDir * traceDistance;
-
-	TArray<AActor*> ignoredActors;
-	ignoredActors.Add(GetOwner());
-
-	TArray<FHitResult> hitResults;
-
-	UKismetSystemLibrary::SphereTraceMulti(GetWorld(), traceStart, traceEnd, sphereRadius,
-		ETraceTypeQuery::TraceTypeQuery1, false, ignoredActors, EDrawDebugTrace::ForOneFrame, hitResults, true);
-
-	for (FHitResult hitRes : hitResults)
-	{
-		if (hitRes.Actor == nullptr)
-		{
-			continue;
-		}
-		FDamageEvent damageEvent;
-		APawn* instigator = GetOwner()->GetInstigator();
-		hitRes.Actor->TakeDamage(_throwerData.Damage, damageEvent, instigator ? instigator->GetController() : nullptr, instigator);
-	}
 }
 
 
