@@ -38,12 +38,18 @@ void UActionDodge::VOnExecute()
 
 	GetActionComp()->AbortAction(EActionType::EACT_Aim);
 	GetActionComp()->AbortAction(EActionType::EACT_Fire);
+
+	FVector normalizedVelocity = GetActionOwner()->GetCharacterMovement()->Velocity.GetSafeNormal();
+	normalizedVelocity.Z = 0;
+	_shiftDirection = normalizedVelocity.IsNearlyZero() ? GetActionOwner()->GetActorForwardVector() : normalizedVelocity;
+
+	GetActionOwner()->SetActorRotation(normalizedVelocity.Rotation());
 }
 
 void UActionDodge::VOnTick(float deltaTime)
 {
 	Super::VOnTick(deltaTime);
 
-	GetActionOwner()->GetCharacterMovement()->AddForce(GetActionOwner()->GetActorForwardVector() * _dodgeForce);
+	GetActionOwner()->GetCharacterMovement()->AddForce(_shiftDirection * _dodgeForce);
 	//GetActionOwner()->GetCharacterMovement()->Mass
 }

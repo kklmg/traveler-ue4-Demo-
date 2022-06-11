@@ -23,4 +23,6 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = Force)
 	float _dodgeForce;
+
+	FVector _shiftDirection;
 };
