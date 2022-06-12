@@ -43,7 +43,7 @@ void UActionDodge::VOnExecute()
 	normalizedVelocity.Z = 0;
 	_shiftDirection = normalizedVelocity.IsNearlyZero() ? GetActionOwner()->GetActorForwardVector() : normalizedVelocity;
 
-	GetActionOwner()->SetActorRotation(normalizedVelocity.Rotation());
+	GetActionOwner()->SetActorRotation(_shiftDirection.Rotation());
 }
 
 void UActionDodge::VOnTick(float deltaTime)
