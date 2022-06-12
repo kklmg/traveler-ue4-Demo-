@@ -10,57 +10,81 @@ UObjectPoolBase::UObjectPoolBase()
 }
 
 
-UObject* UObjectPoolBase::SpawnObject()
+UObject* UObjectPoolBase::SpawnUObject()
 {
-	check(_spawnObjectClass);
+	check(_ObjectClassToSpawn);
+	check(Cast<IPoolableInterface>(_ObjectClassToSpawn.GetDefaultObject()));
 
 	//recycle
 	if (_emptyIndicies.Num() > 0)
 	{
 		int32 emptySlotID = _emptyIndicies.Pop();
+		check(_pool[emptySlotID])
 		_pool[emptySlotID]->VActivate();
-
+		
 		return _pool[emptySlotID].GetObject();
 	}
 
 	//create new
 	else if (_pool.Num() < _poolSize)
 	{
-		UObject* newObject;
-		if (_bIsActor)
-		{
-			UWorld* world = GetWorld();
-			if (world)
-			{
-				newObject = GetWorld()->SpawnActor(_spawnObjectClass);
-			}
-			else
-			{
-				return nullptr;
-			}
-		}
-		else
-		{
-			newObject = NewObject<UObject>(this, _spawnObjectClass);
-		}
-
+		UObject* newObject = NewObject<UObject>(this, _ObjectClassToSpawn);
+		check(newObject);
 		IPoolableInterface* poolObjectInterface = Cast<IPoolableInterface>(newObject);
-		if (newObject && poolObjectInterface)
-		{
-			poolObjectInterface->VSetPoolId(_pool.Num());
+		check(poolObjectInterface);
+		check(poolObjectInterface->VGetObjectInactiveDelegate());
 
-			check(poolObjectInterface->VGetObjectInactiveDelegate());
-			poolObjectInterface->VGetObjectInactiveDelegate()->BindUObject(this, &UObjectPoolBase::OnObjectInactive);
-			poolObjectInterface->VActivate();
-			_pool.Add(newObject);
+		poolObjectInterface->VSetPoolId(_pool.Num());
+		poolObjectInterface->VGetObjectInactiveDelegate()->BindUObject(this, &UObjectPoolBase::OnObjectInactive);
+		poolObjectInterface->VActivate();
 
-			return newObject;
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("Failed to create uobject instance!"))
-				return nullptr;
-		}
+		_pool.Add(newObject);
+
+		return newObject;
+	}
+
+	//todo (case: no empty slot in pool)
+	else
+	{	
+		return nullptr;
+	}
+}
+
+AActor* UObjectPoolBase::SpawnActor()
+{
+	check(_ObjectClassToSpawn);
+	check(Cast<AActor>(_ObjectClassToSpawn.GetDefaultObject()))
+	check(Cast<IPoolableInterface>(_ObjectClassToSpawn.GetDefaultObject()));
+
+	if (GetWorld() == false) return nullptr;
+
+	//recycle
+	if (_emptyIndicies.Num() > 0)
+	{
+		int32 emptySlotID = _emptyIndicies.Pop();
+		check(_pool[emptySlotID])
+		_pool[emptySlotID]->VActivate();
+
+		AActor* recycledActor = Cast<AActor>(_pool[emptySlotID].GetObject());
+
+		return recycledActor;
+	}
+
+	//create new
+	else if (_pool.Num() < _poolSize)
+	{
+		AActor* newActor = GetWorld()->SpawnActor(_ObjectClassToSpawn);
+		check(newActor);
+		IPoolableInterface* poolObjectInterface = Cast<IPoolableInterface>(newActor);
+		check(poolObjectInterface);
+		check(poolObjectInterface->VGetObjectInactiveDelegate());
+
+		poolObjectInterface->VSetPoolId(_pool.Num());
+		poolObjectInterface->VGetObjectInactiveDelegate()->BindUObject(this, &UObjectPoolBase::OnObjectInactive);
+		poolObjectInterface->VActivate();
+		_pool.Add(newActor);
+
+		return newActor;
 	}
 	else
 	{	//todo
@@ -77,7 +101,7 @@ void UObjectPoolBase::Initialize(TSubclassOf<UObject> objectClass, int32 poolSiz
 	if (poolableInterface)
 	{
 		_bIsActor = actor != nullptr;
-		_spawnObjectClass = objectClass;
+		_ObjectClassToSpawn = objectClass;
 	}
 	else
 	{
@@ -96,7 +120,7 @@ void UObjectPoolBase::DrawDebugMessage()
 
 bool UObjectPoolBase::IsSpawnable()
 {
-	if (!_spawnObjectClass) return false;
+	if (!_ObjectClassToSpawn) return false;
 	return _pool.Num() < _poolSize || _emptyIndicies.Num() > 0;
 }
 
@@ -113,5 +137,3 @@ void UObjectPoolBase::OnObjectInactive(int32 index)
 {
 	_emptyIndicies.Add(index);
 }
-
-

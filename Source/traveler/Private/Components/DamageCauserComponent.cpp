@@ -43,6 +43,8 @@ void UDamageCauserComponent::CauseDamageTo(AActor* damagedActor)
 
 void UDamageCauserComponent::CauseContinousDamageTo(AActor* damagedActor)
 {
+	if (!damagedActor) return;
+
 	UMyGameplayStatics::CauseDamage(damagedActor, _damageData, damagedActor->GetActorLocation(), GetOwner(), nullptr);
 
 	FTimerHandle timerHandle;

@@ -16,7 +16,7 @@ UQuiverComponent::UQuiverComponent()
 	bWantsInitializeComponent = true;
 
 	// ...
-	_poolSize = 256;
+	_poolSize = 500;
 }
 
 
@@ -67,7 +67,7 @@ bool UQuiverComponent::SpawnArrows(int count, APawn* instigator, TArray<AArrowAc
 	int32 num = outArray.Num();
 	for (int i = 0; i < count; ++i)
 	{
-		AArrowActorBase* arrowIns = _arrowPool->SpawnObject<AArrowActorBase>();
+		AArrowActorBase* arrowIns = Cast<AArrowActorBase>(_arrowPool->SpawnActor());
 		if (arrowIns)
 		{
 			arrowIns->SetOwner(GetOwner());

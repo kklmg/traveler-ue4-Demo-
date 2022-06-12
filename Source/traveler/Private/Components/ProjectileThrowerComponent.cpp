@@ -110,7 +110,7 @@ void UProjectileThrowerComponent::SpawnProjectile()
 	check(_pool);
 
 	if (isSpawnable() == false) return;
-	ASphereProjectile* actor = _pool->SpawnObject<ASphereProjectile>();
+	ASphereProjectile* actor = Cast<ASphereProjectile>(_pool->SpawnActor());
 
 	if (actor)
 	{

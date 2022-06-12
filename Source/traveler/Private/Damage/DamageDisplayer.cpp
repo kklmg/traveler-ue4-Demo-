@@ -7,7 +7,7 @@
 UDamageDisplayer::UDamageDisplayer()
 {
 	_spawnInCircleRadius = 60.0f;
-	_poolSize = 510;
+	_poolSize = 1024;
 
 	_damageDisplaySetting.Add(EElementalType::EElemental_Fire, FColor::Red);
 	_damageDisplaySetting.Add(EElementalType::EElemental_Electricity, FColor::Yellow);
@@ -27,7 +27,7 @@ void UDamageDisplayer::Initialize()
 
 void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 {
-	if(!_damageWidgetClass)
+	if (!_damageWidgetClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No DamageWidgetClass!"));
 		return;
@@ -47,11 +47,10 @@ void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 	FDamageWidgetData outDamageWidgetData;
 	GetDamageWidgetData(damageDisplayData, offset, outDamageWidgetData);
 
-
 	//Spawn widget 
-	UDamageWidget* newDamageWidgetIns = _widgetPool->SpawnObject<UDamageWidget>();
+	UDamageWidget* newDamageWidgetIns = Cast<UDamageWidget>(_widgetPool->SpawnUObject());
 
-	if(!newDamageWidgetIns)
+	if (!newDamageWidgetIns)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("spawn Widget instance failed"));
 		return;
@@ -61,7 +60,7 @@ void UDamageDisplayer::ShowDamage(FDamageDisplayData damageDisplayData)
 
 void UDamageDisplayer::Tick(float DeltaTime)
 {
-	/*if (_widgetPool) 
+	/*if (_widgetPool)
 	{
 		_widgetPool->DrawDebugMessage();
 	}*/

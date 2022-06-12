@@ -17,10 +17,8 @@ class TRAVELER_API UObjectPoolBase : public UObject
 public:
 	UObjectPoolBase();
 
-	UObject* SpawnObject();
-
-	template<typename TData>
-	TData* SpawnObject();
+	UObject* SpawnUObject();
+	AActor* SpawnActor();
 
 	void Initialize(TSubclassOf<UObject> objectClass, int32 poolSize);
 	bool IsSpawnable();
@@ -33,8 +31,9 @@ protected:
 	void OnObjectInactive(int32 index);
 
 private:
+
 	UPROPERTY()
-	TSubclassOf<UObject> _spawnObjectClass;
+	TSubclassOf<UObject> _ObjectClassToSpawn;
 
 	UPROPERTY()
 	TArray<TScriptInterface<IPoolableInterface>> _pool;
@@ -44,10 +43,3 @@ private:
 	int32 _poolSize;
 	bool _bIsActor;
 };
-
-
-template<typename TData>
-TData* UObjectPoolBase::SpawnObject()
-{
-	return Cast<TData>(SpawnObject());
-}
