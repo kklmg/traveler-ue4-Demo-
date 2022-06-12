@@ -79,9 +79,9 @@ void UBasicStatus::ApplyValueChange(float deltaValue, bool bResetRecoveryTimer)
 	}
 }
 
-void UBasicStatus::VOnLevelUp(int32 level)
+void UBasicStatus::VOnLevelChanged(int32 level)
 {
-	Super::VOnLevelUp(level);
+	Super::VOnLevelChanged(level);
 
 	float cacheValue = _remainingValue;
 	_remainingValue = GetFinalValue();

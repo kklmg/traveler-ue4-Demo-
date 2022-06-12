@@ -26,9 +26,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	float GetPercentage();
 
-	
-protected:
-	virtual void VOnLevelUp(int32 level);
+	virtual void VOnLevelChanged(int32 level) override;
 private:
 
 	UPROPERTY(EditDefaultsOnly)

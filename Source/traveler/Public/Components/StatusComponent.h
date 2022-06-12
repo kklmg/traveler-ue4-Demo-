@@ -41,6 +41,8 @@ public:
 	int32 GetLevelValue();
 	UFUNCTION(BlueprintCallable)
 	ULevelStatus* GetLevelStatusIns();
+	UFUNCTION(BlueprintCallable)
+	void SetLevel(int32 level);
 
 	UFUNCTION(BlueprintCallable)
 	float GetPrimaryValue(EStatusType statusType);

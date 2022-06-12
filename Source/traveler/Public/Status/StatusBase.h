@@ -41,8 +41,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	FText GetText();
 
+	virtual void VOnLevelChanged(int32 level);
+
 protected:
-	virtual void VOnLevelUp(int32 level);
 	void ComputeFinalValue();
 
 private:

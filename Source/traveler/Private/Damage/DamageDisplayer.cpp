@@ -7,7 +7,7 @@
 UDamageDisplayer::UDamageDisplayer()
 {
 	_spawnInCircleRadius = 60.0f;
-	_poolSize = 256;
+	_poolSize = 510;
 
 	_damageDisplaySetting.Add(EElementalType::EElemental_Fire, FColor::Red);
 	_damageDisplaySetting.Add(EElementalType::EElemental_Electricity, FColor::Yellow);

@@ -16,7 +16,7 @@ void UStatusBase::VInitialize(const FStatusTableRow& tableRow, int32 level)
 	_basicValue = _primaryValue + (_growth * (level - 1));
 	_finalValue = _basicValue;
 
-	VOnLevelUp(level);
+	VOnLevelChanged(level);
 }
 
 float UStatusBase::GetPrimaryValue()
@@ -44,7 +44,7 @@ FText UStatusBase::GetText()
 	return _statusText;
 }
 
-void UStatusBase::VOnLevelUp(int32 level)
+void UStatusBase::VOnLevelChanged(int32 level)
 {
 	float cacheValue = _basicValue;
 	_basicValue = _primaryValue + (_growth * level);
@@ -54,7 +54,6 @@ void UStatusBase::VOnLevelUp(int32 level)
 
 void UStatusBase::ComputeFinalValue()
 {
-	
 	float cacheValue = _finalValue;
 
 	//To do

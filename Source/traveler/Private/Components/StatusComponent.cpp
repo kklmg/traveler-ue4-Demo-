@@ -92,6 +92,19 @@ ULevelStatus* UStatusComponent::GetLevelStatusIns()
 	return _levelStatusIns;
 }
 
+void UStatusComponent::SetLevel(int32 level)
+{
+	level = FMath::Clamp(level, 1, 100);
+	check(_levelStatusIns);
+	_levelStatusIns->SetLevel(level);
+
+	for (auto status : _statusMap)
+	{
+		status.Value->VOnLevelChanged(level);
+	}
+
+}
+
 float UStatusComponent::GetPrimaryValue(EStatusType statusType)
 {
 	UStatusBase* statusBaseIns = GetStatusIns(statusType);
@@ -153,7 +166,6 @@ bool UStatusComponent::TryApplyCost(UCostData* costData)
 
 void UStatusComponent::InitializeStatusData()
 {
-
 	//Initialize level status
 	_levelStatusIns = NewObject<ULevelStatus>(this);
 	_levelStatusIns->SetLevel(_defaultLevel);
