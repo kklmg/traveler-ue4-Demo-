@@ -134,8 +134,11 @@ void AProjectileActorBase::VReset()
 
 void AProjectileActorBase::FellOutOfWorld(const UDamageType& damageType)
 {
-	Super::FellOutOfWorld(damageType);
-	VDeactivate();
+	// Only authority or non-networked actors should be destroyed, otherwise misprediction can destroy something the server is intending to keep alive.
+	if (HasAuthority() || GetLocalRole() == ROLE_None)
+	{
+		VDeactivate();
+	}
 }
 
 int AProjectileActorBase::VGetPoolId()
