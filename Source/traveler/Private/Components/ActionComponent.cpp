@@ -25,6 +25,8 @@ UActionComponent::UActionComponent()
 	// ...
 	bWantsInitializeComponent = true;
 	_bActorAlive = true;
+
+	_basicActionPresetGroupClass = UActionPresetGroup::StaticClass();
 }
 
 
@@ -53,13 +55,11 @@ void UActionComponent::BeginPlay()
 		_eventBrokerComp->SubscribeEvent(NSEventData::ActorLifeStateChanged::Name, this, &UActionComponent::OnReceiveEvent_LifeStateChanged);
 	}
 
-	if (_defaultActionPresetGroupClass)
+	if (_basicActionPresetGroupClass)
 	{
-		UActionPresetGroup* defaultActionPresetGroup = NewObject<UActionPresetGroup>(this, _defaultActionPresetGroupClass);
-		check(defaultActionPresetGroup)
-			defaultActionPresetGroup->Init(_character, this, _character->GetCharacterMovement()->MovementMode);
-		_mapActionPresetGroup.Add(EActionPrestGroup::EACTPresetGroup_BasicActions, defaultActionPresetGroup);
-		_curActionPrestGroupType = EActionPrestGroup::EACTPresetGroup_BasicActions;
+		_basicActionPresetGroupIns = NewObject<UActionPresetGroup>(this, _basicActionPresetGroupClass);
+		check(_basicActionPresetGroupIns)
+		_basicActionPresetGroupIns->Init(_character, this, _character->GetCharacterMovement()->MovementMode);
 	}
 
 	//
@@ -118,8 +118,7 @@ UActionBlackBoard* UActionComponent::GetActionBlackBoard()
 
 UActionPresetGroup* UActionComponent::GetCurActionPresetGroup()
 {
-	return _mapActionPresetGroup.Contains(_curActionPrestGroupType) ?
-		_mapActionPresetGroup[_curActionPrestGroupType] : nullptr;
+	return _bActionPresetGroupOverrided ? _overridedActionPresetGroupIns : _basicActionPresetGroupIns;
 }
 
 void UActionComponent::AbortAllActions()
@@ -130,40 +129,26 @@ void UActionComponent::AbortAllActions()
 	}
 }
 
-void UActionComponent::RegisterActionPresetGroup(EActionPrestGroup presetGroupType, TSubclassOf<UActionPresetGroup> actionPresetGroupClass)
+bool UActionComponent::OverrideActionPresetGroup(TSubclassOf<UActionPresetGroup> actionPresetGroupClass)
 {
-	if (!actionPresetGroupClass) return;
-
-	if (_curActionPrestGroupType == presetGroupType && GetCurActionPresetGroup())
-	{
-		GetCurActionPresetGroup()->AbortAllActions();
-	}
+	if (_bActionPresetGroupOverrided == true || actionPresetGroupClass == nullptr) return false;
 
 	//make instance
-	UActionPresetGroup* newActionPresetGroup = NewObject<UActionPresetGroup>(this, actionPresetGroupClass);
-	newActionPresetGroup->Init(_character, this, _character->GetCharacterMovement()->MovementMode);
+	_overridedActionPresetGroupIns = NewObject<UActionPresetGroup>(this, actionPresetGroupClass);
+	_overridedActionPresetGroupIns->Init(_character, this, _character->GetCharacterMovement()->MovementMode);
 
-	if (_mapActionPresetGroup.Contains(presetGroupType))
-	{
-		_mapActionPresetGroup[presetGroupType] = newActionPresetGroup;
-	}
-	else
-	{
-		_mapActionPresetGroup.Add(presetGroupType, newActionPresetGroup);
-	}
+	_basicActionPresetGroupIns->AbortAllActions();
+
+	_bActionPresetGroupOverrided = true;
+	return true;
 }
 
-void UActionComponent::SwitchActionPresetGroup(EActionPrestGroup presetGroupType)
+void UActionComponent::ClearOverridedActionPresetGroup()
 {
-	if (_curActionPrestGroupType == presetGroupType) return;
-	if (_mapActionPresetGroup.Contains(presetGroupType))
+	if (_bActionPresetGroupOverrided)
 	{
-		if (GetCurActionPresetGroup())
-		{
-			GetCurActionPresetGroup()->AbortAllActions();
-		}
-
-		_curActionPrestGroupType = presetGroupType;
+		_overridedActionPresetGroupIns->AbortAllActions();
+		_bActionPresetGroupOverrided = false;
 	}
 }
 

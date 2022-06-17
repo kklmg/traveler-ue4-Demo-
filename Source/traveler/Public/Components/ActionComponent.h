@@ -40,8 +40,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void AbortAllActions();
-	void RegisterActionPresetGroup(EActionPrestGroup presetGroupType,TSubclassOf<UActionPresetGroup> actionPresetGroupClass);
-	void SwitchActionPresetGroup(EActionPrestGroup presetGroupType);
+	bool OverrideActionPresetGroup(TSubclassOf<UActionPresetGroup> actionPresetGroupClass);
+	void ClearOverridedActionPresetGroup();
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -72,15 +72,16 @@ private:
 	UActionBlackBoard* _actionBlackBoard;
 
 	UPROPERTY(EditDefaultsOnly, Category = ActionPresetGroup)
-	TSubclassOf<UActionPresetGroup> _defaultActionPresetGroupClass;
+	TSubclassOf<UActionPresetGroup> _basicActionPresetGroupClass;
 
 	UPROPERTY()
-	TMap<EActionPrestGroup, UActionPresetGroup*> _mapActionPresetGroup;
+	UActionPresetGroup* _basicActionPresetGroupIns;
 
 	UPROPERTY()
-	EActionPrestGroup _curActionPrestGroupType;
+	UActionPresetGroup* _overridedActionPresetGroupIns;
 
 	bool _bActorAlive;
+	bool _bActionPresetGroupOverrided;
 };
 
 

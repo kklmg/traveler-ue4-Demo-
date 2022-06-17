@@ -77,12 +77,12 @@ void UWeaponComponent::EquipWeapon(AWeaponBase* newWeapon)
 		{
 			if (_weaponIns)
 			{
-				_actionComp->RegisterActionPresetGroup(EActionPrestGroup::EACTPresetGroup_WeaponActions,_weaponIns->GetActionPresetGroupClass());
-				_actionComp->SwitchActionPresetGroup(EActionPrestGroup::EACTPresetGroup_WeaponActions);
+				_actionComp->ClearOverridedActionPresetGroup();
+				_actionComp->OverrideActionPresetGroup(_weaponIns->GetActionPresetGroupClass());
 			}
 			else
 			{
-				_actionComp->SwitchActionPresetGroup(EActionPrestGroup::EACTPresetGroup_BasicActions);
+				_actionComp->ClearOverridedActionPresetGroup();
 			}
 		}
 
