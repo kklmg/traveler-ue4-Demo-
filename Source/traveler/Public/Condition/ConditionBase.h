@@ -26,8 +26,8 @@ public:
 	void Subscribe(TData* inUserObj, void (TData::* InFunc)(bool));
 
 protected:
-	virtual void VTMInitialize();
-	virtual bool VTMValidate();
+	virtual void VOnInitialized();
+	virtual bool VOnValidated();
 
 private:
 	bool _cachedResult;

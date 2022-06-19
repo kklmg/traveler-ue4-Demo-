@@ -5,11 +5,11 @@
 
 void UConditionBase::Initialize()
 {
-	VTMInitialize();
+	VOnInitialized();
 	_cachedResult = Validate();
 }
 
-void UConditionBase::VTMInitialize()
+void UConditionBase::VOnInitialized()
 {
 }
 
@@ -20,12 +20,12 @@ bool UConditionBase::GetResult()
 
 bool UConditionBase::Validate()
 {
-	_cachedResult = VTMValidate();
+	_cachedResult = VOnValidated();
 	OnValidatedDelegate.Broadcast(_cachedResult);
 	return _cachedResult;
 }
 
-bool UConditionBase::VTMValidate()
+bool UConditionBase::VOnValidated()
 {
 	return true;
 }

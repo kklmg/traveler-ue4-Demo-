@@ -11,7 +11,7 @@ void UACon_StatusBase::VSetActor(AActor* actor)
 
 bool UACon_StatusBase::VTMValidate()
 {
-	if (!Super::VTMValidate()) return false;
+	if (!Super::VOnValidated()) return false;
 
 	return _statusComp != nullptr;
 }

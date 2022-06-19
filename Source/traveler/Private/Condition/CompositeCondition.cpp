@@ -5,7 +5,7 @@
 
 bool UCompositeCondition::VTMValidate()
 {
-	if (!Super::VTMValidate()) return false;
+	if (!Super::VOnValidated()) return false;
 
 	for (UConditionBase* condition : _conditions)
 	{
@@ -19,7 +19,7 @@ bool UCompositeCondition::VTMValidate()
 
 void UCompositeCondition::VTMInitialize()
 {
-	Super::VTMInitialize();
+	Super::VOnInitialized();
 
 	for (auto conditionClass : _conditionClasses)
 	{
