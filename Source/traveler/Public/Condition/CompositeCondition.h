@@ -19,8 +19,8 @@ public:
 	void OnSubConditionChanged(bool result);
 
 protected:
-	void VTMInitialize() override;
-	virtual bool VTMValidate() override;
+	void VOnInitialized() override;
+	virtual bool VOnValidated() override;
 	
 
 private:

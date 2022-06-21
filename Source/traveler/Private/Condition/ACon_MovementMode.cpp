@@ -19,7 +19,7 @@ void UACon_MovementMode::SetValidateData(EMovementMode movementMode)
 	_movementMode = movementMode;
 }
 
-bool UACon_MovementMode::VTMValidate()
+bool UACon_MovementMode::VOnValidated()
 {
 	if (!Super::VOnValidated()) return false;
 	return _character ? _character->GetCharacterMovement()->MovementMode == _movementMode : false;

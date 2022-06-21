@@ -19,7 +19,7 @@ class TRAVELER_API UCompositeActorCondition : public UCompositeCondition
 public:
 	void SetActor(AActor* actor);
 protected:
-	void VTMInitialize() override;
+	void VOnInitialized() override;
 
 private:
 	UPROPERTY(EditDefaultsOnly)

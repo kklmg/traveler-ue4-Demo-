@@ -17,7 +17,7 @@ class TRAVELER_API UACon_IsStatusPointRemained : public UACon_StatusBase
 public:
 	virtual void VSetActor(AActor* actor) override;
 protected:
-	virtual bool VTMValidate() override;
+	virtual bool VOnValidated() override;
 
 	UFUNCTION()
 	void OnRemainingValueChanged(float prevValue,float newValue);

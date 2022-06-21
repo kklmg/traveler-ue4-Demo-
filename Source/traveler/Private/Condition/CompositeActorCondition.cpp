@@ -10,9 +10,9 @@ void UCompositeActorCondition::SetActor(AActor* actor)
 	_actor = actor;
 }
 
-void UCompositeActorCondition::VTMInitialize()
+void UCompositeActorCondition::VOnInitialized()
 {
-	Super::VTMInitialize();
+	Super::VOnInitialized();
 
 	for (auto conditionClass : _actorConditionClasses)
 	{

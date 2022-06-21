@@ -18,7 +18,7 @@ public:
 	virtual void VSetActor(AActor* actor);
 	void SetValidateData(EMovementMode movementMode);
 protected:
-	virtual bool VTMValidate() override;
+	virtual bool VOnValidated() override;
 
 	UFUNCTION()
 	void OnMovementModeChanged(ACharacter* character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);

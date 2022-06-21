@@ -17,7 +17,7 @@ public:
 	void SetDuration(float duration);
 	float GetRemainingTime();
 
-	virtual void VTMInitialize();
+	virtual void VOnInitialized();
 	virtual bool VCanExecute() override;
 	virtual void VOnExecute();
 	virtual void VOnTick(float deltaTime);

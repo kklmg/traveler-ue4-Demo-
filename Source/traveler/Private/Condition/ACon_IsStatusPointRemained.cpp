@@ -21,9 +21,9 @@ void UACon_IsStatusPointRemained::VSetActor(AActor* actor)
 
 }
 
-bool UACon_IsStatusPointRemained::VTMValidate()
+bool UACon_IsStatusPointRemained::VOnValidated()
 {
-	if (!Super::VTMValidate()) return false;
+	if (!Super::VOnValidated()) return false;
 	float value = _statusComp->GetRemainingValue(_statusType);
 	return value > 0.0f;
 }

@@ -3,7 +3,7 @@
 
 #include "Condition/CompositeCondition.h"
 
-bool UCompositeCondition::VTMValidate()
+bool UCompositeCondition::VOnValidated()
 {
 	if (!Super::VOnValidated()) return false;
 
@@ -17,7 +17,7 @@ bool UCompositeCondition::VTMValidate()
 }
 
 
-void UCompositeCondition::VTMInitialize()
+void UCompositeCondition::VOnInitialized()
 {
 	Super::VOnInitialized();
 

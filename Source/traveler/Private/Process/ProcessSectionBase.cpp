@@ -14,7 +14,7 @@ float UProcessSectionBase::GetRemainingTime()
 	return _remainingTime;
 }
 
-void UProcessSectionBase::VTMInitialize()
+void UProcessSectionBase::VOnInitialized()
 {
 	Super::VOnInit();
 	_remainingTime = _duration;

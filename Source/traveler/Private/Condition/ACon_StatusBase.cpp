@@ -9,7 +9,7 @@ void UACon_StatusBase::VSetActor(AActor* actor)
 	_statusComp = Cast<UStatusComponent>(actor->GetComponentByClass(UStatusComponent::StaticClass()));
 }
 
-bool UACon_StatusBase::VTMValidate()
+bool UACon_StatusBase::VOnValidated()
 {
 	if (!Super::VOnValidated()) return false;
 

@@ -19,7 +19,7 @@ class TRAVELER_API UACon_StatusBase : public UActorCondition
 public:
 	virtual void VSetActor(AActor* actor) override;
 protected:
-	virtual bool VTMValidate() override;
+	virtual bool VOnValidated() override;
 
 protected:
 	UStatusComponent* _statusComp;
